@@ -2,11 +2,13 @@
 #define _ICHECKSUM_CALCULATOR_H
 
 #include <stdint.h>
-#include <stdlib.h>
+#include <stdlib.h>	// size_t
 
 class IChecksumCalculator{
 public:
-	virtual uint8_t calcChecksum(const char *data2, size_t len) = 0;
+	virtual ~IChecksumCalculator(){};
+
+	virtual uint8_t calcChecksum(const void *data2, size_t len) = 0;
 };
 
 #endif

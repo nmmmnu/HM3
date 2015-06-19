@@ -4,29 +4,47 @@
 #include "ipair.h"
 #include "ichecksumcalculator.h"
 
+typedef struct _PairBuffer PairBuffer;
+
 class Pair : public IPair{
 public:
-	Pair(IChecksumCalculator *checksumCalculator);
-	
+	static const uint16_t MAX_KEY_SIZE = 0xffff;
+	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
+
+public:
+	Pair(IChecksumCalculator *checksumCalculator = NULL);
+
+	virtual ~Pair();
+
+	bool create(const char *key, const void *value, size_t valLen, uint32_t expires = 0);
+	bool create(const char *key, const char *value, uint32_t expires = 0);
+	bool create(const char *key, uint32_t expires = 0);
+	void destroy();
+
+	void load(PairBuffer *pb);
+
 	virtual const char *getKey() const;
-	virtual const char *getValue() const;
-	
-	virtual int cmp(const char *key) const;
-	
+	virtual const char *getVal() const;
+
 	virtual bool valid() const;
+
+	virtual size_t getSize() const;
+
+	virtual void print() const;
+
+	virtual bool saveToFile(FILE *F) const;
+
+private:
+	size_t _sizeofBuffer() const;
+
+	void _clear();
 
 private:
 	uint8_t _getChecksum() const;
 
 private:
-	uint16_t		_keyLen;
-	uint32_t		_valLen;
-	
-	char			_buffer[];
-	uint32_t		_bufferLen;
-
-	uint8_t			_checksum;
-	
+	PairBuffer		*_pb = NULL;
+	bool			_pbDestroy;
 	IChecksumCalculator	*_checksumCalculator = NULL;
 };
 
