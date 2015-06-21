@@ -58,7 +58,7 @@ const char *Pair::getVal() const{
 	return & buffer[ be16toh(keylen) + 1 ];
 }
 
-bool Pair::valid(Pair *pair) const{
+bool Pair::valid(const Pair *pair) const{
 	// now expires is 0 no matter of endianness
 	if (expires){
 		if ( MyTime::expired( be64toh(created), be32toh(expires) ) )

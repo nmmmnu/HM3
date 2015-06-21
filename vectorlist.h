@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-class VectorList : public IList{
+class VectorList : public IList, public IIterator{
 public:
 	static const size_t REALLOC_SIZE = 1 * sizeof(void *);
 
@@ -14,37 +14,41 @@ public:
 	virtual void removeAll();
 
 	virtual bool put(Pair *pair);
-	virtual const Pair *get(const char *key);
+	virtual const Pair *get(const char *key) const;
 	virtual bool remove(const char *key);
 
 	virtual uint64_t getCount();
 	virtual size_t getSize();
+
+	virtual IIterator *getIterator();
 
 public:
 	virtual const Pair *first(const char *key = NULL);
 	virtual const Pair *next();
 
 private:
-	size_t _reallocSize;
+	size_t		_reallocSize;
 
-	Pair **_buffer;
-	size_t _bufferSize;
+	Pair		**_buffer;
+	size_t		_bufferSize;
 
-	uint64_t _count;
-	size_t _datasize;
+	uint64_t	_count;
+	size_t		_datasize;
 
-	uint64_t _itPos;
+	uint64_t	_itPos;
 
 private:
 	void _clear(bool alsoFree = false);
 
-	int _locatePosition(const char *key, uint64_t *index);
-	int _locatePositionBSearch(const char *key, uint64_t *index);
+	int _locatePosition(const char *key, uint64_t *index) const;
+	int _locatePositionBSearch(const char *key, uint64_t *index) const;
 
 	bool _shiftL(uint64_t index);
 	bool _shiftR(uint64_t index);
 
 	bool _resize(int delta);
+
+	void _resetIterator();
 
 private:
 	static size_t __calcNewSize(size_t size, size_t reallocSize);

@@ -17,6 +17,8 @@ VectorList::~VectorList(){
 
 
 void VectorList::removeAll(){
+	_resetIterator();
+
 	uint64_t i;
 	for(i = 0; i < _count; ++i){
 		Pair *data = _buffer[i];
@@ -29,6 +31,8 @@ void VectorList::removeAll(){
 }
 
 bool VectorList::put(Pair *newdata){
+	_resetIterator();
+
 	if (newdata == NULL)
 		return false;
 
@@ -47,7 +51,7 @@ bool VectorList::put(Pair *newdata){
 			// prevent memory leak
 			xfree(newdata);
 
-			return 0;
+			return false;
 		}
 
 		_datasize = _datasize
@@ -74,7 +78,7 @@ bool VectorList::put(Pair *newdata){
 	return true;
 }
 
-const Pair *VectorList::get(const char *key){
+const Pair *VectorList::get(const char *key) const{
 	if (key == NULL)
 		return NULL;
 
@@ -88,6 +92,11 @@ const Pair *VectorList::get(const char *key){
 }
 
 bool VectorList::remove(const char *key){
+	_resetIterator();
+
+	if (key == NULL)
+		return false;
+
 	uint64_t index;
 	int cmp = _locatePosition(key, & index);
 
@@ -113,6 +122,10 @@ uint64_t VectorList::getCount(){
 
 size_t VectorList::getSize(){
 	return _datasize;
+}
+
+IIterator *VectorList::getIterator(){
+	return this;
 }
 
 // ===================================
@@ -149,9 +162,11 @@ void VectorList::_clear(bool alsoFree){
 	_datasize = 0;
 	_bufferSize = 0;
 	_buffer = NULL;
+
+	_resetIterator();
 }
 
-int VectorList::_locatePosition(const char *key, uint64_t *index){
+int VectorList::_locatePosition(const char *key, uint64_t *index) const{
 	if (_count == 0){
 		*index = 0;
 		return 1;
@@ -160,7 +175,7 @@ int VectorList::_locatePosition(const char *key, uint64_t *index){
 	return _locatePositionBSearch(key, index);
 }
 
-int VectorList::_locatePositionBSearch(const char *key, uint64_t *index){
+int VectorList::_locatePositionBSearch(const char *key, uint64_t *index) const{
 	/*
 	 * Lazy based from Linux kernel...
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
@@ -258,6 +273,10 @@ size_t VectorList::__calcNewSize(size_t size, size_t reallocSize){
 		newsize++;
 
 	return newsize * reallocSize;
+}
+
+void VectorList::_resetIterator(){
+	_itPos = 0;
 }
 
 // ===================================

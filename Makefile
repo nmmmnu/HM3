@@ -36,15 +36,18 @@ iiterator.o: iiterator.cc iiterator.h pair.h
 vectorlist.o: vectorlist.cc vectorlist.h ilist.h iiterator.h pair.h
 	$(CC) vectorlist.cc
 
+linklist.o: linklist.cc linklist.h ilist.h iiterator.h pair.h
+	$(CC) linklist.cc
+
 test_pair.o: test_pair.cc pair.h nmea0183checksumcalculator.h ichecksumcalculator.h
 	$(CC) test_pair.cc
 
 test_pair: 			test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o
-	$(LINK) test_pair	test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o 	$(LIBS)
+	$(LINK) test_pair	test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o	$(LIBS)
 
 test_list.o: test_list.cc vectorlist.h pair.h
 	$(CC) test_list.cc
 
-test_list:			test_list.o	vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o
-	$(LINK)	test_list	test_list.o	vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o
+test_list:			test_list.o	linklist.o vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o
+	$(LINK) test_list	test_list.o	linklist.o vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o	$(LIBS)
 

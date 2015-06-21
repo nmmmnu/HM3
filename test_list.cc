@@ -1,4 +1,5 @@
 #include "vectorlist.h"
+#include "linklist.h"
 
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
@@ -29,7 +30,7 @@ static void list_test(IList *list){
 
 	size_t size = list_populate(list);
 
-	list->print();
+	list->getIterator()->print();
 
 	PRINTF_TEST("count",		list->getCount() == 4			);
 	PRINTF_TEST("sizeof",		list->getSize() == size			);
@@ -74,14 +75,14 @@ static void list_test(IList *list){
 
 	PRINTF_TEST("remove count",	list->getCount() == 0			);
 
-	list->print();
+	list->getIterator()->print();
 
+	delete list;
 }
 
 int main(int argc, char **argv){
-	IList *list = new VectorList();
-	list_test(list);
-	delete list;
+	list_test( new VectorList() );
+	list_test( new LinkList() );
 
 	return 0;
 }
