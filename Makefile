@@ -9,7 +9,9 @@ LIBS	= -lstdc++
 #-ljemalloc
 #-fpack-struct
 
-TARGETS =	test_pair
+TARGETS =	\
+		test_pair	\
+		test_list
 
 
 all: $(TARGETS)
@@ -28,10 +30,21 @@ pair.o: pair.cc pair.h mytime.h
 nmea0183checksumcalculator.o: nmea0183checksumcalculator.cc nmea0183checksumcalculator.h ichecksumcalculator.h
 	$(CC) nmea0183checksumcalculator.cc
 
+iiterator.o: iiterator.cc iiterator.h pair.h
+	$(CC) iiterator.cc
+
+vectorlist.o: vectorlist.cc vectorlist.h ilist.h iiterator.h pair.h
+	$(CC) vectorlist.cc
+
 test_pair.o: test_pair.cc pair.h nmea0183checksumcalculator.h ichecksumcalculator.h
 	$(CC) test_pair.cc
 
-test_pair: 			test_pair.o	mytime.o pair.o nmea0183checksumcalculator.o
-	$(LINK) test_pair	test_pair.o	mytime.o pair.o nmea0183checksumcalculator.o	$(LIBS)
+test_pair: 			test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o
+	$(LINK) test_pair	test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o 	$(LIBS)
 
+test_list.o: test_list.cc vectorlist.h pair.h
+	$(CC) test_list.cc
+
+test_list:			test_list.o	vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o
+	$(LINK)	test_list	test_list.o	vectorlist.o iiterator.o	mytime.o pair.o nmea0183checksumcalculator.o
 

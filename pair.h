@@ -31,7 +31,7 @@ public:
 	inline int cmp(const char *key) const;
 	inline int cmp(const Pair *pair) const;
 
-	bool valid() const;
+	bool valid(Pair *pair = NULL) const;
 
 	size_t getSize() const;
 
