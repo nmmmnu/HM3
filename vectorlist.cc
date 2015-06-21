@@ -15,7 +15,6 @@ VectorList::~VectorList(){
 	removeAll();
 }
 
-
 void VectorList::removeAll(){
 	_resetIterator();
 
@@ -116,11 +115,11 @@ bool VectorList::remove(const char *key){
 	return true;
 }
 
-uint64_t VectorList::getCount(){
+uint64_t VectorList::getCount() const{
 	return _count;
 }
 
-size_t VectorList::getSize(){
+size_t VectorList::getSize() const{
 	return _datasize;
 }
 

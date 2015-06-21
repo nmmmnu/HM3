@@ -148,11 +148,11 @@ bool LinkList::remove(const char *key){
 	return true;
 }
 
-uint64_t LinkList::getCount(){
+uint64_t LinkList::getCount() const{
 	return _dataCount;
 }
 
-size_t LinkList::getSize(){
+size_t LinkList::getSize() const{
 	return _dataSize;
 }
 

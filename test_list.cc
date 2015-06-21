@@ -17,10 +17,10 @@ static size_t list_populate(IList *list){
 
 	size_t size = 0;
 
-	p = Pair::create("3 city", "Sofia");	size += p->getSize();	list->put(p);
-	p = Pair::create("1 name", "Niki");	size += p->getSize();	list->put(p);
-	p = Pair::create("4 os", "Linux");	size += p->getSize();	list->put(p);
-	p = Pair::create("2 age", "22");	size += p->getSize();	list->put(p);
+	p = Pair::create("3 city",	"Sofia"	);	size += p->getSize();	list->put(p);
+	p = Pair::create("1 name",	"Niki"	);	size += p->getSize();	list->put(p);
+	p = Pair::create("4 os",	"Linux"	);	size += p->getSize();	list->put(p);
+	p = Pair::create("2 age",	"22"	);	size += p->getSize();	list->put(p);
 
 	return size;
 }

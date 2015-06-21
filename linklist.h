@@ -16,8 +16,8 @@ public:
 	virtual const Pair *get(const char *key) const;
 	virtual bool remove(const char *key);
 
-	virtual uint64_t getCount();
-	virtual size_t getSize();
+	virtual uint64_t getCount() const;
+	virtual size_t getSize() const;
 
 	virtual IIterator *getIterator();
 
