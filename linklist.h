@@ -5,7 +5,7 @@
 
 struct LinkListNode;
 
-class LinkList : public IList, public IIterator{
+class LinkList : public IList{
 public:
 	LinkList();
 	virtual ~LinkList();
@@ -18,8 +18,6 @@ public:
 
 	virtual uint64_t getCount() const;
 	virtual size_t getSize() const;
-
-	virtual IIterator *getIterator();
 
 public:
 	virtual const Pair *first(const char *key = NULL);

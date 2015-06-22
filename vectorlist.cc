@@ -114,10 +114,6 @@ size_t VectorList::getSize() const{
 	return _datasize;
 }
 
-IIterator *VectorList::getIterator(){
-	return this;
-}
-
 // ===================================
 
 const Pair *VectorList::first(const char *key){

@@ -147,10 +147,6 @@ size_t LinkList::getSize() const{
 	return _dataSize;
 }
 
-IIterator *LinkList::getIterator(){
-	return this;
-}
-
 // ==============================
 
 const Pair *LinkList::first(const char *key){

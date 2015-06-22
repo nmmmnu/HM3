@@ -5,7 +5,7 @@
 
 struct SkipListNode;
 
-class SkipList : public IList, public IIterator{
+class SkipList : public IList{
 public:
 	static const uint8_t MAX_HEIGHT		= 64;
 	static const uint8_t DEFAULT_HEIGHT	= 32;
@@ -22,8 +22,6 @@ public:
 
 	virtual uint64_t getCount() const;
 	virtual size_t getSize() const;
-
-	virtual IIterator *getIterator();
 
 public:
 	virtual const Pair *first(const char *key = NULL);

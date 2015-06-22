@@ -48,8 +48,13 @@ public:
 		return _list->getSize();
 	}
 
-	virtual IIterator *getIterator(){
-		return _list->getIterator();
+public:
+	virtual const Pair *first(const char *key = NULL){
+		return _list->first(key);
+	}
+
+	virtual const Pair *next(){
+		return _list->next();
 	}
 
 private:

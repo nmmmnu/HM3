@@ -4,7 +4,7 @@
 #include "pair.h"
 #include "iiterator.h"
 
-class IList{
+class IList : public IIterator{
 public:
 	virtual ~IList(){};
 
@@ -20,7 +20,7 @@ public:
 	inline bool empty() const;
 	inline bool exists(const char *key) const;
 
-	virtual IIterator *getIterator() = 0;
+	inline IIterator *getIterator();
 };
 
 // ==============================
@@ -31,6 +31,10 @@ inline bool IList::empty() const{
 
 inline bool IList::exists(const char *key) const{
 	return get(key) != NULL;
+}
+
+inline IIterator *IList::getIterator(){
+	return this;
 }
 
 #endif

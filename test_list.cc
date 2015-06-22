@@ -32,7 +32,7 @@ static void list_test(IList *list){
 
 	size_t size = list_populate(list);
 
-	list->getIterator()->print();
+	list->print();
 
 	PRINTF_TEST("count",		list->getCount() == 4			);
 	PRINTF_TEST("sizeof",		list->getSize() == size			);
@@ -106,7 +106,7 @@ static void skiplist_lanes_test(SkipList *list){
 
 	list->printLanes();
 
-//	list->getIterator()->print();
+//	list->print();
 }
 
 static void skiplist_test(SkipList *list, bool lanes){

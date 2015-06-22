@@ -165,10 +165,6 @@ size_t SkipList::getSize() const{
 	return _dataSize;
 }
 
-IIterator *SkipList::getIterator(){
-	return this;
-}
-
 // ==============================
 
 const Pair *SkipList::first(const char *key){

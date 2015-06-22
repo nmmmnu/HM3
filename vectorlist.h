@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-class VectorList : public IList, public IIterator{
+class VectorList : public IList{
 public:
 	static const size_t REALLOC_SIZE = 1 * sizeof(void *);
 
@@ -19,8 +19,6 @@ public:
 
 	virtual uint64_t getCount() const;
 	virtual size_t getSize() const;
-
-	virtual IIterator *getIterator();
 
 public:
 	virtual const Pair *first(const char *key = NULL);
