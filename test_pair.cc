@@ -82,6 +82,7 @@ static void pair_test(){
 	delete cs;
 }
 
+__attribute__ ((unused))
 static void pair_test_delay(){
 	Pair *p = Pair::create("test", 1);
 
@@ -96,7 +97,7 @@ static void pair_test_delay(){
 int main(int argc, char **argv){
 	pair_test_raw();
 	pair_test();
-	pair_test_delay();
+	//pair_test_delay();
 
 	return 0;
 }

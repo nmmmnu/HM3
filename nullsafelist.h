@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-class NULLSafeList : public IList{
+class NULLSafeList final : public IList{
 public:
 	NULLSafeList(IList *list, bool destroyList = true){
 		_list = list;

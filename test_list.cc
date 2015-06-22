@@ -84,7 +84,7 @@ static void list_test(IList *list){
 }
 
 __attribute__ ((unused))
-static void skiplist_test(SkipList *list){
+static void skiplist_lanes_test(SkipList *list){
 	list->put(Pair::create("name",		"Niki"		));
 	list->put(Pair::create("city",		"Sofia"		));
 	list->put(Pair::create("state",		"na"		));
@@ -100,17 +100,29 @@ static void skiplist_test(SkipList *list){
 
 	list->printLanes();
 
-	list->getIterator()->print();
+//	list->getIterator()->print();
+}
 
-	delete list;
+static void skiplist_test(SkipList *list, bool lanes){
+	if (lanes)
+		skiplist_lanes_test(list);
+
+	list_test(list);
+}
+
+static void nullsafelist_test(NULLSafeList *list){
+	PRINTF_TEST("put null",		! list->put(NULL)		);
+	PRINTF_TEST("get null",		list->get(NULL) == NULL		);
+	PRINTF_TEST("remove null",	! list->remove(NULL)		);
 }
 
 int main(int argc, char **argv){
 	list_test( new VectorList()	);
 	list_test( new LinkList()	);
-	list_test( new SkipList()	);
-	//skiplist_test( new SkipList()	);
-	list_test( new NULLSafeList(new SkipList())	);
+
+	skiplist_test( new SkipList(), false);
+
+	nullsafelist_test( new NULLSafeList(new SkipList())	);
 
 	return 0;
 }

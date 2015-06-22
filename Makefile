@@ -1,7 +1,7 @@
 MYCC	= clang
 MYCC	= g++
 
-CC	= $(MYCC) -Wall			\
+CC	= $(MYCC) -std=c++11 -Wall	\
 		-D_FILE_OFFSET_BITS=64	\
 		-c
 LINK	= $(MYCC) -o
