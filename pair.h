@@ -6,6 +6,8 @@
 #include <string.h>	//strcmp
 #include <stdio.h>	//FILE
 
+#define PAIR_CORRECTION 1
+
 class Pair{
 private:
 	Pair(){};
@@ -50,7 +52,7 @@ private:
 	uint32_t	vallen;		// 4
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
-	char		buffer[2];	// dynamic
+	char		buffer[PAIR_CORRECTION];	// dynamic
 };
 
 // ==============================

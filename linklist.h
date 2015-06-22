@@ -26,12 +26,12 @@ public:
 	virtual const Pair *next();
 
 private:
-	LinkListNode	*_head;
+	LinkListNode		*_head;
 
-	uint64_t	_dataCount;
-	size_t		_dataSize;
+	uint64_t		_dataCount;
+	size_t			_dataSize;
 
-	LinkListNode	*_itHead;
+	const LinkListNode	*_itHead;
 private:
 	void _clear();
 

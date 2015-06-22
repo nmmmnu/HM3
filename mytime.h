@@ -8,8 +8,11 @@ class MyTime{
 public:
 	static const size_t STRING_SIZE = 20;
 
+	static const char *DATA_FORMAT_STANDARD;
+	static const char *DATA_FORMAT_NUMBER;
+
 public:
-	static const char *toString(uint64_t date);
+	static const char *toString(uint64_t date, const char *format = DATA_FORMAT_STANDARD);
 
 	static uint64_t now();
 
@@ -25,6 +28,7 @@ public:
 		return timestamp >> 32;
 	};
 
+private:
 	static char buffer[STRING_SIZE];
 };
 

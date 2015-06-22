@@ -175,7 +175,7 @@ const Pair *LinkList::next(){
 	if (_itHead == NULL)
 		return NULL;
 
-	LinkListNode *node = _itHead;
+	const LinkListNode *node = _itHead;
 	_itHead = _itHead->next;
 
 	return node->data;
