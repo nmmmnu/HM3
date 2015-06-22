@@ -5,12 +5,12 @@
 
 static void my_error(const char *err, const char *file, unsigned int line);
 
-#define SLN_CORRECTION	1
+#define NODE_SIZEOF_CORRECTION	1
 
 struct SkipListNode{
 	Pair		*data;			// system dependent
 	uint8_t		height;			// 1
-	SkipListNode	*next[SLN_CORRECTION];	// system dependent, dynamic, at least 1
+	SkipListNode	*next[NODE_SIZEOF_CORRECTION];	// system dependent, dynamic, at least 1
 };
 
 SkipList::SkipList(uint8_t height){
@@ -83,7 +83,8 @@ bool SkipList::put(Pair *newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	SkipListNode *newnode = (SkipListNode *) malloc(sizeof(SkipListNode) - SLN_CORRECTION + height * sizeof(SkipListNode *) );
+	SkipListNode *newnode = (SkipListNode *) malloc(sizeof(SkipListNode) - NODE_SIZEOF_CORRECTION + height * sizeof(SkipListNode *));
+
 	if (newnode == NULL){
 		// prevent memory leak
 		Pair::destroy(newdata);

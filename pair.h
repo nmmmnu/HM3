@@ -6,8 +6,6 @@
 #include <string.h>	//strcmp
 #include <stdio.h>	//FILE
 
-#define PAIR_CORRECTION 1
-
 class Pair{
 private:
 	Pair(){};
@@ -15,6 +13,9 @@ private:
 public:
 	static const uint16_t MAX_KEY_SIZE = 0xffff;
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
+
+private:
+	static const bool SIZEOF_CORRECTION = 1;
 
 private:
 	static IChecksumCalculator *_checksumCalculator;
@@ -54,7 +55,7 @@ private:
 	uint32_t	vallen;		// 4
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
-	char		buffer[PAIR_CORRECTION];	// dynamic
+	char		buffer[SIZEOF_CORRECTION];	// dynamic
 } __attribute__((__packed__));
 
 // ==============================

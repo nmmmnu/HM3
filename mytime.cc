@@ -4,10 +4,7 @@
 #include <time.h>	// localtime, strftime
 #include <stdio.h>
 
-char MyTime::buffer[STRING_SIZE]; //"1980-01-01 00:00:00";
-
-const char *MyTime::DATA_FORMAT_STANDARD = "%Y-%m-%d %H:%M:%S";
-const char *MyTime::DATA_FORMAT_NUMBER = "%Y%m%d.%H%M%S";
+char MyTime::buffer[STRING_SIZE];
 
 uint64_t MyTime::now(){
 	struct timeval tv;

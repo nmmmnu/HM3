@@ -11,7 +11,7 @@ public:
 	static const uint8_t DEFAULT_HEIGHT	= 32;
 
 public:
-	SkipList(uint8_t height = 0);
+	SkipList(uint8_t height = DEFAULT_HEIGHT);
 	virtual ~SkipList();
 
 	virtual void removeAll();

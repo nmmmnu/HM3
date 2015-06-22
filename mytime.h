@@ -3,13 +3,14 @@
 
 #include <stdint.h>
 #include <stdlib.h>	// size_t
+#include <string.h>	// strlen
 
 class MyTime{
 public:
-	static const size_t STRING_SIZE = 20;
+	constexpr static const size_t STRING_SIZE		= strlen("1980-01-01 00:00:00");
 
-	static const char *DATA_FORMAT_STANDARD;
-	static const char *DATA_FORMAT_NUMBER;
+	constexpr static const char *DATA_FORMAT_STANDARD	= "%Y-%m-%d %H:%M:%S";
+	constexpr static const char *DATA_FORMAT_NUMBER		= "%Y%m%d.%H%M%S";
 
 public:
 	static const char *toString(uint64_t date, const char *format = DATA_FORMAT_STANDARD);
@@ -30,6 +31,7 @@ public:
 
 private:
 	static char buffer[STRING_SIZE];
+
 };
 
 #endif
