@@ -1,5 +1,7 @@
 #include "vectorlist.h"
 #include "linklist.h"
+#include "skiplist.h"
+#include "nullsafelist.h"
 
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
@@ -44,6 +46,7 @@ static void list_test(IList *list){
 	list->put( Pair::create(key_overwr, val_overwr)	);
 	p = list->get(key_overwr);
 
+	if (p)
 	PRINTF_TEST("overwrite",	! strcmp(p->getVal(), val_overwr)	);
 
 	// testing remove
@@ -63,8 +66,10 @@ static void list_test(IList *list){
 
 	p = list->get("3 city");
 
+	if (p)
 	PRINTF_TEST("remove",		! strcmp(p->getVal(), "Sofia")		);
 	PRINTF_TEST("remove count",	list->getCount() == 1			);
+	if (p)
 	PRINTF_TEST("remove sizeof",	list->getSize() == p->getSize()		);
 
 	// remove last
@@ -75,14 +80,37 @@ static void list_test(IList *list){
 
 	PRINTF_TEST("remove count",	list->getCount() == 0			);
 
+	delete list;
+}
+
+__attribute__ ((unused))
+static void skiplist_test(SkipList *list){
+	list->put(Pair::create("name",		"Niki"		));
+	list->put(Pair::create("city",		"Sofia"		));
+	list->put(Pair::create("state",		"na"		));
+	list->put(Pair::create("zip",		"1000"		));
+	list->put(Pair::create("country",	"BG"		));
+	list->put(Pair::create("phone",		"+358 888 1000"	));
+	list->put(Pair::create("fax",		"+358 888 2000"	));
+	list->put(Pair::create("email",		"user@aol.com"	));
+
+	list->put(Pair::create("laptop",	"Dell"		));
+	list->put(Pair::create("os",		"Archlinux"	));
+	list->put(Pair::create("mouse",		"Logitech"	));
+
+	list->printLanes();
+
 	list->getIterator()->print();
 
 	delete list;
 }
 
 int main(int argc, char **argv){
-	list_test( new VectorList() );
-	list_test( new LinkList() );
+	list_test( new VectorList()	);
+	list_test( new LinkList()	);
+	list_test( new SkipList()	);
+	//skiplist_test( new SkipList()	);
+	list_test( new NULLSafeList(new SkipList())	);
 
 	return 0;
 }

@@ -44,6 +44,10 @@ Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t exp
 	return p;
 }
 
+void Pair::destroy(Pair *pair){
+	xfree(pair);
+}
+
 // ==============================
 
 const char *Pair::getKey() const{

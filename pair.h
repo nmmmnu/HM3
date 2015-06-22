@@ -24,6 +24,8 @@ public:
 	static inline Pair *create(const char *key, const char *value, uint32_t expires = 0);
 	static inline Pair *create(const char *key, uint32_t expires = 0);
 
+	static void destroy(Pair *pair);
+
 	static inline void setChecksumCalculator(IChecksumCalculator *checksumCalculator);
 
 public:
@@ -53,7 +55,7 @@ private:
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
 	char		buffer[PAIR_CORRECTION];	// dynamic
-};
+} __attribute__((__packed__));
 
 // ==============================
 

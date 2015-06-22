@@ -23,7 +23,7 @@ void VectorList::removeAll(){
 		Pair *data = _buffer[i];
 
 		if (data)
-			xfree(data);
+			Pair::destroy(data);
 	}
 
 	_clear(true);
@@ -31,9 +31,6 @@ void VectorList::removeAll(){
 
 bool VectorList::put(Pair *newdata){
 	_resetIterator();
-
-	if (newdata == NULL)
-		return false;
 
 	const char *key = newdata->getKey();
 
@@ -48,7 +45,7 @@ bool VectorList::put(Pair *newdata){
 		// check if the data in database is valid
 		if (! newdata->valid(olddata) ){
 			// prevent memory leak
-			xfree(newdata);
+			Pair::destroy(newdata);
 
 			return false;
 		}
@@ -57,7 +54,7 @@ bool VectorList::put(Pair *newdata){
 					- olddata->getSize()
 					+ newdata->getSize();
 
-		xfree(olddata);
+		Pair::destroy(olddata);
 
 		_buffer[index] = newdata;
 
@@ -66,7 +63,7 @@ bool VectorList::put(Pair *newdata){
 
 	if ( ! _shiftR(index) ){
 		// prevent memory leak
-		xfree(newdata);
+		Pair::destroy(newdata);
 		return false;
 	}
 
@@ -78,9 +75,6 @@ bool VectorList::put(Pair *newdata){
 }
 
 const Pair *VectorList::get(const char *key) const{
-	if (key == NULL)
-		return NULL;
-
 	uint64_t index;
 	if (_locatePosition(key, & index)){
 		// the key does not exists in the vector.
@@ -92,9 +86,6 @@ const Pair *VectorList::get(const char *key) const{
 
 bool VectorList::remove(const char *key){
 	_resetIterator();
-
-	if (key == NULL)
-		return false;
 
 	uint64_t index;
 	int cmp = _locatePosition(key, & index);
@@ -108,7 +99,7 @@ bool VectorList::remove(const char *key){
 	Pair *data = _buffer[index];
 	_datasize -= data->getSize();
 
-	xfree(data);
+	Pair::destroy(data);
 
 	_shiftL(index);
 

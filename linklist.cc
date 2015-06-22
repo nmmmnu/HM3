@@ -24,7 +24,7 @@ void LinkList::removeAll(){
 
 		node = node->next;
 
-		xfree(copy->data);
+		Pair::destroy(copy->data);
 		xfree(copy);
 	}
 
@@ -33,9 +33,6 @@ void LinkList::removeAll(){
 
 bool LinkList::put(Pair *newdata){
 	_resetIterator();
-
-	if (newdata == NULL)
-		return false;
 
 	LinkListNode *prev = NULL;
 	LinkListNode *node;
@@ -51,7 +48,7 @@ bool LinkList::put(Pair *newdata){
 			// check if the data in database is valid
 			if (! newdata->valid(olddata)){
 				// prevent memory leak
-				xfree(newdata);
+				Pair::destroy(newdata);
 
 				return false;
 			}
@@ -60,7 +57,7 @@ bool LinkList::put(Pair *newdata){
 					- olddata->getSize()
 					+ newdata->getSize();
 
-			xfree(node->data);
+			Pair::destroy(node->data);
 			node->data = newdata;
 
 			return true;
@@ -75,7 +72,7 @@ bool LinkList::put(Pair *newdata){
 	LinkListNode *newnode = (LinkListNode *)xmalloc(sizeof(LinkListNode));
 	if (newnode == NULL){
 		// prevent memory leak
-		xfree(newdata);
+		Pair::destroy(newdata);
 
 		return false;
 	}
@@ -99,9 +96,6 @@ bool LinkList::put(Pair *newdata){
 }
 
 const Pair *LinkList::get(const char *key) const{
-	if (key == NULL)
-		return NULL;
-
 	const LinkListNode *node = _locate(key);
 
 	if (node == NULL)
@@ -112,9 +106,6 @@ const Pair *LinkList::get(const char *key) const{
 
 bool LinkList::remove(const char *key){
 	_resetIterator();
-
-	if (key == NULL)
-		return false;
 
 	LinkListNode *prev = NULL;
 	LinkListNode *node;
@@ -133,7 +124,7 @@ bool LinkList::remove(const char *key){
 			_dataSize -= data->getSize();
 			_dataCount--;
 
-			xfree(node->data);
+			Pair::destroy(node->data);
 			xfree(node);
 
 			return true;

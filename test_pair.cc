@@ -76,8 +76,8 @@ static void pair_test(){
 	p->print();
 	t->print();
 
-	free(p);
-	free(t);
+	Pair::destroy(p);
+	Pair::destroy(t);
 
 	delete cs;
 }
@@ -90,7 +90,7 @@ static void pair_test_delay(){
 	sleep(2);
 	PRINTF_TEST("expired",		! p->valid()				);
 
-	free(p);
+	Pair::destroy(p);
 }
 
 int main(int argc, char **argv){
