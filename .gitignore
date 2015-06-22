@@ -4,6 +4,7 @@ test_list
 a.out
 
 *.o
+*.d
 
 x.*
 

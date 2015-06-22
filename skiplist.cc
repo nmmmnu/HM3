@@ -70,7 +70,7 @@ bool SkipList::put(Pair *newdata){
 		node->data = newdata;
 
 		_dataSize = _dataSize
-			- olddata->getSize();
+			- olddata->getSize()
 			+ newdata->getSize();
 
 		// release old data

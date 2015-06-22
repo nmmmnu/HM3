@@ -97,7 +97,7 @@ static void pair_test_delay(){
 int main(int argc, char **argv){
 	pair_test_raw();
 	pair_test();
-	//pair_test_delay();
+	pair_test_delay();
 
 	return 0;
 }

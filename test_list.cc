@@ -72,6 +72,12 @@ static void list_test(IList *list){
 	if (p)
 	PRINTF_TEST("remove sizeof",	list->getSize() == p->getSize()		);
 
+	// overwrite sizeof test
+	p = Pair::create("3 city");
+	list->put((Pair *) p);
+	PRINTF_TEST("overwrite count",	list->getCount() == 1			);
+	PRINTF_TEST("overwrite sizeof",	list->getSize() == p->getSize()		);
+
 	// remove last
 	list->remove("3 city");
 
@@ -114,6 +120,8 @@ static void nullsafelist_test(NULLSafeList *list){
 	PRINTF_TEST("put null",		! list->put(NULL)		);
 	PRINTF_TEST("get null",		list->get(NULL) == NULL		);
 	PRINTF_TEST("remove null",	! list->remove(NULL)		);
+
+	delete list;
 }
 
 int main(int argc, char **argv){
