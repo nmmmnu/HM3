@@ -35,6 +35,7 @@ static void list_test(IList *list){
 	list->print();
 
 	PRINTF_TEST("count",		list->getCount() == 4			);
+	PRINTF_TEST("empty",		! list->isEmpty()			);
 	PRINTF_TEST("sizeof",		list->getSize() == size			);
 
 	// testing overwrite
@@ -85,6 +86,18 @@ static void list_test(IList *list){
 	list->remove("nonexistent");
 
 	PRINTF_TEST("remove count",	list->getCount() == 0			);
+	PRINTF_TEST("remove empty",	list->isEmpty()				);
+
+	// testing iterator
+	list_populate(list);
+
+	PRINTF_TEST("iterator rewind",	list->rewind()				);
+	PRINTF_TEST("iterator rewind",	! list->rewind("bla")			);
+	PRINTF_TEST("iterator rewind",	list->rewind("2 age")			);
+	p = list->next();
+	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "22") == 0		);
+	p = list->next();
+	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "Sofia") == 0	);
 
 	delete list;
 }

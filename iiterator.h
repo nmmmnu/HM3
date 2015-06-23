@@ -12,10 +12,16 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	virtual const Pair *first(const char *key = NULL) = 0;
+	virtual bool rewind(const char *key = NULL) = 0;
 	virtual const Pair *next() = 0;
+
+	inline const Pair *first(const char *key = NULL);
 
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 };
+
+inline const Pair *IIterator::first(const char *key){
+	return rewind(key) ? next() : NULL;
+}
 
 #endif

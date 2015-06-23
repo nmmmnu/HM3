@@ -5,23 +5,23 @@
 
 struct LinkListNode;
 
-class LinkList : public IList{
+class LinkList : virtual public IList{
 public:
 	LinkList();
 	virtual ~LinkList();
 
-	virtual void removeAll();
+	virtual void removeAll() override;
 
-	virtual bool put(Pair *pair);
-	virtual const Pair *get(const char *key) const;
-	virtual bool remove(const char *key);
+	virtual bool put(Pair *pair) override;
+	virtual const Pair *get(const char *key) const override;
+	virtual bool remove(const char *key) override;
 
-	virtual uint64_t getCount() const;
-	virtual size_t getSize() const;
+	virtual uint64_t getCount() const override;
+	virtual size_t getSize() const override;
 
 public:
-	virtual const Pair *first(const char *key = NULL);
-	virtual const Pair *next();
+	virtual bool rewind(const char *key = NULL) override;
+	virtual const Pair *next() override;
 
 private:
 	LinkListNode		*_head;
@@ -34,8 +34,6 @@ private:
 	void _clear();
 
 	LinkListNode *_locate(const char *key) const;
-
-	void _resetIterator();
 };
 
 #endif

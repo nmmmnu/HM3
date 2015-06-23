@@ -13,10 +13,10 @@ VectorList::~VectorList(){
 }
 
 void VectorList::removeAll(){
-	_resetIterator();
+	rewind();
 
 	uint64_t i;
-	for(i = 0; i < _count; ++i){
+	for(i = 0; i < _dataCount; ++i){
 		Pair *data = _buffer[i];
 
 		if (data)
@@ -27,12 +27,12 @@ void VectorList::removeAll(){
 }
 
 bool VectorList::put(Pair *newdata){
-	_resetIterator();
+	rewind();
 
 	const char *key = newdata->getKey();
 
 	uint64_t index;
-	int cmp = _locatePosition(key, & index);
+	int cmp = locatePosition(key, & index);
 
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
@@ -47,7 +47,7 @@ bool VectorList::put(Pair *newdata){
 			return false;
 		}
 
-		_datasize = _datasize
+		_dataSize = _dataSize
 					- olddata->getSize()
 					+ newdata->getSize();
 
@@ -64,7 +64,7 @@ bool VectorList::put(Pair *newdata){
 		return false;
 	}
 
-	_datasize += newdata->getSize();
+	_dataSize += newdata->getSize();
 
 	_buffer[index] = newdata;
 
@@ -73,19 +73,27 @@ bool VectorList::put(Pair *newdata){
 
 const Pair *VectorList::get(const char *key) const{
 	uint64_t index;
-	if (_locatePosition(key, & index)){
+	if (locatePosition(key, & index)){
 		// the key does not exists in the vector.
 		return NULL;
 	}
 
+	return getAt(index);
+}
+
+const Pair *VectorList::getAt(uint64_t index) const{
+	if (index >= _dataCount)
+		return NULL;
+
 	return _buffer[index];
 }
 
+
 bool VectorList::remove(const char *key){
-	_resetIterator();
+	rewind();
 
 	uint64_t index;
-	int cmp = _locatePosition(key, & index);
+	int cmp = locatePosition(key, & index);
 
 	if (cmp){
 		// the key does not exists in the vector.
@@ -94,7 +102,7 @@ bool VectorList::remove(const char *key){
 
 	// proceed with remove
 	Pair *data = _buffer[index];
-	_datasize -= data->getSize();
+	_dataSize -= data->getSize();
 
 	Pair::destroy(data);
 
@@ -104,35 +112,11 @@ bool VectorList::remove(const char *key){
 }
 
 uint64_t VectorList::getCount() const{
-	return _count;
+	return _dataCount;
 }
 
 size_t VectorList::getSize() const{
-	return _datasize;
-}
-
-// ===================================
-
-const Pair *VectorList::first(const char *key){
-	if (key){
-		uint64_t index;
-		if (_locatePosition(key, & index)){
-			// the key does not exists in the vector.
-			return NULL;
-		}
-
-		_itPos = index;
-	}else
-		_itPos = 0;
-
-	return next();
-}
-
-const Pair *VectorList::next(){
-	if (_itPos >= _count)
-		return NULL;
-
-	return _buffer[_itPos++];
+	return _dataSize;
 }
 
 // ===================================
@@ -141,16 +125,16 @@ void VectorList::_clear(bool alsoFree){
 	if (alsoFree && _buffer)
 		xfree(_buffer);
 
-	_count = 0;
-	_datasize = 0;
+	_dataCount = 0;
+	_dataSize = 0;
 	_bufferSize = 0;
 	_buffer = NULL;
 
-	_resetIterator();
+	rewind();
 }
 
-int VectorList::_locatePosition(const char *key, uint64_t *index) const{
-	if (_count == 0){
+int VectorList::locatePosition(const char *key, uint64_t *index) const{
+	if (_dataCount == 0){
 		*index = 0;
 		return 1;
 	}
@@ -165,7 +149,7 @@ int VectorList::_locatePositionBSearch(const char *key, uint64_t *index) const{
 	 */
 
 	uint64_t start = 0;
-	uint64_t end   = _count;
+	uint64_t end   = _dataCount;
 	int cmp = 0;
 
 	while (start < end){
@@ -196,7 +180,7 @@ int VectorList::_locatePositionBSearch(const char *key, uint64_t *index) const{
 
 bool VectorList::_shiftL(uint64_t index){
 	// this is the most slow operation of them all
-	memmove(& _buffer[index], & _buffer[index + 1], (_count - index - 1) * sizeof(void *));
+	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * sizeof(void *));
 
 	_resize(-1);
 
@@ -208,7 +192,7 @@ bool VectorList::_shiftR(uint64_t index){
 		return false;
 
 	// this is the most slow operation of them all
-	memmove(& _buffer[index + 1], & _buffer[index], (_count - index - 1) * sizeof(void *));
+	memmove(& _buffer[index + 1], & _buffer[index], (_dataCount - index - 1) * sizeof(void *));
 
 	return true;
 }
@@ -221,18 +205,18 @@ bool VectorList::_resize(int delta){
 
 	delta = SGN(delta);
 
-	uint64_t new_count = _count + delta;
+	uint64_t new_dataCount = _dataCount + delta;
 
-	if (new_count == 0){
+	if (new_dataCount == 0){
 		_clear(true);
 		return true;
 	}
 
-	size_t new_bufferSize = __calcNewSize(new_count * sizeof(void *), _reallocSize);
+	size_t new_bufferSize = __calcNewSize(new_dataCount * sizeof(void *), _reallocSize);
 
 	if (_bufferSize == new_bufferSize){
 		// already resized, done :)
-		_count = new_count;
+		_dataCount = new_dataCount;
 
 		return true;
 	}
@@ -242,7 +226,7 @@ bool VectorList::_resize(int delta){
 	if (new_buffer == NULL)
 		return false;
 
-	_count		= new_count;
+	_dataCount		= new_dataCount;
 	_bufferSize	= new_bufferSize;
 	_buffer		= (Pair**) new_buffer;
 
@@ -257,9 +241,4 @@ size_t VectorList::__calcNewSize(size_t size, size_t reallocSize){
 
 	return newsize * reallocSize;
 }
-
-void VectorList::_resetIterator(){
-	_itPos = 0;
-}
-
 

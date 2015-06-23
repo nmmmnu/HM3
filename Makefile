@@ -14,8 +14,9 @@ LIBS	= -lstdc++
 
 SRC	=	\
 		pair.cc					\
-		iiterator.cc				\
+		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
+		disklist.cc				\
 		nmea0183checksumcalculator.cc		\
 		mytime.cc
 

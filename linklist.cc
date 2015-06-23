@@ -31,7 +31,7 @@ void LinkList::removeAll(){
 }
 
 bool LinkList::put(Pair *newdata){
-	_resetIterator();
+	rewind();
 
 	LinkListNode *prev = NULL;
 	LinkListNode *node;
@@ -104,7 +104,7 @@ const Pair *LinkList::get(const char *key) const{
 }
 
 bool LinkList::remove(const char *key){
-	_resetIterator();
+	rewind();
 
 	LinkListNode *prev = NULL;
 	LinkListNode *node;
@@ -148,13 +148,14 @@ size_t LinkList::getSize() const{
 
 // ==============================
 
-const Pair *LinkList::first(const char *key){
+bool LinkList::rewind(const char *key){
 	if (key){
 		_itHead = _locate(key);
-	}else
-		_itHead = _head;
+		return _itHead;
+	}
 
-	return next();
+	_itHead = _head;
+	return true;
 }
 
 const Pair *LinkList::next(){
@@ -174,7 +175,7 @@ void LinkList::_clear(){
 	_dataSize = 0;
 	_head = NULL;
 
-	_resetIterator();
+	rewind();
 }
 
 LinkListNode *LinkList::_locate(const char *key) const{
@@ -194,7 +195,4 @@ LinkListNode *LinkList::_locate(const char *key) const{
 	return NULL;
 };
 
-void LinkList::_resetIterator(){
-	_itHead = NULL;
-}
 

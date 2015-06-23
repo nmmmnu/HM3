@@ -3,8 +3,9 @@
 
 #include "pair.h"
 #include "iiterator.h"
+#include "icountable.h"
 
-class IList : public IIterator{
+class IList : virtual public IIterator, virtual public ICountable{
 public:
 	virtual ~IList(){};
 
@@ -14,20 +15,14 @@ public:
 	virtual const Pair *get(const char *key) const = 0;
 	virtual bool remove(const char *key) = 0;
 
-	virtual uint64_t getCount() const = 0;
 	virtual uint64_t getSize() const = 0;
 
-	inline bool empty() const;
 	inline bool exists(const char *key) const;
 
 	inline IIterator *getIterator();
 };
 
 // ==============================
-
-inline bool IList::empty() const{
-	return getCount() == 0;
-}
 
 inline bool IList::exists(const char *key) const{
 	return get(key) != NULL;

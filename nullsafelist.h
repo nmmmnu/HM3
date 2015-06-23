@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-class NULLSafeList final : public IList{
+class NULLSafeList final : virtual public IList{
 public:
 	NULLSafeList(IList *list, bool destroyList = true){
 		_list = list;
@@ -15,45 +15,45 @@ public:
 			delete _list;
 	}
 
-	virtual void removeAll(){
+	virtual void removeAll() override{
 		_list->removeAll();
 	}
 
-	virtual bool put(Pair *pair){
+	virtual bool put(Pair *pair) override{
 		if (pair == NULL)
 			return false;
 
 		return _list->put(pair);
 	}
 
-	virtual const Pair *get(const char *key) const{
+	virtual const Pair *get(const char *key) const override{
 		if (key == NULL)
 			return NULL;
 
 		return _list->get(key);
 	}
 
-	virtual bool remove(const char *key){
+	virtual bool remove(const char *key) override{
 		if (key == NULL)
 			return false;
 
 		return _list->remove(key);
 	}
 
-	virtual uint64_t getCount() const{
+	virtual uint64_t getCount() const override{
 		return _list->getCount();
 	}
 
-	virtual size_t getSize() const{
+	virtual size_t getSize() const override{
 		return _list->getSize();
 	}
 
 public:
-	virtual const Pair *first(const char *key = NULL){
-		return _list->first(key);
+	virtual bool rewind(const char *key = NULL) override{
+		return _list->rewind(key);
 	}
 
-	virtual const Pair *next(){
+	virtual const Pair *next() override{
 		return _list->next();
 	}
 
