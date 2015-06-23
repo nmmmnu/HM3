@@ -34,13 +34,8 @@ private:
 
 	uint64_t	_itPos;
 
-protected:
-	virtual int locatePosition(const char *key, uint64_t *index) const override final;
-
 private:
 	void _clear(bool alsoFree = false);
-
-	int _locatePositionBSearch(const char *key, uint64_t *index) const;
 
 	bool _shiftL(uint64_t index);
 	bool _shiftR(uint64_t index);

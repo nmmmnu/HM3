@@ -32,7 +32,7 @@ bool VectorList::put(Pair *newdata){
 	const char *key = newdata->getKey();
 
 	uint64_t index;
-	int cmp = locatePosition(key, & index);
+	int cmp = lookup(key, & index);
 
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
@@ -73,7 +73,7 @@ bool VectorList::put(Pair *newdata){
 
 const Pair *VectorList::get(const char *key) const{
 	uint64_t index;
-	if (locatePosition(key, & index)){
+	if (lookup(key, & index)){
 		// the key does not exists in the vector.
 		return NULL;
 	}
@@ -93,9 +93,7 @@ bool VectorList::remove(const char *key){
 	rewind();
 
 	uint64_t index;
-	int cmp = locatePosition(key, & index);
-
-	if (cmp){
+	if (lookup(key, & index)){
 		// the key does not exists in the vector.
 		return true;
 	}
@@ -131,51 +129,6 @@ void VectorList::_clear(bool alsoFree){
 	_buffer = NULL;
 
 	rewind();
-}
-
-int VectorList::locatePosition(const char *key, uint64_t *index) const{
-	if (_dataCount == 0){
-		*index = 0;
-		return 1;
-	}
-
-	return _locatePositionBSearch(key, index);
-}
-
-int VectorList::_locatePositionBSearch(const char *key, uint64_t *index) const{
-	/*
-	 * Lazy based from Linux kernel...
-	 * http://lxr.free-electrons.com/source/lib/bsearch.c
-	 */
-
-	uint64_t start = 0;
-	uint64_t end   = _dataCount;
-	int cmp = 0;
-
-	while (start < end){
-	//	uint64_t mid = start + ((end - start) /  2);
-		uint64_t mid = start + ((end - start) >> 1);
-
-		const Pair *data = _buffer[mid];
-
-		cmp = data->cmp(key);
-
-		if (cmp == 0){
-			*index = mid;
-			return 0;
-		}
-
-		if (cmp < 0){
-			// go right
-			start = mid + 1;
-		}else{
-			// go left
-			end = mid;
-		}
-	}
-
-	*index = start;
-	return cmp;
 }
 
 bool VectorList::_shiftL(uint64_t index){
