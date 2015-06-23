@@ -1,16 +1,26 @@
 #include "skiplist.h"
 
-#define xmalloc(s)		malloc(s)
-#define xfree(a)		free(a)
+#include "defs.h"
 
-static void my_error(const char *err, const char *file, unsigned int line);
+#define NODE_INTERNAL_SIZE 1
 
-#define NODE_SIZEOF_CORRECTION	1
+/*
+We do ***NOT*** store next[] array size,
+***NOR*** we store NULL after last next node.
+
+It turn out it does not need, because NULL lanes are already NULL.
+
+Disadvantage is once allocated, no one knows the size,
+except probably with malloc_usable_size();
+
+Uncommend DEBUG_PRINT_LANES for visualisation.
+
+#define DEBUG_PRINT_LANES
+*/
 
 struct SkipListNode{
-	Pair		*data;			// system dependent
-	uint8_t		height;			// 1
-	SkipListNode	*next[NODE_SIZEOF_CORRECTION];	// system dependent, dynamic, at least 1
+	Pair		*data;				// system dependent
+	SkipListNode	*next[NODE_INTERNAL_SIZE];	// system dependent, dynamic, at least 1
 };
 
 SkipList::SkipList(uint8_t height){
@@ -83,7 +93,9 @@ bool SkipList::put(Pair *newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	SkipListNode *newnode = (SkipListNode *) malloc(sizeof(SkipListNode) - NODE_SIZEOF_CORRECTION + height * sizeof(SkipListNode *));
+	SkipListNode *newnode = (SkipListNode *) xmalloc(
+			sizeof(SkipListNode) +
+			(height - NODE_INTERNAL_SIZE) * sizeof(SkipListNode *));
 
 	if (newnode == NULL){
 		// prevent memory leak
@@ -91,7 +103,6 @@ bool SkipList::put(Pair *newdata){
 		return false;
 	}
 
-	newnode->height = height;
 	newnode->data = newdata;
 
 	// place new node where it belongs
@@ -109,6 +120,16 @@ bool SkipList::put(Pair *newdata){
 			_heads[i] = newnode;
 		}
 	}
+
+#ifdef DEBUG_PRINT_LANES
+	printf("%3u Lanes-> ", height);
+	for(i = 0; i < height; ++i)
+		printf("%p ", newnode->next[i]);
+	printf("\n");
+#endif
+
+	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
+	// newnode->next[i] = NULL;
 
 	_dataSize += newdata->getSize();
 	_dataCount++;
@@ -276,12 +297,5 @@ uint8_t SkipList::_getRandomHeight(){
 
 void SkipList::_resetIterator(){
 	_itHead = NULL;
-}
-
-// ==============================
-
-static void my_error(const char *err, const char *file, unsigned int line){
-	fprintf(stderr, "%s: key is NULL on %s:%u\n", err, file, line);
-	exit(100);
 }
 
