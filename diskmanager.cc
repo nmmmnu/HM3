@@ -34,11 +34,13 @@ void DiskManager::close(){
 	_isOpen = false;
 }
 
-bool DiskManager::createFromIterator(IIterator *it, uint64_t datacount) const{
+// ==============================
+
+bool DiskManager::create(const char *filename, IIterator *it, uint64_t datacount){
 	if (datacount == 0 || it == NULL)
 		return false;
 
-	FILE *F = fopen(_filename, "w");
+	FILE *F = fopen(filename, "w");
 
 	if (F == NULL)
 		return false;
@@ -50,7 +52,7 @@ bool DiskManager::createFromIterator(IIterator *it, uint64_t datacount) const{
 	return result;
 }
 
-bool DiskManager::_writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F) const{
+bool DiskManager::_writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F){
 	const Pair *pair;
 	uint64_t be;
 

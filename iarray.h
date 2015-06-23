@@ -10,9 +10,6 @@ public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;
 
-private:
-	static const uint8_t DEFAULT_SEARCH	= BINARY_SEARCH;
-
 public:
 	virtual ~IArray(){};
 
@@ -22,18 +19,18 @@ public:
 
 	inline int lookup(const char *key, uint64_t *index = NULL) const;
 
-	inline void setSearchMethod(uint8_t searchMethod);
+	inline void setLookupMethod(uint8_t lookupMethod);
 
 public:
 	virtual bool rewind(const char *key = NULL) override;
 	virtual const Pair *next() override;
 
 private:
-	uint8_t		_searchMethod = DEFAULT_SEARCH;
+	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 	uint64_t	_itPos = 0;
 
-private:
+protected:
 	int _lookupBinSearch(const char *key, uint64_t *index) const;
 	int _lookupLinearSearch(const char *key, uint64_t *index) const;
 
@@ -45,16 +42,16 @@ inline const Pair *IArray::operator[](uint64_t index) const{
 	return getAt(index);
 }
 
-inline void IArray::setSearchMethod(uint8_t searchMethod){
-	_searchMethod = searchMethod;
+inline void IArray::setLookupMethod(uint8_t lookupMethod){
+	_lookupMethod = lookupMethod;
 }
 
 inline int IArray::lookup(const char *key, uint64_t *index) const{
-	switch(_searchMethod){
-	case LINEAR_SEARCH:	return _lookupLinearSearch(key, index);
-	default:
-	case BINARY_SEARCH:	return _lookupBinSearch(key, index);
-	}
+	// until there are only 2 methods
+	if (_lookupMethod == LINEAR_SEARCH)
+		return _lookupLinearSearch(key, index);
+	else
+		return _lookupBinSearch(key, index);
 }
 
 #endif

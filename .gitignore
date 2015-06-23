@@ -9,5 +9,6 @@ a.out
 
 x.*
 
-data
+data.*
+data/*
 

@@ -1,7 +1,7 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "ilist.h"
+#include "diskmanager.h"
 
 #include "vectorlist.h"
 #include "linklist.h"
@@ -22,12 +22,12 @@ static IList *factory(char what){
 	switch(what){
 	case 'v':
 		list = new VectorList();
-		list->setSearchMethod(list->LINEAR_SEARCH);
+		list->setLookupMethod(VectorList::LINEAR_SEARCH);
 		return list;
 
 	case 'V':
 		list = new VectorList();
-		list->setSearchMethod(list->BINARY_SEARCH);
+		list->setLookupMethod(VectorList::BINARY_SEARCH);
 		return list;
 
 	case 'l':
@@ -42,28 +42,47 @@ static IList *factory(char what){
 }
 
 int main(int argc, char **argv){
-	if (argc <= 2){
+	if (argc <= 4){
 		printUsage(argv[0]);
 		return 1;
 	}
 
-	const char *what = argv[1];
-
-	const char *filename = argv[2];
-
-	const char *key = argc > 3 ? argv[3] : NULL;
+	const char *op		= argv[1];
+	const char *what	= argv[2];
+	const char *filename	= argv[3];
+	const char *key		= argv[4];
+	const char *filename2	= argv[4];
 
 	IList *list = factory(what[0]);
 
-	printf("Load start..\n");
-	listLoad(list, filename);
-	printf("Load done..\n");
-	getchar();
+	switch(op[0]){
+	case 's':
+		printf("Load start..\n");
+		listLoad(list, filename);
+		printf("Load done..\n");
+		getchar();
 
-	printf("Search start..\n");
-	listSearch(list, key);
-	printf("Search done..\n");
-	getchar();
+		printf("Search start..\n");
+		listSearch(list, key);
+		printf("Search done..\n");
+		getchar();
+
+		break;
+
+	case 'w':
+		printf("Load start..\n");
+		listLoad(list, filename);
+		printf("Load done..\n");
+		getchar();
+
+		printf("Search start..\n");
+		DiskManager::create(filename2, list);
+		printf("Search done..\n");
+		getchar();
+
+		break;
+	}
+
 
 	delete list;
 
@@ -72,7 +91,11 @@ int main(int argc, char **argv){
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
-	printf("\t%s [class] [file] [key] - load file, then search for the key\n", cmd);
+	printf("\t%s [op] [class] [file] [key]  - load file.txt, then search for the key\n", cmd);
+	printf("\t%s [op] [class] [file] [file] - load file.txt, then create file.dat\n", cmd);
+	printf("Operations are:\n");
+	printf("\t%c - %s\n", 's', "Search for key");
+	printf("\t%c - %s\n", 'w', "Create a file");
 	printf("Classes are:\n");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");

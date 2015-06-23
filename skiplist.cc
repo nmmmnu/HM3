@@ -19,7 +19,7 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 */
 
 struct SkipListNode{
-	Pair		*data;				// system dependent
+	Pair		*data;		// system dependent
 	SkipListNode	*next[1];	// system dependent, dynamic, at least 1
 };
 
