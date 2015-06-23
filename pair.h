@@ -15,9 +15,6 @@ public:
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
 private:
-	static const bool SIZEOF_CORRECTION = 1;
-
-private:
 	static IChecksumCalculator *_checksumCalculator;
 
 public:
@@ -40,7 +37,7 @@ public:
 
 	size_t getSize() const;
 
-	bool saveToFile(FILE *F) const;
+	bool writeToFile(FILE *F) const;
 
 	void print() const;
 
@@ -55,7 +52,7 @@ private:
 	uint32_t	vallen;		// 4
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
-	char		buffer[SIZEOF_CORRECTION];	// dynamic
+	char		buffer[1];	// dynamic
 } __attribute__((__packed__));
 
 // ==============================

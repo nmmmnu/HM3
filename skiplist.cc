@@ -1,8 +1,8 @@
 #include "skiplist.h"
 
-#include "defs.h"
+#include <stddef.h>	// offsetof
 
-#define NODE_INTERNAL_SIZE 1
+#include "defs.h"
 
 /*
 We do ***NOT*** store next[] array size,
@@ -20,7 +20,7 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 
 struct SkipListNode{
 	Pair		*data;				// system dependent
-	SkipListNode	*next[NODE_INTERNAL_SIZE];	// system dependent, dynamic, at least 1
+	SkipListNode	*next[1];	// system dependent, dynamic, at least 1
 };
 
 SkipList::SkipList(uint8_t height){
@@ -57,7 +57,7 @@ void SkipList::removeAll(){
 }
 
 bool SkipList::put(Pair *newdata){
-	_resetIterator();
+	rewind();
 
 	const char *key = newdata->getKey();
 
@@ -94,14 +94,17 @@ bool SkipList::put(Pair *newdata){
 	uint8_t height = _getRandomHeight();
 
 	SkipListNode *newnode = (SkipListNode *) xmalloc(
-			sizeof(SkipListNode) +
-			(height - NODE_INTERNAL_SIZE) * sizeof(SkipListNode *));
+			offsetof(SkipListNode, next) +
+			height * sizeof(SkipListNode *));
 
 	if (newnode == NULL){
 		// prevent memory leak
 		Pair::destroy(newdata);
 		return false;
 	}
+
+	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
+	// newnode->height = height
 
 	newnode->data = newdata;
 
@@ -147,7 +150,7 @@ const Pair *SkipList::get(const char *key) const{
 }
 
 bool SkipList::remove(const char *key){
-	_resetIterator();
+	rewind();
 
 	const SkipListNode *node = _locate(key, true);
 
@@ -188,10 +191,16 @@ size_t SkipList::getSize() const{
 
 // ==============================
 
-const Pair *SkipList::first(const char *key){
+bool SkipList::rewind(const char *key){
+	if (key){
+		_itHead = _locate(key);
+
+		return _itHead;
+	}
+
 	_itHead = _heads[0];
 
-	return next();
+	return true;
 }
 
 const Pair *SkipList::next(){
@@ -236,7 +245,7 @@ void SkipList::_clear(){
 	// no need to clean _loc
 	//memset(_loc, 0, _height * sizeof(SkipListNode *) );
 
-	_resetIterator();
+	rewind();
 }
 
 const SkipListNode *SkipList::_locate(const char *key, bool complete_evaluation) const{
@@ -293,9 +302,5 @@ uint8_t SkipList::_getRandomHeight(){
 		h++;
 
 	return h;
-}
-
-void SkipList::_resetIterator(){
-	_itHead = NULL;
 }
 

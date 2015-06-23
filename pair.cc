@@ -2,6 +2,7 @@
 #include "mytime.h"
 
 #include <endian.h>	// htobe16
+#include <stddef.h>	// offsetof
 
 #include "defs.h"
 
@@ -17,7 +18,7 @@ Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t exp
 	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
 		return NULL;
 
-	size_t size = sizeof(Pair) - SIZEOF_CORRECTION + keylen + 1 + vallen + 1;
+	size_t size = offsetof(Pair, buffer) + keylen + 1 + vallen + 1;
 
 	Pair *p = (Pair *) xmalloc(size);
 
@@ -79,10 +80,10 @@ bool Pair::valid(const Pair *pair) const{
 }
 
 size_t Pair::getSize() const{
-	return sizeof(Pair) - SIZEOF_CORRECTION + _sizeofBuffer();
+	return offsetof(Pair, buffer) + _sizeofBuffer();
 }
 
-bool Pair::saveToFile(FILE *F) const{
+bool Pair::writeToFile(FILE *F) const{
 	size_t size = getSize();
 
 	size_t res = fwrite(this, size, 1, F);
