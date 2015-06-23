@@ -89,7 +89,6 @@ static void list_test(IList *list){
 	delete list;
 }
 
-__attribute__ ((unused))
 static void skiplist_lanes_test(SkipList *list){
 	list->put(Pair::create("name",		"Niki"		));
 	list->put(Pair::create("city",		"Sofia"		));

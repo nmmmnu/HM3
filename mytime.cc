@@ -2,7 +2,6 @@
 
 #include <sys/time.h>
 #include <time.h>	// localtime, strftime
-#include <stdio.h>
 
 char MyTime::buffer[STRING_SIZE];
 
