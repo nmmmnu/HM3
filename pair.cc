@@ -3,8 +3,7 @@
 
 #include <endian.h>	// htobe16
 
-#define xmalloc(s) malloc(s)
-#define xfree(p)   free(p)
+#include "defs.h"
 
 // ==============================
 

@@ -1,9 +1,6 @@
 #include "vectorlist.h"
 
-#define xfree(a)		free(a)
-#define xrealloc(a, size)	realloc(a, size)
-
-inline int SGN(int a);
+#include "defs.h"
 
 VectorList::VectorList(size_t reallocSize){
 	_reallocSize = reallocSize ? reallocSize : REALLOC_SIZE;
@@ -265,12 +262,4 @@ void VectorList::_resetIterator(){
 	_itPos = 0;
 }
 
-// ===================================
-
-inline int SGN(int a){
-	if (a == 0)
-		return 0;
-
-	return a > 0 ? 1 : -1;
-}
 

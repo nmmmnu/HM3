@@ -25,11 +25,12 @@ TARGETS	=	\
 		test_pair	\
 		test_list
 
+
 all: $(TARGETS)
 
 
 clean:
-	rm -f *.o .deps/*.d $(TARGETS)
+	rm -f *.o *.d $(TARGETS)
 
 test_pair: test_pair.o		$(OBJECTS)
 	$(LINK) $@	\

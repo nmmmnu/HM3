@@ -1,7 +1,6 @@
 #include "linklist.h"
 
-#define xmalloc(s)		malloc(s)
-#define xfree(a)		free(a)
+#include "defs.h"
 
 struct LinkListNode{
 	LinkListNode	*next;	// system dependent
