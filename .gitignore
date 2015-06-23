@@ -1,5 +1,6 @@
 test_pair
 test_list
+test_file
 
 a.out
 
@@ -7,4 +8,6 @@ a.out
 *.d
 
 x.*
+
+data
 

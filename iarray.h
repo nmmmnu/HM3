@@ -8,10 +8,10 @@
 class IArray : virtual public IIterator, virtual public ICountable{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
-	static const uint8_t BIN_SEARCH		= 1;
+	static const uint8_t BINARY_SEARCH	= 1;
 
 private:
-	static const uint8_t DEFAULT_SEARCH	= BIN_SEARCH;
+	static const uint8_t DEFAULT_SEARCH	= BINARY_SEARCH;
 
 public:
 	virtual ~IArray(){};
@@ -53,7 +53,7 @@ inline int IArray::lookup(const char *key, uint64_t *index) const{
 	switch(_searchMethod){
 	case LINEAR_SEARCH:	return _lookupLinearSearch(key, index);
 	default:
-	case BIN_SEARCH:	return _lookupBinSearch(key, index);
+	case BINARY_SEARCH:	return _lookupBinSearch(key, index);
 	}
 }
 

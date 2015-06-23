@@ -38,6 +38,15 @@ static void list_test(IList *list){
 	PRINTF_TEST("empty",		! list->isEmpty()			);
 	PRINTF_TEST("sizeof",		list->getSize() == size			);
 
+	// testing get
+
+	p = list->get("3 city");
+	if (p)
+	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")		);
+
+	p = list->get("nonexistent");
+	PRINTF_TEST("get non existent",	p == NULL				);
+
 	// testing overwrite
 
 	const char *key_overwr = "2 val";

@@ -24,7 +24,8 @@ OBJECTS	=	$(SRC:%.cc=%.o)
 
 TARGETS	=	\
 		test_pair	\
-		test_list
+		test_list	\
+		test_file
 
 
 all: $(TARGETS)
@@ -39,6 +40,11 @@ test_pair: test_pair.o		$(OBJECTS)
 			$(LIBS)
 
 test_list: test_list.o		$(OBJECTS)
+	$(LINK) $@	\
+		$^	\
+			$(LIBS)
+
+test_file: test_file.o		$(OBJECTS)
 	$(LINK) $@	\
 		$^	\
 			$(LIBS)
