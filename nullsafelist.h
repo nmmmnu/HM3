@@ -10,7 +10,7 @@ public:
 		_deleteList = destroyList;
 	}
 
-	virtual ~NULLSafeList(){
+	virtual ~NULLSafeList() override{
 		if (_deleteList)
 			delete _list;
 	}

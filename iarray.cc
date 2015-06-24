@@ -93,3 +93,13 @@ const Pair *IArray::next(){
 	return getAt(_itPos++);
 }
 
+// ==============================
+
+const Pair *IArray::get(const char *key) const{
+	uint64_t index;
+	if (lookup(key, & index))
+		return NULL;
+
+	return getAt(index);
+}
+

@@ -8,7 +8,7 @@ struct LinkListNode;
 class LinkList : virtual public IList{
 public:
 	LinkList();
-	virtual ~LinkList();
+	virtual ~LinkList() override;
 
 	virtual void removeAll() override;
 

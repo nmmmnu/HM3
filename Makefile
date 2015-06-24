@@ -16,7 +16,7 @@ SRC	=	\
 		pair.cc					\
 		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
-		diskmanager.cc				\
+		disktable.cc				\
 		nmea0183checksumcalculator.cc		\
 		mytime.cc
 

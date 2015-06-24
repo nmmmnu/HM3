@@ -71,16 +71,6 @@ bool VectorList::put(Pair *newdata){
 	return true;
 }
 
-const Pair *VectorList::get(const char *key) const{
-	uint64_t index;
-	if (lookup(key, & index)){
-		// the key does not exists in the vector.
-		return NULL;
-	}
-
-	return getAt(index);
-}
-
 const Pair *VectorList::getAt(uint64_t index) const{
 	if (index >= _dataCount)
 		return NULL;

@@ -12,7 +12,7 @@ public:
 
 public:
 	SkipList(uint8_t height = DEFAULT_HEIGHT);
-	virtual ~SkipList();
+	virtual ~SkipList() override;
 
 	virtual void removeAll() override;
 

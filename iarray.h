@@ -1,20 +1,19 @@
 #ifndef _IARRAY_H
 #define _IARRAY_H
 
-#include "pair.h"
-#include "iiterator.h"
-#include "icountable.h"
+#include "irolist.h"
 
-class IArray : virtual public IIterator, virtual public ICountable{
+class IArray : virtual public IROList{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual ~IArray(){};
-
 	virtual const Pair *getAt(uint64_t index) const = 0;
 
+	virtual const Pair *get(const char *key) const override;
+
+public:
 	inline const Pair *operator[](uint64_t index) const;
 
 	inline int lookup(const char *key, uint64_t *index = NULL) const;

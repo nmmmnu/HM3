@@ -1,0 +1,7 @@
+
+   ICountable                     IList  ----- (Lists)
+              \                 /        \
+                --- IROList ---            --- Vector
+              /                 \        /
+   IIterator                      IArray ----- DiskManager
+

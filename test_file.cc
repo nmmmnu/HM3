@@ -1,16 +1,18 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "diskmanager.h"
+#include "disktable.h"
 
 #include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
 
+#include "disktable.h"
+
 #define PROCESS_STEP	1000 * 10
 
 static void listLoad(IList *list, const char *filename, bool tombstones = true);
-static void listSearch(IList *list, const char *key);
+static void listSearch(IROList *list, const char *key);
 
 static char *trim(char *s);
 
@@ -41,6 +43,56 @@ static IList *factory(char what){
 	return list;
 }
 
+static int op_search(IList *list, const char *filename, const char *key){
+	printf("Load start..\n");
+	listLoad(list, filename);
+	printf("Load done..\n");
+	getchar();
+
+	printf("Search start..\n");
+	listSearch(list, key);
+	printf("Search done..\n");
+	getchar();
+
+	delete list;
+
+	return 0;
+}
+
+static int op_write(IList *list, const char *filename, const char *filename2){
+	printf("Load start..\n");
+	listLoad(list, filename);
+	printf("Load done..\n");
+	getchar();
+
+	printf("Search start..\n");
+	DiskTable::create(filename2, list);
+	printf("Search done..\n");
+	getchar();
+
+	delete list;
+
+	return 0;
+}
+
+static int op_filesearch(const char *filename, const char *key){
+	DiskTable *list = new DiskTable(filename);
+
+	printf("Open start..\n");
+	list->open();
+	printf("Open done..\n");
+	getchar();
+
+	printf("Search start..\n");
+	listSearch(list, key);
+	printf("Search done..\n");
+	getchar();
+
+	delete list;
+
+	return 0;
+}
+
 int main(int argc, char **argv){
 	if (argc <= 4){
 		printUsage(argv[0]);
@@ -53,38 +105,26 @@ int main(int argc, char **argv){
 	const char *key		= argv[4];
 	const char *filename2	= argv[4];
 
-	IList *list = factory(what[0]);
-
 	switch(op[0]){
-	case 's':
-		printf("Load start..\n");
-		listLoad(list, filename);
-		printf("Load done..\n");
-		getchar();
+	case 's':	return op_search(
+				factory(what[0]),
+				filename,
+				key
+			);
 
-		printf("Search start..\n");
-		listSearch(list, key);
-		printf("Search done..\n");
-		getchar();
+	case 'w':	return op_write(
+				factory(what[0]),
+				filename,
+				filename2
+			);
 
-		break;
+	case 'r':	return op_filesearch(
+				filename,
+				key
+			);
 
-	case 'w':
-		printf("Load start..\n");
-		listLoad(list, filename);
-		printf("Load done..\n");
-		getchar();
-
-		printf("Search start..\n");
-		DiskManager::create(filename2, list);
-		printf("Search done..\n");
-		getchar();
-
-		break;
 	}
 
-
-	delete list;
 
 	return 0;
 }
@@ -96,6 +136,7 @@ static void printUsage(const char *cmd){
 	printf("Operations are:\n");
 	printf("\t%c - %s\n", 's', "Search for key");
 	printf("\t%c - %s\n", 'w', "Create a file");
+	printf("\t%c - %s\n", 'r', "Search for key in a file");
 	printf("Classes are:\n");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");
@@ -128,11 +169,11 @@ static void listLoad(IList *list, const char *filename, bool tombstones){
 	fclose(f);
 }
 
-static void listSearch(IList *list, const char *key){
+static void listSearch(IROList *list, const char *key){
 	const Pair *pair = list->get(key);
 
 	if (pair == NULL){
-		printf("Key not found...\n");
+		printf("Key '%s' not found...\n", key);
 		return;
 	}
 

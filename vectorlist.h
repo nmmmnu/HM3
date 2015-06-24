@@ -10,12 +10,11 @@ public:
 
 public:
 	VectorList(size_t reallocChunkSize = 0);
-	virtual ~VectorList();
+	virtual ~VectorList() override;
 
 	virtual void removeAll() override;
 
 	virtual bool put(Pair *pair) override;
-	virtual const Pair *get(const char *key) const override;
 	virtual bool remove(const char *key) override;
 
 	virtual const Pair *getAt(uint64_t index) const override;
