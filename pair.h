@@ -42,6 +42,7 @@ public:
 	void print() const;
 
 private:
+	static constexpr size_t __sizeofPair();
 	size_t _sizeofBuffer() const;
 
 	uint8_t _getChecksum() const;
@@ -52,7 +53,7 @@ private:
 	uint32_t	vallen;		// 4
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
-	char		buffer[1];	// dynamic
+	char		buffer[2];	// dynamic, at least 2
 } __attribute__((__packed__));
 
 // ==============================

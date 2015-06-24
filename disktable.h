@@ -35,7 +35,7 @@ private:
 private:
 	uint64_t _getCount() const;
 
-	constexpr static size_t _getSizeHeader();
+	constexpr static size_t __sizeofHeader();
 
 	static bool _writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F);
 

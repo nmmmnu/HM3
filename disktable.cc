@@ -8,7 +8,7 @@ struct DiskTableHeader{
 	uint64_t	data[1];	// 8, dynamic
 } __attribute__((__packed__));
 
-constexpr size_t DiskTable::_getSizeHeader(){
+constexpr size_t DiskTable::__sizeofHeader(){
 	return offsetof(DiskTableHeader, data);
 }
 
@@ -79,7 +79,7 @@ const Pair *DiskTable::getAt(uint64_t index) const{
 }
 
 size_t DiskTable::getSize() const{
-	return _size - _getSizeHeader() - _datacount * sizeof(uint64_t);
+	return _size - __sizeofHeader() - _datacount * sizeof(uint64_t);
 }
 
 uint64_t DiskTable::_getCount() const{
@@ -114,7 +114,7 @@ bool DiskTable::_writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F)
 	const Pair *pair;
 	uint64_t be;
 
-	const size_t headerSize = _getSizeHeader();
+	const size_t headerSize = __sizeofHeader();
 	const size_t tableSize  = sizeof(uint64_t) * datacount;
 
 	/* preallocating the file do not really speed up the fwrite process.
