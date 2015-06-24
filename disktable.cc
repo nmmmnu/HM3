@@ -90,8 +90,13 @@ uint64_t DiskTable::_getCount() const{
 // ==============================
 
 bool DiskTable::create(const char *filename, IIterator *it, uint64_t datacount){
-	if (datacount == 0 || it == NULL)
-		return false;
+	if (it == NULL)
+		return NULL;
+
+	if (datacount == 0){
+		// very slow operation
+		datacount = it->iteratorCount();
+	}
 
 	FILE *F = fopen(filename, "w");
 

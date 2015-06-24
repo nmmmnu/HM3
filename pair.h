@@ -77,4 +77,22 @@ inline int Pair::cmp(const Pair *pair) const{
 	return pair == NULL ? -1 : cmp(pair->getKey());
 }
 
+// ==============================
+
+class OPair{
+public:
+	OPair(Pair *p) : _pair(p){};
+
+	inline explicit operator bool() const {
+		return _pair != NULL;
+	}
+
+	inline explicit operator Pair() const {
+		return *_pair;
+	}
+
+private:
+	const Pair *_pair = NULL;
+};
+
 #endif

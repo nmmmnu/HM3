@@ -17,6 +17,7 @@ public:
 
 	inline const Pair *first(const char *key = NULL);
 
+	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 };
 
