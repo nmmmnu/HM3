@@ -44,6 +44,10 @@ static void list_test(IList *list){
 	if (p)
 	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")		);
 
+	p = (*list)["3 city"];
+	if (p)
+	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")		);
+
 	p = list->get("nonexistent");
 	PRINTF_TEST("get non existent",	p == NULL				);
 
