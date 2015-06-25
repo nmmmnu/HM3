@@ -1,9 +1,10 @@
 #include "pair.h"
-#include "nmea0183checksumcalculator.h"
 
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
 #include <unistd.h>	// sleep
+
+#include "nmea0183checksumcalculator.h"
 
 #define MODULE_NAME	"Pair"
 
@@ -39,7 +40,7 @@ static void pair_test(){
 	const char *key = "abcdef";
 	const char *val = "1234567890";
 
-	IChecksumCalculator *cs = new NMEA0183ChecksumCalculator();
+	NMEA0183ChecksumCalculator cs = NMEA0183ChecksumCalculator();
 	Pair::setChecksumCalculator(cs);
 
 	Pair *p = Pair::create(key, val);
@@ -63,23 +64,26 @@ static void pair_test(){
 	// these always pass
 	PRINTF_TEST("valid",		p->valid()				);
 
+
+	{
+
 	char *corruptor = (char *)p->getKey();
 	corruptor[0] = ~ corruptor[0];
 
 	PRINTF_TEST("valid corrupted",	! p->valid()				);
 
-	Pair::setChecksumCalculator(NULL);
+	Pair::removeChecksumCalculator();
 	PRINTF_TEST("valid null",	p->valid()				);
 
 	corruptor[0] = ~ corruptor[0];
+	}
+
 
 	p->print();
 	t->print();
 
 	Pair::destroy(p);
 	Pair::destroy(t);
-
-	delete cs;
 }
 
 __attribute__ ((unused))

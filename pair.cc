@@ -8,7 +8,7 @@
 
 // ==============================
 
-IChecksumCalculator *Pair::_checksumCalculator = NULL;
+std_optional<IChecksumCalculator> Pair::_checksumCalculator = NULL;
 
 // ==============================
 
@@ -112,10 +112,7 @@ void Pair::print() const{
 // ==============================
 
 uint8_t Pair::_getChecksum() const{
-	if (_checksumCalculator == NULL)
-		return 0;
-
-	return _checksumCalculator->calcChecksum(buffer, _sizeofBuffer());
+	return _checksumCalculator ?_checksumCalculator().calcChecksum(buffer, _sizeofBuffer()) : 0;
 }
 
 size_t Pair::_sizeofBuffer() const{

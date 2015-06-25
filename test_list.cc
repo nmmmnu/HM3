@@ -12,17 +12,20 @@
 	printf("%-15s Testing %-20s %s\n", MODULE_NAME, test, result ? "OK" : "Fail")
 
 
+inline static size_t list_add(IList &list, Pair *p){
+	list.put(p);
+	return p->getSize();
+}
+
 static size_t list_populate(IList &list){
 	list.removeAll();
 
-	Pair *p;
-
 	size_t size = 0;
 
-	p = Pair::create("3 city",	"Sofia"	);	size += p->getSize();	list.put(p);
-	p = Pair::create("1 name",	"Niki"	);	size += p->getSize();	list.put(p);
-	p = Pair::create("4 os",	"Linux"	);	size += p->getSize();	list.put(p);
-	p = Pair::create("2 age",	"22"	);	size += p->getSize();	list.put(p);
+	size += list_add(list, Pair::create("3 city",	"Sofia"	));
+	size += list_add(list, Pair::create("1 name",	"Niki"	));
+	size += list_add(list, Pair::create("4 os",	"Linux"	));
+	size += list_add(list, Pair::create("2 age",	"22"	));
 
 	return size;
 }

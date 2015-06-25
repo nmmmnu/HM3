@@ -1,5 +1,6 @@
 #include "disktable.h"
 
+#include <endian.h>	// htobe16
 #include <stddef.h>	// ofsetof
 #include <sys/mman.h>	// mmap
 

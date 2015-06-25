@@ -16,7 +16,7 @@ public:
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
 private:
-	static IChecksumCalculator *_checksumCalculator;
+	static std_optional<IChecksumCalculator> _checksumCalculator;
 
 public:
 	static Pair *create(const char *key, const void *value, size_t valLen, uint32_t expires = 0);
@@ -25,7 +25,8 @@ public:
 
 	static void destroy(Pair *pair);
 
-	static inline void setChecksumCalculator(IChecksumCalculator *checksumCalculator);
+	static inline void setChecksumCalculator(IChecksumCalculator & checksumCalculator);
+	static inline void removeChecksumCalculator();
 
 public:
 	const char *getKey() const;
@@ -76,8 +77,12 @@ inline Pair *Pair::create(const char *key, uint32_t expires){
 	return create(key, nullptr, 0, expires);
 }
 
-inline void Pair::setChecksumCalculator(IChecksumCalculator *checksumCalculator){
-	_checksumCalculator = checksumCalculator;
+inline void Pair::setChecksumCalculator(IChecksumCalculator & checksumCalculator){
+	_checksumCalculator = &checksumCalculator;
+}
+
+inline void Pair::removeChecksumCalculator(){
+	_checksumCalculator = NULL;
 }
 
 inline int Pair::cmp(const char *key) const{
