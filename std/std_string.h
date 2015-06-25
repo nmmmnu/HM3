@@ -1,6 +1,8 @@
 #ifndef _STD_STRING_H
 #define _STD_STRING_H
 
+#include <stdlib.h>
+
 class std_string{
 private:
 	constexpr static const char *EMPTY = "";
@@ -13,8 +15,16 @@ public:
 		return _s;
 	};
 
-	inline size_t length() const{
+	inline size_t length(const char *s) const{
 		return strlen(_s);
+	};
+
+	inline int cmp(const char *s) const{
+		return strcmp(_s, s);
+	};
+
+	inline int cmp(const std_string &s) const{
+		return cmp(s.c_str());
 	};
 
 	inline char operator[](size_t index) const{
@@ -22,7 +32,7 @@ public:
 	}
 
 	inline char operator==(const char *s) const{
-		return strcmp(_s, s) == 0;
+		return cmp(s) == 0;
 	}
 
 	inline char operator==(const std_string &s) const{

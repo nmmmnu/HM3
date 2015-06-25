@@ -66,7 +66,7 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-const OPair DiskTable::getAt(uint64_t index) const{
+std_optional<const Pair> DiskTable::getAt(uint64_t index) const{
 	if (index >= getCount())
 		return NULL;
 
@@ -74,9 +74,7 @@ const OPair DiskTable::getAt(uint64_t index) const{
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 
 	const uint64_t ptr = be64toh( head->data[index] );
-	const Pair *pair = (Pair *) & mem[ptr];
-
-	return OPair(pair);
+	return (const Pair *) & mem[ptr];
 }
 
 size_t DiskTable::getSize() const{
@@ -109,7 +107,6 @@ bool DiskTable::create(const char *filename, IIterator &it, uint64_t datacount){
 }
 
 bool DiskTable::_writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F){
-	OPair pair;
 	uint64_t be;
 
 	const size_t headerSize = __sizeofHeader();
@@ -127,14 +124,14 @@ bool DiskTable::_writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F)
 	fwrite(& header, headerSize, 1, F);
 
 	// traverse and write the table.
-	for(pair = it.first(); pair; pair = it.next()){
+	for(auto pair = it.first(); pair; pair = it.next()){
 		be = htobe64(current);
 		fwrite(& be, sizeof(uint64_t), 1, F);
 		current += pair->getSize();
 	}
 
 	// traverse and write the data.
-	for(pair = it.first(); pair; pair = it.next()){
+	for(auto pair = it.first(); pair; pair = it.next()){
 		pair->writeToFile(F);
 	}
 

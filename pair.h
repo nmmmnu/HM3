@@ -62,13 +62,6 @@ private:
 
 // ==============================
 
-class OPair : public std_optional<const Pair>{
-public:
-	OPair(const Pair *pair = nullptr) : std_optional(pair){};
-};
-
-// ==============================
-
 inline Pair *Pair::create(const char *key, const char *value, uint32_t expires){
 	return create(key, value, value ? strlen(value) : 0, expires);
 }

@@ -140,7 +140,7 @@ bool SkipList::put(Pair *newdata){
 	return true;
 }
 
-const OPair SkipList::get(const char *key) const{
+std_optional<const Pair> SkipList::get(const char *key) const{
 	const SkipListNode *node = _locate(key);
 
 	return node ? node->data : nullptr;
@@ -200,7 +200,7 @@ bool SkipList::rewind(const char *key){
 	return true;
 }
 
-const OPair SkipList::next(){
+std_optional<const Pair> SkipList::next(){
 	if (_itHead == NULL)
 		return NULL;
 

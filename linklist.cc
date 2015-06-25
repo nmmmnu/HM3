@@ -94,7 +94,7 @@ bool LinkList::put(Pair *newdata){
 	return true;
 }
 
-const OPair LinkList::get(const char *key) const{
+std_optional<const Pair> LinkList::get(const char *key) const{
 	const LinkListNode *node = _locate(key);
 
 	const Pair *pair = node ? node->data : nullptr;
@@ -157,7 +157,7 @@ bool LinkList::rewind(const char *key){
 	return true;
 }
 
-const OPair LinkList::next(){
+std_optional<const Pair> LinkList::next(){
 	if (_itHead == NULL)
 		return NULL;
 
