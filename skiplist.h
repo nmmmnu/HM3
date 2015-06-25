@@ -17,7 +17,7 @@ public:
 	virtual void removeAll() override;
 
 	virtual bool put(Pair *pair) override;
-	virtual OPair get(const char *key) const override;
+	virtual const OPair get(const char *key) const override;
 	virtual bool remove(const char *key) override;
 
 	virtual uint64_t getCount() const override;
@@ -25,7 +25,7 @@ public:
 
 public:
 	virtual bool rewind(const char *key = NULL) override;
-	virtual const Pair *next() override;
+	virtual const OPair next() override;
 
 public:
 	void printLanes() const;

@@ -65,7 +65,7 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-OPair DiskTable::getAt(uint64_t index) const{
+const OPair DiskTable::getAt(uint64_t index) const{
 	if (index >= getCount())
 		return NULL;
 
@@ -89,13 +89,10 @@ uint64_t DiskTable::_getCount() const{
 
 // ==============================
 
-bool DiskTable::create(const char *filename, IIterator *it, uint64_t datacount){
-	if (it == NULL)
-		return NULL;
-
+bool DiskTable::create(const char *filename, IIterator &it, uint64_t datacount){
 	if (datacount == 0){
 		// very slow operation
-		datacount = it->iteratorCount();
+		datacount = it.iteratorCount();
 	}
 
 	FILE *F = fopen(filename, "w");
@@ -110,8 +107,8 @@ bool DiskTable::create(const char *filename, IIterator *it, uint64_t datacount){
 	return result;
 }
 
-bool DiskTable::_writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F){
-	const Pair *pair;
+bool DiskTable::_writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F){
+	OPair pair;
 	uint64_t be;
 
 	const size_t headerSize = __sizeofHeader();
@@ -129,15 +126,15 @@ bool DiskTable::_writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F)
 	fwrite(& header, headerSize, 1, F);
 
 	// traverse and write the table.
-	for(pair = it->first(); pair; pair = it->next()){
+	for(pair = it.first(); pair; pair = it.next()){
 		be = htobe64(current);
 		fwrite(& be, sizeof(uint64_t), 1, F);
-		current += pair->getSize();
+		current += pair().getSize();
 	}
 
 	// traverse and write the data.
-	for(pair = it->first(); pair; pair = it->next()){
-		pair->writeToFile(F);
+	for(pair = it.first(); pair; pair = it.next()){
+		pair().writeToFile(F);
 	}
 
 	return true;

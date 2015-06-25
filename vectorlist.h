@@ -17,7 +17,7 @@ public:
 	virtual bool put(Pair *pair) override;
 	virtual bool remove(const char *key) override;
 
-	virtual OPair getAt(uint64_t index) const override;
+	virtual const OPair getAt(uint64_t index) const override;
 
 	virtual uint64_t getCount() const override;
 	virtual size_t getSize() const override;

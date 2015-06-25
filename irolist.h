@@ -7,20 +7,20 @@
 
 class IROList : virtual public IIterator, virtual public ICountable{
 public:
-	virtual OPair get(const char *key) const = 0;
+	virtual const OPair get(const char *key) const = 0;
 
 	virtual size_t getSize() const = 0;
 
-	inline OPair operator[](const char *key) const;
+	inline const OPair operator[](const char *key) const;
 
 	inline bool exists(const char *key) const;
 
-	inline IIterator *getIterator();
+	inline IIterator &getIterator();
 };
 
 // ==============================
 
-inline OPair IROList::operator[](const char *key) const{
+inline const OPair IROList::operator[](const char *key) const{
 	return get(key);
 }
 
@@ -28,8 +28,8 @@ inline bool IROList::exists(const char *key) const{
 	return (bool) get(key);
 }
 
-inline IIterator *IROList::getIterator(){
-	return this;
+inline IIterator &IROList::getIterator(){
+	return *this;
 }
 
 #endif

@@ -9,9 +9,9 @@ public:
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual OPair getAt(uint64_t index) const = 0;
+	virtual const OPair getAt(uint64_t index) const = 0;
 
-	virtual OPair get(const char *key) const override;
+	virtual const OPair get(const char *key) const override;
 
 public:
 	inline OPair operator[](uint64_t index) const;
@@ -22,7 +22,7 @@ public:
 
 public:
 	virtual bool rewind(const char *key = NULL) override;
-	virtual const Pair *next() override;
+	virtual const OPair next() override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

@@ -16,12 +16,12 @@ public:
 		return _datacount;
 	}
 
-	virtual OPair getAt(uint64_t index) const override;
+	virtual const OPair getAt(uint64_t index) const override;
 
 	virtual size_t getSize() const override;
 
 public:
-	       static bool create(const char *filename, IIterator *it, uint64_t datacount);
+	       static bool create(const char *filename, IIterator &it, uint64_t datacount);
 	inline static bool create(const char *filename, IROList &list);
 
 private:
@@ -37,7 +37,7 @@ private:
 
 	constexpr static size_t __sizeofHeader();
 
-	static bool _writeIteratorToFile(IIterator *it, uint64_t datacount, FILE *F);
+	static bool _writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F);
 
 };
 

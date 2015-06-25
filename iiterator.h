@@ -13,15 +13,15 @@ public:
 	virtual ~IIterator(){};
 
 	virtual bool rewind(const char *key = NULL) = 0;
-	virtual const Pair *next() = 0;
+	virtual const OPair next() = 0;
 
-	inline const Pair *first(const char *key = NULL);
+	inline const OPair first(const char *key = NULL);
 
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 };
 
-inline const Pair *IIterator::first(const char *key){
+inline const OPair IIterator::first(const char *key){
 	return rewind(key) ? next() : NULL;
 }
 

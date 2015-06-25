@@ -71,15 +71,8 @@ bool VectorList::put(Pair *newdata){
 	return true;
 }
 
-OPair VectorList::getAt(uint64_t index) const{
-	const Pair *pair;
-
-	if (index >= _dataCount)
-		pair = nullptr;
-	else
-		pair = _buffer[index];
-
-	return OPair(pair);
+const OPair VectorList::getAt(uint64_t index) const{
+	return index < _dataCount ? _buffer[index] : nullptr;
 }
 
 

@@ -17,21 +17,21 @@ public:
 	}
 
 	virtual bool put(Pair *pair) override{
-		if (pair == NULL)
+		if (pair == nullptr)
 			return false;
 
 		return _list.put(pair);
 	}
 
 	virtual OPair get(const char *key) const override{
-		if (key == NULL)
-			return OPair();
+		if (key == nullptr)
+			return nullptr;
 
 		return _list.get(key);
 	}
 
 	virtual bool remove(const char *key) override{
-		if (key == NULL)
+		if (key == nullptr)
 			return false;
 
 		return _list.remove(key);
@@ -46,11 +46,11 @@ public:
 	}
 
 public:
-	virtual bool rewind(const char *key = NULL) override{
+	virtual bool rewind(const char *key = nullptr) override{
 		return _list.rewind(key);
 	}
 
-	virtual const Pair *next() override{
+	virtual OPair next() override{
 		return _list.next();
 	}
 
