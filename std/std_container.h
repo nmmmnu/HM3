@@ -13,22 +13,27 @@ public:
 		return _t;
 	}
 
-	inline T & val() const{
+	inline T & value() const{
 		return *_t;
 	}
 
 	// ==============================
 
 	inline T & operator *() const {
-		return val();
+		return value();
 	}
 
-	inline T & operator ()() const {
-		return val();
-	}
+//	inline T & operator ()() const {
+//		return value();
+//	}
 
 	inline T * operator ->() const {
 		return ptr();
+	}
+
+protected:
+	inline void setPtr(T *t){
+		_t = t;
 	}
 
 private:

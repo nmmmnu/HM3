@@ -112,7 +112,7 @@ void Pair::print() const{
 // ==============================
 
 uint8_t Pair::_getChecksum() const{
-	return _checksumCalculator ?_checksumCalculator().calcChecksum(buffer, _sizeofBuffer()) : 0;
+	return _checksumCalculator ?_checksumCalculator.value().calcChecksum(buffer, _sizeofBuffer()) : 0;
 }
 
 size_t Pair::_sizeofBuffer() const{

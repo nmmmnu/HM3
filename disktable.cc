@@ -130,12 +130,12 @@ bool DiskTable::_writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F)
 	for(pair = it.first(); pair; pair = it.next()){
 		be = htobe64(current);
 		fwrite(& be, sizeof(uint64_t), 1, F);
-		current += pair().getSize();
+		current += pair->getSize();
 	}
 
 	// traverse and write the data.
 	for(pair = it.first(); pair; pair = it.next()){
-		pair().writeToFile(F);
+		pair->writeToFile(F);
 	}
 
 	return true;

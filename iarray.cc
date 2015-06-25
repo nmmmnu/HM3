@@ -12,7 +12,7 @@ int IArray::_lookupLinearSearch(const char *key, uint64_t *index) const{
 	for(i = 0; i < getCount(); ++i){
 		const OPair data = getAt(i);
 
-		cmp = data().cmp(key);
+		cmp = data->cmp(key);
 
 		if (cmp == 0){
 			// found
@@ -49,7 +49,7 @@ int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
 
 		OPair data = getAt(mid);
 
-		cmp = data().cmp(key);
+		cmp = data->cmp(key);
 
 		if (cmp == 0){
 			// found

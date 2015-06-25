@@ -1,7 +1,7 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "std/std_autorelease.h"
+#include "std/std_auto_ptr.h"
 
 #include "disktable.h"
 
@@ -20,13 +20,13 @@ static char *trim(char *s);
 
 static void printUsage(const char *cmd);
 
-static std_autorelease<IList> factory(char what){
+static std_auto_ptr<IList> factory(char what){
 	switch(what){
 	case 'v':
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::LINEAR_SEARCH);
-			return std_autorelease<IList>(vlist);
+			return std_auto_ptr<IList>(vlist);
 		}
 		break;
 
@@ -34,17 +34,17 @@ static std_autorelease<IList> factory(char what){
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::BINARY_SEARCH);
-			return std_autorelease<IList>(vlist);
+			return std_auto_ptr<IList>(vlist);
 		}
 		break;
 
 	case 'l':
-		return std_autorelease<IList>(new LinkList());
+		return std_auto_ptr<IList>(new LinkList());
 		break;
 
 	default:
 	case 's':
-		return std_autorelease<IList>(new SkipList());
+		return std_auto_ptr<IList>(new SkipList());
 	}
 }
 
@@ -106,13 +106,13 @@ int main(int argc, char **argv){
 
 	switch(op[0]){
 	case 's':	return op_search(
-				factory(what[0]).val(),
+				factory(what[0]).value(),
 				filename,
 				key
 			);
 
 	case 'w':	return op_write(
-				factory(what[0]).val(),
+				factory(what[0]).value(),
 				filename,
 				filename2
 			);
