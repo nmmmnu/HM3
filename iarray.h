@@ -16,7 +16,7 @@ public:
 public:
 	inline std_optional<const Pair> operator[](uint64_t index) const;
 
-	inline int lookup(const char *key, uint64_t *index = NULL) const;
+	inline int lookup(const char *key, uint64_t &index) const;
 
 	inline void setLookupMethod(uint8_t lookupMethod);
 
@@ -31,8 +31,8 @@ private:
 	uint64_t	_itPos = 0;
 
 protected:
-	int _lookupBinSearch(const char *key, uint64_t *index) const;
-	int _lookupLinearSearch(const char *key, uint64_t *index) const;
+	int _lookupBinSearch(   const char *key, uint64_t &index) const;
+	int _lookupLinearSearch(const char *key, uint64_t &index) const;
 
 };
 
@@ -46,7 +46,7 @@ inline void IArray::setLookupMethod(uint8_t lookupMethod){
 	_lookupMethod = lookupMethod;
 }
 
-inline int IArray::lookup(const char *key, uint64_t *index) const{
+inline int IArray::lookup(const char *key, uint64_t &index) const{
 	// until there are only 2 methods
 	if (_lookupMethod == LINEAR_SEARCH)
 		return _lookupLinearSearch(key, index);

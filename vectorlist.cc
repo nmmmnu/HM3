@@ -32,7 +32,7 @@ bool VectorList::put(Pair *newdata){
 	const char *key = newdata->getKey();
 
 	uint64_t index;
-	int cmp = lookup(key, & index);
+	int cmp = lookup(key, index);
 
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
@@ -80,7 +80,7 @@ bool VectorList::remove(const char *key){
 	rewind();
 
 	uint64_t index;
-	if (lookup(key, & index)){
+	if (lookup(key, index)){
 		// the key does not exists in the vector.
 		return true;
 	}

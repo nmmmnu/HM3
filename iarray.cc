@@ -1,9 +1,8 @@
 #include "iarray.h"
 
-int IArray::_lookupLinearSearch(const char *key, uint64_t *index) const{
+int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{
 	if (isEmpty()){
-		*index = 0;
-		return 1;
+		index = 0; return 1;
 	}
 
 	int cmp = -1;
@@ -16,22 +15,19 @@ int IArray::_lookupLinearSearch(const char *key, uint64_t *index) const{
 
 		if (cmp == 0){
 			// found
-			*index = i;
-			return 0;
+			index = i; return 0;
 		}
 
 		if (cmp > 0)
 			break;
 	}
 
-	*index = i;
-	return cmp;
+	index = i; return cmp;
 }
 
-int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
+int IArray::_lookupBinSearch(const char *key, uint64_t &index) const{
 	if (isEmpty()){
-		*index = 0;
-		return 1;
+		index = 0; return 1;
 	}
 
 	/*
@@ -53,8 +49,7 @@ int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
 
 		if (cmp == 0){
 			// found
-			*index = mid;
-			return 0;
+			index = mid; return 0;
 		}
 
 		if (cmp < 0){
@@ -66,8 +61,7 @@ int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
 		}
 	}
 
-	*index = start;
-	return cmp;
+	index = start; return cmp;
 }
 
 // ==============================
@@ -82,7 +76,7 @@ bool IArray::rewind(const char *key){
 		return rewind();
 
 	uint64_t index;
-	if (lookup(key, & index))
+	if (lookup(key, index))
 		return false;
 
 	_itPos = index;
@@ -100,7 +94,7 @@ std_optional<const Pair> IArray::next(){
 
 std_optional<const Pair> IArray::get(const char *key) const{
 	uint64_t index;
-	if (lookup(key, & index))
+	if (lookup(key, index))
 		return nullptr;
 
 	return getAt(index);
