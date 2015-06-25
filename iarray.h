@@ -9,12 +9,12 @@ public:
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual const Pair *getAt(uint64_t index) const = 0;
+	virtual OPair getAt(uint64_t index) const = 0;
 
-	virtual const Pair *get(const char *key) const override;
+	virtual OPair get(const char *key) const override;
 
 public:
-	inline const Pair *operator[](uint64_t index) const;
+	inline OPair operator[](uint64_t index) const;
 
 	inline int lookup(const char *key, uint64_t *index = NULL) const;
 
@@ -37,7 +37,7 @@ protected:
 
 // ==============================
 
-inline const Pair *IArray::operator[](uint64_t index) const{
+inline OPair IArray::operator[](uint64_t index) const{
 	return getAt(index);
 }
 

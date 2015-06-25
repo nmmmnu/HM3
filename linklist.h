@@ -13,7 +13,7 @@ public:
 	virtual void removeAll() override;
 
 	virtual bool put(Pair *pair) override;
-	virtual const Pair *get(const char *key) const override;
+	virtual OPair get(const char *key) const override;
 	virtual bool remove(const char *key) override;
 
 	virtual uint64_t getCount() const override;

@@ -1,6 +1,8 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
+#include "std/std_autorelease.h"
+
 #include "disktable.h"
 
 #include "vectorlist.h"
@@ -11,39 +13,42 @@
 
 #define PROCESS_STEP	1000 * 10
 
-static void listLoad(IList *list, const char *filename, bool tombstones = true);
-static void listSearch(IROList *list, const char *key);
+static void listLoad(IList &list, const char *filename, bool tombstones = true);
+static void listSearch(IROList &list, const char *key);
 
 static char *trim(char *s);
 
 static void printUsage(const char *cmd);
 
-static IList *factory(char what){
-	VectorList *list;
-
+static std_autorelease<IList> factory(char what){
 	switch(what){
 	case 'v':
-		list = new VectorList();
-		list->setLookupMethod(VectorList::LINEAR_SEARCH);
-		return list;
+		{
+			VectorList *vlist = new VectorList();
+			vlist->setLookupMethod(VectorList::LINEAR_SEARCH);
+			return std_autorelease<IList>(vlist);
+		}
+		break;
 
 	case 'V':
-		list = new VectorList();
-		list->setLookupMethod(VectorList::BINARY_SEARCH);
-		return list;
+		{
+			VectorList *vlist = new VectorList();
+			vlist->setLookupMethod(VectorList::BINARY_SEARCH);
+			return std_autorelease<IList>(vlist);
+		}
+		break;
 
 	case 'l':
-		return new LinkList();
+		return std_autorelease<IList>(new LinkList());
+		break;
 
 	default:
 	case 's':
-		return new SkipList();
+		return std_autorelease<IList>(new SkipList());
 	}
-
-	return list;
 }
 
-static int op_search(IList *list, const char *filename, const char *key){
+static int op_search(IList &list, const char *filename, const char *key){
 	printf("Load start..\n");
 	listLoad(list, filename);
 	printf("Load done..\n");
@@ -54,12 +59,10 @@ static int op_search(IList *list, const char *filename, const char *key){
 	printf("Search done..\n");
 	getchar();
 
-	delete list;
-
 	return 0;
 }
 
-static int op_write(IList *list, const char *filename, const char *filename2){
+static int op_write(IList &list, const char *filename, const char *filename2){
 	printf("Load start..\n");
 	listLoad(list, filename);
 	printf("Load done..\n");
@@ -70,16 +73,14 @@ static int op_write(IList *list, const char *filename, const char *filename2){
 	printf("Search done..\n");
 	getchar();
 
-	delete list;
-
 	return 0;
 }
 
 static int op_filesearch(const char *filename, const char *key){
-	DiskTable *list = new DiskTable(filename);
+	DiskTable list = DiskTable(filename);
 
 	printf("Open start..\n");
-	list->open();
+	list.open();
 	printf("Open done..\n");
 	getchar();
 
@@ -87,8 +88,6 @@ static int op_filesearch(const char *filename, const char *key){
 	listSearch(list, key);
 	printf("Search done..\n");
 	getchar();
-
-	delete list;
 
 	return 0;
 }
@@ -107,13 +106,13 @@ int main(int argc, char **argv){
 
 	switch(op[0]){
 	case 's':	return op_search(
-				factory(what[0]),
+				factory(what[0]).val(),
 				filename,
 				key
 			);
 
 	case 'w':	return op_write(
-				factory(what[0]),
+				factory(what[0]).val(),
 				filename,
 				filename2
 			);
@@ -145,7 +144,7 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(IList *list, const char *filename, bool tombstones){
+static void listLoad(IList &list, const char *filename, bool tombstones){
 	const size_t BUFFER_SIZE = 1024;
 	static char buffer[BUFFER_SIZE];
 
@@ -157,22 +156,22 @@ static void listLoad(IList *list, const char *filename, bool tombstones){
 
 		const char *val = tombstones ? NULL : filename;
 
-		list->put(Pair::create(key, val));
+		list.put(Pair::create(key, val));
 
 		++i;
 
 		if (i % ( PROCESS_STEP ) == 0){
-			printf("Processed %10u records, %10zu bytes...\n", i, list->getSize() );
+			printf("Processed %10u records, %10zu bytes...\n", i, list.getSize() );
 		}
 	}
 
 	fclose(f);
 }
 
-static void listSearch(IROList *list, const char *key){
-	const Pair *pair = list->get(key);
+static void listSearch(IROList &list, const char *key){
+	OPair pair = list.get(key);
 
-	if (pair == NULL){
+	if (! pair){
 		printf("Key '%s' not found...\n", key);
 		return;
 	}

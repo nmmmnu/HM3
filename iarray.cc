@@ -10,9 +10,9 @@ int IArray::_lookupLinearSearch(const char *key, uint64_t *index) const{
 
 	uint64_t i;
 	for(i = 0; i < getCount(); ++i){
-		const Pair *data = getAt(i);
+		OPair data = getAt(i);
 
-		cmp = data->cmp(key);
+		cmp = data().cmp(key);
 
 		if (cmp == 0){
 			// found
@@ -47,9 +47,9 @@ int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
 	//	uint64_t mid = start + ((end - start) /  2);
 		uint64_t mid = start + ((end - start) >> 1);
 
-		const Pair *data = getAt(mid);
+		OPair data = getAt(mid);
 
-		cmp = data->cmp(key);
+		cmp = data().cmp(key);
 
 		if (cmp == 0){
 			// found
@@ -90,15 +90,15 @@ const Pair *IArray::next(){
 	if (_itPos >= getCount())
 		return NULL;
 
-	return getAt(_itPos++);
+	return getAt(_itPos++).ptr();
 }
 
 // ==============================
 
-const Pair *IArray::get(const char *key) const{
+OPair IArray::get(const char *key) const{
 	uint64_t index;
 	if (lookup(key, & index))
-		return NULL;
+		return OPair();
 
 	return getAt(index);
 }

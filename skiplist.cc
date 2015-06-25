@@ -140,13 +140,12 @@ bool SkipList::put(Pair *newdata){
 	return true;
 }
 
-const Pair *SkipList::get(const char *key) const{
+OPair SkipList::get(const char *key) const{
 	const SkipListNode *node = _locate(key);
 
-	if (node == NULL)
-		return NULL;
+	const Pair *pair = node ? node->data : nullptr;
 
-	return node->data;
+	return OPair(pair);
 }
 
 bool SkipList::remove(const char *key){

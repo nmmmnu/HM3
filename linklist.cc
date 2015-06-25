@@ -94,13 +94,12 @@ bool LinkList::put(Pair *newdata){
 	return true;
 }
 
-const Pair *LinkList::get(const char *key) const{
+OPair LinkList::get(const char *key) const{
 	const LinkListNode *node = _locate(key);
 
-	if (node == NULL)
-		return NULL;
+	const Pair *pair = node ? node->data : nullptr;
 
-	return node->data;
+	return OPair(pair);
 }
 
 bool LinkList::remove(const char *key){

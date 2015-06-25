@@ -1,6 +1,7 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
+#include "std/std_optional.h"
 #include "ichecksumcalculator.h"
 
 #include <string.h>	//strcmp
@@ -33,7 +34,9 @@ public:
 	inline int cmp(const char *key) const;
 	inline int cmp(const Pair *pair) const;
 
-	bool valid(const Pair *pair = NULL) const;
+	bool valid() const;
+	bool valid(const Pair &pair) const;
+	bool valid(const Pair *pair) const;
 
 	size_t getSize() const;
 
@@ -58,12 +61,19 @@ private:
 
 // ==============================
 
+class OPair : public std_optional<const Pair>{
+public:
+	OPair(const Pair *pair = nullptr) : std_optional(pair){};
+};
+
+// ==============================
+
 inline Pair *Pair::create(const char *key, const char *value, uint32_t expires){
 	return create(key, value, value ? strlen(value) : 0, expires);
 }
 
 inline Pair *Pair::create(const char *key, uint32_t expires){
-	return create(key, NULL, 0, expires);
+	return create(key, nullptr, 0, expires);
 }
 
 inline void Pair::setChecksumCalculator(IChecksumCalculator *checksumCalculator){
@@ -71,29 +81,14 @@ inline void Pair::setChecksumCalculator(IChecksumCalculator *checksumCalculator)
 }
 
 inline int Pair::cmp(const char *key) const{
-	return key == NULL ? -1 : strcmp(getKey(), key);
+	return key == nullptr ? -1 : strcmp(getKey(), key);
 }
 
 inline int Pair::cmp(const Pair *pair) const{
-	return pair == NULL ? -1 : cmp(pair->getKey());
+	return pair == nullptr ? -1 : cmp(pair->getKey());
 }
 
 // ==============================
 
-class OPair{
-public:
-	OPair(Pair *p) : _pair(p){};
-
-	inline explicit operator bool() const {
-		return _pair != NULL;
-	}
-
-	inline explicit operator Pair() const {
-		return *_pair;
-	}
-
-private:
-	const Pair *_pair = NULL;
-};
 
 #endif

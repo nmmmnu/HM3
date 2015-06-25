@@ -16,13 +16,13 @@ public:
 		return _datacount;
 	}
 
-	virtual const Pair *getAt(uint64_t index) const override;
+	virtual OPair getAt(uint64_t index) const override;
 
 	virtual size_t getSize() const override;
 
 public:
 	       static bool create(const char *filename, IIterator *it, uint64_t datacount);
-	inline static bool create(const char *filename, IROList *list);
+	inline static bool create(const char *filename, IROList &list);
 
 private:
 	const char	*_filename;
@@ -43,11 +43,8 @@ private:
 
 // ==============================
 
-inline bool DiskTable::create(const char *filename, IROList *list){
-	if (list == NULL)
-		return false;
-
-	return create(filename, list->getIterator(), list->getCount());
+inline bool DiskTable::create(const char *filename, IROList &list){
+	return create(filename, list.getIterator(), list.getCount());
 }
 
 #endif
