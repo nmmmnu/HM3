@@ -169,7 +169,7 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 }
 
 static void listSearch(IROList &list, const char *key){
-	OPair pair = list.get(key);
+	auto pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);

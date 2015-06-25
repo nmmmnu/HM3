@@ -23,7 +23,7 @@ public:
 		return _list.put(pair);
 	}
 
-	virtual const OPair get(const char *key) const override{
+	virtual std_optional<const Pair> get(const char *key) const override{
 		if (key == nullptr)
 			return nullptr;
 
@@ -46,11 +46,15 @@ public:
 	}
 
 public:
-	virtual bool rewind(const char *key = nullptr) override{
+	virtual bool rewind() override{
+		return _list.rewind();
+	}
+
+	virtual bool rewind(const char *key) override{
 		return _list.rewind(key);
 	}
 
-	virtual const OPair next() override{
+	virtual std_optional<const Pair> next() override{
 		return _list.next();
 	}
 

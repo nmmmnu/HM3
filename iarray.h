@@ -21,7 +21,8 @@ public:
 	inline void setLookupMethod(uint8_t lookupMethod);
 
 public:
-	virtual bool rewind(const char *key = NULL) override;
+	virtual bool rewind() override;
+	virtual bool rewind(const char *key) override;
 	virtual std_optional<const Pair> next() override;
 
 private:

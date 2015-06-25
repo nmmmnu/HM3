@@ -24,7 +24,8 @@ public:
 	virtual size_t getSize() const override;
 
 public:
-	virtual bool rewind(const char *key = NULL) override;
+	virtual bool rewind() override;
+	virtual bool rewind(const char *key) override;
 	virtual std_optional<const Pair> next() override;
 
 public:

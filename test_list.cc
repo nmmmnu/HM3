@@ -31,8 +31,6 @@ static size_t list_populate(IList &list){
 }
 
 static void list_test(IList &list){
-	OPair p;
-
 	size_t size = list_populate(list);
 
 	list.print();
@@ -43,7 +41,7 @@ static void list_test(IList &list){
 
 	// testing get
 
-	p = list.get("3 city");
+	auto p = list.get("3 city");
 	if (p)
 	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")	);
 

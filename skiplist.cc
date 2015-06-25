@@ -188,17 +188,19 @@ size_t SkipList::getSize() const{
 
 // ==============================
 
-bool SkipList::rewind(const char *key){
-	if (key){
-		_itHead = _locate(key);
-
-		return _itHead;
-	}
-
+bool SkipList::rewind(){
 	_itHead = _heads[0];
-
 	return true;
 }
+
+bool SkipList::rewind(const char *key){
+	if (!key)
+		return rewind();
+
+	_itHead = _locate(key);
+	return _itHead;
+}
+
 
 std_optional<const Pair> SkipList::next(){
 	if (_itHead == NULL)

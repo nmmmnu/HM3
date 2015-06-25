@@ -12,7 +12,8 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	virtual bool rewind(const char *key = NULL) = 0;
+	virtual bool rewind() = 0;
+	virtual bool rewind(const char *key) = 0;
 	virtual std_optional<const Pair> next() = 0;
 
 	inline std_optional<const Pair> first(const char *key = NULL);

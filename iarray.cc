@@ -72,17 +72,20 @@ int IArray::_lookupBinSearch(const char *key, uint64_t *index) const{
 
 // ==============================
 
-bool IArray::rewind(const char *key){
-	if (key){
-		uint64_t index;
-		if (lookup(key, & index))
-			return false;
-
-		_itPos = index;
-		return true;
-	}
-
+bool IArray::rewind(){
 	_itPos = 0;
+	return true;
+}
+
+bool IArray::rewind(const char *key){
+	if (!key)
+		return rewind();
+
+	uint64_t index;
+	if (lookup(key, & index))
+		return false;
+
+	_itPos = index;
 	return true;
 }
 
