@@ -13,9 +13,8 @@ constexpr size_t DiskTable::__sizeofHeader(){
 	return offsetof(DiskTableHeader, data);
 }
 
-DiskTable::DiskTable(const char *filename){
-	_filename = filename;
-}
+DiskTable::DiskTable(const char *filename) :
+	_filename(filename){}
 
 DiskTable::~DiskTable(){
 	close();

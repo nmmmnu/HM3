@@ -29,7 +29,8 @@ SkipList::SkipList(uint8_t height){
 
 	_height = height;
 	_heads = new SkipListNode*[height * 2];
-	_loc   = & _heads[height]; // C, but much faster
+	_loc   = new SkipListNode*[height * 2];
+	//_loc   = & _heads[height]; // C, but much faster
 
 	_clear();
 }
@@ -38,7 +39,7 @@ SkipList::~SkipList(){
 	removeAll();
 
 	delete[] _heads;
-	//delete[] _loc;
+	delete[] _loc;
 }
 
 void SkipList::removeAll(){
