@@ -2,9 +2,8 @@
 
 #include "defs.h"
 
-VectorList::VectorList(size_t reallocSize){
-	_reallocSize = reallocSize ? reallocSize : REALLOC_SIZE;
-
+VectorList::VectorList(size_t reallocSize) :
+	_reallocSize(reallocSize ? reallocSize : REALLOC_SIZE) {
 	_clear();
 }
 

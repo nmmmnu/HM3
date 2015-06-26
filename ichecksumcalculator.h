@@ -8,7 +8,7 @@ class IChecksumCalculator{
 public:
 	virtual ~IChecksumCalculator(){};
 
-	virtual uint8_t calcChecksum(const void *data2, size_t len) = 0;
+	virtual uint8_t calcChecksum(const void *data, size_t size) = 0;
 };
 
 #endif

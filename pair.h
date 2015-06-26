@@ -36,7 +36,6 @@ public:
 	inline int cmp(const Pair *pair) const;
 
 	bool valid() const;
-	bool valid(const Pair &pair) const;
 	bool valid(const Pair *pair) const;
 
 	size_t getSize() const;
@@ -46,7 +45,7 @@ public:
 	void print() const;
 
 private:
-	static constexpr size_t __sizeofPair();
+	static constexpr size_t __sizeofBase();
 	size_t _sizeofBuffer() const;
 
 	uint8_t _getChecksum() const;

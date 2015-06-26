@@ -18,7 +18,7 @@ Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t exp
 	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
 		return NULL;
 
-	size_t size = __sizeofPair() + keylen + 1 + vallen + 1;
+	size_t size = __sizeofBase() + keylen + 1 + vallen + 1;
 
 	Pair *p = (Pair *) xmalloc(size);
 
@@ -79,16 +79,12 @@ bool Pair::valid() const{
 	return true;
 }
 
-bool Pair::valid(const Pair &pair) const{
-	return valid();
-}
-
 bool Pair::valid(const Pair *pair) const{
 	return valid();
 }
 
 size_t Pair::getSize() const{
-	return __sizeofPair() + _sizeofBuffer();
+	return __sizeofBase() + _sizeofBuffer();
 }
 
 bool Pair::writeToFile(FILE *F) const{
@@ -119,7 +115,7 @@ size_t Pair::_sizeofBuffer() const{
 	return be16toh(keylen) + 1 + be32toh(vallen) + 1;
 }
 
-constexpr size_t Pair::__sizeofPair(){
+constexpr size_t Pair::__sizeofBase(){
 	return offsetof(Pair, buffer);
 }
 
