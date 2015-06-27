@@ -26,25 +26,22 @@ static std_auto_ptr<IList> factory(char what){
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::LINEAR_SEARCH);
-			return std_auto_ptr<IList>(vlist);
+			return vlist;
 		}
-		break;
 
 	case 'V':
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::BINARY_SEARCH);
-			return std_auto_ptr<IList>(vlist);
+			return vlist;
 		}
-		break;
 
 	case 'l':
-		return std_auto_ptr<IList>(new LinkList());
-		break;
+		return new LinkList();
 
 	default:
 	case 's':
-		return std_auto_ptr<IList>(new SkipList());
+		return new SkipList();
 	}
 }
 

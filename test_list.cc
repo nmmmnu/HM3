@@ -147,16 +147,16 @@ static void nullsafelist_test(NULLSafeList &list){
 }
 
 int main(int argc, char **argv){
-	auto vl = VectorList();
+	VectorList vl;
 	list_test(vl);
 
-	auto ll = VectorList();
+	LinkList ll;
 	list_test(ll);
 
-	auto sl = SkipList();
+	SkipList sl;
 	skiplist_test(sl, false);
 
-	auto nsl = NULLSafeList(sl);
+	NULLSafeList nsl = sl;
 	nullsafelist_test(nsl);
 
 	return 0;
