@@ -153,7 +153,7 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 
 		const char *val = tombstones ? NULL : filename;
 
-		list.put(Pair{key, val});
+		{ Pair p = {key, val}; list.put(p); }
 
 		++i;
 
