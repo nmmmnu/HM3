@@ -13,12 +13,14 @@ LIBS	= -lstdc++
 #-fpack-struct
 
 SRC	=	\
-		pair.cc					\
+		ipair.cc pair.cc			\
 		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
 		disktable.cc				\
 		nmea0183checksumcalculator.cc		\
 		mytime.cc
+
+
 
 OBJECTS	=	$(SRC:%.cc=%.o)
 

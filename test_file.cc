@@ -153,7 +153,7 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 
 		const char *val = tombstones ? NULL : filename;
 
-		list.put(Pair::create(key, val));
+		list.put(Pair{key, val});
 
 		++i;
 
@@ -166,14 +166,14 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 }
 
 static void listSearch(IROList &list, const char *key){
-	auto pair = list.get(key);
+	Pair pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);
 		return;
 	}
 
-	pair->print();
+	pair.print();
 }
 
 static char *trim(char *s){

@@ -7,11 +7,11 @@
 
 class IROList : virtual public IIterator, virtual public ICountable{
 public:
-	virtual std_optional<const Pair> get(const char *key) const = 0;
+	virtual const void *get(const char *key) const = 0;
 
 	virtual size_t getSize() const = 0;
 
-	inline std_optional<const Pair> operator[](const char *key) const;
+	inline const void *operator[](const char *key) const;
 
 	inline bool exists(const char *key) const;
 
@@ -20,7 +20,7 @@ public:
 
 // ==============================
 
-inline std_optional<const Pair> IROList::operator[](const char *key) const{
+inline const void *IROList::operator[](const char *key) const{
 	return get(key);
 }
 

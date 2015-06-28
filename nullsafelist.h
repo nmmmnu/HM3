@@ -5,10 +5,11 @@
 
 class NULLSafeList final : virtual public IList{
 public:
-	NULLSafeList(IList & list, bool deleteList = false) : _list(list), _deleteList(deleteList){}
+	NULLSafeList(IList & list, bool ownList = false) :
+		_list(list), _ownList(ownList){}
 
 	virtual ~NULLSafeList() override{
-		if (_deleteList)
+		if (_ownList)
 			delete &_list;
 	}
 
@@ -16,14 +17,11 @@ public:
 		_list.removeAll();
 	}
 
-	virtual bool put(Pair *pair) override{
-		if (pair == nullptr)
-			return false;
-
+	virtual bool put(IPair &pair) override{
 		return _list.put(pair);
 	}
 
-	virtual std_optional<const Pair> get(const char *key) const override{
+	virtual const void *get(const char *key) const override{
 		if (key == nullptr)
 			return nullptr;
 
@@ -54,13 +52,13 @@ public:
 		return _list.rewind(key);
 	}
 
-	virtual std_optional<const Pair> next() override{
+	virtual const void *next() override{
 		return _list.next();
 	}
 
 private:
 	IList	& _list;
-	bool	_deleteList;
+	bool	_ownList;
 
 };
 

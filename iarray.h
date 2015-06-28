@@ -9,12 +9,12 @@ public:
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual std_optional<const Pair> getAt(uint64_t index) const = 0;
+	virtual const void *getAt(uint64_t index) const = 0;
 
-	virtual std_optional<const Pair> get(const char *key) const override;
+	virtual const void *get(const char *key) const override;
 
 public:
-	inline std_optional<const Pair> operator[](uint64_t index) const;
+	inline const void *operator[](uint64_t index) const;
 
 	inline int lookup(const char *key, uint64_t &index) const;
 
@@ -23,7 +23,7 @@ public:
 public:
 	virtual bool rewind() override;
 	virtual bool rewind(const char *key) override;
-	virtual std_optional<const Pair> next() override;
+	virtual const void *next() override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
@@ -38,7 +38,7 @@ protected:
 
 // ==============================
 
-inline std_optional<const Pair> IArray::operator[](uint64_t index) const{
+inline const void *IArray::operator[](uint64_t index) const{
 	return getAt(index);
 }
 

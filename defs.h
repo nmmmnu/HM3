@@ -1,7 +1,8 @@
 #ifndef _DEFS_H
 #define _DEFS_H
 
-#include <stdlib.h>
+#include <stdlib.h>	// size_t
+#include <stdio.h>	// printf
 
 static inline void *xmalloc(size_t s){
 	return malloc(s);

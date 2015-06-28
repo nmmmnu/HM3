@@ -19,7 +19,7 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 */
 
 struct SkipListNode{
-	Pair		*data;		// system dependent
+	void		*data;		// system dependent
 	SkipListNode	*next[1];	// system dependent, dynamic, at least 1
 };
 
@@ -28,8 +28,8 @@ SkipList::SkipList(uint8_t height){
 		height = DEFAULT_HEIGHT;
 
 	_height = height;
-	_heads = new SkipListNode*[height * 2];
-	_loc   = new SkipListNode*[height * 2];
+	_heads = new SkipListNode*[height];
+	_loc   = new SkipListNode*[height];
 	//_loc   = & _heads[height]; // C, but much faster
 
 	_clear();
@@ -50,42 +50,43 @@ void SkipList::removeAll(){
 
 		node = node->next[0];
 
-		Pair::destroy(copy->data);
+		Pair data = copy->data;
+		data.destroy();
 		xfree(copy);
 	}
 
 	_clear();
 }
 
-bool SkipList::put(Pair *newdata){
+bool SkipList::put(IPair &newdata){
 	rewind();
 
-	const char *key = newdata->getKey();
+	const char *key = newdata.getKey();
 
 	SkipListNode *node = (SkipListNode *) _locate(key);
 
 	if (node){
 		// update in place. node MUST be not NULL...
 
-		Pair *olddata = node->data;
+		Pair olddata = node->data;
 
 		// check if the data in database is valid
-		if (! newdata->valid(olddata) ){
+		if (! newdata.valid2(olddata) ){
 			// prevent memory leak
-			Pair::destroy(newdata);
+			newdata.destroy();
 
 			return false;
 		}
 
 		// leave node, update only the data
-		node->data = newdata;
+		node->data = (void *) newdata.releaseBlob();
 
 		_dataSize = _dataSize
-			- olddata->getSize()
-			+ newdata->getSize();
+			- olddata.getSize()
+			+ newdata.getSize();
 
 		// release old data
-		Pair::destroy(olddata);
+		olddata.destroy();
 
 		return true;
 	}
@@ -100,14 +101,14 @@ bool SkipList::put(Pair *newdata){
 
 	if (newnode == NULL){
 		// prevent memory leak
-		Pair::destroy(newdata);
+		newdata.destroy();
 		return false;
 	}
 
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->height = height
 
-	newnode->data = newdata;
+	newnode->data = (void *) newdata.releaseBlob();
 
 	// place new node where it belongs
 
@@ -135,13 +136,13 @@ bool SkipList::put(Pair *newdata){
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->next[i] = NULL;
 
-	_dataSize += newdata->getSize();
+	_dataSize += newdata.getSize();
 	_dataCount++;
 
 	return true;
 }
 
-std_optional<const Pair> SkipList::get(const char *key) const{
+const void *SkipList::get(const char *key) const{
 	const SkipListNode *node = _locate(key);
 
 	return node ? node->data : nullptr;
@@ -170,10 +171,12 @@ bool SkipList::remove(const char *key){
 		}
 	}
 
-	_dataSize -= node->data->getSize();
+	Pair data = node->data;
+
+	_dataSize -= data.getSize();
 	_dataCount--;
 
-	Pair::destroy(node->data);
+	data.destroy();
 	xfree((void *) node);
 
 	return true;
@@ -203,7 +206,7 @@ bool SkipList::rewind(const char *key){
 }
 
 
-std_optional<const Pair> SkipList::next(){
+const void *SkipList::next(){
 	if (_itHead == NULL)
 		return NULL;
 
@@ -227,7 +230,8 @@ void SkipList::printLane(uint8_t lane) const{
 	uint64_t i = 0;
 	const SkipListNode *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
-		node->data->print();
+		Pair data = node->data;
+		data.print();
 
 		if (i++ > 10)
 			break;
@@ -268,7 +272,8 @@ const SkipListNode *SkipList::_locate(const char *key, bool complete_evaluation)
 		node = prev ? prev : _heads[height - 1];
 
 		while(node){
-			cmp = node->data->cmp(key);
+			Pair data = node->data;
+			cmp = data.cmp(key);
 
 			if (cmp >= 0)
 				break;

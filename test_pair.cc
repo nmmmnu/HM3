@@ -25,15 +25,16 @@ static void pair_test_raw(){
 		'P', 'e', 't', 'e', 'r', '\0'			// val
 	};
 
-	Pair *p = (Pair *) raw_memory;
+	Pair p = raw_memory;
 
-	PRINTF_TEST("raw key",		strcmp(p->getKey(), key) == 0		);
-	PRINTF_TEST("raw val",		strcmp(p->getVal(), val) == 0		);
+	p.print();
 
-	PRINTF_TEST("raw cmp",		p->cmp(key) == 0			);
-	PRINTF_TEST("raw cmp",		p->cmp("~~~ non existent") < 0		);
-	PRINTF_TEST("raw cmp",		p->cmp("!!! non existent") > 0		);
+	PRINTF_TEST("raw key",		strcmp(p.getKey(), key) == 0	);
+	PRINTF_TEST("raw val",		strcmp(p.getVal(), val) == 0	);
 
+	PRINTF_TEST("raw cmp",		p.cmp(key) == 0			);
+	PRINTF_TEST("raw cmp",		p.cmp("~~~ non existent") < 0	);
+	PRINTF_TEST("raw cmp",		p.cmp("!!! non existent") > 0	);
 }
 
 static void pair_test(){
@@ -43,65 +44,55 @@ static void pair_test(){
 	NMEA0183ChecksumCalculator cs = NMEA0183ChecksumCalculator();
 	Pair::setChecksumCalculator(cs);
 
-	Pair *p = Pair::create(key, val);
+	Pair p = {key, val};
+	Pair t = {key, nullptr};
 
-	Pair *t = Pair::create(key);
+	PRINTF_TEST("tombstone",	t.getVal() == NULL		);
 
-	PRINTF_TEST("tombstone",	t->getVal() == NULL			);
+	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
+	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
 
-	PRINTF_TEST("key",		strcmp(p->getKey(), key) == 0		);
-	PRINTF_TEST("val",		strcmp(p->getVal(), val) == 0		);
+	PRINTF_TEST("cmp",		p.cmp(key) == 0			);
+	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
+	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 
-	PRINTF_TEST("cmp",		p->cmp(key) == 0			);
-	PRINTF_TEST("cmp",		p->cmp("~~~ non existent") < 0		);
-	PRINTF_TEST("cmp",		p->cmp("!!! non existent") > 0		);
+	PRINTF_TEST("cmp2",		p.cmp2(t) == 0			);
 
-	PRINTF_TEST("cmp class",	p->cmp(t) == 0				);
+	PRINTF_TEST("cmp null",		p.cmp((char *) nullptr)		);
 
-	PRINTF_TEST("cmp null",		p->cmp((char *)NULL)			);
-	PRINTF_TEST("cmp null",		p->cmp((Pair *)NULL)			);
-
-	// these always pass
-	PRINTF_TEST("valid",		p->valid()				);
-
+	PRINTF_TEST("valid",		p.valid()			);
+	PRINTF_TEST("valid2",		p.valid2(t)			);
 
 	{
-
-	char *corruptor = (char *)p->getKey();
+	char *corruptor = (char *)p.getKey();
 	corruptor[0] = ~ corruptor[0];
 
-	PRINTF_TEST("valid corrupted",	! p->valid()				);
+	PRINTF_TEST("valid corrupted",	! p.valid()			);
 
 	Pair::removeChecksumCalculator();
-	PRINTF_TEST("valid null",	p->valid()				);
+	PRINTF_TEST("valid null",	p.valid()			);
 
 	corruptor[0] = ~ corruptor[0];
 	}
 
-
-	p->print();
-	t->print();
-
-	Pair::destroy(p);
-	Pair::destroy(t);
+	p.print();
+	t.print();
 }
 
 __attribute__ ((unused))
 static void pair_test_delay(){
-	Pair *p = Pair::create("test", 1);
+	Pair p = { "key", "val", 1 };
 
-	PRINTF_TEST("not expired",	p->valid()				);
+	PRINTF_TEST("not expired",	p.valid()			);
 	printf("sleep for 1 sec...\n");
 	sleep(2);
-	PRINTF_TEST("expired",		! p->valid()				);
-
-	Pair::destroy(p);
+	PRINTF_TEST("expired",		! p.valid()			);
 }
 
 int main(int argc, char **argv){
 	pair_test_raw();
 	pair_test();
-	pair_test_delay();
+//	pair_test_delay();
 
 	return 0;
 }

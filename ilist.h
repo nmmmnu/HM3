@@ -8,7 +8,7 @@ class IList : virtual public IROList{
 public:
 	virtual void removeAll() = 0;
 
-	virtual bool put(Pair *pair) = 0;
+	virtual bool put(IPair &pair) = 0;
 	virtual bool remove(const char *key) = 0;
 };
 

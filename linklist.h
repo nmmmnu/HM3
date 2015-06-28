@@ -12,8 +12,8 @@ public:
 
 	virtual void removeAll() override;
 
-	virtual bool put(Pair *pair) override;
-	virtual std_optional<const Pair> get(const char *key) const override;
+	virtual bool put(IPair &pair) override;
+	virtual const void *get(const char *key) const override;
 	virtual bool remove(const char *key) override;
 
 	virtual uint64_t getCount() const override;
@@ -22,7 +22,7 @@ public:
 public:
 	virtual bool rewind() override;
 	virtual bool rewind(const char *key) override;
-	virtual std_optional<const Pair> next() override;
+	virtual const void *next() override;
 
 private:
 	LinkListNode		*_head;

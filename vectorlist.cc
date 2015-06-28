@@ -14,21 +14,18 @@ VectorList::~VectorList(){
 void VectorList::removeAll(){
 	rewind();
 
-	uint64_t i;
-	for(i = 0; i < _dataCount; ++i){
-		Pair *data = _buffer[i];
-
-		if (data)
-			Pair::destroy(data);
+	for(uint64_t i = 0; i < _dataCount; ++i){
+		Pair data = _buffer[i];
+		data.destroy();
 	}
 
 	_clear(true);
 }
 
-bool VectorList::put(Pair *newdata){
+bool VectorList::put(IPair &newdata){
 	rewind();
 
-	const char *key = newdata->getKey();
+	const char *key = newdata.getKey();
 
 	uint64_t index;
 	int cmp = lookup(key, index);
@@ -36,44 +33,40 @@ bool VectorList::put(Pair *newdata){
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
 
-		Pair *olddata = _buffer[index];
+		Pair olddata = _buffer[index];
 
 		// check if the data in database is valid
-		if (! newdata->valid(olddata) ){
+		if (! newdata.valid2(olddata) ){
 			// prevent memory leak
-			Pair::destroy(newdata);
+			newdata.destroy();
 
 			return false;
 		}
 
 		_dataSize = _dataSize
-					- olddata->getSize()
-					+ newdata->getSize();
+					- olddata.getSize()
+					+ newdata.getSize();
 
-		Pair::destroy(olddata);
+		olddata.destroy();
 
-		_buffer[index] = newdata;
+		_buffer[index] = (void *) newdata.releaseBlob();
 
 		return true;
 	}
 
+	// key not exists, shift, then add
 	if ( ! _shiftR(index) ){
 		// prevent memory leak
-		Pair::destroy(newdata);
+		newdata.destroy();
 		return false;
 	}
 
-	_dataSize += newdata->getSize();
+	_dataSize += newdata.getSize();
 
-	_buffer[index] = newdata;
+	_buffer[index] = (void *) newdata.releaseBlob();
 
 	return true;
 }
-
-std_optional<const Pair> VectorList::getAt(uint64_t index) const{
-	return index < _dataCount ? _buffer[index] : nullptr;
-}
-
 
 bool VectorList::remove(const char *key){
 	rewind();
@@ -85,14 +78,18 @@ bool VectorList::remove(const char *key){
 	}
 
 	// proceed with remove
-	Pair *data = _buffer[index];
-	_dataSize -= data->getSize();
+	Pair data = _buffer[index];
+	_dataSize -= data.getSize();
 
-	Pair::destroy(data);
+	data.destroy();
 
 	_shiftL(index);
 
 	return true;
+}
+
+const void *VectorList::getAt(uint64_t index) const{
+	return index < _dataCount ? _buffer[index] : nullptr;
 }
 
 uint64_t VectorList::getCount() const{
@@ -112,7 +109,7 @@ void VectorList::_clear(bool alsoFree){
 	_dataCount = 0;
 	_dataSize = 0;
 	_bufferSize = 0;
-	_buffer = NULL;
+	_buffer = nullptr;
 
 	rewind();
 }
@@ -167,7 +164,7 @@ bool VectorList::_resize(int delta){
 
 	_dataCount		= new_dataCount;
 	_bufferSize	= new_bufferSize;
-	_buffer		= (Pair**) new_buffer;
+	_buffer		= (void **) new_buffer;
 
 	return true;
 }

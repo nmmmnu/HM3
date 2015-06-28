@@ -14,16 +14,18 @@ public:
 
 	virtual bool rewind() = 0;
 	virtual bool rewind(const char *key) = 0;
-	virtual std_optional<const Pair> next() = 0;
+	virtual const void *next() = 0;
 
-	inline std_optional<const Pair> first(const char *key = NULL);
+	inline const void *first(const char *key = nullptr);
 
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 };
 
-inline std_optional<const Pair> IIterator::first(const char *key){
-	return rewind(key) ? next() : NULL;
+// ==============================
+
+inline const void *IIterator::first(const char *key){
+	return rewind(key) ? next() : nullptr;
 }
 
 #endif

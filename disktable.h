@@ -14,9 +14,9 @@ public:
 
 	virtual uint64_t getCount() const override{
 		return _datacount;
-	}
+	};
 
-	virtual std_optional<const Pair> getAt(uint64_t index) const override;
+	virtual const void *getAt(uint64_t index) const override;
 
 	virtual size_t getSize() const override;
 
