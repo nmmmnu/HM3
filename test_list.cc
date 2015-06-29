@@ -12,9 +12,9 @@
 	printf("%-15s Testing %-20s %s\n", MODULE_NAME, test, result ? "OK" : "Fail")
 
 
-inline static size_t list_add(IList &list, IPair &p){
+inline static size_t list_add(IList &list, const Pair *p){
 	list.put(p);
-	return p.getSize();
+	return p->getSize();
 }
 
 static size_t list_populate(IList &list){
@@ -22,10 +22,10 @@ static size_t list_populate(IList &list){
 
 	size_t size = 0;
 
-	{ Pair p = {"3 city",	"Sofia"	}; size += list_add(list, p); }
-	{ Pair p = {"1 name",	"Niki"	}; size += list_add(list, p); }
-	{ Pair p = {"4 os",	"Linux"	}; size += list_add(list, p); }
-	{ Pair p = {"2 age",	"22"	}; size += list_add(list, p); }
+	size += list_add(list, Pair::create("3 city",	"Sofia"	));
+	size += list_add(list, Pair::create("1 name",	"Niki"	));
+	size += list_add(list, Pair::create("4 os",	"Linux"	));
+	size += list_add(list, Pair::create("2 age",	"22"	));
 
 	return size;
 }
@@ -41,13 +41,13 @@ static void list_test(IList &list){
 
 	// testing get
 
-	Pair p = list.get("3 city");
-	if (p)
-	PRINTF_TEST("get",		! strcmp(p.getVal(), "Sofia")	);
+	const Pair *p = list.get("3 city");
+
+	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")	);
 
 	p = list["3 city"];
-	if (p)
-	PRINTF_TEST("get",		! strcmp(p.getVal(), "Sofia")	);
+
+	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")	);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -57,14 +57,11 @@ static void list_test(IList &list){
 	const char *key_overwr = "2 val";
 	const char *val_overwr = "overwritten";
 
-	Pair pp1{key_overwr, "original"};
-	list.put( pp1	);
-	Pair pp2{key_overwr, val_overwr};
-	list.put( pp2	);
+	list.put( Pair::create(key_overwr, "original") );
+	list.put( Pair::create(key_overwr, val_overwr));
 	p = list.get(key_overwr);
 
-	if (p)
-	PRINTF_TEST("overwrite",	! strcmp(p.getVal(), val_overwr)	);
+	PRINTF_TEST("overwrite",	! strcmp(p->getVal(), val_overwr)	);
 
 	// testing remove
 	list_populate(list);
@@ -83,17 +80,15 @@ static void list_test(IList &list){
 
 	p = list.get("3 city");
 
-	if (p)
-	PRINTF_TEST("remove",		! strcmp(p.getVal(), "Sofia")		);
+	PRINTF_TEST("remove",		! strcmp(p->getVal(), "Sofia")		);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
-	if (p)
-	PRINTF_TEST("remove sizeof",	list.getSize() == p.getSize()		);
+	PRINTF_TEST("remove sizeof",	list.getSize() == p->getSize()		);
 
 	// overwrite sizeof test
-	Pair sopair = {"3 city", nullptr};
+	const Pair *sopair = Pair::create("3 city", nullptr);
 	list.put(sopair);
 	PRINTF_TEST("overwrite count",	list.getCount() == 1			);
-	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair.getSize()	);
+	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair->getSize()	);
 
 	// remove last
 	list.remove("3 city");
@@ -111,24 +106,23 @@ static void list_test(IList &list){
 	PRINTF_TEST("iterator rewind",	! list.rewind("bla")			);
 	PRINTF_TEST("iterator rewind",	list.rewind("2 age")			);
 	p = list.next();
-	PRINTF_TEST("iterator next",	strcmp(p.getVal(), "22") == 0	);
+	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "22") == 0	);
 	p = list.next();
-	PRINTF_TEST("iterator next",	strcmp(p.getVal(), "Sofia") == 0	);
+	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "Sofia") == 0	);
 }
 
 static void skiplist_lanes_test(SkipList &list){
-	{ Pair p = {"name",		"Niki"		}; list.put(p); }
-	{ Pair p = {"city",		"Sofia"		}; list.put(p); }
-	{ Pair p = {"state",		"na"		}; list.put(p); }
-	{ Pair p = {"zip",		"1000"		}; list.put(p); }
-	{ Pair p = {"country",		"BG"		}; list.put(p); }
-	{ Pair p = {"phone",		"+358 888 1000"	}; list.put(p); }
-	{ Pair p = {"fax",		"+358 888 2000"	}; list.put(p); }
-	{ Pair p = {"email",		"user@aol.com"	}; list.put(p); }
-
-	{ Pair p = {"laptop",		"Dell"		}; list.put(p); }
-	{ Pair p = {"os",		"Archlinux"	}; list.put(p); }
-	{ Pair p = {"mouse",		"Logitech"	}; list.put(p); }
+	list.put(Pair::create("name",		"Niki"		));
+	list.put(Pair::create("city",		"Sofia"		));
+	list.put(Pair::create("state",		"na"		));
+	list.put(Pair::create("zip",		"1000"		));
+	list.put(Pair::create("country",	"BG"		));
+	list.put(Pair::create("phone",		"+358 888 1000"	));
+	list.put(Pair::create("fax",		"+358 888 2000"	));
+	list.put(Pair::create("email",		"user@aol.com"	));
+	list.put(Pair::create("laptop",		"Dell"		));
+	list.put(Pair::create("os",		"Archlinux"	));
+	list.put(Pair::create("mouse",		"Logitech"	));
 
 	list.printLanes();
 

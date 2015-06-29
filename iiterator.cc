@@ -3,7 +3,7 @@
 uint64_t IIterator::iteratorCount(){
 	uint64_t count = 0;
 
-	for(const void *p = first(); p; p = next())
+	for(auto p = first(); p; p = next())
 		++count;
 
 	return count;
@@ -12,8 +12,8 @@ uint64_t IIterator::iteratorCount(){
 void IIterator::print(uint64_t limit){
 	uint64_t count = 0;
 
-	for(Pair p = first(); p; p = next()){
-		p.print();
+	for(auto p = first(); p; p = next()){
+		p->print();
 
 		if (++count >= limit)
 			break;

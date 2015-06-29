@@ -14,9 +14,9 @@ public:
 
 	virtual bool rewind() = 0;
 	virtual bool rewind(const char *key) = 0;
-	virtual const void *next() = 0;
+	virtual const Pair *next() = 0;
 
-	inline const void *first(const char *key = nullptr);
+	inline const Pair *first(const char *key = nullptr);
 
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
@@ -24,7 +24,7 @@ public:
 
 // ==============================
 
-inline const void *IIterator::first(const char *key){
+inline const Pair *IIterator::first(const char *key){
 	return rewind(key) ? next() : nullptr;
 }
 

@@ -4,7 +4,7 @@
 
 struct LinkListNode{
 	LinkListNode	*next;	// system dependent
-	void		*data;	// system dependent
+	const Pair	*data;	// system dependent
 };
 
 LinkList::LinkList(){
@@ -16,51 +16,48 @@ LinkList::~LinkList(){
 }
 
 void LinkList::removeAll(){
-	LinkListNode *copy;
-	LinkListNode *node;
-	for(node = _head; node; ){
-		copy = node;
+	for(LinkListNode *node = _head; node; ){
+		LinkListNode *copy = node;
 
 		node = node->next;
 
-		Pair data = copy->data;
-		data.destroy();
+		const Pair *data = copy->data;
+		Pair::destroy(data);
 		xfree(copy);
 	}
 
 	_clear();
 }
 
-bool LinkList::put(IPair &newdata){
+bool LinkList::put(const Pair *newdata){
 	rewind();
 
-	const char *key = newdata.getKey();
+	const char *key = newdata->getKey();
 
 	LinkListNode *prev = NULL;
-	LinkListNode *node;
-	for(node = _head; node; node = node->next){
-		Pair olddata = node->data;
+	for(LinkListNode *node = _head; node; node = node->next){
+		const Pair *olddata = node->data;
 
-		const int cmp = olddata.cmp(key);
+		const int cmp = olddata->cmp(key);
 
 		if (cmp == 0){
 			// handle overwrite,
 			// keep the node, overwrite the data
 
 			// check if the data in database is valid
-			if (! newdata.valid2(olddata)){
+			if (! newdata->valid2(olddata)){
 				// prevent memory leak
-				newdata.destroy();
+				Pair::destroy(newdata);
 
 				return false;
 			}
 
 			_dataSize = _dataSize
-					- olddata.getSize()
-					+ newdata.getSize();
+					- olddata->getSize()
+					+ newdata->getSize();
 
-			olddata.destroy();
-			node->data = (void *) newdata.releaseBlob();
+			Pair::destroy(olddata);
+			node->data = newdata;
 
 			return true;
 		}
@@ -74,12 +71,12 @@ bool LinkList::put(IPair &newdata){
 	LinkListNode *newnode = (LinkListNode *)xmalloc(sizeof(LinkListNode));
 	if (newnode == NULL){
 		// prevent memory leak
-		newdata.destroy();
+		Pair::destroy(newdata);
 
 		return false;
 	}
 
-	newnode->data = (void *) newdata.releaseBlob();
+	newnode->data = newdata;
 
 	// put new pair here...
 	if (prev){
@@ -91,13 +88,13 @@ bool LinkList::put(IPair &newdata){
 		_head = newnode;
 	}
 
-	_dataSize += newdata.getSize();
+	_dataSize += newdata->getSize();
 	_dataCount++;
 
 	return true;
 }
 
-const void *LinkList::get(const char *key) const{
+const Pair *LinkList::get(const char *key) const{
 	const LinkListNode *node = _locate(key);
 
 	return node ? node->data : nullptr;
@@ -109,8 +106,8 @@ bool LinkList::remove(const char *key){
 	LinkListNode *prev = NULL;
 	LinkListNode *node;
 	for(node = _head; node; node = node->next){
-		Pair data = node->data;
-		const int cmp = data.cmp(key);
+		const Pair *data = node->data;
+		const int cmp = data->cmp(key);
 
 		if (cmp == 0){
 			if (prev){
@@ -120,10 +117,10 @@ bool LinkList::remove(const char *key){
 				_head = node->next;
 			}
 
-			_dataSize -= data.getSize();
+			_dataSize -= data->getSize();
 			_dataCount--;
 
-			data.destroy();
+			Pair::destroy(data);
 			xfree(node);
 
 			return true;
@@ -161,7 +158,7 @@ bool LinkList::rewind(const char *key){
 	return _itHead;
 }
 
-const void *LinkList::next(){
+const Pair *LinkList::next(){
 	if (_itHead == NULL)
 		return NULL;
 
@@ -182,11 +179,10 @@ void LinkList::_clear(){
 }
 
 LinkListNode *LinkList::_locate(const char *key) const{
-	LinkListNode *node;
-	for(node = _head; node; node = node->next){
-		Pair data = node->data;
+	for(LinkListNode *node = _head; node; node = node->next){
+		const Pair *data = node->data;
 
-		const int cmp = data.cmp(key);
+		const int cmp = data->cmp(key);
 
 		if (cmp == 0)
 			return node;

@@ -9,9 +9,9 @@ public:
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual const void *getAt(uint64_t index) const = 0;
+	virtual const Pair *getAt(uint64_t index) const = 0;
 
-	virtual const void *get(const char *key) const override;
+	virtual const Pair *get(const char *key) const override;
 
 public:
 	inline const void *operator[](uint64_t index) const;
@@ -23,7 +23,7 @@ public:
 public:
 	virtual bool rewind() override;
 	virtual bool rewind(const char *key) override;
-	virtual const void *next() override;
+	virtual const Pair *next() override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

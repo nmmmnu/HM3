@@ -46,28 +46,28 @@ static std_auto_ptr<IList> factory(char what){
 }
 
 static int op_search(IList &list, const char *filename, const char *key){
-	printf("Load start..\n");
+	printf("Load start...\n");
 	listLoad(list, filename);
-	printf("Load done..\n");
+	printf("Load done...\n");
 	getchar();
 
-	printf("Search start..\n");
+	printf("Search start...\n");
 	listSearch(list, key);
-	printf("Search done..\n");
+	printf("Search done...\n");
 	getchar();
 
 	return 0;
 }
 
 static int op_write(IList &list, const char *filename, const char *filename2){
-	printf("Load start..\n");
+	printf("Load start...\n");
 	listLoad(list, filename);
-	printf("Load done..\n");
+	printf("Load done...\n");
 	getchar();
 
-	printf("Search start..\n");
+	printf("Write start...\n");
 	DiskTable::create(filename2, list);
-	printf("Search done..\n");
+	printf("Write done...\n");
 	getchar();
 
 	return 0;
@@ -76,14 +76,14 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 static int op_filesearch(const char *filename, const char *key){
 	DiskTable list = DiskTable(filename);
 
-	printf("Open start..\n");
+	printf("Open start...\n");
 	list.open();
-	printf("Open done..\n");
+	printf("Open done...\n");
 	getchar();
 
-	printf("Search start..\n");
+	printf("File search start...\n");
 	listSearch(list, key);
-	printf("Search done..\n");
+	printf("File search done...\n");
 	getchar();
 
 	return 0;
@@ -151,9 +151,9 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 	while( (key = fgets(buffer, BUFFER_SIZE, f)) ){
 		trim(key);
 
-		const char *val = tombstones ? NULL : filename;
+		const char *val = tombstones ? nullptr : filename;
 
-		{ Pair p = {key, val}; list.put(p); }
+		list.put(Pair::create(key, val));
 
 		++i;
 
@@ -166,14 +166,14 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 }
 
 static void listSearch(IROList &list, const char *key){
-	Pair pair = list.get(key);
+	const Pair *pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);
 		return;
 	}
 
-	pair.print();
+	pair->print();
 }
 
 static char *trim(char *s){

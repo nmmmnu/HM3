@@ -1,42 +1,29 @@
 #include "pair.h"
 #include "mytime.h"
 
-#include <new>		// new (std::nothrow)
+#include "defs.h"
 
 #include <endian.h>	// htobe16
 #include <stddef.h>	// offsetof
 
-#include "defs.h"
+// ==============================
+
+std_optional<IChecksumCalculator> Pair::_checksumCalculator = nullptr;
 
 // ==============================
 
-struct PairBlob{
-	uint64_t	created;	// 8
-	uint32_t	expires;	// 4, 136 years, not that bad.
-	uint32_t	vallen;		// 4
-	uint16_t	keylen;		// 2
-	uint8_t		checksum;	// 1
-	char		buffer[2];	// dynamic, at least 2
-} __attribute__((__packed__));
-
-// ==============================
-
-std_optional<IChecksumCalculator> Pair::_checksumCalculator = NULL;
-
-// ==============================
-
-const void *Pair::__createBuffer(const char *key, const void *val, size_t vallen, uint32_t expires){
+Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t expires){
 	size_t keylen = strlen(key);
 
 	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
-		return nullptr;
+		return NULL;
 
-	size_t sizeBuffer = keylen + 1 + vallen + 1;
+	size_t size = __sizeofBase() + keylen + 1 + vallen + 1;
 
-	PairBlob *p = (PairBlob*) new (std::nothrow) char[__sizeofBase() + sizeBuffer];
+	Pair *p = (Pair *) xmalloc(size);
 
-	if (p == nullptr)
-		return nullptr;
+	if (p == NULL)
+		return NULL;
 
 	p->created	= htobe64(MyTime::now());
 	p->expires	= htobe32(expires);
@@ -51,39 +38,40 @@ const void *Pair::__createBuffer(const char *key, const void *val, size_t vallen
 	memcpy(& p->buffer[keylen + 1], val, vallen);
 	p->buffer[keylen + 1 + vallen] = '\0';
 
-	p->checksum = __getChecksum(p->buffer, sizeBuffer);
+	p->checksum = p->_getChecksum();
 
+	// p must be valid POD class
 	return p;
+}
+
+void Pair::destroy(const Pair *pair){
+	xfree((void *) pair);
 }
 
 // ==============================
 
 const char *Pair::getKey() const{
-	return & _getBlob()->buffer[0];
+	return & buffer[0];
 }
 
 const char *Pair::getVal() const{
 	// vallen is 0 no matter of endianness
-	if (_getBlob()->vallen == 0)
-		return nullptr;
+	if (vallen == 0)
+		return NULL;
 
-	return & _getBlob()->buffer[ be16toh(_getBlob()->keylen) + 1 ];
-}
-
-int Pair::cmp(const char *key) const{
-	return key == nullptr ? -1 : strcmp(getKey(), key);
+	return & buffer[ be16toh(keylen) + 1 ];
 }
 
 bool Pair::valid() const{
 	// now expires is 0 no matter of endianness
-	if (_getBlob()->expires){
-		if ( MyTime::expired( be64toh(_getBlob()->created), be32toh(_getBlob()->expires) ) )
+	if (expires){
+		if ( MyTime::expired( be64toh(created), be32toh(expires) ) )
 			return false;
 	}
 
 	// now check checksum
 	if (_checksumCalculator){
-		if (_getBlob()->checksum != __getChecksum(_getBlob()->buffer, _sizeofBuffer()))
+		if (checksum != _getChecksum())
 			return false;
 	}
 
@@ -96,28 +84,41 @@ size_t Pair::getSize() const{
 }
 
 void Pair::print() const{
-	static const char *format = "%-10s | %-20s | %-*s | %8u\n";
+	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
 
 	printf(format,
 		getKey(), getVal(),
-		MyTime::STRING_SIZE, MyTime::toString(be64toh(_getBlob()->created)),
-		be32toh(_getBlob()->expires)
+		MyTime::STRING_SIZE, MyTime::toString(be64toh(created)),
+		be32toh(expires)
 	);
 }
 
 // ==============================
 
-size_t Pair::_sizeofBuffer() const{
-	return be16toh(_getBlob()->keylen) + 1 + be32toh(_getBlob()->vallen) + 1;
+uint8_t Pair::_getChecksum() const{
+	if (! _checksumCalculator)
+		return 0;
+
+	return _checksumCalculator.value().calcChecksum(buffer, _sizeofBuffer());
 }
 
 constexpr size_t Pair::__sizeofBase(){
-	return offsetof(PairBlob, buffer);
+	return offsetof(Pair, buffer);
 }
 
-uint8_t Pair::__getChecksum(const void *buffer, size_t size){
-	return _checksumCalculator ?_checksumCalculator.value().calcChecksum(buffer, size) : 0;
+size_t Pair::_sizeofBuffer() const{
+	return be16toh(keylen) + 1 + be32toh(vallen) + 1;
 }
 
 // ==============================
+
+#if 0
+bool Pair::saveToFile(FILE *F) const{
+	size_t size = getSize();
+
+	size_t res = fwrite(this, size, 1, F);
+
+	return res < size;
+}
+#endif
 

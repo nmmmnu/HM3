@@ -4,6 +4,8 @@
 #include "iarray.h"
 #include "irolist.h"
 
+#include <stdio.h>	// FILE
+
 class DiskTable : virtual public IArray{
 public:
 	DiskTable(const char *filename);
@@ -16,7 +18,7 @@ public:
 		return _datacount;
 	};
 
-	virtual const void *getAt(uint64_t index) const override;
+	virtual const Pair *getAt(uint64_t index) const override;
 
 	virtual size_t getSize() const override;
 

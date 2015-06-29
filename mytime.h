@@ -7,7 +7,7 @@
 
 class MyTime{
 public:
-	constexpr static const size_t STRING_SIZE		= 19; //strlen("1980-01-01 00:00:00");
+	constexpr static const size_t STRING_SIZE		= 20;	// strlen("1980-01-01 00:00:00");
 
 	constexpr static const char *DATA_FORMAT_STANDARD	= "%Y-%m-%d %H:%M:%S";
 	constexpr static const char *DATA_FORMAT_NUMBER		= "%Y%m%d.%H%M%S";

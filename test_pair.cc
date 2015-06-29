@@ -25,7 +25,8 @@ static void pair_test_raw(){
 		'P', 'e', 't', 'e', 'r', '\0'			// val
 	};
 
-	Pair p = raw_memory;
+	Pair *p2 = (Pair *)raw_memory;
+	Pair &p = *p2;
 
 	p.print();
 
@@ -44,8 +45,11 @@ static void pair_test(){
 	NMEA0183ChecksumCalculator cs = NMEA0183ChecksumCalculator();
 	Pair::setChecksumCalculator(cs);
 
-	Pair p = {key, val};
-	Pair t = {key, nullptr};
+	Pair *p2 = Pair::create(key, val);
+	Pair *t2 = Pair::create(key, nullptr);
+
+	Pair &p = *p2;
+	Pair &t = *t2;
 
 	PRINTF_TEST("tombstone",	t.getVal() == NULL		);
 
@@ -61,7 +65,7 @@ static void pair_test(){
 	PRINTF_TEST("cmp null",		p.cmp((char *) nullptr)		);
 
 	PRINTF_TEST("valid",		p.valid()			);
-	PRINTF_TEST("valid2",		p.valid2(t)			);
+	PRINTF_TEST("valid2",		p.valid2(&t)			);
 
 	{
 	char *corruptor = (char *)p.getKey();
@@ -81,7 +85,8 @@ static void pair_test(){
 
 __attribute__ ((unused))
 static void pair_test_delay(){
-	Pair p = { "key", "val", 1 };
+	Pair *p2 = Pair::create("key", "val", 1);
+	Pair &p = *p2;
 
 	PRINTF_TEST("not expired",	p.valid()			);
 	printf("sleep for 1 sec...\n");
@@ -92,7 +97,7 @@ static void pair_test_delay(){
 int main(int argc, char **argv){
 	pair_test_raw();
 	pair_test();
-//	pair_test_delay();
+	pair_test_delay();
 
 	return 0;
 }

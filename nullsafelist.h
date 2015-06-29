@@ -17,11 +17,11 @@ public:
 		_list.removeAll();
 	}
 
-	virtual bool put(IPair &pair) override{
+	virtual bool put(const Pair *pair) override{
 		return _list.put(pair);
 	}
 
-	virtual const void *get(const char *key) const override{
+	virtual const Pair *get(const char *key) const override{
 		if (key == nullptr)
 			return nullptr;
 
@@ -52,7 +52,7 @@ public:
 		return _list.rewind(key);
 	}
 
-	virtual const void *next() override{
+	virtual const Pair *next() override{
 		return _list.next();
 	}
 

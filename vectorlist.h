@@ -15,10 +15,10 @@ public:
 
 	virtual void removeAll() override;
 
-	virtual bool put(IPair &data) override;
+	virtual bool put(const Pair *data) override;
 	virtual bool remove(const char *key) override;
 
-	virtual const void *getAt(uint64_t index) const override;
+	virtual const Pair *getAt(uint64_t index) const override;
 
 	virtual uint64_t getCount() const override;
 	virtual size_t getSize() const override;
@@ -26,7 +26,7 @@ public:
 private:
 	size_t		_reallocSize;
 
-	void		**_buffer;
+	const Pair	**_buffer;
 	size_t		_bufferSize;
 
 	uint64_t	_dataCount;
