@@ -16,8 +16,8 @@ public:
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
 public:
-	static Pair *create(const char *key, const void *value, size_t valLen, uint32_t expires = 0);
-	static inline Pair *create(const char *key, const char *value, uint32_t expires = 0);
+	static        Pair *create(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
+	static inline Pair *create(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
 
 	static void destroy(const Pair *pair);
 
@@ -29,7 +29,7 @@ public:
 	inline int cmp2(const Pair &pair) const;
 
 	bool valid() const;
-	bool valid2(const Pair *pair) const{
+	inline bool valid2(const Pair *pair) const{
 		return valid();
 	}
 
@@ -42,6 +42,7 @@ public:
 	static inline void removeChecksumCalculator();
 
 private:
+	static uint64_t __getCreateTime(uint32_t created);
 	constexpr static size_t __sizeofBase();
 	size_t _sizeofBuffer() const;
 	uint8_t _getChecksum() const;
@@ -61,8 +62,8 @@ private:
 
 // ==============================
 
-inline Pair *Pair::create(const char *key, const char *value, uint32_t expires){
-	return create(key, value, value ? strlen(value) : 0, expires);
+inline Pair *Pair::create(const char *key, const char *value, uint32_t expires, uint32_t created){
+	return create(key, value, value ? strlen(value) : 0, expires, created);
 }
 
 inline int Pair::cmp(const char *key) const{
@@ -80,6 +81,5 @@ inline void Pair::setChecksumCalculator(IChecksumCalculator & checksumCalculator
 inline void Pair::removeChecksumCalculator(){
 	_checksumCalculator = nullptr;
 }
-
 
 #endif

@@ -32,8 +32,6 @@ private:
 	uint64_t	_dataCount;
 	size_t		_dataSize;
 
-	uint64_t	_itPos;
-
 private:
 	void _clear(bool alsoFree = false);
 

@@ -12,20 +12,20 @@ std_optional<IChecksumCalculator> Pair::_checksumCalculator = nullptr;
 
 // ==============================
 
-Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t expires){
+Pair *Pair::create(const char *key, const void *val, size_t vallen, uint32_t expires, uint32_t created){
 	size_t keylen = strlen(key);
 
 	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
-		return NULL;
+		return nullptr;
 
 	size_t size = __sizeofBase() + keylen + 1 + vallen + 1;
 
 	Pair *p = (Pair *) xmalloc(size);
 
 	if (p == NULL)
-		return NULL;
+		return nullptr;
 
-	p->created	= htobe64(MyTime::now());
+	p->created	= htobe64(__getCreateTime(created));
 	p->expires	= htobe32(expires);
 	p->vallen	= htobe32(vallen);
 	p->keylen	= htobe16(keylen);
@@ -95,6 +95,10 @@ void Pair::print() const{
 
 // ==============================
 
+uint64_t Pair::__getCreateTime(uint32_t created){
+	return created ? MyTime::combine(created) : MyTime::now();
+}
+
 uint8_t Pair::_getChecksum() const{
 	if (! _checksumCalculator)
 		return 0;
@@ -109,16 +113,4 @@ constexpr size_t Pair::__sizeofBase(){
 size_t Pair::_sizeofBuffer() const{
 	return be16toh(keylen) + 1 + be32toh(vallen) + 1;
 }
-
-// ==============================
-
-#if 0
-bool Pair::saveToFile(FILE *F) const{
-	size_t size = getSize();
-
-	size_t res = fwrite(this, size, 1, F);
-
-	return res < size;
-}
-#endif
 

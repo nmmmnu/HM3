@@ -1,5 +1,5 @@
 MYCC	= clang
-MYCC	= g++
+#MYCC	= g++
 
 CC	= $(MYCC) -std=c++11 -Wall	\
 		-D_FILE_OFFSET_BITS=64	\
@@ -18,7 +18,7 @@ SRC	=	\
 		vectorlist.cc linklist.cc skiplist.cc	\
 		disktable.cc				\
 		nmea0183checksumcalculator.cc		\
-		mytime.cc
+		mytime.cc myglob.cc
 
 
 
@@ -27,7 +27,8 @@ OBJECTS	=	$(SRC:%.cc=%.o)
 TARGETS	=	\
 		test_pair	\
 		test_list	\
-		test_file
+		test_file	\
+		test_glob
 
 
 all: $(TARGETS)
@@ -47,6 +48,11 @@ test_list: test_list.o		$(OBJECTS)
 			$(LIBS)
 
 test_file: test_file.o		$(OBJECTS)
+	$(LINK) $@	\
+		$^	\
+			$(LIBS)
+
+test_glob: test_glob.o		$(OBJECTS)
 	$(LINK) $@	\
 		$^	\
 			$(LIBS)

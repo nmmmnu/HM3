@@ -1,6 +1,7 @@
 test_pair
 test_list
 test_file
+test_glob
 
 a.out
 
