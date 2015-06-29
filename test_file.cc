@@ -4,6 +4,7 @@
 #include "std/std_auto_ptr.h"
 
 #include "disktable.h"
+#include "diskfile.h"
 
 #include "vectorlist.h"
 #include "linklist.h"
@@ -66,7 +67,7 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 	getchar();
 
 	printf("Write start...\n");
-	DiskTable::create(filename2, list);
+	DiskFile::create(filename2, list);
 	printf("Write done...\n");
 	getchar();
 
@@ -74,10 +75,10 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 }
 
 static int op_filesearch(const char *filename, const char *key){
-	DiskTable list = DiskTable(filename);
+	DiskTable list = DiskTable();
 
 	printf("Open start...\n");
-	list.open();
+	list.open(filename);
 	printf("Open done...\n");
 	getchar();
 

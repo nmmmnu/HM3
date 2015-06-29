@@ -13,7 +13,7 @@ LIBS	= -lstdc++
 #-fpack-struct
 
 SRC	=	\
-		pair.cc					\
+		pair.cc diskfile.cc			\
 		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
 		disktable.cc				\

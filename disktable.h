@@ -4,14 +4,11 @@
 #include "iarray.h"
 #include "irolist.h"
 
-#include <stdio.h>	// FILE
-
 class DiskTable : virtual public IArray{
 public:
-	DiskTable(const char *filename);
 	virtual ~DiskTable() override;
 
-	bool open();
+	bool open(const char *filename);
 	void close();
 
 	virtual uint64_t getCount() const override{
@@ -22,31 +19,15 @@ public:
 
 	virtual size_t getSize() const override;
 
-public:
-	       static bool create(const char *filename, IIterator &it, uint64_t datacount);
-	inline static bool create(const char *filename, IROList &list);
-
 private:
-	const char	*_filename;
-	FILE		*_f;
-	off_t		_size		= 0;
+	int		_fd;
 	const void	*_mem		= NULL;
+	uint64_t	_size		= 0;
 
 	uint64_t	_datacount	= 0;
 
 private:
 	uint64_t _getCount() const;
-
-	constexpr static size_t __sizeofHeader();
-
-	static bool _writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F);
-
 };
-
-// ==============================
-
-inline bool DiskTable::create(const char *filename, IROList &list){
-	return create(filename, list.getIterator(), list.getCount());
-}
 
 #endif

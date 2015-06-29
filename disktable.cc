@@ -1,55 +1,51 @@
 #include "disktable.h"
 
+#include "diskfile.h"
+
 #include <endian.h>	// htobe16
-#include <stddef.h>	// ofsetof
 #include <sys/mman.h>	// mmap
-
-struct DiskTableHeader{
-	uint64_t	size;		// 8
-	uint64_t	data[1];	// 8, dynamic
-} __attribute__((__packed__));
-
-constexpr size_t DiskTable::__sizeofHeader(){
-	return offsetof(DiskTableHeader, data);
-}
-
-DiskTable::DiskTable(const char *filename) :
-	_filename(filename){}
+#include <fcntl.h>	// open,
+#include <unistd.h>
 
 DiskTable::~DiskTable(){
 	close();
 }
 
-bool DiskTable::open(){
+bool DiskTable::open(const char *filename){
 	close();
 
-	FILE *F = fopen(_filename, "r");
+	int fd = ::open(filename, O_RDONLY);
 
-	if (F == NULL)
+	if (fd < 0)
 		return false;
 
-	fseek(F, 0, SEEK_END);
+	off_t size2 = lseek(fd, 0, SEEK_END);
 
-	off_t size = ftello(F);
+	uint64_t size = size2 <= 0 ? 0 : size2;
 
-	if (size == 0){
-		fclose(F);
+	if (size == 0 && size < DiskFile::sizeofHeader()){
+		::close(fd);
 		return false;
 	}
 
-	const void *mem = mmap(NULL, size, PROT_READ, MAP_SHARED, fileno(F), /* offset */ 0);
+	const void *mem = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, /* offset */ 0);
 
 	if (mem == MAP_FAILED){
-		fclose(F);
+		::close(fd);
 		return false;
 	}
 
-	_f = F;
+	_fd = fd;
 	_size = size;
 	_mem = mem;
 
 	// memoize count instead to read it from the disk each time
 	_datacount = _getCount();
+
+	if (size < DiskFile::sizeofHeader() + _datacount * sizeof(uint64_t)){
+		close();
+		return false;
+	}
 
 	return true;
 }
@@ -59,7 +55,7 @@ void DiskTable::close(){
 		return;
 
 	munmap((void *) _mem, _size);
-	fclose(_f);
+	::close(_fd);
 
 	_mem = NULL;
 	_size = 0;
@@ -77,66 +73,11 @@ const Pair *DiskTable::getAt(uint64_t index) const{
 }
 
 size_t DiskTable::getSize() const{
-	return _size - __sizeofHeader() - _datacount * sizeof(uint64_t);
+	return _size - DiskFile::sizeofHeader() - _datacount * sizeof(uint64_t);
 }
 
 uint64_t DiskTable::_getCount() const{
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 	return be64toh(head->size);
-}
-
-// ==============================
-
-bool DiskTable::create(const char *filename, IIterator &it, uint64_t datacount){
-	if (datacount == 0){
-		// very slow operation
-		datacount = it.iteratorCount();
-	}
-
-	FILE *F = fopen(filename, "w");
-
-	if (F == NULL)
-		return false;
-
-	bool result = _writeIteratorToFile(it, datacount, F);
-
-	fclose(F);
-
-	return result;
-}
-
-#include <malloc.h>
-
-bool DiskTable::_writeIteratorToFile(IIterator &it, uint64_t datacount, FILE *F){
-	uint64_t be;
-
-	const size_t headerSize = __sizeofHeader();
-	const size_t tableSize  = sizeof(uint64_t) * datacount;
-
-	/* preallocating the file do not really speed up the fwrite process.
-	posix_fallocate(fileno(F), 0, total_size);
-	*/
-
-	size_t current = headerSize + tableSize;
-
-	// write table header
-	DiskTableHeader header;
-	header.size = htobe64(datacount);
-	fwrite(& header, headerSize, 1, F);
-
-	// traverse and write the table.
-	for(auto pair = it.first(); pair; pair = it.next()){
-		be = htobe64(current);
-		fwrite(& be, sizeof(uint64_t), 1, F);
-		current += pair->getSize();
-	}
-
-	// traverse and write the data.
-	for(auto pair = it.first(); pair; pair = it.next()){
-		//pair->writeToFile(F);
-		fwrite((const void *) pair, pair->getSize(), 1, F);
-	}
-
-	return true;
 }
 
