@@ -22,8 +22,9 @@ public:
 public:
 	virtual bool rewind() override;
 	virtual bool rewind(const char *key) override;
-	virtual const Pair *current() override;
-	virtual const Pair *next() override;
+
+protected:
+	virtual const Pair *forward() override;
 
 private:
 	LinkListNode		*_head;

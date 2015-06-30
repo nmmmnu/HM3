@@ -202,20 +202,15 @@ bool SkipList::rewind(const char *key){
 	return _itHead;
 }
 
-const Pair *SkipList::current(){
+const Pair *SkipList::forward(){
 	if (_itHead == nullptr)
 		return nullptr;
 
-	return _itHead->data;
-}
+	auto node = _itHead;
 
-const Pair *SkipList::next(){
-	auto p = current();
+	_itHead = _itHead->next[0];
 
-	if (_itHead)
-		_itHead = _itHead->next[0];
-
-	return p;
+	return node->data;
 }
 
 // ==============================

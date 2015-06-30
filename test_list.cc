@@ -106,9 +106,13 @@ static void list_test(IList &list){
 	PRINTF_TEST("iterator rewind",	! list.rewind("bla")			);
 	PRINTF_TEST("iterator rewind",	list.rewind("2 age")			);
 	p = list.next();
-	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "22") == 0	);
+	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "22") == 0		);
+	p = list.current();
+	PRINTF_TEST("iterator current",	strcmp(p->getVal(), "22") == 0		);
 	p = list.next();
 	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "Sofia") == 0	);
+	p = list.current();
+	PRINTF_TEST("iterator current",	strcmp(p->getVal(), "Sofia") == 0	);
 }
 
 static void skiplist_lanes_test(SkipList &list){
@@ -129,29 +133,26 @@ static void skiplist_lanes_test(SkipList &list){
 //	list.print();
 }
 
-static void skiplist_test(SkipList &list, bool lanes){
-	if (lanes)
-		skiplist_lanes_test(list);
-
-	list_test(list);
-}
-
-static void nullsafelist_test(NULLSafeList &&list){
+static void nullsafelist_test(NULLSafeList &list){
 	PRINTF_TEST("get null",		! list.get(NULL)		);
 	PRINTF_TEST("remove null",	! list.remove(NULL)		);
 }
 
 int main(int argc, char **argv){
 	VectorList vl;
-	list_test(vl);
+		list_test(vl);
 
 	LinkList ll;
-	list_test(ll);
+		list_test(ll);
 
 	SkipList sl;
-	skiplist_test(sl, false);
+		list_test(sl);
+		if (0)
+			skiplist_lanes_test(sl);
 
-	nullsafelist_test( NULLSafeList{vl} );
+	NULLSafeList nsl = { sl };
+		list_test(nsl);
+		nullsafelist_test( nsl );
 
 	return 0;
 }

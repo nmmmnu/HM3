@@ -52,12 +52,11 @@ public:
 		return _list.rewind(key);
 	}
 
-	virtual const Pair *next() override{
+protected:
+	virtual const Pair *forward() override{
+		// it is a hack, but from outside,
+		// there are no difference between forward() and next()
 		return _list.next();
-	}
-
-	virtual const Pair *current() override{
-		return _list.current();
 	}
 
 private:

@@ -17,20 +17,11 @@ bool IArray::rewind(const char *key){
 	return true;
 }
 
-const Pair *IArray::current(){
+const Pair *IArray::forward(){
 	if (_itPos >= getCount())
 		return nullptr;
 
-	return getAt(_itPos);
-}
-
-const Pair *IArray::next(){
-	auto p = current();
-
-	if (_itPos < getCount())
-		++_itPos;
-
-	return p;
+	return getAt(_itPos++);
 }
 
 // ==============================
