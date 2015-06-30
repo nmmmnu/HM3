@@ -16,14 +16,12 @@ int main(int argc, char **argv){
 
 	const char *path = argv[1];
 
-	std::vector<std::string> files;
+	MyGlob gl;
 
-	MyGlob::glob(path, files);
+	gl.open(path);
 
-	for(size_t i = 0; i < files.size(); ++i)
-		printf("%5zu %s\n", i, files[i].c_str());
-
-	printf("Total %zu files...\n",  files.size());
+	for(auto s = gl.first(); s; s = gl.next())
+		printf("%s\n", s);
 
 	return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef _ICOUNTABLE_H
 #define _ICOUNTABLE_H
 
+#include <stdint.h>
+
 class ICountable{
 public:
 	virtual ~ICountable(){};

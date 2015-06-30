@@ -1,32 +1,45 @@
 #include "myglob.h"
 
-#include <glob.h>	// glob
 #include <sys/stat.h>	// stat
 
-bool MyGlob::glob(const char *path, std::vector<std::string> & vector){
-	vector.clear();
+bool MyGlob::open(const char *path){
+	close();
 
-	glob_t globresults;
+	int result = glob(path, 0, nullptr, & _globresults);
 
-	int result = ::glob(path, 0, NULL, & globresults);
+	switch(result){
+	case 0:
+		_isOpen = true;
+		return true;
 
-	if (result == GLOB_NOMATCH)
+	case GLOB_NOMATCH:
 		return false;
 
-	if (result != 0)
+	default:
 		return false;
+	}
+}
 
-	for (size_t i = 0; i < globresults.gl_pathc; ++i){
-		const char *filename = globresults.gl_pathv[i];
+void MyGlob::close(){
+	if (! _isOpen)
+		return;
+
+	globfree(& _globresults);
+	_isOpen = false;
+}
+
+const char *MyGlob::next(){
+	if (! _isOpen)
+		return nullptr;
+
+	while(_it < _globresults.gl_pathc){
+		const char *filename = _globresults.gl_pathv[_it++];
 
 		if (__checkFile( filename ))
-			vector.push_back(filename);
+			return filename;
 	}
 
-	// close
-	globfree(& globresults);
-
-	return vector.size() > 0;
+	return nullptr;
 }
 
 bool MyGlob::__checkFile(const char *filename){
