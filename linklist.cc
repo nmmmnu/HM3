@@ -158,14 +158,20 @@ bool LinkList::rewind(const char *key){
 	return _itHead;
 }
 
+const Pair *LinkList::current(){
+	if (_itHead == nullptr)
+		return nullptr;
+
+	return _itHead->data;
+}
+
 const Pair *LinkList::next(){
-	if (_itHead == NULL)
-		return NULL;
+	auto p = current();
 
-	const LinkListNode *node = _itHead;
-	_itHead = _itHead->next;
+	if (_itHead)
+		_itHead = _itHead->next;
 
-	return node->data;
+	return p;
 }
 
 // ==============================

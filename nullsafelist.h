@@ -56,6 +56,10 @@ public:
 		return _list.next();
 	}
 
+	virtual const Pair *current() override{
+		return _list.current();
+	}
+
 private:
 	IList	& _list;
 	bool	_ownList;

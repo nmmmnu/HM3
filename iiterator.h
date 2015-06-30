@@ -14,6 +14,7 @@ public:
 
 	virtual bool rewind() = 0;
 	virtual bool rewind(const char *key) = 0;
+	virtual const Pair *current() = 0;
 	virtual const Pair *next() = 0;
 
 	inline const Pair *first(const char *key = nullptr);
