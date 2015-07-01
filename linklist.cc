@@ -145,20 +145,17 @@ size_t LinkList::getSize() const{
 
 // ==============================
 
-bool LinkList::rewind(){
-	_itHead = _head;
-	return true;
-}
-
 bool LinkList::rewind(const char *key){
-	if (!key)
-		return rewind();
+	if (!key){
+		_itHead = _head;
+		return true;
+	}
 
 	_itHead = _locate(key);
 	return _itHead;
 }
 
-const Pair *LinkList::forward(){
+const Pair *LinkList::_next(){
 	if (_itHead == nullptr)
 		return nullptr;
 

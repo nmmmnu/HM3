@@ -2,11 +2,12 @@
 #define _DISK_TABLE_H
 
 #include "iarray.h"
-#include "irolist.h"
 
 class DiskTable : virtual public IArray{
 public:
-	virtual ~DiskTable() override;
+	virtual ~DiskTable() override{
+		close();
+	}
 
 	bool open(const char *filename);
 	void close();

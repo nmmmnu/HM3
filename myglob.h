@@ -9,7 +9,7 @@
 
 class MyGlob{
 public:
-	~MyGlob(){
+	virtual ~MyGlob(){
 		close();
 	};
 

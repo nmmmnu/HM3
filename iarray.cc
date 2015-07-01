@@ -1,13 +1,12 @@
 #include "iarray.h"
 
-bool IArray::rewind(){
-	_itPos = 0;
-	return true;
-}
+#include <stdio.h>
 
 bool IArray::rewind(const char *key){
-	if (!key)
-		return rewind();
+	if (!key){
+		_itPos = 0;
+		return true;
+	}
 
 	uint64_t index;
 	if (lookup(key, index))
@@ -17,7 +16,7 @@ bool IArray::rewind(const char *key){
 	return true;
 }
 
-const Pair *IArray::forward(){
+const Pair *IArray::_next(){
 	if (_itPos >= getCount())
 		return nullptr;
 

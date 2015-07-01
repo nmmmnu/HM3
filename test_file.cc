@@ -75,17 +75,24 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 }
 
 static int op_filesearch(const char *filename, const char *key){
-	DiskTable list = DiskTable();
+	DiskTable list;
 
-	printf("Open start...\n");
 	list.open(filename);
-	printf("Open done...\n");
-	getchar();
-
-	printf("File search start...\n");
 	listSearch(list, key);
-	printf("File search done...\n");
-	getchar();
+
+	return 0;
+}
+
+static int op_list(const char *filename, const char *key, size_t count = 100){
+	DiskTable list;
+	list.open(filename);
+
+	for(const Pair *pair = list.first(key); pair; pair = list.next()){
+		pair->print();
+
+		if (--count == 0)
+			break;
+	}
 
 	return 0;
 }
@@ -120,6 +127,11 @@ int main(int argc, char **argv){
 				key
 			);
 
+	case 'l':	return op_list(
+				filename,
+				key
+			);
+
 	}
 
 
@@ -128,12 +140,10 @@ int main(int argc, char **argv){
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
-	printf("\t%s [op] [class] [file] [key]  - load file.txt, then search for the key\n", cmd);
-	printf("\t%s [op] [class] [file] [file] - load file.txt, then create file.dat\n", cmd);
-	printf("Operations are:\n");
-	printf("\t%c - %s\n", 's', "Search for key");
-	printf("\t%c - %s\n", 'w', "Create a file");
-	printf("\t%c - %s\n", 'r', "Search for key in a file");
+	printf("\t%s s [class] [file.txt] [key]      - load file.txt, then search for the key\n",	cmd);
+	printf("\t%s w [class] [file.txt] [file.dat] - load file.txt, then create file.dat\n",		cmd);
+	printf("\t%s r -       [file.dat] [key]      - load file.dat, then search for the key\n",	cmd);
+	printf("\t%s l -       [file.dat] [key]      - load file.dat, then list using iterator\n",	cmd);
 	printf("Classes are:\n");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");

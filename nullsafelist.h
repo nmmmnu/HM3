@@ -44,16 +44,12 @@ public:
 	}
 
 public:
-	virtual bool rewind() override{
-		return _list.rewind();
-	}
-
-	virtual bool rewind(const char *key) override{
+	virtual bool rewind(const char *key = nullptr) override{
 		return _list.rewind(key);
 	}
 
 protected:
-	virtual const Pair *forward() override{
+	virtual const Pair *_next() override{
 		// it is a hack, but from outside,
 		// there are no difference between forward() and next()
 		return _list.next();

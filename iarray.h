@@ -21,11 +21,10 @@ public:
 	inline void setLookupMethod(uint8_t lookupMethod);
 
 public:
-	virtual bool rewind() override;
-	virtual bool rewind(const char *key) override;
+	virtual bool rewind(const char *key = nullptr) override;
 
 protected:
-	virtual const Pair *forward() override;
+	virtual const Pair *_next() override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

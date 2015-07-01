@@ -12,8 +12,7 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	virtual bool rewind() = 0;
-	virtual bool rewind(const char *key) = 0;
+	virtual bool rewind(const char *key = nullptr) = 0;
 
 	inline const Pair *first(const char *key = nullptr);
 	inline const Pair *current();
@@ -23,7 +22,7 @@ public:
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 
 protected:
-	virtual const Pair *forward() = 0;
+	virtual const Pair *_next() = 0;
 
 private:
 	const Pair *_currIt = nullptr;
@@ -40,7 +39,7 @@ inline const Pair *IIterator::current(){
 }
 
 inline const Pair *IIterator::next(){
-	_currIt = forward();
+	_currIt = _next();
 	return current();
 }
 

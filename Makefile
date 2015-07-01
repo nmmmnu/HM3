@@ -16,7 +16,7 @@ SRC	=	\
 		pair.cc diskfile.cc			\
 		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
-		disktable.cc				\
+		disktable.cc dirtable.cc		\
 		nmea0183checksumcalculator.cc		\
 		mytime.cc myglob.cc
 
@@ -28,7 +28,8 @@ TARGETS	=	\
 		test_pair	\
 		test_list	\
 		test_file	\
-		test_glob
+		test_glob	\
+		test_dir
 
 
 all: $(TARGETS)
@@ -53,6 +54,11 @@ test_file: test_file.o		$(OBJECTS)
 			$(LIBS)
 
 test_glob: test_glob.o		$(OBJECTS)
+	$(LINK) $@	\
+		$^	\
+			$(LIBS)
+
+test_dir: test_dir.o		$(OBJECTS)
 	$(LINK) $@	\
 		$^	\
 			$(LIBS)

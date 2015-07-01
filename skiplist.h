@@ -24,11 +24,10 @@ public:
 	virtual size_t getSize() const override;
 
 public:
-	virtual bool rewind() override;
-	virtual bool rewind(const char *key) override;
+	virtual bool rewind(const char *key = nullptr) override;
 
 protected:
-	virtual const Pair *forward() override;
+	virtual const Pair *_next() override;
 
 public:
 	void printLanes() const;

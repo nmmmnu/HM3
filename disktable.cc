@@ -7,9 +7,6 @@
 #include <fcntl.h>	// open,
 #include <unistd.h>
 
-DiskTable::~DiskTable(){
-	close();
-}
 
 bool DiskTable::open(const char *filename){
 	close();

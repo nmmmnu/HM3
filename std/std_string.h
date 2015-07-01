@@ -1,47 +1,61 @@
-#ifndef _STD_STRING_H
-#define _STD_STRING_H
+#include <stdio.h>
+#include <string.h>
 
-#include <stdlib.h>
-
-class std_string{
-private:
-	constexpr static const char *EMPTY = "";
-
+class std_string_ref{
 public:
-	std_string(const char *s): _s(s ? s : EMPTY){};
-	std_string(const std_string &s): std_string(s.c_str()){};
+	std_string_ref(const char *s) :
+		s(s){};
 
-	inline const char* c_str() const{
-		return _s;
-	};
+	inline operator const char *() const{
+		return s;
+	}
 
-	inline size_t length(const char *s) const{
-		return strlen(_s);
-	};
+	inline const char *c_str() const{
+		return s;
+	}
 
-	inline int cmp(const char *s) const{
-		return strcmp(_s, s);
-	};
+	inline const char *value() const{
+		return c_str();
+	}
 
-	inline int cmp(const std_string &s) const{
-		return cmp(s.c_str());
-	};
+	inline size_t length() const{
+		return strlen(s);
+	}
 
 	inline char operator[](size_t index) const{
-		return index < length() ? _s[index] : '\0';
+		return index < length() ? s[index] : '\0';
 	}
 
-	inline char operator==(const char *s) const{
-		return cmp(s) == 0;
+	inline bool operator==(const char *s2) const{
+		return cmp(s2);
 	}
 
-	inline char operator==(const std_string &s) const{
-		return _s == s.c_str();
+	inline bool operator==(const std_string_ref &sr) const{
+		return cmp(sr.c_str());
 	}
 
 private:
-	const char *_s = nullptr;
+	inline bool cmp(const char *s2) const{
+		return strcmp(s, s2) == 0;
+	};
+
+	const char *s;
 };
 
-#endif
+int main(int argc, char** argv){
+	const char *hello = "hello";
+	const char *world = "world";
+
+	std_string_ref a = hello;
+
+	a = world;
+
+	std_string_ref b = a;
+	printf("%s\n", (const char *)b);
+
+
+	printf("%d\n", a == b);
+
+	return 0;
+}
 
