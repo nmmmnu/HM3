@@ -54,7 +54,7 @@ bool DirTable::rewind(const char *key){
 		DiskTable &file = _files[i];
 
 		// at least 1 file must return true
-		if (file.first(key))
+		if (file.first(key, true))
 			result = true;
 	}
 

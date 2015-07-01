@@ -83,11 +83,11 @@ static int op_filesearch(const char *filename, const char *key){
 	return 0;
 }
 
-static int op_list(const char *filename, const char *key, size_t count = 100){
+static int op_list(const char *filename, const char *key = nullptr, size_t count = 10){
 	DiskTable list;
 	list.open(filename);
 
-	for(const Pair *pair = list.first(key); pair; pair = list.next()){
+	for(const Pair *pair = list.first(key, true); pair; pair = list.next()){
 		pair->print();
 
 		if (--count == 0)
@@ -127,9 +127,13 @@ int main(int argc, char **argv){
 				key
 			);
 
-	case 'l':	return op_list(
+	case 'L':	return op_list(
 				filename,
 				key
+			);
+
+	case 'l':	return op_list(
+				filename
 			);
 
 	}

@@ -6,7 +6,8 @@
 static void printUsage(const char *name){
 	printf("Usage:\n");
 	printf("\t%s s [directory] [key] - open directory then search for the key\n", 		name);
-	printf("\t%s l [directory] [key] - open directory then List dir using iterator\n",	name);
+	printf("\t%s l [directory] -     - open directory then List dir using iterator\n",	name);
+	printf("\t%s L [directory] [key] - open directory then List dir using iterator\n",	name);
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
@@ -21,8 +22,8 @@ void find(IROList &list, const char *key){
 	pair->print();
 }
 
-void listing(IROList &list, size_t count = 100){
-	for(const Pair *pair = list.first(); pair; pair = list.next()){
+void listing(IROList &list, const char *key = nullptr, size_t count = 100){
+	for(const Pair *pair = list.first(key); pair; pair = list.next()){
 		pair->print();
 
 		if (--count == 0)
@@ -50,6 +51,10 @@ int main(int argc, char **argv){
 
 		case 'l':
 			listing(dt);
+			break;
+
+		case 'L':
+			listing(dt, key);
 			break;
 	}
 

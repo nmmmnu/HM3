@@ -9,8 +9,10 @@ bool IArray::rewind(const char *key){
 	}
 
 	uint64_t index;
-	if (lookup(key, index))
+	if (lookup(key, index)){
+		_itPos = index;
 		return false;
+	}
 
 	_itPos = index;
 	return true;
