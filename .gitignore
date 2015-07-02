@@ -2,6 +2,7 @@ test_pair
 test_list
 test_file
 test_glob
+test_dir
 
 a.out
 

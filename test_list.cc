@@ -1,7 +1,6 @@
 #include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
-#include "nullsafelist.h"
 
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
@@ -133,11 +132,6 @@ static void skiplist_lanes_test(SkipList &list){
 //	list.print();
 }
 
-static void nullsafelist_test(NULLSafeList &list){
-	PRINTF_TEST("get null",		! list.get(NULL)		);
-	PRINTF_TEST("remove null",	! list.remove(NULL)		);
-}
-
 int main(int argc, char **argv){
 	VectorList vl;
 		list_test(vl);
@@ -149,10 +143,6 @@ int main(int argc, char **argv){
 		list_test(sl);
 		if (0)
 			skiplist_lanes_test(sl);
-
-	NULLSafeList nsl = { sl };
-		list_test(nsl);
-		nullsafelist_test( nsl );
 
 	return 0;
 }
