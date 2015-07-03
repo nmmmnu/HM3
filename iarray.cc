@@ -1,16 +1,16 @@
 #include "iarray.h"
 
-bool IArray::rewind(const char *key){
+void IArray::rewind(const char *key){
 	if (!key){
 		_itPos = 0;
-		return true;
+		return;
 	}
 
 	uint64_t index;
 	lookup(key, index);
 
 	_itPos = index;
-	return true;
+	return;
 }
 
 const Pair *IArray::_next(){

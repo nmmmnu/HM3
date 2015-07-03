@@ -205,10 +205,10 @@ size_t SkipList::getSize() const{
 
 // ==============================
 
-bool SkipList::rewind(const char *key){
+void SkipList::rewind(const char *key){
 	if (!key){
 		_itHead = _heads[0];
-		return true;
+		return;
 	}
 
 	const SkipList::Node *node = _locate(key, true);
@@ -216,13 +216,13 @@ bool SkipList::rewind(const char *key){
 	if (node){
 		// found
 		_itHead = node;
-		return true;
+		return;
 	}
 
 	// fuzzy found, but we are on previous element.
 	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
 
-	return true;
+	return;
 }
 
 const Pair *SkipList::_next(){

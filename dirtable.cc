@@ -70,18 +70,11 @@ const Pair *DirTable::getAfter(const char *key) const{
 	return result;
 }
 
-bool DirTable::rewind(const char *key){
-	bool result = false;
-
+void DirTable::rewind(const char *key){
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable &file = _files[i];
-
-		// at least 1 file must return true
-		if (file.first(key))
-			result = true;
+		file.first(key);
 	}
-
-	return result;
 }
 
 const Pair *DirTable::_next(){

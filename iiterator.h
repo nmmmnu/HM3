@@ -12,7 +12,7 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	virtual bool rewind(const char *key = nullptr) = 0;
+	virtual void rewind(const char *key = nullptr) = 0;
 
 	inline const Pair *first(const char *key = nullptr);
 	inline const Pair *current();
@@ -31,7 +31,8 @@ private:
 // ==============================
 
 inline const Pair *IIterator::first(const char *key){
-	return rewind(key) ? next() : nullptr;
+	rewind(key);
+	return next();
 }
 
 inline const Pair *IIterator::current(){

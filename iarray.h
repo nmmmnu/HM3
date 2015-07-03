@@ -22,7 +22,7 @@ public:
 	inline void setLookupMethod(uint8_t lookupMethod);
 
 public:
-	virtual bool rewind(const char *key = nullptr) override;
+	virtual void rewind(const char *key = nullptr) override;
 
 protected:
 	virtual const Pair *_next() override;

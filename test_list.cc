@@ -105,8 +105,7 @@ static void list_test(IList &list){
 	// testing iterator
 	list_populate(list);
 
-	PRINTF_TEST("it rewind",	list.rewind()				);
-	PRINTF_TEST("it rewind val",	list.rewind("2 age")			);
+	list.rewind("2 age");
 	p = list.next();
 	PRINTF_TEST("it next",		p && strcmp(p->getVal(), "22") == 0	);
 	p = list.current();
@@ -120,7 +119,7 @@ static void list_test(IList &list){
 	if (p) p->print();
 	PRINTF_TEST("it get after",	p && strcmp(p->getVal(), "22") == 0	);
 
-	PRINTF_TEST("it rewind fuzzy2",	list.rewind("5")			);
+	list.rewind("5");
 	p = list.next();
 	PRINTF_TEST("it next it",	! p					);
 
