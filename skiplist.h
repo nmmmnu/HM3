@@ -3,7 +3,6 @@
 
 #include "ilist.h"
 
-struct SkipListNode;
 
 class SkipList : virtual public IList{
 public:
@@ -34,19 +33,21 @@ public:
 	void printLane(uint8_t lane) const;
 
 private:
+	struct Node;
+
 	uint8_t		_height;
-	SkipListNode	**_heads;
-	SkipListNode	**_loc;
+	Node		**_heads;
+	Node		**_loc;
 
 	uint64_t	_dataCount;
 	size_t		_dataSize;
 
-	const SkipListNode	*_itHead;
+	const Node	*_itHead;
 
 private:
 	void _clear();
 
-	const SkipListNode *_locate(const char *key, bool complete_evaluation = false) const;
+	const Node *_locate(const char *key, bool complete_evaluation = false) const;
 
 	uint8_t _getRandomHeight();
 };

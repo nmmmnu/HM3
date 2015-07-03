@@ -2,8 +2,8 @@
 
 #include "defs.h"
 
-struct LinkListNode{
-	LinkListNode	*next;	// system dependent
+struct LinkList::Node{
+	LinkList::Node	*next;	// system dependent
 	const Pair	*data;	// system dependent
 };
 
@@ -16,8 +16,8 @@ LinkList::~LinkList(){
 }
 
 void LinkList::removeAll(){
-	for(LinkListNode *node = _head; node; ){
-		LinkListNode *copy = node;
+	for(LinkList::Node *node = _head; node; ){
+		LinkList::Node *copy = node;
 
 		node = node->next;
 
@@ -34,8 +34,8 @@ bool LinkList::put(const Pair *newdata){
 
 	const char *key = newdata->getKey();
 
-	LinkListNode *prev = NULL;
-	for(LinkListNode *node = _head; node; node = node->next){
+	LinkList::Node *prev = NULL;
+	for(LinkList::Node *node = _head; node; node = node->next){
 		const Pair *olddata = node->data;
 
 		const int cmp = olddata->cmp(key);
@@ -68,7 +68,7 @@ bool LinkList::put(const Pair *newdata){
 		prev = node;
 	}
 
-	LinkListNode *newnode = (LinkListNode *)xmalloc(sizeof(LinkListNode));
+	LinkList::Node *newnode = (LinkList::Node *)xmalloc(sizeof(LinkList::Node));
 	if (newnode == NULL){
 		// prevent memory leak
 		Pair::destroy(newdata);
@@ -95,7 +95,7 @@ bool LinkList::put(const Pair *newdata){
 }
 
 const Pair *LinkList::get(const char *key) const{
-	const LinkListNode *node = _locate(key);
+	const LinkList::Node *node = _locate(key);
 
 	if (node == nullptr)
 		return nullptr;
@@ -108,8 +108,8 @@ const Pair *LinkList::get(const char *key) const{
 bool LinkList::remove(const char *key){
 	rewind();
 
-	LinkListNode *prev = NULL;
-	LinkListNode *node;
+	LinkList::Node *prev = NULL;
+	LinkList::Node *node;
 	for(node = _head; node; node = node->next){
 		const Pair *data = node->data;
 		const int cmp = data->cmp(key);
@@ -157,7 +157,7 @@ bool LinkList::rewind(const char *key){
 	}
 
 	_itHead = _locate(key);
-	return _itHead;
+	return true;
 }
 
 const Pair *LinkList::_next(){
@@ -181,8 +181,8 @@ void LinkList::_clear(){
 	rewind();
 }
 
-LinkListNode *LinkList::_locate(const char *key) const{
-	for(LinkListNode *node = _head; node; node = node->next){
+LinkList::Node *LinkList::_locate(const char *key) const{
+	for(LinkList::Node *node = _head; node; node = node->next){
 		const Pair *data = node->data;
 
 		const int cmp = data->cmp(key);

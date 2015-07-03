@@ -3,8 +3,6 @@
 
 #include "ilist.h"
 
-struct LinkListNode;
-
 class LinkList : virtual public IList{
 public:
 	LinkList();
@@ -26,16 +24,18 @@ protected:
 	virtual const Pair *_next() override;
 
 private:
-	LinkListNode		*_head;
+	struct Node;
 
-	uint64_t		_dataCount;
-	size_t			_dataSize;
+	Node		*_head;
 
-	const LinkListNode	*_itHead;
+	uint64_t	_dataCount;
+	size_t		_dataSize;
+
+	const Node	*_itHead;
 private:
 	void _clear();
 
-	LinkListNode *_locate(const char *key) const;
+	Node *_locate(const char *key) const;
 };
 
 #endif
