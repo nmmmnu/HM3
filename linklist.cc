@@ -97,7 +97,12 @@ bool LinkList::put(const Pair *newdata){
 const Pair *LinkList::get(const char *key) const{
 	const LinkListNode *node = _locate(key);
 
-	return node ? node->data : nullptr;
+	if (node == nullptr)
+		return nullptr;
+
+	const Pair *data = node->data;
+
+	return data->cmp(key) == 0 ? data : nullptr;
 }
 
 bool LinkList::remove(const char *key){
@@ -186,7 +191,8 @@ LinkListNode *LinkList::_locate(const char *key) const{
 			return node;
 
 		if (cmp > 0)
-			break;
+			return node;
+			//break;
 	}
 
 	return nullptr;

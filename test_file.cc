@@ -144,10 +144,11 @@ int main(int argc, char **argv){
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
-	printf("\t%s s [class] [file.txt] [key]      - load file.txt, then search for the key\n",	cmd);
-	printf("\t%s w [class] [file.txt] [file.dat] - load file.txt, then create file.dat\n",		cmd);
-	printf("\t%s r -       [file.dat] [key]      - load file.dat, then search for the key\n",	cmd);
-	printf("\t%s l -       [file.dat] [key]      - load file.dat, then list using iterator\n",	cmd);
+	printf("\t%s s [class] [file.txt] [key]      - load file.txt, then search for the key\n",		cmd);
+	printf("\t%s w [class] [file.txt] [file.dat] - load file.txt, then create file.dat\n",			cmd);
+	printf("\t%s r -       [file.dat] [key]      - load file.dat, then search for the key\n",		cmd);
+	printf("\t%s l -       [file.dat] [key]      - load file.dat, then list using iterator\n",		cmd);
+	printf("\t%s L -       [file.dat] [key]      - load file.dat, then list using iterator with start\n",	cmd);
 	printf("Classes are:\n");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");

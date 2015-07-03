@@ -1,7 +1,5 @@
 #include "iarray.h"
 
-#include <stdio.h>
-
 bool IArray::rewind(const char *key){
 	if (!key){
 		_itPos = 0;
@@ -9,10 +7,7 @@ bool IArray::rewind(const char *key){
 	}
 
 	uint64_t index;
-	if (lookup(key, index)){
-		_itPos = index;
-		return false;
-	}
+	lookup(key, index);
 
 	_itPos = index;
 	return true;

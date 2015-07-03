@@ -42,14 +42,18 @@ static void list_test(IList &list){
 
 	const Pair *p = list.get("3 city");
 
-	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("get",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 	p = list["3 city"];
 
-	PRINTF_TEST("get",		! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("get",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
+
+//	p = list.get("3");
+//	PRINTF_TEST("get fuzzy",	p && ! strcmp(p->getVal(), "Sofia")	);
+
 
 	// testing overwrite
 
@@ -79,7 +83,7 @@ static void list_test(IList &list){
 
 	p = list.get("3 city");
 
-	PRINTF_TEST("remove",		! strcmp(p->getVal(), "Sofia")		);
+	PRINTF_TEST("remove",		p && ! strcmp(p->getVal(), "Sofia")	);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
 	PRINTF_TEST("remove sizeof",	list.getSize() == p->getSize()		);
 
@@ -101,17 +105,25 @@ static void list_test(IList &list){
 	// testing iterator
 	list_populate(list);
 
-	PRINTF_TEST("iterator rewind",	list.rewind()				);
-	PRINTF_TEST("iterator rewind",	! list.rewind("bla")			);
-	PRINTF_TEST("iterator rewind",	list.rewind("2 age")			);
+	PRINTF_TEST("it rewind",	list.rewind()				);
+	PRINTF_TEST("it rewind val",	list.rewind("2 age")			);
 	p = list.next();
-	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "22") == 0		);
+	PRINTF_TEST("it next",		p && strcmp(p->getVal(), "22") == 0	);
 	p = list.current();
-	PRINTF_TEST("iterator current",	strcmp(p->getVal(), "22") == 0		);
+	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "22") == 0	);
 	p = list.next();
-	PRINTF_TEST("iterator next",	strcmp(p->getVal(), "Sofia") == 0	);
+	PRINTF_TEST("it next",		p && strcmp(p->getVal(), "Sofia") == 0	);
 	p = list.current();
-	PRINTF_TEST("iterator current",	strcmp(p->getVal(), "Sofia") == 0	);
+	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Sofia") == 0	);
+
+	PRINTF_TEST("it rewind fuzzy",	list.rewind("2")			);
+	p = list.next();
+	PRINTF_TEST("it next it",	p && strcmp(p->getVal(), "22") == 0	);
+
+	PRINTF_TEST("it rewind fuzzy2",	list.rewind("5")			);
+	p = list.next();
+	PRINTF_TEST("it next it",	! p					);
+
 }
 
 static void skiplist_lanes_test(SkipList &list){

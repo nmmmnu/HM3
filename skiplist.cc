@@ -195,8 +195,19 @@ bool SkipList::rewind(const char *key){
 		return true;
 	}
 
-	_itHead = _locate(key);
-	return _itHead;
+	const SkipListNode *node = _locate(key, true);
+
+	if (node){
+		// found
+		_itHead = node;
+		return true;
+	}
+
+	// fuzzy found, but we are on previous element.
+	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
+
+	return true;
+
 }
 
 const Pair *SkipList::_next(){
