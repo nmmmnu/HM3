@@ -105,6 +105,23 @@ const Pair *LinkList::get(const char *key) const{
 	return data->cmp(key) == 0 ? data : nullptr;
 }
 
+const Pair *LinkList::getAfter(const char *key) const{
+	const LinkList::Node *node = _locate(key);
+
+	if (node == nullptr)
+		return nullptr;
+
+	const Pair *data = node->data;
+
+	if (data->cmp(key) == 0){
+		// key found. return next
+		return node->next ? node->next->data : nullptr;
+	}
+
+	//  key not found. return what is found
+	return data;
+}
+
 bool LinkList::remove(const char *key){
 	rewind();
 

@@ -12,6 +12,7 @@ public:
 	virtual const Pair *getAt(uint64_t index) const = 0;
 
 	virtual const Pair *get(const char *key) const override;
+	virtual const Pair *getAfter(const char *key) const override;
 
 public:
 	inline const void *operator[](uint64_t index) const;

@@ -51,8 +51,8 @@ static void list_test(IList &list){
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
 
-//	p = list.get("3");
-//	PRINTF_TEST("get fuzzy",	p && ! strcmp(p->getVal(), "Sofia")	);
+	p = list.getAfter("3");
+	PRINTF_TEST("getAfter",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 
 	// testing overwrite
@@ -116,9 +116,9 @@ static void list_test(IList &list){
 	p = list.current();
 	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Sofia") == 0	);
 
-	PRINTF_TEST("it rewind fuzzy",	list.rewind("2")			);
-	p = list.next();
-	PRINTF_TEST("it next it",	p && strcmp(p->getVal(), "22") == 0	);
+	p = list.getAfter("2");
+	if (p) p->print();
+	PRINTF_TEST("it get after",	p && strcmp(p->getVal(), "22") == 0	);
 
 	PRINTF_TEST("it rewind fuzzy2",	list.rewind("5")			);
 	p = list.next();

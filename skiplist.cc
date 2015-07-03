@@ -145,6 +145,22 @@ const Pair *SkipList::get(const char *key) const{
 	return node ? node->data : nullptr;
 }
 
+const Pair *SkipList::getAfter(const char *key) const{
+	const SkipList::Node *node = _locate(key, true);
+
+	if (node == nullptr){
+		// not found. use internal
+		node = _loc[0];
+	}else{
+		// found
+	}
+
+	// go to next in both cases
+	node = node ? node->next[0] : nullptr;
+
+	return node ? node->data : nullptr;
+}
+
 bool SkipList::remove(const char *key){
 	rewind();
 
@@ -207,7 +223,6 @@ bool SkipList::rewind(const char *key){
 	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
 
 	return true;
-
 }
 
 const Pair *SkipList::_next(){

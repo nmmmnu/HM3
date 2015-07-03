@@ -7,6 +7,9 @@
 class IROList : virtual public IIterator, virtual public ICountable{
 public:
 	virtual const Pair *get(const char *key) const = 0;
+	virtual const Pair *getAfter(const char *key) const{
+		return nullptr;
+	};
 
 	virtual size_t getSize() const = 0;
 

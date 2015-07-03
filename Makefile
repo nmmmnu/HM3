@@ -1,5 +1,5 @@
 MYCC	= clang
-#MYCC	= g++
+MYCC	= g++
 
 CC	= $(MYCC) -std=c++11 -Wall	\
 		-D_FILE_OFFSET_BITS=64	\
