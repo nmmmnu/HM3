@@ -39,29 +39,19 @@ clean:
 	rm -f *.o *.d $(TARGETS)
 
 test_pair: test_pair.o		$(OBJECTS)
-	$(LINK) $@	\
-		$^	\
-			$(LIBS)
+	$(LINK) $@ $^		$(LIBS)
 
 test_list: test_list.o		$(OBJECTS)
-	$(LINK) $@	\
-		$^	\
-			$(LIBS)
+	$(LINK) $@ $^		$(LIBS)
 
 test_file: test_file.o		$(OBJECTS)
-	$(LINK) $@	\
-		$^	\
-			$(LIBS)
+	$(LINK) $@ $^		$(LIBS)
 
 test_glob: test_glob.o		$(OBJECTS)
-	$(LINK) $@	\
-		$^	\
-			$(LIBS)
+	$(LINK) $@ $^		$(LIBS)
 
 test_dir: test_dir.o		$(OBJECTS)
-	$(LINK) $@	\
-		$^	\
-			$(LIBS)
+	$(LINK) $@ $^		$(LIBS)
 
 %.o: %.cc
 	$(CC) $<

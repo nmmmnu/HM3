@@ -27,7 +27,7 @@ public:
 	virtual const Pair *get(const char *key) const override;
 	virtual const Pair *getAfter(const char *key) const override;
 
-	virtual void rewind(const char *key = nullptr) override;
+	virtual void _rewind(const char *key = nullptr) override;
 
 protected:
 	virtual const Pair *_next() override;

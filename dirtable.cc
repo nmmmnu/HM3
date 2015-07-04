@@ -70,7 +70,7 @@ const Pair *DirTable::getAfter(const char *key) const{
 	return result;
 }
 
-void DirTable::rewind(const char *key){
+void DirTable::_rewind(const char *key){
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable &file = _files[i];
 		file.first(key);

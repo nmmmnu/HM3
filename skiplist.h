@@ -23,10 +23,8 @@ public:
 	virtual uint64_t getCount() const override;
 	virtual size_t getSize() const override;
 
-public:
-	virtual void rewind(const char *key = nullptr) override;
-
 protected:
+	virtual void _rewind(const char *key = nullptr) override;
 	virtual const Pair *_next() override;
 
 public:

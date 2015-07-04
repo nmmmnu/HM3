@@ -57,7 +57,7 @@ void SkipList::removeAll(){
 }
 
 bool SkipList::put(const Pair *newdata){
-	rewind();
+	invalidate();
 
 	const char *key = newdata->getKey();
 
@@ -162,7 +162,7 @@ const Pair *SkipList::getAfter(const char *key) const{
 }
 
 bool SkipList::remove(const char *key){
-	rewind();
+	invalidate();
 
 	const SkipList::Node *node = _locate(key, true);
 
@@ -205,7 +205,7 @@ size_t SkipList::getSize() const{
 
 // ==============================
 
-void SkipList::rewind(const char *key){
+void SkipList::_rewind(const char *key){
 	if (!key){
 		_itHead = _heads[0];
 		return;
@@ -221,8 +221,6 @@ void SkipList::rewind(const char *key){
 
 	// fuzzy found, but we are on previous element.
 	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
-
-	return;
 }
 
 const Pair *SkipList::_next(){
@@ -269,7 +267,7 @@ void SkipList::_clear(){
 	// no need to clean _loc
 	//memset(_loc, 0, _height * sizeof(SkipList::Node *) );
 
-	rewind();
+	invalidate();
 }
 
 const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluation) const{

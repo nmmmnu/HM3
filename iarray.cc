@@ -1,7 +1,7 @@
 #include "iarray.h"
 
-void IArray::rewind(const char *key){
-	if (!key){
+void IArray::_rewind(const char *key){
+	if (key == nullptr){
 		_itPos = 0;
 		return;
 	}
@@ -10,7 +10,6 @@ void IArray::rewind(const char *key){
 	lookup(key, index);
 
 	_itPos = index;
-	return;
 }
 
 const Pair *IArray::_next(){

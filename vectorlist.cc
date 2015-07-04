@@ -12,8 +12,6 @@ VectorList::~VectorList(){
 }
 
 void VectorList::removeAll(){
-	rewind();
-
 	for(uint64_t i = 0; i < _dataCount; ++i){
 		const Pair *data = _buffer[i];
 		Pair::destroy(data);
@@ -23,7 +21,7 @@ void VectorList::removeAll(){
 }
 
 bool VectorList::put(const Pair *newdata){
-	rewind();
+	invalidate();
 
 	const char *key = newdata->getKey();
 
@@ -69,7 +67,7 @@ bool VectorList::put(const Pair *newdata){
 }
 
 bool VectorList::remove(const char *key){
-	rewind();
+	invalidate();
 
 	uint64_t index;
 	if (lookup(key, index)){
@@ -111,7 +109,7 @@ void VectorList::_clear(bool alsoFree){
 	_bufferSize = 0;
 	_buffer = nullptr;
 
-	rewind();
+	invalidate();
 }
 
 bool VectorList::_shiftL(uint64_t index){

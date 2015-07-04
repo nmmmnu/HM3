@@ -30,6 +30,12 @@ static size_t list_populate(IList &list){
 }
 
 static void list_test(IList &list){
+	const Pair *p;
+
+
+
+	// TEST GENERAL
+
 	size_t size = list_populate(list);
 
 	list.print();
@@ -38,15 +44,15 @@ static void list_test(IList &list){
 	PRINTF_TEST("empty",		! list.isEmpty()			);
 	PRINTF_TEST("sizeof",		list.getSize() == size			);
 
-	// testing get
 
-	const Pair *p = list.get("3 city");
 
+	// TEST GET
+
+	p = list.get("3 city");
 	PRINTF_TEST("get",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 	p = list["3 city"];
-
-	PRINTF_TEST("get",		p && ! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("get[]",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -55,7 +61,8 @@ static void list_test(IList &list){
 	PRINTF_TEST("getAfter",		p && ! strcmp(p->getVal(), "Sofia")	);
 
 
-	// testing overwrite
+
+	// TEST OVERWRITE
 
 	const char *key_overwr = "2 val";
 	const char *val_overwr = "overwritten";
@@ -63,10 +70,12 @@ static void list_test(IList &list){
 	list.put( Pair::create(key_overwr, "original") );
 	list.put( Pair::create(key_overwr, val_overwr));
 	p = list.get(key_overwr);
+	PRINTF_TEST("overwrite",	p && ! strcmp(p->getVal(), val_overwr)	);
 
-	PRINTF_TEST("overwrite",	! strcmp(p->getVal(), val_overwr)	);
 
-	// testing remove
+
+	// TEST REMOVE
+
 	list_populate(list);
 
 	// remove non existent
@@ -78,7 +87,7 @@ static void list_test(IList &list){
 	// remove first
 	list.remove("1 name");
 
-	// remove middle
+	// remove last
 	list.remove("4 os");
 
 	p = list.get("3 city");
@@ -93,21 +102,28 @@ static void list_test(IList &list){
 	PRINTF_TEST("overwrite count",	list.getCount() == 1			);
 	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair->getSize()	);
 
-	// remove last
+	// remove last element
 	list.remove("3 city");
 
-	// remove non existent
+	// remove non existent from empty list
 	list.remove("nonexistent");
 
 	PRINTF_TEST("remove count",	list.getCount() == 0			);
 	PRINTF_TEST("remove empty",	list.isEmpty()				);
 
-	// testing iterator
+
+
+	// TEST ITERATOR
+
 	list_populate(list);
 
-	list.rewind("2 age");
-	p = list.next();
-	PRINTF_TEST("it next",		p && strcmp(p->getVal(), "22") == 0	);
+	p = list.first();
+	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "Niki") == 0	);
+	p = list.current();
+	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Niki") == 0	);
+
+	p = list.first("2 age");
+	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "22") == 0	);
 	p = list.current();
 	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "22") == 0	);
 	p = list.next();
@@ -115,12 +131,16 @@ static void list_test(IList &list){
 	p = list.current();
 	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Sofia") == 0	);
 
-	p = list.getAfter("2");
-	if (p) p->print();
-	PRINTF_TEST("it get after",	p && strcmp(p->getVal(), "22") == 0	);
-
-	list.rewind("5");
+	p = list.first("4 os");
+	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "Linux") == 0	);
+	p = list.current();
+	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Linux") == 0	);
 	p = list.next();
+	PRINTF_TEST("it next",		! p					);
+	p = list.current();
+	PRINTF_TEST("it current",	! p					);
+
+	p = list.first("5");
 	PRINTF_TEST("it next it",	! p					);
 
 }
