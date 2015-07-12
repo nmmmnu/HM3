@@ -2,6 +2,8 @@
 
 #include "defs.h"
 
+#include <memory>
+
 struct LinkList::Node{
 	LinkList::Node	*next;	// system dependent
 	const Pair	*data;	// system dependent
@@ -33,7 +35,7 @@ void LinkList::removeAll(){
 
 		const Pair *data = copy->data;
 		Pair::destroy(data);
-		xfree(copy);
+		delete copy;
 	}
 
 	_clear();
@@ -78,7 +80,7 @@ bool LinkList::put(const Pair *newdata){
 		prev = node;
 	}
 
-	LinkList::Node *newnode = (LinkList::Node *)xmalloc(sizeof(LinkList::Node));
+	LinkList::Node *newnode = new(std::nothrow) LinkList::Node;
 	if (newnode == NULL){
 		// prevent memory leak
 		Pair::destroy(newdata);
@@ -153,7 +155,7 @@ bool LinkList::remove(const char *key){
 			_dataCount--;
 
 			Pair::destroy(data);
-			xfree(node);
+			delete node;
 
 			return true;
 		}

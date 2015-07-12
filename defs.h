@@ -4,17 +4,8 @@
 #include <stdlib.h>	// size_t
 #include <stdio.h>	// printf
 
-static inline void *xmalloc(size_t s){
-	return malloc(s);
-}
-
-static inline void xfree(void *a){
-	free(a);
-}
-
-static inline void *xrealloc(void *a, size_t size){
-	return realloc(a, size);
-}
+#define xmalloc(s)	malloc(s)
+#define xfree(a)	free(a)
 
 static inline void my_error(const char *err, const char *file, unsigned int line){
 	fprintf(stderr, "%s: key is NULL on %s:%u\n", err, file, line);

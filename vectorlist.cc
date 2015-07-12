@@ -2,6 +2,13 @@
 
 #include "defs.h"
 
+#include <stdlib.h>	// size_t
+
+//#define xmalloc(s)	malloc(s)
+//#define xfree(va)	free(a)
+#define xrealloc(a, s)	realloc(a, s)
+
+
 VectorList::VectorList(size_t reallocSize) :
 	_reallocSize(reallocSize ? reallocSize : REALLOC_SIZE) {
 	_clear();

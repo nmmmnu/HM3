@@ -4,6 +4,8 @@
 
 #include "defs.h"
 
+#include <memory>
+
 /*
 We do ***NOT*** store next[] array size,
 ***NOR*** we store NULL after last next node.
@@ -64,7 +66,7 @@ void SkipList::removeAll(){
 
 		const Pair *data = copy->data;
 		Pair::destroy(data);
-		xfree(copy);
+		delete[] copy;
 	}
 
 	_clear();
@@ -107,9 +109,10 @@ bool SkipList::put(const Pair *newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	SkipList::Node *newnode = (SkipList::Node *) xmalloc(
-			offsetof(SkipList::Node, next) +
-			height * sizeof(SkipList::Node *));
+	SkipList::Node *newnode = (SkipList::Node *) new(std::nothrow) char[
+				offsetof(SkipList::Node, next) +
+				height * sizeof(SkipList::Node *)
+			];
 
 	if (newnode == nullptr){
 		// prevent memory leak
@@ -204,7 +207,7 @@ bool SkipList::remove(const char *key){
 	_dataCount--;
 
 	Pair::destroy(data);
-	xfree((void *) node);
+	delete[] node;
 
 	return true;
 }
