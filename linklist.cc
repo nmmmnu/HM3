@@ -11,12 +11,11 @@ LinkList::LinkList(){
 	_clear();
 }
 
-LinkList::LinkList(LinkList &&other){
-	_head		= other._head;
-	_dataCount	= other._dataCount;
-	_dataSize	= other._dataSize;
-	_itHead		= other._itHead;
-
+LinkList::LinkList(LinkList &&other):
+		_head		(other._head		),
+		_dataCount	(other._dataCount	),
+		_dataSize	(other._dataSize	),
+		_itHead		(other._itHead          ){
 	other._clear();
 }
 

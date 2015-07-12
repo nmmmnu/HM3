@@ -35,16 +35,13 @@ SkipList::SkipList(uint8_t height){
 	_clear();
 }
 
-SkipList::SkipList(SkipList &&other){
-	_height		= other._height;
-	_heads		= other._heads;
-	_loc		= other._loc;
-
-	_dataCount	= other._dataCount;
-	_dataSize	= other._dataSize;
-
-	_itHead		= other._itHead;
-
+SkipList::SkipList(SkipList &&other):
+		_height		(other._height		),
+		_heads		(other._heads		),
+		_loc		(other._loc		),
+		_dataCount	(other._dataCount	),
+		_dataSize	(other._dataSize	),
+		_itHead		(other._itHead		){
 	other._heads = nullptr;
 	other._loc = nullptr;
 	other._itHead = nullptr;

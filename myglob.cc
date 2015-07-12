@@ -2,11 +2,10 @@
 
 #include <sys/stat.h>	// stat
 
-MyGlob::MyGlob(MyGlob &&other){
-	_isOpen		= other._isOpen;
-	_globresults	= other._globresults;
-	_it		= other._it;
-
+MyGlob::MyGlob(MyGlob &&other) :
+		_isOpen(other._isOpen),
+		_globresults(other._globresults),
+		_it(other._it){
 	other._isOpen = false;
 }
 

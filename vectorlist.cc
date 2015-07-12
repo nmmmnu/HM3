@@ -7,15 +7,12 @@ VectorList::VectorList(size_t reallocSize) :
 	_clear();
 }
 
-VectorList::VectorList(VectorList &&other){
-	_reallocSize	= other._reallocSize;
-
-	_buffer		= other._buffer;
-	_bufferSize	= other._bufferSize;
-
-	_dataCount	= other._dataCount;
-	_dataSize	= other._dataSize;
-
+VectorList::VectorList(VectorList &&other):
+		_reallocSize	(other._reallocSize	),
+		_buffer		(other._buffer		),
+		_bufferSize	(other._bufferSize	),
+		_dataCount	(other._dataCount	),
+		_dataSize	(other._dataSize	){
 	other._clear();
 }
 
