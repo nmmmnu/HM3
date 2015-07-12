@@ -35,8 +35,25 @@ SkipList::SkipList(uint8_t height){
 	_clear();
 }
 
+SkipList::SkipList(SkipList &&other){
+	_height		= other._height;
+	_heads		= other._heads;
+	_loc		= other._loc;
+
+	_dataCount	= other._dataCount;
+	_dataSize	= other._dataSize;
+
+	_itHead		= other._itHead;
+
+	other._heads = nullptr;
+	other._loc = nullptr;
+	other._itHead = nullptr;
+}
+
 SkipList::~SkipList(){
-	removeAll();
+	// _heads may be nullptr, when move constructor is on the way...
+	if (_heads != nullptr)
+		removeAll();
 
 	delete[] _heads;
 	delete[] _loc;
@@ -272,7 +289,7 @@ void SkipList::_clear(){
 
 const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluation) const{
 	// it is extremly dangerous to have key == NULL here.
-	if (key == NULL){
+	if (key == nullptr){
 		// probably should be throw exception here.
 		my_error("FATAL ERROR", __FILE__, __LINE__);
 	}

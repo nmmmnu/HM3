@@ -10,7 +10,8 @@ public:
 
 public:
 	VectorList(size_t reallocChunkSize = 0);
-
+	VectorList(VectorList &&other);
+	VectorList& operator=(VectorList other) = delete;
 	virtual ~VectorList();
 
 	virtual void removeAll() override;

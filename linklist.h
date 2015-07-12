@@ -6,6 +6,8 @@
 class LinkList : virtual public IList{
 public:
 	LinkList();
+	LinkList(LinkList &&other);
+	LinkList& operator=(LinkList other) = delete;
 	virtual ~LinkList() override;
 
 	virtual void removeAll() override;

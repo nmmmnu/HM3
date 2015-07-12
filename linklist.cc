@@ -11,8 +11,19 @@ LinkList::LinkList(){
 	_clear();
 }
 
+LinkList::LinkList(LinkList &&other){
+	_head		= other._head;
+	_dataCount	= other._dataCount;
+	_dataSize	= other._dataSize;
+	_itHead		= other._itHead;
+
+	other._clear();
+}
+
 LinkList::~LinkList(){
-	removeAll();
+	// _head may be nullptr, when move constructor is on the way...
+	if (_head != nullptr)
+		removeAll();
 }
 
 void LinkList::removeAll(){

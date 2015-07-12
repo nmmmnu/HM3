@@ -2,13 +2,13 @@
 #include "linklist.h"
 #include "skiplist.h"
 
+#include <utility>	// std::move
+
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
 
-#define MODULE_NAME	"List"
-
 #define PRINTF_TEST(test, result) \
-	printf("%-15s Testing %-20s %s\n", MODULE_NAME, test, result ? "OK" : "Fail")
+	printf("%-14s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
 
 inline static size_t list_add(IList &list, const Pair *p){
@@ -29,7 +29,7 @@ static size_t list_populate(IList &list){
 	return size;
 }
 
-static void list_test(IList &list){
+static void list_test(const char *module, IList &list){
 	const Pair *p;
 
 
@@ -165,15 +165,30 @@ static void skiplist_lanes_test(SkipList &list){
 
 int main(int argc, char **argv){
 	VectorList vl;
-		list_test(vl);
+		list_test("Vector", vl);
+
+	VectorList vl2 = { std::move(vl) };
+		list_test("Moved Vector", vl2);
+
+	// =========================
 
 	LinkList ll;
-		list_test(ll);
+		list_test("LinkList", ll);
+
+	LinkList ll2 = { std::move(ll) };
+		list_test("Moved LinkList", ll2);
+
+	// =========================
 
 	SkipList sl;
-		list_test(sl);
+		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
+
+	SkipList sl2 = { std::move(sl) };
+		list_test("Moved SkipList", sl2);
+
+	// =========================
 
 	return 0;
 }

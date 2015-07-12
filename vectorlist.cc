@@ -7,8 +7,22 @@ VectorList::VectorList(size_t reallocSize) :
 	_clear();
 }
 
+VectorList::VectorList(VectorList &&other){
+	_reallocSize	= other._reallocSize;
+
+	_buffer		= other._buffer;
+	_bufferSize	= other._bufferSize;
+
+	_dataCount	= other._dataCount;
+	_dataSize	= other._dataSize;
+
+	other._clear();
+}
+
 VectorList::~VectorList(){
-	removeAll();
+	// _buffer may be nullptr, when move constructor is on the way...
+	if (_buffer != nullptr)
+		removeAll();
 }
 
 void VectorList::removeAll(){

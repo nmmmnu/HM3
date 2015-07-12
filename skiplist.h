@@ -11,6 +11,8 @@ public:
 
 public:
 	SkipList(uint8_t height = DEFAULT_HEIGHT);
+	SkipList(SkipList &&other);
+	SkipList& operator=(SkipList other) = delete;
 	virtual ~SkipList() override;
 
 	virtual void removeAll() override;
