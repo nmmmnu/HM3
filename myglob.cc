@@ -2,6 +2,14 @@
 
 #include <sys/stat.h>	// stat
 
+MyGlob::MyGlob(MyGlob &&other){
+	_isOpen		= other._isOpen;
+	_globresults	= other._globresults;
+	_it		= other._it;
+
+	other._isOpen = false;
+}
+
 bool MyGlob::open(const char *path){
 	close();
 

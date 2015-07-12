@@ -5,6 +5,9 @@
 
 class DiskTable : virtual public IArray{
 public:
+	DiskTable(){};
+	DiskTable(DiskTable &&other);
+	DiskTable& operator=(DiskTable other) = delete;
 	virtual ~DiskTable() override{
 		close();
 	}

@@ -7,6 +7,15 @@
 #include <fcntl.h>	// open,
 #include <unistd.h>
 
+DiskTable::DiskTable(DiskTable &&other){
+	_fd		= other._fd;
+	_mem		= other._mem;
+	_size		= other._size;
+	_datacount	= other._datacount;
+
+	other._mem = nullptr;
+	other._size = 0;
+}
 
 bool DiskTable::open(const char *filename){
 	close();
@@ -48,7 +57,7 @@ bool DiskTable::open(const char *filename){
 }
 
 void DiskTable::close(){
-	if (_mem == NULL || _size == 0)
+	if (_mem == nullptr || _size == 0)
 		return;
 
 	munmap((void *) _mem, _size);

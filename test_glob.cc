@@ -8,6 +8,12 @@ static void print_usage(const char *name){
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
+MyGlob getGlobSimulateMove(const char *path){
+	MyGlob gl;
+	gl.open(path);
+	return gl;
+}
+
 int main(int argc, char **argv){
 	if (argc < 2){
 		print_usage(argv[0]);
@@ -16,9 +22,7 @@ int main(int argc, char **argv){
 
 	const char *path = argv[1];
 
-	MyGlob gl;
-
-	gl.open(path);
+	MyGlob gl = getGlobSimulateMove(path);
 
 	for(auto s = gl.first(); s; s = gl.next())
 		printf("%s\n", s);

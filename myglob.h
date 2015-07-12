@@ -9,6 +9,9 @@
 
 class MyGlob{
 public:
+	MyGlob(){};
+	MyGlob(MyGlob &&other);
+	MyGlob& operator=(MyGlob other) = delete;
 	virtual ~MyGlob(){
 		close();
 	};
