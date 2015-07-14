@@ -25,7 +25,6 @@ public:
 	}
 
 	virtual const Pair *get(const char *key) const override;
-	virtual const Pair *getAfter(const char *key) const override;
 
 	virtual void _rewind(const char *key = nullptr) override;
 

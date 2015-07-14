@@ -47,29 +47,6 @@ const Pair *DirTable::get(const char *key) const{
 	return nullptr;
 }
 
-const Pair *DirTable::getAfter(const char *key) const{
-	const Pair *result = nullptr;
-
-	for(size_t i = 0; i < _filesCount; ++i){
-		DiskTable & file = _files[i];
-
-		const Pair *pair = file.getAfter(key);
-
-		if (pair == nullptr)
-			continue;
-
-		if (result == nullptr){
-			result = pair;
-			continue;
-		}
-
-		if (result->cmp2(*pair) > 0)
-			result = pair;
-	}
-
-	return result;
-}
-
 void DirTable::_rewind(const char *key){
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable &file = _files[i];

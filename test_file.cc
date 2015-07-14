@@ -15,7 +15,7 @@
 #define PROCESS_STEP	1000 * 10
 
 static void listLoad(IList &list, const char *filename, bool tombstones = true);
-static void listSearch(IROList &list, const char *key, bool after = false);
+static void listSearch(IROList &list, const char *key);
 
 static char *trim(char *s);
 
@@ -74,11 +74,11 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 	return 0;
 }
 
-static int op_filesearch(const char *filename, const char *key, bool after = false){
+static int op_filesearch(const char *filename, const char *key){
 	DiskTable list;
 
 	list.open(filename);
-	listSearch(list, key, after);
+	listSearch(list, key);
 
 	return 0;
 }
@@ -127,12 +127,6 @@ int main(int argc, char **argv){
 				key
 			);
 
-	case 'R':	return op_filesearch(
-				filename,
-				key,
-				true
-			);
-
 	case 'L':	return op_list(
 				filename,
 				key
@@ -153,7 +147,6 @@ static void printUsage(const char *cmd){
 	printf("\t%s s [class] [file.txt] [key]      - load file.txt, then search for the key\n",		cmd);
 	printf("\t%s w [class] [file.txt] [file.dat] - load file.txt, then create file.dat\n",			cmd);
 	printf("\t%s r -       [file.dat] [key]      - load file.dat, then search for the key\n",		cmd);
-	printf("\t%s R -       [file.dat] [key]      - load file.dat, then search~ for the key\n",		cmd);
 	printf("\t%s l -       [file.dat] [key]      - load file.dat, then list using iterator\n",		cmd);
 	printf("\t%s L -       [file.dat] [key]      - load file.dat, then list using iterator with start\n",	cmd);
 	printf("Classes are:\n");
@@ -188,8 +181,8 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 	fclose(f);
 }
 
-static void listSearch(IROList &list, const char *key, bool after){
-	const Pair *pair = after ? list.getAfter(key) :  list.get(key);
+static void listSearch(IROList &list, const char *key){
+	const Pair *pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);

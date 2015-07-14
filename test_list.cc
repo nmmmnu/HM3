@@ -57,10 +57,6 @@ static void list_test(const char *module, IList &list){
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
 
-	p = list.getAfter("3");
-	PRINTF_TEST("getAfter",		p && ! strcmp(p->getVal(), "Sofia")	);
-
-
 
 	// TEST OVERWRITE
 

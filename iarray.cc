@@ -29,18 +29,6 @@ const Pair *IArray::get(const char *key) const{
 	return getAt(index);
 }
 
-const Pair *IArray::getAfter(const char *key) const{
-	uint64_t index;
-	if (lookup(key, index)){
-		// key not found. return what was found.
-		return getAt(index);
-	}
-
-	// key not found. return next
-	++index;
-	return getAt(index);
-}
-
 // ==============================
 
 int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{

@@ -6,14 +6,13 @@
 static void printUsage(const char *name){
 	printf("Usage:\n");
 	printf("\t%s s [directory] [key] - open directory then search for the key\n", 		name);
-	printf("\t%s S [directory] [key] - open directory then search~ for the key\n", 		name);
 	printf("\t%s l [directory] -     - open directory then List dir using iterator\n",	name);
 	printf("\t%s L [directory] [key] - open directory then List dir using iterator\n",	name);
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
-void find(IROList &list, const char *key, bool after = false){
-	const Pair *pair = after ? list.getAfter(key) : list.get(key);
+void find(IROList &list, const char *key){
+	const Pair *pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);
@@ -48,10 +47,6 @@ int main(int argc, char **argv){
 	switch(op[0]){
 		case 's':
 			find(dt, key);
-			break;
-
-		case 'S':
-			find(dt, key, true);
 			break;
 
 		case 'l':

@@ -30,8 +30,8 @@ SkipList::SkipList(uint8_t height){
 		height = DEFAULT_HEIGHT;
 
 	_height = height;
-	_heads = new SkipList::Node*[height];
-	_loc   = new SkipList::Node*[height];
+	_heads = new Node*[height];
+	_loc   = new Node*[height];
 	//_loc   = & _heads[height]; // C, but much faster
 
 	_clear();
@@ -59,8 +59,8 @@ SkipList::~SkipList(){
 }
 
 void SkipList::removeAll(){
-	for(SkipList::Node *node = _heads[0]; node; ){
-		SkipList::Node *copy = node;
+	for(Node *node = _heads[0]; node; ){
+		Node *copy = node;
 
 		node = node->next[0];
 
@@ -77,7 +77,7 @@ bool SkipList::put(const Pair *newdata){
 
 	const char *key = newdata->getKey();
 
-	SkipList::Node *node = (SkipList::Node *) _locate(key);
+	Node *node = (Node *) _locate(key);
 
 	if (node){
 		// update in place. node MUST be not NULL...
@@ -109,9 +109,9 @@ bool SkipList::put(const Pair *newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	SkipList::Node *newnode = (SkipList::Node *) new(std::nothrow) char[
-				offsetof(SkipList::Node, next) +
-				height * sizeof(SkipList::Node *)
+	Node *newnode = (Node *) new(std::nothrow) char[
+				offsetof(Node, next) +
+				height * sizeof(Node *)
 			];
 
 	if (newnode == nullptr){
@@ -130,7 +130,7 @@ bool SkipList::put(const Pair *newdata){
 	for(uint8_t i = 0; i < height; ++i){
 		if (_loc[i]){
 			// we are at the middle
-			SkipList::Node *node = _loc[i];
+			Node *node = _loc[i];
 
 			newnode->next[i] = node->next[i];
 			node->next[i] = newnode;
@@ -157,23 +157,7 @@ bool SkipList::put(const Pair *newdata){
 }
 
 const Pair *SkipList::get(const char *key) const{
-	const SkipList::Node *node = _locate(key);
-
-	return node ? node->data : nullptr;
-}
-
-const Pair *SkipList::getAfter(const char *key) const{
-	const SkipList::Node *node = _locate(key, true);
-
-	if (node == nullptr){
-		// not found. use internal
-		node = _loc[0];
-	}else{
-		// found
-	}
-
-	// go to next in both cases
-	node = node ? node->next[0] : nullptr;
+	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;
 }
@@ -181,14 +165,14 @@ const Pair *SkipList::getAfter(const char *key) const{
 bool SkipList::remove(const char *key){
 	invalidate();
 
-	const SkipList::Node *node = _locate(key, true);
+	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
 		return true;
 
 	uint8_t i;
 	for(i = 0; i < _height; ++i){
-		SkipList::Node *prev = (SkipList::Node *) _loc[i];
+		Node *prev = (Node *) _loc[i];
 
 		if (prev){
 			// check if lane go to this node...
@@ -228,7 +212,7 @@ void SkipList::_rewind(const char *key){
 		return;
 	}
 
-	const SkipList::Node *node = _locate(key, true);
+	const Node *node = _locate(key, true);
 
 	if (node){
 		// found
@@ -263,7 +247,7 @@ void SkipList::printLanes() const{
 
 void SkipList::printLane(uint8_t lane) const{
 	uint64_t i = 0;
-	const SkipList::Node *node;
+	const Node *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
 		const Pair *data = node->data;
 		data->print();
@@ -279,10 +263,10 @@ void SkipList::_clear(){
 	_dataSize = 0;
 	_dataCount = 0;
 
-	memset(_heads, 0, _height * sizeof(SkipList::Node *) );
+	memset(_heads, 0, _height * sizeof(Node *) );
 
 	// no need to clean _loc
-	//memset(_loc, 0, _height * sizeof(SkipList::Node *) );
+	//memset(_loc, 0, _height * sizeof(Node *) );
 
 	invalidate();
 }
@@ -299,8 +283,8 @@ const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluatio
 
 	int cmp = 1;
 
-	const SkipList::Node *node = NULL;
-	const SkipList::Node *prev = NULL;
+	const Node *node = NULL;
+	const Node *prev = NULL;
 
 	uint8_t height = _height;
 	while(height){
@@ -321,7 +305,7 @@ const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluatio
 		if (cmp == 0 && complete_evaluation == false)
 			return node;
 
-		_loc[height - 1] = (SkipList::Node *) prev;
+		_loc[height - 1] = (Node *) prev;
 
 		--height;
 	}

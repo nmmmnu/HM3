@@ -28,8 +28,8 @@ LinkList::~LinkList(){
 }
 
 void LinkList::removeAll(){
-	for(LinkList::Node *node = _head; node; ){
-		LinkList::Node *copy = node;
+	for(Node *node = _head; node; ){
+		Node *copy = node;
 
 		node = node->next;
 
@@ -46,8 +46,8 @@ bool LinkList::put(const Pair *newdata){
 
 	const char *key = newdata->getKey();
 
-	LinkList::Node *prev = NULL;
-	for(LinkList::Node *node = _head; node; node = node->next){
+	Node *prev = NULL;
+	for(Node *node = _head; node; node = node->next){
 		const Pair *olddata = node->data;
 
 		const int cmp = olddata->cmp(key);
@@ -80,7 +80,7 @@ bool LinkList::put(const Pair *newdata){
 		prev = node;
 	}
 
-	LinkList::Node *newnode = new(std::nothrow) LinkList::Node;
+	Node *newnode = new(std::nothrow) Node;
 	if (newnode == NULL){
 		// prevent memory leak
 		Pair::destroy(newdata);
@@ -107,7 +107,7 @@ bool LinkList::put(const Pair *newdata){
 }
 
 const Pair *LinkList::get(const char *key) const{
-	const LinkList::Node *node = _locate(key);
+	const Node *node = _locate(key);
 
 	if (node == nullptr)
 		return nullptr;
@@ -117,28 +117,11 @@ const Pair *LinkList::get(const char *key) const{
 	return data->cmp(key) == 0 ? data : nullptr;
 }
 
-const Pair *LinkList::getAfter(const char *key) const{
-	const LinkList::Node *node = _locate(key);
-
-	if (node == nullptr)
-		return nullptr;
-
-	const Pair *data = node->data;
-
-	if (data->cmp(key) == 0){
-		// key found. return next
-		return node->next ? node->next->data : nullptr;
-	}
-
-	//  key not found. return what is found
-	return data;
-}
-
 bool LinkList::remove(const char *key){
 	invalidate();
 
-	LinkList::Node *prev = NULL;
-	LinkList::Node *node;
+	Node *prev = NULL;
+	Node *node;
 	for(node = _head; node; node = node->next){
 		const Pair *data = node->data;
 		const int cmp = data->cmp(key);
@@ -210,7 +193,7 @@ void LinkList::_clear(){
 }
 
 LinkList::Node *LinkList::_locate(const char *key) const{
-	for(LinkList::Node *node = _head; node; node = node->next){
+	for(Node *node = _head; node; node = node->next){
 		const Pair *data = node->data;
 
 		const int cmp = data->cmp(key);
