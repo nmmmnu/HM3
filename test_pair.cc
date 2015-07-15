@@ -4,6 +4,8 @@
 #include <string.h>	// strcmp
 #include <unistd.h>	// sleep
 
+#include <utility>	// std::move
+
 #include "nmea0183checksumcalculator.h"
 
 #define MODULE_NAME	"Pair"
@@ -25,8 +27,7 @@ static void pair_test_raw(){
 		'P', 'e', 't', 'e', 'r', '\0'			// val
 	};
 
-	Pair *p2 = (Pair *)raw_memory;
-	Pair &p = *p2;
+	const Pair p = (const void *) raw_memory;
 
 	p.print();
 
@@ -38,6 +39,17 @@ static void pair_test_raw(){
 	PRINTF_TEST("raw cmp",		p.cmp("!!! non existent") > 0	);
 }
 
+static void pair_test_null(){
+	Pair p = nullptr;
+
+	p.print();
+
+	PRINTF_TEST("null bool",	p == false			);
+	PRINTF_TEST("null key",		p.getKey() == nullptr		);
+	PRINTF_TEST("null val",		p.getVal() == nullptr		);
+	PRINTF_TEST("null cmp",		p.cmp("bla") == 1		);
+}
+
 static void pair_test(){
 	const char *key = "abcdef";
 	const char *val = "1234567890";
@@ -45,13 +57,12 @@ static void pair_test(){
 	NMEA0183ChecksumCalculator cs = NMEA0183ChecksumCalculator();
 	Pair::setChecksumCalculator(cs);
 
-	Pair *p2 = Pair::create(key, val);
-	Pair *t2 = Pair::create(key, nullptr);
+	const Pair p = { key, val };
 
-	Pair &p = *p2;
-	Pair &t = *t2;
-
-	PRINTF_TEST("tombstone",	t.getVal() == NULL		);
+	const Pair t = { key, nullptr };
+	
+	PRINTF_TEST("null bull ok",	p == true			);
+	PRINTF_TEST("tombstone",	t.getVal() == nullptr		);
 
 	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
 	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
@@ -79,25 +90,41 @@ static void pair_test(){
 	corruptor[0] = ~ corruptor[0];
 	}
 
+	{
+	Pair m1 = { key, val };
+	Pair m2 = std::move(m1);
+	PRINTF_TEST("move c-tor",	strcmp(m2.getKey(), key) == 0	);
+	Pair m3 = m2;
+	PRINTF_TEST("copy c-tor",	strcmp(m2.getKey(), key) == 0	);
+	PRINTF_TEST("copy c-tor",	strcmp(m3.getKey(), key) == 0	);
+	m1 = m2;
+	PRINTF_TEST("copy assign",	strcmp(m1.getKey(), key) == 0	);
+	}
+	
 	p.print();
 	t.print();
 }
 
-__attribute__ ((unused))
-static void pair_test_delay(){
-	Pair *p2 = Pair::create("key", "val", 1);
-	Pair &p = *p2;
+static void pair_test_expired(bool sl = false){
+	Pair p1 = { "key", "val", 1 };
 
-	PRINTF_TEST("not expired",	p.valid()			);
-	printf("sleep for 1 sec...\n");
-	sleep(2);
-	PRINTF_TEST("expired",		! p.valid()			);
+	PRINTF_TEST("not expired",	p1.valid()			);
+	
+	if (sl){
+		printf("sleep for 2 sec...\n");
+		sleep(2);
+		PRINTF_TEST("expired",		! p1.valid()			);
+	}
+	
+	Pair p2 = { "key", "val", 1, 3600 * 24 /* 1970-01-02 */ };
+	PRINTF_TEST("expired",		! p2.valid()			);
 }
 
 int main(int argc, char **argv){
 	pair_test_raw();
+	pair_test_null();
 	pair_test();
-	pair_test_delay();
+	pair_test_expired();
 
 	return 0;
 }

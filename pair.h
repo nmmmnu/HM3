@@ -8,18 +8,33 @@
 #include <string.h>	//strcmp
 
 class Pair{
-private:
-	Pair(){};
-
 public:
 	static const uint16_t MAX_KEY_SIZE = 0xffff;
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
-public:
-	static        Pair *create(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
-	static inline Pair *create(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
+public:	
+	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
+	
+	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0) : 
+			Pair(key, value, value ? strlen(value) : 0, expires, created){};
 
-	static void destroy(const Pair *pair);
+	Pair(const void *blob, bool ownBlob = false) :
+			blob((const Blob *) blob), 
+			ownBlob(ownBlob){};
+
+	Pair(Pair && other) :
+			Pair(other.blob, other.ownBlob){
+		other.ownBlob = false;
+	};
+
+	Pair(Pair & other) :
+			Pair(other.cloneBlob(), true){};
+
+	const Pair & operator=(const Pair& other);
+
+	~Pair();
+
+	inline operator bool() const;
 
 public:
 	const char *getKey() const;
@@ -35,38 +50,42 @@ public:
 
 	size_t getSize() const;
 
-	void print() const;
+	const void *cloneBlob() const;
 
+	void print() const;
+	
 public:
 	static inline void setChecksumCalculator(IChecksumCalculator & checksumCalculator);
 	static inline void removeChecksumCalculator();
 
 private:
+	struct Blob;
+	const Blob *blob = nullptr;
+	bool ownBlob = true;
+
+private:
 	static uint64_t __getCreateTime(uint32_t created);
+	static uint8_t __getChecksum(const void *buffer, size_t size);
 	constexpr static size_t __sizeofBase();
+
 	size_t _sizeofBuffer() const;
 	uint8_t _getChecksum() const;
 
 private:
-	uint64_t	created;	// 8
-	uint32_t	expires;	// 4, 136 years, not that bad.
-	uint32_t	vallen;		// 4
-	uint16_t	keylen;		// 2
-	uint8_t		checksum;	// 1
-	char		buffer[2];	// dynamic
+	static std_optional<IChecksumCalculator> __checksumCalculator;
 
-private:
-	static std_optional<IChecksumCalculator> _checksumCalculator;
-
-} __attribute__((__packed__));
+};
 
 // ==============================
 
-inline Pair *Pair::create(const char *key, const char *value, uint32_t expires, uint32_t created){
-	return create(key, value, value ? strlen(value) : 0, expires, created);
+inline Pair::operator bool() const{
+	return blob;
 }
 
 inline int Pair::cmp(const char *key) const{
+	if (blob == nullptr)
+		return 1;
+
 	return key == nullptr ? -1 : strcmp(getKey(), key);
 }
 
@@ -75,11 +94,11 @@ inline int Pair::cmp2(const Pair &pair) const{
 }
 
 inline void Pair::setChecksumCalculator(IChecksumCalculator & checksumCalculator){
-	_checksumCalculator = &checksumCalculator;
+	__checksumCalculator = &checksumCalculator;
 }
 
 inline void Pair::removeChecksumCalculator(){
-	_checksumCalculator = nullptr;
+	__checksumCalculator = nullptr;
 }
 
 #endif
