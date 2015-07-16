@@ -61,14 +61,16 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	blob = p;
 }
 
-const Pair & Pair::operator=(const Pair& other){
+const Pair & Pair::operator=(const Pair & other){
 	if (this == &other)
 		return *this;
-		
+	
+	const Blob *myblob = (const Blob *) other.cloneBlob();
+
 	if (ownBlob)
 		xfree((void *) blob);
 	
-	blob = (const Blob *) other.cloneBlob();
+	blob = myblob;
 	ownBlob = true;
 	
 	return *this;
