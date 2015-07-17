@@ -5,8 +5,8 @@
 #include <memory>
 
 struct LinkList::Node{
+	const void	*data;	// system dependent
 	LinkList::Node	*next;	// system dependent
-	const Pair	*data;	// system dependent
 };
 
 LinkList::LinkList(){
@@ -33,43 +33,43 @@ void LinkList::removeAll(){
 
 		node = node->next;
 
-		const Pair *data = copy->data;
-		Pair::destroy(data);
+		const Pair data = { copy->data, true };
+		
 		delete copy;
 	}
 
 	_clear();
 }
 
-bool LinkList::put(const Pair *newdata){
+bool LinkList::put(const Pair &newdata){
 	invalidate();
 
-	const char *key = newdata->getKey();
+	const char *key = newdata.getKey();
 
 	Node *prev = NULL;
 	for(Node *node = _head; node; node = node->next){
-		const Pair *olddata = node->data;
+		Pair olddata = node->data;
 
-		const int cmp = olddata->cmp(key);
+		const int cmp = olddata.cmp(key);
 
 		if (cmp == 0){
 			// handle overwrite,
 			// keep the node, overwrite the data
 
 			// check if the data in database is valid
-			if (! newdata->valid2(olddata)){
-				// prevent memory leak
-				Pair::destroy(newdata);
-
+			if (! newdata.valid2(olddata)){
+				// newdata will be magically destroyed.
 				return false;
 			}
 
 			_dataSize = _dataSize
-					- olddata->getSize()
-					+ newdata->getSize();
+					- olddata.getSize()
+					+ newdata.getSize();
 
-			Pair::destroy(olddata);
-			node->data = newdata;
+			olddata.getBlobOwnership();
+			// olddata will be magically destroyed.
+			
+			node->data = newdata.cloneBlob();
 
 			return true;
 		}
@@ -82,13 +82,11 @@ bool LinkList::put(const Pair *newdata){
 
 	Node *newnode = new(std::nothrow) Node;
 	if (newnode == NULL){
-		// prevent memory leak
-		Pair::destroy(newdata);
-
+		// newdata will be magically destroyed.
 		return false;
 	}
 
-	newnode->data = newdata;
+	newnode->data = newdata.cloneBlob();
 
 	// put new pair here...
 	if (prev){
@@ -100,21 +98,21 @@ bool LinkList::put(const Pair *newdata){
 		_head = newnode;
 	}
 
-	_dataSize += newdata->getSize();
+	_dataSize += newdata.getSize();
 	_dataCount++;
 
 	return true;
 }
 
-const Pair *LinkList::get(const char *key) const{
+const Pair LinkList::get(const char *key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
 		return nullptr;
 
-	const Pair *data = node->data;
+	const Pair data = node->data;
 
-	return data->cmp(key) == 0 ? data : nullptr;
+	return data.cmp(key) == 0 ? data : nullptr;
 }
 
 bool LinkList::remove(const char *key){
@@ -123,8 +121,8 @@ bool LinkList::remove(const char *key){
 	Node *prev = NULL;
 	Node *node;
 	for(node = _head; node; node = node->next){
-		const Pair *data = node->data;
-		const int cmp = data->cmp(key);
+		Pair data = node->data;
+		const int cmp = data.cmp(key);
 
 		if (cmp == 0){
 			if (prev){
@@ -134,10 +132,12 @@ bool LinkList::remove(const char *key){
 				_head = node->next;
 			}
 
-			_dataSize -= data->getSize();
+			_dataSize -= data.getSize();
 			_dataCount--;
 
-			Pair::destroy(data);
+			data.getBlobOwnership();
+			// data will be magically destroyed.
+			
 			delete node;
 
 			return true;
@@ -171,7 +171,7 @@ void LinkList::_rewind(const char *key){
 	_itHead = _locate(key);
 }
 
-const Pair *LinkList::_next(){
+const void *LinkList::_next(){
 	if (_itHead == nullptr)
 		return nullptr;
 
@@ -194,9 +194,9 @@ void LinkList::_clear(){
 
 LinkList::Node *LinkList::_locate(const char *key) const{
 	for(Node *node = _head; node; node = node->next){
-		const Pair *data = node->data;
+		const Pair data = node->data;
 
-		const int cmp = data->cmp(key);
+		const int cmp = data.cmp(key);
 
 		if (cmp == 0)
 			return node;

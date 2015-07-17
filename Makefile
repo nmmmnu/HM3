@@ -3,7 +3,7 @@ MYCC	= g++
 
 CC	= $(MYCC) -std=c++11 -Wall	\
 		-D_FILE_OFFSET_BITS=64	\
-		-MMD			\
+		-MMD -MP		\
 		-c
 
 LINK	= $(MYCC) -o
@@ -38,10 +38,10 @@ all: $(TARGETS)
 clean:
 	rm -f *.o *.d $(TARGETS)
 
-test_pair: test_pair.o		$(OBJECTS)
+test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_list: test_list.o		$(OBJECTS)
+test_list: test_list.o pair.o iiterator.o linklist.o  skiplist.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_file: test_file.o		$(OBJECTS)

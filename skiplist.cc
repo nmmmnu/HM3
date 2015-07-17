@@ -21,7 +21,7 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 */
 
 struct SkipList::Node{
-	const Pair	*data;		// system dependent
+	const void	*data;		// system dependent
 	SkipList::Node	*next[1];	// system dependent, dynamic, at least 1
 };
 
@@ -64,43 +64,41 @@ void SkipList::removeAll(){
 
 		node = node->next[0];
 
-		const Pair *data = copy->data;
-		Pair::destroy(data);
+		Pair data = { copy->data, true };
+		
 		delete[] copy;
 	}
 
 	_clear();
 }
 
-bool SkipList::put(const Pair *newdata){
+bool SkipList::put(const Pair &newdata){
 	invalidate();
 
-	const char *key = newdata->getKey();
+	const char *key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
 
 	if (node){
 		// update in place. node MUST be not NULL...
 
-		const Pair *olddata = node->data;
+		Pair olddata = node->data;
 
 		// check if the data in database is valid
-		if (! newdata->valid2(olddata) ){
-			// prevent memory leak
-			Pair::destroy(newdata);
-
+		if (! newdata.valid2(olddata) ){
+			// newdata will be magically destroyed.
 			return false;
 		}
 
-		// leave node, update only the data
-		node->data = newdata;
-
 		_dataSize = _dataSize
-			- olddata->getSize()
-			+ newdata->getSize();
+			- olddata.getSize()
+			+ newdata.getSize();
 
-		// release old data
-		Pair::destroy(olddata);
+		// leave node, update only the data
+		node->data = newdata.cloneBlob();;
+
+		olddata.getBlobOwnership();
+		// olddata will be magically destroyed.
 
 		return true;
 	}
@@ -115,15 +113,14 @@ bool SkipList::put(const Pair *newdata){
 			];
 
 	if (newnode == nullptr){
-		// prevent memory leak
-		Pair::destroy(newdata);
+		// newdata will be magically destroyed.
 		return false;
 	}
 
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->height = height
 
-	newnode->data = newdata;
+	newnode->data = newdata.cloneBlob();
 
 	// place new node where it belongs
 
@@ -150,13 +147,13 @@ bool SkipList::put(const Pair *newdata){
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->next[i] = NULL;
 
-	_dataSize += newdata->getSize();
+	_dataSize += newdata.getSize();
 	_dataCount++;
 
 	return true;
 }
 
-const Pair *SkipList::get(const char *key) const{
+const Pair SkipList::get(const char *key) const{
 	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;
@@ -185,12 +182,13 @@ bool SkipList::remove(const char *key){
 		}
 	}
 
-	const Pair *data = node->data;
+	Pair data = { node->data, true };
 
-	_dataSize -= data->getSize();
+	_dataSize -= data.getSize();
 	_dataCount--;
 
-	Pair::destroy(data);
+	// data will be magically destroyed.
+	
 	delete[] node;
 
 	return true;
@@ -224,7 +222,7 @@ void SkipList::_rewind(const char *key){
 	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
 }
 
-const Pair *SkipList::_next(){
+const void *SkipList::_next(){
 	if (_itHead == nullptr)
 		return nullptr;
 
@@ -249,8 +247,8 @@ void SkipList::printLane(uint8_t lane) const{
 	uint64_t i = 0;
 	const Node *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
-		const Pair *data = node->data;
-		data->print();
+		const Pair data = node->data;
+		data.print();
 
 		if (++i > 10)
 			break;
@@ -291,8 +289,8 @@ const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluatio
 		node = prev ? prev : _heads[height - 1];
 
 		while(node){
-			const Pair *data = node->data;
-			cmp = data->cmp(key);
+			const Pair data = node->data;
+			cmp = data.cmp(key);
 
 			if (cmp >= 0)
 				break;

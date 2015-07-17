@@ -2,6 +2,7 @@
 #define _IITERATOR_H
 
 #include <stdint.h>
+//#include <stdio.h>
 
 #include "pair.h"
 
@@ -12,9 +13,10 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	inline const Pair *first(const char *key = nullptr);
-	inline const Pair *current();
-	inline const Pair *next();
+	inline const Pair first(const char *key = nullptr);
+	inline const Pair current();
+	inline const Pair next();
+	
 	inline void invalidate();
 
 	uint64_t iteratorCount();
@@ -22,39 +24,41 @@ public:
 
 protected:
 	virtual void _rewind(const char *key = nullptr) = 0;
-	virtual const Pair *_next() = 0;
+	virtual const void *_next() = 0;
 
 private:
-	const Pair *_current = nullptr;
+	Pair _current = nullptr;
 	bool _valid = false;
 };
 
 // ==============================
 
-inline const Pair *IIterator::first(const char *key){
+inline const Pair IIterator::first(const char *key){
 	_rewind(key);
 	_valid = true;
 	return next();
 }
 
-inline const Pair *IIterator::current(){
-	return _valid ? _current : nullptr;
+inline const Pair IIterator::current(){
+	// _current is "false" no matter of _valid
+	return _current;
 }
 
-inline const Pair *IIterator::next(){
-	if (! _valid)
-		return nullptr;
+inline const Pair IIterator::next(){
+	if (_valid == false){
+		// _current is "false" no matter of _valid
+		return _current;
+	}
 
 	_current = _next();
+	//printf(">>> %p\n", _current);
 
-	if (! _current)
-		_valid = false;
-
-	return current();
+	return _current;
 }
 
 inline void IIterator::invalidate(){
 	_valid = false;
+	_current = nullptr;
 }
 
 

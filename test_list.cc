@@ -1,4 +1,4 @@
-#include "vectorlist.h"
+//#include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
 
@@ -11,9 +11,9 @@
 	printf("%-14s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
 
-inline static size_t list_add(IList &list, const Pair *p){
+inline static size_t list_add(IList &list, const Pair &p){
 	list.put(p);
-	return p->getSize();
+	return p.getSize();
 }
 
 static size_t list_populate(IList &list){
@@ -21,18 +21,16 @@ static size_t list_populate(IList &list){
 
 	size_t size = 0;
 
-	size += list_add(list, Pair::create("3 city",	"Sofia"	));
-	size += list_add(list, Pair::create("1 name",	"Niki"	));
-	size += list_add(list, Pair::create("4 os",	"Linux"	));
-	size += list_add(list, Pair::create("2 age",	"22"	));
+	size += list_add(list, Pair("3 city",	"Sofia"	));
+	size += list_add(list, Pair("1 name",	"Niki"	));
+	size += list_add(list, Pair("4 os",	"Linux"	));
+	size += list_add(list, Pair("2 age",	"22"	));
 
 	return size;
 }
 
 static void list_test(const char *module, IList &list){
-	const Pair *p;
-
-
+	Pair p = nullptr;
 
 	// TEST GENERAL
 
@@ -49,10 +47,10 @@ static void list_test(const char *module, IList &list){
 	// TEST GET
 
 	p = list.get("3 city");
-	PRINTF_TEST("get",		p && ! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("get",		p && ! strcmp(p.getVal(), "Sofia")	);
 
 	p = list["3 city"];
-	PRINTF_TEST("get[]",		p && ! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("get[]",		p && ! strcmp(p.getVal(), "Sofia")	);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -63,10 +61,10 @@ static void list_test(const char *module, IList &list){
 	const char *key_overwr = "2 val";
 	const char *val_overwr = "overwritten";
 
-	list.put( Pair::create(key_overwr, "original") );
-	list.put( Pair::create(key_overwr, val_overwr));
+	list.put( Pair(key_overwr, "original") );
+	list.put( Pair(key_overwr, val_overwr) );
 	p = list.get(key_overwr);
-	PRINTF_TEST("overwrite",	p && ! strcmp(p->getVal(), val_overwr)	);
+	PRINTF_TEST("overwrite",	p && ! strcmp(p.getVal(), val_overwr)	);
 
 
 
@@ -88,15 +86,15 @@ static void list_test(const char *module, IList &list){
 
 	p = list.get("3 city");
 
-	PRINTF_TEST("remove",		p && ! strcmp(p->getVal(), "Sofia")	);
+	PRINTF_TEST("remove",		p && ! strcmp(p.getVal(), "Sofia")	);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
-	PRINTF_TEST("remove sizeof",	list.getSize() == p->getSize()		);
+	PRINTF_TEST("remove sizeof",	list.getSize() == p.getSize()		);
 
 	// overwrite sizeof test
-	const Pair *sopair = Pair::create("3 city", nullptr);
+	const Pair sopair = {"3 city", nullptr};
 	list.put(sopair);
 	PRINTF_TEST("overwrite count",	list.getCount() == 1			);
-	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair->getSize()	);
+	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair.getSize()	);
 
 	// remove last element
 	list.remove("3 city");
@@ -114,23 +112,23 @@ static void list_test(const char *module, IList &list){
 	list_populate(list);
 
 	p = list.first();
-	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "Niki") == 0	);
-	p = list.current();
-	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Niki") == 0	);
-
-	p = list.first("2 age");
-	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "22") == 0	);
-	p = list.current();
-	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "22") == 0	);
-	p = list.next();
-	PRINTF_TEST("it next",		p && strcmp(p->getVal(), "Sofia") == 0	);
-	p = list.current();
-	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Sofia") == 0	);
-
-	p = list.first("4 os");
-	PRINTF_TEST("it first",		p && strcmp(p->getVal(), "Linux") == 0	);
-	p = list.current();
-	PRINTF_TEST("it current",	p && strcmp(p->getVal(), "Linux") == 0	);
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Niki") == 0	);
+	p = list.current();                          
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Niki") == 0	);
+                                                     
+	p = list.first("2 age");                     
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "22") == 0	);
+	p = list.current();                          
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "22") == 0	);
+	p = list.next();                             
+	PRINTF_TEST("it next",		p && strcmp(p.getVal(), "Sofia") == 0	);
+	p = list.current();                          
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Sofia") == 0	);
+                                                     
+	p = list.first("4 os");                      
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Linux") == 0	);
+	p = list.current();                          
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Linux") == 0	);
 	p = list.next();
 	PRINTF_TEST("it next",		! p					);
 	p = list.current();
@@ -142,17 +140,17 @@ static void list_test(const char *module, IList &list){
 }
 
 static void skiplist_lanes_test(SkipList &list){
-	list.put(Pair::create("name",		"Niki"		));
-	list.put(Pair::create("city",		"Sofia"		));
-	list.put(Pair::create("state",		"na"		));
-	list.put(Pair::create("zip",		"1000"		));
-	list.put(Pair::create("country",	"BG"		));
-	list.put(Pair::create("phone",		"+358 888 1000"	));
-	list.put(Pair::create("fax",		"+358 888 2000"	));
-	list.put(Pair::create("email",		"user@aol.com"	));
-	list.put(Pair::create("laptop",		"Dell"		));
-	list.put(Pair::create("os",		"Archlinux"	));
-	list.put(Pair::create("mouse",		"Logitech"	));
+	list.put(Pair("name",		"Niki"		));
+	list.put(Pair("city",		"Sofia"		));
+	list.put(Pair("state",		"na"		));
+	list.put(Pair("zip",		"1000"		));
+	list.put(Pair("country",	"BG"		));
+	list.put(Pair("phone",		"+358 888 1000"	));
+	list.put(Pair("fax",		"+358 888 2000"	));
+	list.put(Pair("email",		"user@aol.com"	));
+	list.put(Pair("laptop",		"Dell"		));
+	list.put(Pair("os",		"Archlinux"	));
+	list.put(Pair("mouse",		"Logitech"	));
 
 	list.printLanes();
 
@@ -160,12 +158,13 @@ static void skiplist_lanes_test(SkipList &list){
 }
 
 int main(int argc, char **argv){
+/*
 	VectorList vl;
 		list_test("Vector", vl);
 
 	VectorList vl2 = { std::move(vl) };
 		list_test("Moved Vector", vl2);
-
+*/
 	// =========================
 
 	LinkList ll;

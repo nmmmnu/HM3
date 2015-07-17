@@ -58,7 +58,7 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	p->checksum = __getChecksum(p->buffer, size - __sizeofBase());
 
 	// p must be valid POD class
-	blob = p;
+	_blob = p;
 }
 
 const Pair & Pair::operator=(const Pair & other){
@@ -67,16 +67,19 @@ const Pair & Pair::operator=(const Pair & other){
 	
 	const Blob *myblob = (const Blob *) other.cloneBlob();
 
-	if (ownBlob)
-		xfree((void *) blob);
+	if (_ownBlob)
+		xfree((void *) _blob);
 	
-	blob = myblob;
-	ownBlob = true;
+	_blob = myblob;
+	_ownBlob = true;
 	
 	return *this;
 }
 
 const void *Pair::cloneBlob() const{
+	if (_blob == nullptr)
+		return nullptr;
+
 	Blob *p = (Blob *) xmalloc(getSize());
 	
 	if (p == nullptr){
@@ -84,49 +87,49 @@ const void *Pair::cloneBlob() const{
 		throw exception;
 	}
 
-	memcpy(p, blob, getSize());
+	memcpy(p, _blob, getSize());
 	
 	return p;
 }
 
 Pair::~Pair(){
-	if (ownBlob)
-		xfree((void *) blob);
+	if (_ownBlob)
+		xfree((void *) _blob);
 }
 
 // ==============================
 
 const char *Pair::getKey() const{
-	if (blob == nullptr)
+	if (_blob == nullptr)
 		return nullptr;
 		
-	return & blob->buffer[0];
+	return & _blob->buffer[0];
 }
 
 const char *Pair::getVal() const{
-	if (blob == nullptr)
-		return nullptr;
-		
-	// vallen is 0 no matter of endianness
-	if (blob->vallen == 0)
+	if (_blob == nullptr)
 		return nullptr;
 
-	return & blob->buffer[ be16toh(blob->keylen) + 1 ];
+	// vallen is 0 no matter of endianness
+	if (_blob->vallen == 0)
+		return nullptr;
+
+	return & _blob->buffer[ be16toh(_blob->keylen) + 1 ];
 }
 
 bool Pair::valid() const{
-	if (blob == nullptr)
+	if (_blob == nullptr)
 		return false;
 
 	// now expires is 0 no matter of endianness
-	if (blob->expires){
-		if ( MyTime::expired( be64toh(blob->created), be32toh(blob->expires) ) )
+	if (_blob->expires){
+		if ( MyTime::expired( be64toh(_blob->created), be32toh(_blob->expires) ) )
 			return false;
 	}
 
 	// now check checksum
 	if (__checksumCalculator){
-		if (blob->checksum != _getChecksum())
+		if (_blob->checksum != _getChecksum())
 			return false;
 	}
 
@@ -139,15 +142,17 @@ size_t Pair::getSize() const{
 }
 
 void Pair::print() const{
-	if (blob == nullptr)
+	if (_blob == nullptr){
+		printf("Pair is empty\n");
 		return;
-
+	}
+	
 	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
 
 	printf(format,
 		getKey(), getVal(),
-		MyTime::STRING_SIZE, MyTime::toString(be64toh(blob->created)),
-		be32toh(blob->expires)
+		MyTime::STRING_SIZE, MyTime::toString(be64toh(_blob->created)),
+		be32toh(_blob->expires)
 	);
 }
 
@@ -158,7 +163,7 @@ uint64_t Pair::__getCreateTime(uint32_t created){
 }
 
 uint8_t Pair::_getChecksum() const{
-	return __getChecksum(blob->buffer, _sizeofBuffer());
+	return __getChecksum(_blob->buffer, _sizeofBuffer());
 }
 
 uint8_t Pair::__getChecksum(const void *buffer, size_t size){
@@ -171,8 +176,11 @@ uint8_t Pair::__getChecksum(const void *buffer, size_t size){
 constexpr size_t Pair::__sizeofBase(){
 	return offsetof(Blob, buffer);
 }
-
+ 
 size_t Pair::_sizeofBuffer() const{
-	return be16toh(blob->keylen) + 1 + be32toh(blob->vallen) + 1;
+	if (_blob == nullptr)
+		return 0;
+
+	return be16toh(_blob->keylen) + 1 + be32toh(_blob->vallen) + 1;
 }
 

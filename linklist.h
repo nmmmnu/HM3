@@ -7,13 +7,12 @@ class LinkList : virtual public IList{
 public:
 	LinkList();
 	LinkList(LinkList &&other);
-	LinkList& operator=(LinkList other) = delete;
 	virtual ~LinkList() override;
 
 	virtual void removeAll() override;
 
-	virtual bool put(const Pair *pair) override;
-	virtual const Pair *get(const char *key) const override;
+	virtual bool put(const Pair &pair) override;
+	virtual const Pair get(const char *key) const override;
 	virtual bool remove(const char *key) override;
 
 	virtual uint64_t getCount() const override;
@@ -21,7 +20,7 @@ public:
 
 protected:
 	virtual void _rewind(const char *key = nullptr) override;
-	virtual const Pair *_next() override;
+	virtual const void *_next() override;
 
 private:
 	struct Node;

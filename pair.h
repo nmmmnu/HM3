@@ -6,6 +6,7 @@
 #include "ichecksumcalculator.h"
 
 #include <string.h>	//strcmp
+//#include <stdio.h>
 
 class Pair{
 public:
@@ -19,15 +20,15 @@ public:
 			Pair(key, value, value ? strlen(value) : 0, expires, created){};
 
 	Pair(const void *blob, bool ownBlob = false) :
-			blob((const Blob *) blob), 
-			ownBlob(ownBlob){};
+			_blob((const Blob *) blob), 
+			_ownBlob(ownBlob){};
 
 	Pair(Pair && other) :
-			Pair(other.blob, other.ownBlob){
-		other.ownBlob = false;
+			Pair(other._blob, other._ownBlob){
+		other._ownBlob = false;
 	};
 
-	Pair(Pair & other) :
+	Pair(const Pair & other) :
 			Pair(other.cloneBlob(), true){};
 
 	const Pair & operator=(const Pair& other);
@@ -44,13 +45,23 @@ public:
 	inline int cmp2(const Pair &pair) const;
 
 	bool valid() const;
-	inline bool valid2(const Pair *pair) const{
+	inline bool valid2(const Pair &pair) const{
 		return valid();
 	}
 
 	size_t getSize() const;
 
 	const void *cloneBlob() const;
+	
+	const void *_____giveBlobOwnership(){
+		if (! _ownBlob)
+			return cloneBlob();
+			
+		_ownBlob = false;
+		return _blob;
+	}
+
+	inline void getBlobOwnership();
 
 	void print() const;
 	
@@ -60,8 +71,8 @@ public:
 
 private:
 	struct Blob;
-	const Blob *blob = nullptr;
-	bool ownBlob = true;
+	const Blob *_blob = nullptr;
+	bool _ownBlob = true;
 
 private:
 	static uint64_t __getCreateTime(uint32_t created);
@@ -79,11 +90,11 @@ private:
 // ==============================
 
 inline Pair::operator bool() const{
-	return blob;
+	return _blob;
 }
 
 inline int Pair::cmp(const char *key) const{
-	if (blob == nullptr)
+	if (_blob == nullptr)
 		return 1;
 
 	return key == nullptr ? -1 : strcmp(getKey(), key);
@@ -92,6 +103,11 @@ inline int Pair::cmp(const char *key) const{
 inline int Pair::cmp2(const Pair &pair) const{
 	return cmp(pair.getKey());
 }
+
+inline void Pair::getBlobOwnership(){
+	_ownBlob = true;
+}
+
 
 inline void Pair::setChecksumCalculator(IChecksumCalculator & checksumCalculator){
 	__checksumCalculator = &checksumCalculator;
