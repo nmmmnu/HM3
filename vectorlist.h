@@ -11,18 +11,7 @@ public:
 public:
 	VectorList(size_t reallocChunkSize = 0);
 	VectorList(VectorList &&other);
-	virtual ~VectorList();
-
-	virtual void removeAll() override;
-
-	virtual bool put(const Pair &data) override;
-	virtual bool remove(const char *key) override;
-
-	virtual uint64_t getCount() const override;
-	virtual size_t getSize() const override;
-
-protected:
-	virtual const void *_getAt(uint64_t index) const override;
+	virtual ~VectorList() override;
 
 private:
 	size_t		_reallocSize;
@@ -32,6 +21,17 @@ private:
 
 	uint64_t	_dataCount;
 	size_t		_dataSize;
+
+private:
+	virtual void _removeAll() override;
+
+	virtual bool _put(const Pair &data) override;
+	virtual bool _remove(const char *key) override;
+
+	virtual Pair _getAt(uint64_t index) const override;
+
+	virtual uint64_t _getCount() const override;
+	virtual size_t _getSize() const override;
 
 private:
 	void _clear(bool alsoFree = false);

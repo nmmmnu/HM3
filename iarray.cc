@@ -18,12 +18,12 @@ const void *IArray::_next(){
 	if (_itPos >= getCount())
 		return nullptr;
 
-	return _getAt(_itPos++);
+	return _getAt(_itPos++).getBlob();
 }
 
 // ==============================
 
-Pair IArray::get(const char *key) const{
+Pair IArray::_get(const char *key) const{
 	uint64_t index;
 	if (lookup(key, index))
 		return nullptr;

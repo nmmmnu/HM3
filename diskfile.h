@@ -18,10 +18,11 @@ struct DiskTableHeader{
 
 class DiskFile{
 public:
-	       static bool create(const char *filename, IIterator &it, uint64_t datacount);
-	inline static bool create(const char *filename, IROList &list);
+	static bool create(const char *filename, IIterator &it, uint64_t datacount);
+	static bool create(const char *filename, IROList &list);
 
-	constexpr inline static size_t sizeofHeader();
+	constexpr 
+	static size_t sizeofHeader();
 
 private:
 	static bool _writeIteratorToFile(IIterator &it, uint64_t datacount, std::ofstream &file);
@@ -34,7 +35,8 @@ inline bool DiskFile::create(const char *filename, IROList &list){
 	return create(filename, list.getIterator(), list.getCount());
 }
 
-constexpr inline size_t DiskFile::sizeofHeader(){
+constexpr
+inline size_t DiskFile::sizeofHeader(){
 	return offsetof(DiskTableHeader, data);
 }
 

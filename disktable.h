@@ -15,14 +15,12 @@ public:
 	bool open(const char *filename);
 	void close();
 
-	virtual uint64_t getCount() const override{
-		return _datacount;
-	};
 
-	virtual size_t getSize() const override;
+private:
+	virtual Pair _getAt(uint64_t index) const override;
 
-protected:
-	virtual const void *_getAt(uint64_t index) const override;
+	virtual uint64_t _getCount() const override;
+	virtual size_t _getSize() const override;
 
 private:
 	int		_fd;
@@ -32,7 +30,7 @@ private:
 	uint64_t	_datacount	= 0;
 
 private:
-	uint64_t _getCount() const;
+	uint64_t _getCountFromDisk() const;
 };
 
 #endif

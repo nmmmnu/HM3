@@ -58,7 +58,7 @@ SkipList::~SkipList(){
 	delete[] _loc;
 }
 
-void SkipList::removeAll(){
+void SkipList::_removeAll(){
 	for(Node *node = _heads[0]; node; ){
 		Node *copy = node;
 
@@ -73,9 +73,7 @@ void SkipList::removeAll(){
 	_clear();
 }
 
-bool SkipList::put(const Pair &newdata){
-	invalidate();
-
+bool SkipList::_put(const Pair &newdata){
 	const char *key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
@@ -154,15 +152,13 @@ bool SkipList::put(const Pair &newdata){
 	return true;
 }
 
-Pair SkipList::get(const char *key) const{
+Pair SkipList::_get(const char *key) const{
 	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;
 }
 
-bool SkipList::remove(const char *key){
-	invalidate();
-
+bool SkipList::_remove(const char *key){
 	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
@@ -195,11 +191,11 @@ bool SkipList::remove(const char *key){
 	return true;
 }
 
-uint64_t SkipList::getCount() const{
+uint64_t SkipList::_getCount() const{
 	return _dataCount;
 }
 
-size_t SkipList::getSize() const{
+size_t SkipList::_getSize() const{
 	return _dataSize;
 }
 
@@ -266,8 +262,6 @@ void SkipList::_clear(){
 
 	// no need to clean _loc
 	//memset(_loc, 0, _height * sizeof(Node *) );
-
-	invalidate();
 }
 
 const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluation) const{

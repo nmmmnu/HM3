@@ -9,16 +9,16 @@ public:
 	LinkList(LinkList &&other);
 	virtual ~LinkList() override;
 
-	virtual void removeAll() override;
+private:
+	virtual void _removeAll() override;
 
-	virtual bool put(const Pair &pair) override;
-	virtual Pair get(const char *key) const override;
-	virtual bool remove(const char *key) override;
+	virtual bool _put(const Pair &pair) override;
+	virtual Pair _get(const char *key) const override;
+	virtual bool _remove(const char *key) override;
 
-	virtual uint64_t getCount() const override;
-	virtual size_t getSize() const override;
+	virtual uint64_t _getCount() const override;
+	virtual size_t _getSize() const override;
 
-protected:
 	virtual void _rewind(const char *key = nullptr) override;
 	virtual const void *_next() override;
 

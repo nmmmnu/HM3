@@ -45,7 +45,7 @@ bool DiskTable::open(const char *filename){
 	_mem = mem;
 
 	// memoize count instead to read it from the disk each time
-	_datacount = _getCount();
+	_datacount = _getCountFromDisk();
 
 	if (size < DiskFile::sizeofHeader() + _datacount * sizeof(uint64_t)){
 		close();
@@ -66,10 +66,11 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-const void *DiskTable::_getAt(uint64_t index) const{
-	if (index >= getCount())
-		return nullptr;
-
+Pair DiskTable::_getAt(uint64_t index) const{
+	// index is check in parent
+	
+	// TODO: check if we are inside the memory block.
+	
 	const char *mem = (char *) _mem;
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 
@@ -77,11 +78,15 @@ const void *DiskTable::_getAt(uint64_t index) const{
 	return & mem[ptr];
 }
 
-size_t DiskTable::getSize() const{
+uint64_t DiskTable::_getCount() const{
+	return _datacount;
+};
+
+size_t DiskTable::_getSize() const{
 	return _size - DiskFile::sizeofHeader() - _datacount * sizeof(uint64_t);
 }
 
-uint64_t DiskTable::_getCount() const{
+uint64_t DiskTable::_getCountFromDisk() const{
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 	return be64toh(head->size);
 }

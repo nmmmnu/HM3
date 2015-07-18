@@ -4,9 +4,6 @@
 #include "irolist.h"
 #include "disktable.h"
 
-#include <vector>
-#include <memory>
-
 class DirTable : virtual public IROList{
 public:
 	virtual ~DirTable() override{
@@ -16,19 +13,18 @@ public:
 	bool open(const char *path);
 	void close();
 
-	virtual uint64_t getCount() const override{
+protected:
+	virtual Pair _get(const char *key) const override;
+	
+	virtual uint64_t _getCount() const override{
 		return 0;
 	};
 
-	virtual size_t getSize() const override{
+	virtual size_t _getSize() const override{
 		return 0;
 	}
 
-	virtual Pair get(const char *key) const override;
-
 	virtual void _rewind(const char *key = nullptr) override;
-
-protected:
 	virtual const void *_next() override;
 
 private:

@@ -13,52 +13,51 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	inline Pair first(const char *key = nullptr);
-	inline Pair current();
-	inline Pair next();
+	Pair first(const char *key = nullptr);
+	Pair current();
+	Pair next();
 	
-	inline void invalidate();
-
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 
 protected:
+	void invalidate();
+
+private:
 	virtual void _rewind(const char *key = nullptr) = 0;
 	virtual const void *_next() = 0;
 
-private:
-	Pair _current = nullptr;
-	bool _valid = false;
+	Pair     _current = nullptr;
+	uint64_t _ver   = 1;
+	uint64_t _verIt = 0;
 };
 
 // ==============================
 
 inline Pair IIterator::first(const char *key){
 	_rewind(key);
-	_valid = true;
+	_verIt = _ver;
 	return next();
 }
 
 inline Pair IIterator::current(){
-	// _current is "false" no matter of _valid
+	if (_verIt != _ver)
+		return nullptr;
+	
 	return _current;
 }
 
 inline Pair IIterator::next(){
-	if (_valid == false){
-		// _current is "false" no matter of _valid
-		return _current;
-	}
+	if (_verIt != _ver)
+		return nullptr;
 		
 	_current = _next();
-	//printf("ITER %12p, %12s\n", _current._blob, _current._ownBlob ? "Own" : "Not Own");
 
 	return _current;
 }
 
 inline void IIterator::invalidate(){
-	_valid = false;
-	_current = nullptr;
+	++_ver;
 }
 
 

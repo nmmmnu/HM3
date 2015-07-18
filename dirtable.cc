@@ -2,8 +2,6 @@
 
 #include "myglob.h"
 
-#include <utility>
-
 bool DirTable::open(const char *path){
 	close();
 
@@ -36,7 +34,7 @@ void DirTable::close(){
 	_filesCount = 0;
 }
 
-Pair DirTable::get(const char *key) const{
+Pair DirTable::_get(const char *key) const{
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable & file = _files[i];
 

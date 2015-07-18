@@ -27,7 +27,7 @@ LinkList::~LinkList(){
 		removeAll();
 }
 
-void LinkList::removeAll(){
+void LinkList::_removeAll(){
 	for(Node *node = _head; node; ){
 		Node *copy = node;
 
@@ -42,9 +42,7 @@ void LinkList::removeAll(){
 	_clear();
 }
 
-bool LinkList::put(const Pair &newdata){
-	invalidate();
-
+bool LinkList::_put(const Pair &newdata){
 	const char *key = newdata.getKey();
 
 	Node *prev = NULL;
@@ -105,7 +103,7 @@ bool LinkList::put(const Pair &newdata){
 	return true;
 }
 
-Pair LinkList::get(const char *key) const{
+Pair LinkList::_get(const char *key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
@@ -116,9 +114,7 @@ Pair LinkList::get(const char *key) const{
 	return data.cmp(key) == 0 ? data : nullptr;
 }
 
-bool LinkList::remove(const char *key){
-	invalidate();
-
+bool LinkList::_remove(const char *key){
 	Node *prev = NULL;
 	Node *node;
 	for(node = _head; node; node = node->next){
@@ -153,11 +149,11 @@ bool LinkList::remove(const char *key){
 	return true;
 }
 
-uint64_t LinkList::getCount() const{
+uint64_t LinkList::_getCount() const{
 	return _dataCount;
 }
 
-size_t LinkList::getSize() const{
+size_t LinkList::_getSize() const{
 	return _dataSize;
 }
 
@@ -189,8 +185,6 @@ void LinkList::_clear(){
 	_dataCount = 0;
 	_dataSize = 0;
 	_head = nullptr;
-
-	invalidate();
 }
 
 LinkList::Node *LinkList::_locate(const char *key) const{

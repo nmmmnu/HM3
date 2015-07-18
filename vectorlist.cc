@@ -29,7 +29,9 @@ VectorList::~VectorList(){
 		removeAll();
 }
 
-void VectorList::removeAll(){
+
+
+void VectorList::_removeAll(){
 	for(uint64_t i = 0; i < _dataCount; ++i){
 		Pair data = { _buffer[i], true };
 		// data will be magically destroyed.
@@ -38,9 +40,7 @@ void VectorList::removeAll(){
 	_clear(true);
 }
 
-bool VectorList::put(const Pair &newdata){
-	invalidate();
-
+bool VectorList::_put(const Pair &newdata){
 	const char *key = newdata.getKey();
 
 	uint64_t index;
@@ -82,9 +82,7 @@ bool VectorList::put(const Pair &newdata){
 	return true;
 }
 
-bool VectorList::remove(const char *key){
-	invalidate();
-
+bool VectorList::_remove(const char *key){
 	uint64_t index;
 	if (lookup(key, index)){
 		// the key does not exists in the vector.
@@ -102,15 +100,16 @@ bool VectorList::remove(const char *key){
 	return true;
 }
 
-const void *VectorList::_getAt(uint64_t index) const{
-	return index < _dataCount ? _buffer[index] : nullptr;
+Pair VectorList::_getAt(uint64_t index) const{
+	// will be double check in parent
+	return _buffer[index];
 }
 
-uint64_t VectorList::getCount() const{
+uint64_t VectorList::_getCount() const{
 	return _dataCount;
 }
 
-size_t VectorList::getSize() const{
+size_t VectorList::_getSize() const{
 	return _dataSize;
 }
 
@@ -124,8 +123,6 @@ void VectorList::_clear(bool alsoFree){
 	_dataSize = 0;
 	_bufferSize = 0;
 	_buffer = nullptr;
-
-	invalidate();
 }
 
 bool VectorList::_shiftL(uint64_t index){
