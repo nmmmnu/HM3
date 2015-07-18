@@ -2,7 +2,7 @@
 #define _IITERATOR_H
 
 #include <stdint.h>
-//#include <stdio.h>
+#include <stdio.h>
 
 #include "pair.h"
 
@@ -13,9 +13,9 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	inline const Pair first(const char *key = nullptr);
-	inline const Pair current();
-	inline const Pair next();
+	inline Pair first(const char *key = nullptr);
+	inline Pair current();
+	inline Pair next();
 	
 	inline void invalidate();
 
@@ -33,25 +33,25 @@ private:
 
 // ==============================
 
-inline const Pair IIterator::first(const char *key){
+inline Pair IIterator::first(const char *key){
 	_rewind(key);
 	_valid = true;
 	return next();
 }
 
-inline const Pair IIterator::current(){
+inline Pair IIterator::current(){
 	// _current is "false" no matter of _valid
 	return _current;
 }
 
-inline const Pair IIterator::next(){
+inline Pair IIterator::next(){
 	if (_valid == false){
 		// _current is "false" no matter of _valid
 		return _current;
 	}
-
+		
 	_current = _next();
-	//printf(">>> %p\n", _current);
+	//printf("ITER %12p, %12s\n", _current._blob, _current._ownBlob ? "Own" : "Not Own");
 
 	return _current;
 }

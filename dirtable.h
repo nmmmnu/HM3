@@ -24,12 +24,12 @@ public:
 		return 0;
 	}
 
-	virtual const Pair *get(const char *key) const override;
+	virtual Pair get(const char *key) const override;
 
 	virtual void _rewind(const char *key = nullptr) override;
 
 protected:
-	virtual const Pair *_next() override;
+	virtual const void *_next() override;
 
 private:
 	DiskTable	*_files		= nullptr;

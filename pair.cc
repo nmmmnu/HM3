@@ -61,17 +61,24 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	_blob = p;
 }
 
-const Pair & Pair::operator=(const Pair & other){
-	if (this == &other)
-		return *this;
-	
-	const Blob *myblob = (const Blob *) other.cloneBlob();
+Pair::Pair(Pair && other) :
+		Pair(other._blob, other._ownBlob){
+	other._ownBlob = false;
+};
 
-	if (_ownBlob)
-		xfree((void *) _blob);
+Pair::Pair(const Pair & other){
+	if (other._ownBlob)
+		printf("WARNING: copy c-tor with allocation\n");
 	
-	_blob = myblob;
-	_ownBlob = true;
+	const void *blob = other._ownBlob ? other.cloneBlob() : other._blob;
+	
+	_blob = (const Blob *) blob;
+	_ownBlob = other._ownBlob;
+}
+
+Pair & Pair::operator=(Pair other){
+	std::swap(_blob,    other._blob   );
+	std::swap(_ownBlob, other._ownBlob);
 	
 	return *this;
 }
@@ -79,9 +86,9 @@ const Pair & Pair::operator=(const Pair & other){
 const void *Pair::cloneBlob() const{
 	if (_blob == nullptr)
 		return nullptr;
-
-	Blob *p = (Blob *) xmalloc(getSize());
 	
+	void *p = xmalloc(getSize());
+
 	if (p == nullptr){
 		std::bad_alloc exception;
 		throw exception;
@@ -143,16 +150,17 @@ size_t Pair::getSize() const{
 
 void Pair::print() const{
 	if (_blob == nullptr){
-		printf("Pair is empty\n");
+		printf("--- Pair is empty ---\n");
 		return;
 	}
 	
-	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
+	static const char *format = "%-20s | %-20s | %-*s | %8u | %s\n";
 
 	printf(format,
 		getKey(), getVal(),
 		MyTime::STRING_SIZE, MyTime::toString(be64toh(_blob->created)),
-		be32toh(_blob->expires)
+		be32toh(_blob->expires),
+		_ownBlob ? "Y" : "N"
 	);
 }
 
@@ -176,7 +184,7 @@ uint8_t Pair::__getChecksum(const void *buffer, size_t size){
 constexpr size_t Pair::__sizeofBase(){
 	return offsetof(Blob, buffer);
 }
- 
+
 size_t Pair::_sizeofBuffer() const{
 	if (_blob == nullptr)
 		return 0;

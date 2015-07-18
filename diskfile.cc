@@ -35,12 +35,12 @@ bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t datacount, std::ofst
 	for(auto pair = it.first(); pair; pair = it.next()){
 		be = htobe64(current);
 		file.write( (const char *) & be, sizeof(uint64_t));
-		current += pair->getSize();
+		current += pair.getSize();
 	}
 
 	// traverse and write the data.
 	for(auto pair = it.first(); pair; pair = it.next()){
-		file.write( (const char *) pair, pair->getSize() );
+		file.write( (const char *) pair.getBlob(), pair.getSize() );
 	}
 
 	return true;

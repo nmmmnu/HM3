@@ -23,15 +23,9 @@ public:
 			_blob((const Blob *) blob), 
 			_ownBlob(ownBlob){};
 
-	Pair(Pair && other) :
-			Pair(other._blob, other._ownBlob){
-		other._ownBlob = false;
-	};
-
-	Pair(const Pair & other) :
-			Pair(other.cloneBlob(), true){};
-
-	const Pair & operator=(const Pair& other);
+	Pair(Pair && other);
+	Pair(const Pair & other);
+	Pair & operator=(Pair other);
 
 	~Pair();
 
@@ -42,24 +36,17 @@ public:
 	const char *getVal() const;
 
 	inline int cmp(const char *key) const;
-	inline int cmp2(const Pair &pair) const;
+	inline int cmp(const Pair &pair) const;
 
 	bool valid() const;
-	inline bool valid2(const Pair &pair) const{
+	bool valid(const Pair &pair) const{
 		return valid();
 	}
 
 	size_t getSize() const;
 
 	const void *cloneBlob() const;
-	
-	const void *_____giveBlobOwnership(){
-		if (! _ownBlob)
-			return cloneBlob();
-			
-		_ownBlob = false;
-		return _blob;
-	}
+	inline const void *getBlob() const;
 
 	inline void getBlobOwnership();
 
@@ -93,6 +80,10 @@ inline Pair::operator bool() const{
 	return _blob;
 }
 
+inline const void *Pair::getBlob() const{
+	return _blob;
+}
+
 inline int Pair::cmp(const char *key) const{
 	if (_blob == nullptr)
 		return 1;
@@ -100,7 +91,7 @@ inline int Pair::cmp(const char *key) const{
 	return key == nullptr ? -1 : strcmp(getKey(), key);
 }
 
-inline int Pair::cmp2(const Pair &pair) const{
+inline int Pair::cmp(const Pair &pair) const{
 	return cmp(pair.getKey());
 }
 

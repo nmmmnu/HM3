@@ -65,7 +65,8 @@ void SkipList::removeAll(){
 		node = node->next[0];
 
 		Pair data = { copy->data, true };
-		
+		// data will be magically destroyed.
+
 		delete[] copy;
 	}
 
@@ -85,7 +86,7 @@ bool SkipList::put(const Pair &newdata){
 		Pair olddata = node->data;
 
 		// check if the data in database is valid
-		if (! newdata.valid2(olddata) ){
+		if (! newdata.valid(olddata) ){
 			// newdata will be magically destroyed.
 			return false;
 		}
@@ -153,7 +154,7 @@ bool SkipList::put(const Pair &newdata){
 	return true;
 }
 
-const Pair SkipList::get(const char *key) const{
+Pair SkipList::get(const char *key) const{
 	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;

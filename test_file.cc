@@ -1,7 +1,7 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "std/std_auto_ptr.h"
+#include <memory>
 
 #include "disktable.h"
 #include "diskfile.h"
@@ -21,28 +21,28 @@ static char *trim(char *s);
 
 static void printUsage(const char *cmd);
 
-static std_auto_ptr<IList> factory(char what){
+static std::unique_ptr<IList> factory(char what){
 	switch(what){
 	case 'v':
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::LINEAR_SEARCH);
-			return vlist;
+			return std::unique_ptr<IList>( vlist );
 		}
 
 	case 'V':
 		{
 			VectorList *vlist = new VectorList();
 			vlist->setLookupMethod(VectorList::BINARY_SEARCH);
-			return vlist;
+			return std::unique_ptr<IList>( vlist );
 		}
 
 	case 'l':
-		return new LinkList();
+		return std::unique_ptr<IList>( new LinkList() );
 
 	default:
 	case 's':
-		return new SkipList();
+		return std::unique_ptr<IList>( new SkipList() );
 	}
 }
 
@@ -87,8 +87,8 @@ static int op_list(const char *filename, const char *key = nullptr, size_t count
 	DiskTable list;
 	list.open(filename);
 
-	for(const Pair *pair = list.first(key); pair; pair = list.next()){
-		pair->print();
+	for(Pair pair = list.first(key); pair; pair = list.next()){
+		pair.print();
 
 		if (--count == 0)
 			break;
@@ -111,13 +111,13 @@ int main(int argc, char **argv){
 
 	switch(op[0]){
 	case 's':	return op_search(
-				factory(what[0]).value(),
+				*factory(what[0]),
 				filename,
 				key
 			);
 
 	case 'w':	return op_write(
-				factory(what[0]).value(),
+				*factory(what[0]),
 				filename,
 				filename2
 			);
@@ -169,7 +169,7 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 
 		const char *val = tombstones ? nullptr : filename;
 
-		list.put(Pair::create(key, val));
+		list.put( Pair{ key, val } );
 
 		++i;
 
@@ -182,14 +182,14 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 }
 
 static void listSearch(IROList &list, const char *key){
-	const Pair *pair = list.get(key);
+	const Pair pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);
 		return;
 	}
 
-	pair->print();
+	pair.print();
 }
 
 static char *trim(char *s){

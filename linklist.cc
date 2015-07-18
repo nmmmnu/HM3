@@ -33,7 +33,8 @@ void LinkList::removeAll(){
 
 		node = node->next;
 
-		const Pair data = { copy->data, true };
+		Pair data = { copy->data, true };
+		// data will be magically destroyed.
 		
 		delete copy;
 	}
@@ -57,7 +58,7 @@ bool LinkList::put(const Pair &newdata){
 			// keep the node, overwrite the data
 
 			// check if the data in database is valid
-			if (! newdata.valid2(olddata)){
+			if (! newdata.valid(olddata)){
 				// newdata will be magically destroyed.
 				return false;
 			}
@@ -104,7 +105,7 @@ bool LinkList::put(const Pair &newdata){
 	return true;
 }
 
-const Pair LinkList::get(const char *key) const{
+Pair LinkList::get(const char *key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)

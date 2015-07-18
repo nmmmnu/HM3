@@ -2,6 +2,8 @@
 
 #include "myglob.h"
 
+#include <utility>
+
 bool DirTable::open(const char *path){
 	close();
 
@@ -34,11 +36,11 @@ void DirTable::close(){
 	_filesCount = 0;
 }
 
-const Pair *DirTable::get(const char *key) const{
+Pair DirTable::get(const char *key) const{
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable & file = _files[i];
 
-		const Pair *pair = file.get(key);
+		Pair pair = file.get(key);
 
 		if (pair)
 			return pair;
@@ -54,42 +56,45 @@ void DirTable::_rewind(const char *key){
 	}
 }
 
-const Pair *DirTable::_next(){
-	const Pair *pair = nullptr;
+const void *DirTable::_next(){
+	Pair         r_pair = nullptr;
+//	const void * r_data = nullptr;
 
 	// step 1: find minimal in reverse order to find most recent.
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable &file = _files[i];
 
-		const Pair *pair2 = file.current();
+		Pair pair = file.current();
 
 		// skip if is null
-		if (pair2 == nullptr)
+		if (! pair)
 			continue;
+
 		// initialize
-		if (pair == nullptr){
-			pair = pair2;
+		if (! r_pair){
+			r_pair = pair;
 			continue;
 		}
 
 		// compare and swap pair
-		if (pair->cmp2(*pair2) > 0)
-			pair = pair2;
+		if (pair.cmp(r_pair) < 0){
+			r_pair = pair;
+		}
 	}
 
-	if (pair == nullptr)
-		return pair;
+	if (!r_pair)
+		return nullptr;
 
 	// step 2: increase all duplicates
 	for(size_t i = 0; i < _filesCount; ++i){
 		DiskTable &file = _files[i];
 
-		const Pair *pair2 = file.current();
+		Pair pair = file.current();
 
-		if (pair2 && pair->cmp2(*pair2) == 0)
+		if (pair && pair.cmp(r_pair) == 0)
 			file.next();
 	}
-
-	return pair;
+		
+	return r_pair.getBlob();
 }
 

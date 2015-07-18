@@ -27,7 +27,7 @@ static void pair_test_raw(){
 		'P', 'e', 't', 'e', 'r', '\0'			// val
 	};
 
-	const Pair p = (const void *) raw_memory;
+	Pair p = (const void *) raw_memory;
 
 	p.print();
 
@@ -37,6 +37,16 @@ static void pair_test_raw(){
 	PRINTF_TEST("raw cmp",		p.cmp(key) == 0			);
 	PRINTF_TEST("raw cmp",		p.cmp("~~~ non existent") < 0	);
 	PRINTF_TEST("raw cmp",		p.cmp("!!! non existent") > 0	);
+	
+	Pair p2 = p;
+	PRINTF_TEST("copy c-tor buff",	p.getBlob() == p2.getBlob()	);
+
+	p2.print();
+	
+	p2 = p;
+	PRINTF_TEST("copy assign buff",	p.getBlob() == p2.getBlob()	);
+	
+	p2.print();
 }
 
 static void pair_test_null(){
@@ -71,12 +81,12 @@ static void pair_test(){
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
 	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 
-	PRINTF_TEST("cmp2",		p.cmp2(t) == 0			);
+	PRINTF_TEST("cmp",		p.cmp(t) == 0			);
 
 	PRINTF_TEST("cmp null",		p.cmp((char *) nullptr)		);
 
 	PRINTF_TEST("valid",		p.valid()			);
-	PRINTF_TEST("valid2",		p.valid2(&t)			);
+	PRINTF_TEST("valid",		p.valid(t)			);
 
 	{
 	char *corruptor = (char *)p.getKey();
@@ -94,11 +104,15 @@ static void pair_test(){
 	Pair m1 = { key, val };
 	Pair m2 = std::move(m1);
 	PRINTF_TEST("move c-tor",	strcmp(m2.getKey(), key) == 0	);
-	Pair m3 = m2;
+	Pair m3 = m2;	
 	PRINTF_TEST("copy c-tor",	strcmp(m2.getKey(), key) == 0	);
 	PRINTF_TEST("copy c-tor",	strcmp(m3.getKey(), key) == 0	);
+	
+	PRINTF_TEST("copy c-tor buff",	m2.getBlob() != m3.getBlob()	);
+	
 	m1 = m2;
 	PRINTF_TEST("copy assign",	strcmp(m1.getKey(), key) == 0	);
+	PRINTF_TEST("copy assign buff",	m2.getBlob() != m3.getBlob()	);
 	}
 	
 	p.print();

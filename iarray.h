@@ -9,12 +9,12 @@ public:
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	virtual const Pair *getAt(uint64_t index) const = 0;
+	inline Pair getAt(uint64_t index) const;
 
-	virtual const Pair *get(const char *key) const override;
+	virtual Pair get(const char *key) const override;
 
 public:
-	inline const void *operator[](uint64_t index) const;
+	inline Pair operator[](uint64_t index) const;
 
 	inline int lookup(const char *key, uint64_t &index) const;
 
@@ -22,7 +22,8 @@ public:
 
 protected:
 	virtual void _rewind(const char *key = nullptr) override;
-	virtual const Pair *_next() override;
+	virtual const void *_next() override;
+	virtual const void *_getAt(uint64_t index) const = 0;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
@@ -37,8 +38,13 @@ protected:
 
 // ==============================
 
-inline const void *IArray::operator[](uint64_t index) const{
-	return getAt(index);
+
+inline Pair IArray::getAt(uint64_t index) const{
+	return _getAt(index);
+}
+
+inline Pair IArray::operator[](uint64_t index) const{
+	return _getAt(index);
 }
 
 inline void IArray::setLookupMethod(uint8_t lookupMethod){

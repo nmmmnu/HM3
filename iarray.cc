@@ -1,5 +1,7 @@
 #include "iarray.h"
 
+#include <stdio.h>
+
 void IArray::_rewind(const char *key){
 	if (key == nullptr){
 		_itPos = 0;
@@ -12,21 +14,21 @@ void IArray::_rewind(const char *key){
 	_itPos = index;
 }
 
-const Pair *IArray::_next(){
+const void *IArray::_next(){
 	if (_itPos >= getCount())
 		return nullptr;
 
-	return getAt(_itPos++);
+	return _getAt(_itPos++);
 }
 
 // ==============================
 
-const Pair *IArray::get(const char *key) const{
+Pair IArray::get(const char *key) const{
 	uint64_t index;
 	if (lookup(key, index))
 		return nullptr;
 
-	return getAt(index);
+	return _getAt(index);
 }
 
 // ==============================
@@ -40,9 +42,9 @@ int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{
 
 	uint64_t i;
 	for(i = 0; i < getCount(); ++i){
-		auto data = getAt(i);
+		Pair data = getAt(i);
 
-		cmp = data->cmp(key);
+		cmp = data.cmp(key);
 
 		if (cmp == 0){
 			// found
@@ -74,9 +76,9 @@ int IArray::_lookupBinSearch(const char *key, uint64_t &index) const{
 	//	uint64_t mid = start + ((end - start) /  2);
 		uint64_t mid = start + ((end - start) >> 1);
 
-		auto data = getAt(mid);
+		Pair data = getAt(mid);
 
-		cmp = data->cmp(key);
+		cmp = data.cmp(key);
 
 		if (cmp == 0){
 			// found

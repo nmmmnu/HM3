@@ -66,7 +66,7 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-const Pair *DiskTable::getAt(uint64_t index) const{
+const void *DiskTable::_getAt(uint64_t index) const{
 	if (index >= getCount())
 		return nullptr;
 
@@ -74,7 +74,7 @@ const Pair *DiskTable::getAt(uint64_t index) const{
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 
 	const uint64_t ptr = be64toh( head->data[index] );
-	return (const Pair *) & mem[ptr];
+	return & mem[ptr];
 }
 
 size_t DiskTable::getSize() const{

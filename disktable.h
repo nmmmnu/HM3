@@ -7,7 +7,7 @@ class DiskTable : virtual public IArray{
 public:
 	DiskTable(){};
 	DiskTable(DiskTable &&other);
-	DiskTable& operator=(DiskTable other) = delete;
+
 	virtual ~DiskTable() override{
 		close();
 	}
@@ -19,9 +19,10 @@ public:
 		return _datacount;
 	};
 
-	virtual const Pair *getAt(uint64_t index) const override;
-
 	virtual size_t getSize() const override;
+
+protected:
+	virtual const void *_getAt(uint64_t index) const override;
 
 private:
 	int		_fd;

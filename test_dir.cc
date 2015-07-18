@@ -12,19 +12,19 @@ static void printUsage(const char *name){
 }
 
 void find(IROList &list, const char *key){
-	const Pair *pair = list.get(key);
+	const Pair pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key);
 		return;
 	}
 
-	pair->print();
+	pair.print();
 }
 
 void listing(IROList &list, const char *key = nullptr, size_t count = 100){
-	for(const Pair *pair = list.first(key); pair; pair = list.next()){
-		pair->print();
+	for(Pair pair = list.first(key); pair; pair = list.next()){
+		pair.print();
 
 		if (--count == 0)
 			break;

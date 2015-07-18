@@ -2,7 +2,6 @@
 #define _ILIST_H
 
 #include "irolist.h"
-#include "std/std_container.h"
 
 class IList : virtual public IROList{
 public:

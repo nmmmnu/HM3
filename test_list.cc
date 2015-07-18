@@ -1,4 +1,4 @@
-//#include "vectorlist.h"
+#include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
 
@@ -158,13 +158,13 @@ static void skiplist_lanes_test(SkipList &list){
 }
 
 int main(int argc, char **argv){
-/*
+
 	VectorList vl;
 		list_test("Vector", vl);
 
 	VectorList vl2 = { std::move(vl) };
 		list_test("Moved Vector", vl2);
-*/
+
 	// =========================
 
 	LinkList ll;
