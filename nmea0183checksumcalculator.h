@@ -4,8 +4,8 @@
 #include "ichecksumcalculator.h"
 
 class NMEA0183ChecksumCalculator : virtual public IChecksumCalculator{
-public:
-	virtual uint8_t calcChecksum(const void *data2, size_t len) override final;
+private:
+	virtual uint8_t _calcChecksum(const void *data2, size_t len) override final;
 };
 
 #endif

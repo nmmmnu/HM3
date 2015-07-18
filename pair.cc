@@ -61,8 +61,17 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	_blob = p;
 }
 
+Pair::Pair(const char *key, const char *value,              uint32_t expires, uint32_t created) : 
+			Pair(key, value, value ? strlen(value) : 0, expires, created){
+};
+
+Pair::Pair(const void *blob, bool ownBlob) :
+			_blob((const Blob *) blob), 
+			_ownBlob(ownBlob){
+};
+
 Pair::Pair(Pair && other) :
-		Pair(other._blob, other._ownBlob){
+			Pair(other._blob, other._ownBlob){
 	other._ownBlob = false;
 };
 
@@ -181,7 +190,8 @@ uint8_t Pair::__getChecksum(const void *buffer, size_t size){
 	return __checksumCalculator.value().calcChecksum(buffer, size);
 }
 
-constexpr size_t Pair::__sizeofBase(){
+constexpr
+size_t Pair::__sizeofBase(){
 	return offsetof(Blob, buffer);
 }
 
