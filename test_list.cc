@@ -137,6 +137,15 @@ static void list_test(const char *module, IList &list){
 	p = list.first("5");
 	PRINTF_TEST("it next it",	! p					);
 
+	p = list.first();
+	auto version = list.getVersion();
+	PRINTF_TEST("it invalidate 1",	p					);
+	list.remove("1 name");
+	p = list.next();
+	PRINTF_TEST("it invalidate 2",	! p					);
+
+	PRINTF_TEST("invalidate ver",	version < list.getVersion()		);
+
 }
 
 static void skiplist_lanes_test(SkipList &list){

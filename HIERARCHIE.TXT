@@ -1,7 +1,9 @@
 
-   ICountable                     IList  ----- (Lists)
-              \                 /        \
-                --- IROList ---            --- Vector
-              /                 \        /
-   IIterator                      IArray ----- DiskManager
+   IVersion -----------------------------
+            \                             \
+             IIterator                      IList  ----- (Lists)
+                        \                 /        \
+                          --- IROList ---            --- Vector
+                        /                 \        /
+             ICountable                     IArray ----- DiskManager
 

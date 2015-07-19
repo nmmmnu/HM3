@@ -2,34 +2,36 @@
 #define _ILIST_H
 
 #include "irolist.h"
+#include "iversion.h"
 
-class IList : virtual public IROList{
+class IList : virtual public IROList, virtual public IVersion{
 public:
 	void removeAll();
 	bool put(const Pair & pair);
 	bool remove(const char *key);
-
+	
 private:
 	virtual void _removeAll() = 0;
 
 	virtual bool _put(const Pair & pair) = 0;
 	virtual bool _remove(const char *key) = 0;
+
 };
 
 // ==============================
 
 inline void IList::removeAll(){
-	invalidate();
+	incVersion();
 	_removeAll();
 }
 
 inline bool IList::put(const Pair & pair){
-	invalidate();
+	incVersion();
 	return pair ? _put(pair) : false;
 }
 
 inline bool IList::remove(const char *key){
-	invalidate();
+	incVersion();
 	return key ? _remove(key) : true;
 }
 
