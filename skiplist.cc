@@ -185,7 +185,7 @@ bool SkipList::_remove(const char *key){
 	_dataCount--;
 
 	// data will be magically destroyed.
-	
+
 	delete[] node;
 
 	return true;
@@ -219,7 +219,7 @@ void SkipList::_rewind(const char *key){
 	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
 }
 
-const void *SkipList::_next(){
+Pair SkipList::_next(){
 	if (_itHead == nullptr)
 		return nullptr;
 

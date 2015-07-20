@@ -35,7 +35,7 @@ void LinkList::_removeAll(){
 
 		Pair data = { copy->data, true };
 		// data will be magically destroyed.
-		
+
 		delete copy;
 	}
 
@@ -67,7 +67,7 @@ bool LinkList::_put(const Pair &newdata){
 
 			olddata.getBlobOwnership();
 			// olddata will be magically destroyed.
-			
+
 			node->data = newdata.cloneBlob();
 
 			return true;
@@ -134,7 +134,7 @@ bool LinkList::_remove(const char *key){
 
 			data.getBlobOwnership();
 			// data will be magically destroyed.
-			
+
 			delete node;
 
 			return true;
@@ -168,7 +168,7 @@ void LinkList::_rewind(const char *key){
 	_itHead = _locate(key);
 }
 
-const void *LinkList::_next(){
+Pair LinkList::_next(){
 	if (_itHead == nullptr)
 		return nullptr;
 

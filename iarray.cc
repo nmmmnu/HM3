@@ -14,11 +14,11 @@ void IArray::_rewind(const char *key){
 	_itPos = index;
 }
 
-const void *IArray::_next(){
+Pair IArray::_next(){
 	if (_itPos >= getCount())
 		return nullptr;
 
-	return _getAt(_itPos++).getBlob();
+	return _getAt(_itPos++);
 }
 
 // ==============================

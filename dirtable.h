@@ -15,7 +15,7 @@ public:
 
 protected:
 	virtual Pair _get(const char *key) const override;
-	
+
 	virtual uint64_t _getCount() const override{
 		return 0;
 	};
@@ -25,7 +25,7 @@ protected:
 	}
 
 	virtual void _rewind(const char *key = nullptr) override;
-	virtual const void *_next() override;
+	virtual Pair _next() override;
 
 private:
 	DiskTable	*_files		= nullptr;

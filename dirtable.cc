@@ -54,9 +54,8 @@ void DirTable::_rewind(const char *key){
 	}
 }
 
-const void *DirTable::_next(){
-	Pair         r_pair = nullptr;
-//	const void * r_data = nullptr;
+Pair DirTable::_next(){
+	Pair r_pair = nullptr;
 
 	// step 1: find minimal in reverse order to find most recent.
 	for(size_t i = 0; i < _filesCount; ++i){
@@ -92,7 +91,7 @@ const void *DirTable::_next(){
 		if (pair && pair.cmp(r_pair) == 0)
 			file.next();
 	}
-		
-	return r_pair.getBlob();
+
+	return r_pair;
 }
 

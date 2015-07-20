@@ -21,7 +21,7 @@ private:
 	virtual Pair _get(const char *key) const override;
 
 	virtual void _rewind(const char *key = nullptr) override;
-	virtual const void *_next() override;
+	virtual Pair _next() override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

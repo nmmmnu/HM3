@@ -20,7 +20,7 @@ private:
 	virtual size_t _getSize() const override;
 
 	virtual void _rewind(const char *key = nullptr) override;
-	virtual const void *_next() override;
+	virtual Pair _next() override;
 
 private:
 	struct Node;
