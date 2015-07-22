@@ -10,7 +10,7 @@
 
 // ==============================
 
-std_optional<IChecksumCalculator> Pair::__checksumCalculator = nullptr;
+NMEA0183ChecksumCalculator Pair::__checksumCalculator;
 
 // ==============================
 
@@ -55,18 +55,18 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	memcpy(& p->buffer[keylen + 1], val, vallen);
 	p->buffer[keylen + 1 + vallen] = '\0';
 
-	p->checksum = __getChecksum(p->buffer, size - __sizeofBase());
+	p->checksum = __checksumCalculator.calc((void *) p->buffer, size - __sizeofBase());
 
 	// p must be valid POD class
 	_blob = p;
 }
 
-Pair::Pair(const char *key, const char *value,              uint32_t expires, uint32_t created) : 
+Pair::Pair(const char *key, const char *value,              uint32_t expires, uint32_t created) :
 			Pair(key, value, value ? strlen(value) : 0, expires, created){
 };
 
 Pair::Pair(const void *blob, bool ownBlob) :
-			_blob((const Blob *) blob), 
+			_blob((const Blob *) blob),
 			_ownBlob(ownBlob){
 };
 
@@ -78,9 +78,9 @@ Pair::Pair(Pair && other) :
 Pair::Pair(const Pair & other){
 	if (other._ownBlob)
 		printf("WARNING: copy c-tor with allocation\n");
-	
+
 	const void *blob = other._ownBlob ? other.cloneBlob() : other._blob;
-	
+
 	_blob = (const Blob *) blob;
 	_ownBlob = other._ownBlob;
 }
@@ -88,14 +88,14 @@ Pair::Pair(const Pair & other){
 Pair & Pair::operator=(Pair other){
 	std::swap(_blob,    other._blob   );
 	std::swap(_ownBlob, other._ownBlob);
-	
+
 	return *this;
 }
 
 const void *Pair::cloneBlob() const{
 	if (_blob == nullptr)
 		return nullptr;
-	
+
 	void *p = xmalloc(getSize());
 
 	if (p == nullptr){
@@ -104,7 +104,7 @@ const void *Pair::cloneBlob() const{
 	}
 
 	memcpy(p, _blob, getSize());
-	
+
 	return p;
 }
 
@@ -118,7 +118,7 @@ Pair::~Pair(){
 const char *Pair::getKey() const{
 	if (_blob == nullptr)
 		return nullptr;
-		
+
 	return & _blob->buffer[0];
 }
 
@@ -144,10 +144,8 @@ bool Pair::valid() const{
 	}
 
 	// now check checksum
-	if (__checksumCalculator){
-		if (_blob->checksum != _getChecksum())
-			return false;
-	}
+	if (_blob->checksum != _getChecksum())
+		return false;
 
 	// finally all OK
 	return true;
@@ -162,7 +160,7 @@ void Pair::print() const{
 		printf("--- Pair is empty ---\n");
 		return;
 	}
-	
+
 	static const char *format = "%-20s | %-20s | %-*s | %8u | %s\n";
 
 	printf(format,
@@ -180,14 +178,7 @@ uint64_t Pair::__getCreateTime(uint32_t created){
 }
 
 uint8_t Pair::_getChecksum() const{
-	return __getChecksum(_blob->buffer, _sizeofBuffer());
-}
-
-uint8_t Pair::__getChecksum(const void *buffer, size_t size){
-	if (! __checksumCalculator)
-		return 0;
-
-	return __checksumCalculator.value().calcChecksum(buffer, size);
+	return __checksumCalculator.calc(_blob->buffer, _sizeofBuffer());
 }
 
 constexpr

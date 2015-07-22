@@ -9,20 +9,20 @@ class IChecksumCalculator{
 public:
 	virtual ~IChecksumCalculator(){};
 
-	uint8_t calcChecksum(const void *data, size_t size);
-	uint8_t calcChecksum(const char *data);
-	
+	uint8_t calc(const void *data, size_t size);
+	uint8_t calc(const char *data);
+
 private:
-	virtual uint8_t _calcChecksum(const void *data, size_t size) = 0;
+	virtual uint8_t _calc(const void *data, size_t size) = 0;
 };
 
 
-inline uint8_t IChecksumCalculator::calcChecksum(const void *data, size_t size){
-	return data ? _calcChecksum(data, size) : 0;
+inline uint8_t IChecksumCalculator::calc(const void *data, size_t size){
+	return _calc(data, size);
 }
 
-inline uint8_t IChecksumCalculator::calcChecksum(const char *data){
-	return calcChecksum(data, strlen(data));
+inline uint8_t IChecksumCalculator::calc(const char *data){
+	return calc(data, strlen(data));
 }
 
 #endif

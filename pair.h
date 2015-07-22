@@ -1,9 +1,7 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
-#include "std/std_optional.h"
-
-#include "ichecksumcalculator.h"
+#include "nmea0183checksumcalculator.h"
 
 #include <string.h>	//strcmp
 //#include <stdio.h>
@@ -13,7 +11,7 @@ public:
 	static const uint16_t MAX_KEY_SIZE = 0xffff;
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
-public:	
+public:
 	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
 	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
 
@@ -47,10 +45,6 @@ public:
 
 	void getBlobOwnership();
 
-public:
-	static void setChecksumCalculator(IChecksumCalculator & checksumCalculator);
-	static void removeChecksumCalculator();
-
 private:
 	struct Blob;
 	const Blob *_blob = nullptr;
@@ -58,7 +52,6 @@ private:
 
 private:
 	static uint64_t __getCreateTime(uint32_t created);
-	static uint8_t  __getChecksum(const void *buffer, size_t size);
 	constexpr
 	static size_t __sizeofBase();
 
@@ -66,7 +59,7 @@ private:
 	uint8_t _getChecksum() const;
 
 private:
-	static std_optional<IChecksumCalculator> __checksumCalculator;
+	static NMEA0183ChecksumCalculator __checksumCalculator;
 
 };
 
@@ -97,15 +90,6 @@ inline bool Pair::valid(const Pair &pair) const{
 
 inline void Pair::getBlobOwnership(){
 	_ownBlob = true;
-}
-
-
-inline void Pair::setChecksumCalculator(IChecksumCalculator & checksumCalculator){
-	__checksumCalculator = &checksumCalculator;
-}
-
-inline void Pair::removeChecksumCalculator(){
-	__checksumCalculator = nullptr;
 }
 
 #endif
