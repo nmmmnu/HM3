@@ -5,7 +5,8 @@
 
 class DiskTable : virtual public IArray{
 public:
-	DiskTable(){};
+	DiskTable() = default;
+
 	DiskTable(DiskTable &&other);
 
 	virtual ~DiskTable() override{
@@ -23,9 +24,10 @@ private:
 	virtual size_t _getSize() const override;
 
 private:
-	int		_fd;
-	const void	*_mem		= NULL;
+	const void	*_mem		= nullptr;
 	uint64_t	_size		= 0;
+
+	int		_fd;
 
 	uint64_t	_datacount	= 0;
 

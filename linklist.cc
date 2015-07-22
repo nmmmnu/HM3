@@ -16,8 +16,7 @@ LinkList::LinkList(){
 LinkList::LinkList(LinkList &&other):
 		_head		(other._head		),
 		_dataCount	(other._dataCount	),
-		_dataSize	(other._dataSize	),
-		_itHead		(other._itHead          ){
+		_dataSize	(other._dataSize	){
 	other._clear();
 }
 
@@ -159,28 +158,6 @@ size_t LinkList::_getSize() const{
 
 // ==============================
 
-void LinkList::_rewind(const char *key){
-	if (!key){
-		_itHead = _head;
-		return;
-	}
-
-	_itHead = _locate(key);
-}
-
-Pair LinkList::_next(){
-	if (_itHead == nullptr)
-		return nullptr;
-
-	auto node = _itHead;
-
-	_itHead = _itHead->next;
-
-	return node->data;
-}
-
-// ==============================
-
 void LinkList::_clear(){
 	_dataCount = 0;
 	_dataSize = 0;
@@ -205,3 +182,50 @@ LinkList::Node *LinkList::_locate(const char *key) const{
 };
 
 
+
+// ==============================
+
+
+
+class LinkListIterator : public IIterator{
+public:
+	LinkListIterator(const LinkList & list) :
+			_list(list),
+			_current(list._head){}
+
+private:
+	virtual void _rewind(const char *key = nullptr) override;
+	virtual Pair _next() override;
+	virtual uint64_t _getVersion() override{
+		return _list.getVersion();
+	};
+
+private:
+	const LinkList		& _list;
+	const LinkList::Node	*_current;
+};
+
+
+void LinkListIterator::_rewind(const char *key){
+	if (!key){
+		_current = _list._head;
+		return;
+	}
+
+	_current = _list._locate(key);
+}
+
+Pair LinkListIterator::_next(){
+	if (_current == nullptr)
+		return nullptr;
+
+	Pair pair = _current->data;
+
+	_current = _current->next;
+
+	return pair;
+}
+
+std::unique_ptr<IIterator> LinkList::_getIterator() const{
+	return std::unique_ptr<IIterator>( new LinkListIterator(*this) );
+};

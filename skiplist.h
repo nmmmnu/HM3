@@ -3,8 +3,12 @@
 
 #include "ilist.h"
 
+#include <random>
+
+class SkipListIterator;
 
 class SkipList : virtual public IList{
+friend class SkipListIterator;
 public:
 	static const uint8_t MAX_HEIGHT		= 64;
 	static const uint8_t DEFAULT_HEIGHT	= 32;
@@ -24,8 +28,7 @@ private:
 	virtual uint64_t _getCount() const override;
 	virtual size_t _getSize() const override;
 
-	virtual void _rewind(const char *key = nullptr) override;
-	virtual Pair _next() override;
+	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
 public:
 	void printLanes() const;
@@ -41,14 +44,15 @@ private:
 	uint64_t	_dataCount;
 	size_t		_dataSize;
 
-	const Node	*_itHead;
-
 private:
 	void _clear();
 
 	const Node *_locate(const char *key, bool complete_evaluation = false) const;
 
 	uint8_t _getRandomHeight();
+
+private:
+	static std::mt19937 __rand;
 };
 
 #endif

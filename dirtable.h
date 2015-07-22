@@ -4,12 +4,13 @@
 #include "irolist.h"
 #include "disktable.h"
 
-class DirTable : virtual public IROList{
-public:
-	virtual ~DirTable() override{
-		close();
-	}
+#include <deque>
 
+class DirTableIterator;
+
+class DirTable : virtual public IROList{
+friend class DirTableIterator;
+public:
 	bool open(const char *path);
 	void close();
 
@@ -24,12 +25,10 @@ protected:
 		return 0;
 	}
 
-	virtual void _rewind(const char *key = nullptr) override;
-	virtual Pair _next() override;
+	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
-	DiskTable	*_files		= nullptr;
-	size_t		_filesCount	= 0;
+	std::deque<DiskTable> _files;
 };
 
 #endif

@@ -4,12 +4,12 @@
 #include "irolist.h"
 #include "iversion.h"
 
-class IList : virtual public IROList, virtual public IVersion{
+class IList : virtual public IROList{
 public:
 	void removeAll();
 	bool put(const Pair & pair);
 	bool remove(const char *key);
-	
+
 private:
 	virtual void _removeAll() = 0;
 

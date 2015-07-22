@@ -2,27 +2,6 @@
 
 #include <stdio.h>
 
-void IArray::_rewind(const char *key){
-	if (key == nullptr){
-		_itPos = 0;
-		return;
-	}
-
-	uint64_t index;
-	lookup(key, index);
-
-	_itPos = index;
-}
-
-Pair IArray::_next(){
-	if (_itPos >= getCount())
-		return nullptr;
-
-	return _getAt(_itPos++);
-}
-
-// ==============================
-
 Pair IArray::_get(const char *key) const{
 	uint64_t index;
 	if (lookup(key, index))
@@ -95,4 +74,48 @@ int IArray::_lookupBinSearch(const char *key, uint64_t &index) const{
 	}
 
 	index = start; return cmp;
+}
+
+// ==============================
+
+class IArrayIterator : public IIterator{
+public:
+	IArrayIterator(const IArray & list) :
+			_list(list){}
+
+private:
+	virtual void _rewind(const char *key = nullptr) override;
+	virtual Pair _next() override;
+	virtual uint64_t _getVersion() override{
+		return _list.getVersion();
+	};
+
+private:
+	const IArray	& _list;
+	uint64_t	_itPos = 0;
+};
+
+void IArrayIterator::_rewind(const char *key){
+	if (key == nullptr){
+		_itPos = 0;
+		return;
+	}
+
+	uint64_t index;
+	_list.lookup(key, index);
+
+	_itPos = index;
+}
+
+Pair IArrayIterator::_next(){
+	if (_itPos >= _list.getCount())
+		return nullptr;
+
+	return _list.getAt(_itPos++);
+}
+
+// ==============================
+
+std::unique_ptr<IIterator> IArray::_getIterator() const{
+	return std::unique_ptr<IIterator>( new IArrayIterator(*this) );
 }

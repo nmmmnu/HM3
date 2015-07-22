@@ -23,7 +23,8 @@ void find(IROList &list, const char *key){
 }
 
 void listing(IROList &list, const char *key = nullptr, size_t count = 100){
-	for(Pair pair = list.first(key); pair; pair = list.next()){
+	auto it = list.getIterator();
+	for(Pair pair = it->first(key); pair; pair = it->next()){
 		pair.print();
 
 		if (--count == 0)

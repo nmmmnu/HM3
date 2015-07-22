@@ -3,7 +3,10 @@
 
 #include "ilist.h"
 
+class LinkListIterator;
+
 class LinkList : virtual public IList{
+friend class LinkListIterator;
 public:
 	LinkList();
 	LinkList(LinkList &&other);
@@ -19,8 +22,7 @@ private:
 	virtual uint64_t _getCount() const override;
 	virtual size_t _getSize() const override;
 
-	virtual void _rewind(const char *key = nullptr) override;
-	virtual Pair _next() override;
+	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
 	struct Node;
@@ -30,7 +32,6 @@ private:
 	uint64_t	_dataCount;
 	size_t		_dataSize;
 
-	const Node	*_itHead;
 private:
 	void _clear();
 

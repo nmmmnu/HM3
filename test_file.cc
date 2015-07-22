@@ -87,7 +87,9 @@ static int op_list(const char *filename, const char *key = nullptr, size_t count
 	DiskTable list;
 	list.open(filename);
 
-	for(Pair pair = list.first(key); pair; pair = list.next()){
+	auto it = list.getIterator();
+
+	for(Pair pair = it->first(key); pair; pair = it->next()){
 		pair.print();
 
 		if (--count == 0)

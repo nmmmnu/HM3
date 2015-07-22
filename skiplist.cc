@@ -4,7 +4,9 @@
 
 #include "defs.h"
 
-#include <memory>
+#include <stdexcept>
+
+std::mt19937 SkipList::__rand{ (uint32_t) time(nullptr) };
 
 /*
 We do ***NOT*** store next[] array size,
@@ -42,11 +44,9 @@ SkipList::SkipList(SkipList &&other):
 		_heads		(other._heads		),
 		_loc		(other._loc		),
 		_dataCount	(other._dataCount	),
-		_dataSize	(other._dataSize	),
-		_itHead		(other._itHead		){
+		_dataSize	(other._dataSize	){
 	other._heads = nullptr;
 	other._loc = nullptr;
-	other._itHead = nullptr;
 }
 
 SkipList::~SkipList(){
@@ -201,37 +201,6 @@ size_t SkipList::_getSize() const{
 
 // ==============================
 
-void SkipList::_rewind(const char *key){
-	if (!key){
-		_itHead = _heads[0];
-		return;
-	}
-
-	const Node *node = _locate(key, true);
-
-	if (node){
-		// found
-		_itHead = node;
-		return;
-	}
-
-	// fuzzy found, but we are on previous element.
-	_itHead = _loc[0] ? _loc[0]->next[0] : nullptr;
-}
-
-Pair SkipList::_next(){
-	if (_itHead == nullptr)
-		return nullptr;
-
-	auto node = _itHead;
-
-	_itHead = _itHead->next[0];
-
-	return node->data;
-}
-
-// ==============================
-
 void SkipList::printLanes() const{
 	uint8_t i;
 	for(i = _height; i > 0; --i){
@@ -265,10 +234,10 @@ void SkipList::_clear(){
 }
 
 const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluation) const{
-	// it is extremly dangerous to have key == NULL here.
+	// it is extremly dangerous to have key == nullptr here.
 	if (key == nullptr){
-		// probably should be throw exception here.
-		my_error("FATAL ERROR", __FILE__, __LINE__);
+		std::logic_error exception("Key can not be nullptr in SkipList::_locate");
+		throw exception;
 	}
 
 	// smart over-optimizations, such skip NULL lanes or
@@ -309,15 +278,71 @@ const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluatio
 uint8_t SkipList::_getRandomHeight(){
 	// This gives slightly better performance,
 	// than divide by 3 or multply by 0.33
-	int part = RAND_MAX >> 1;
+	auto part = __rand.max() >> 1;
 
 	// We execute rand() inside the loop,
 	// but performance is fast enought.
 
 	uint8_t h = 1;
-	while(h < _height && rand() > part)
+	while(h < _height && __rand() > part)
 		h++;
 
 	return h;
 }
 
+
+
+// ==============================
+
+
+
+class SkipListIterator : public IIterator{
+public:
+	SkipListIterator(const SkipList & list) :
+			_list(list),
+			_current(list._heads[0]){}
+
+private:
+	virtual void _rewind(const char *key = nullptr) override;
+	virtual Pair _next() override;
+	virtual uint64_t _getVersion() override{
+		return _list.getVersion();
+	};
+
+private:
+	const SkipList		& _list;
+	const SkipList::Node	*_current;
+};
+
+void SkipListIterator::_rewind(const char *key){
+	if (!key){
+		_current = _list._heads[0];
+		return;
+	}
+
+	auto node = _list._locate(key, true);
+
+	if (node){
+		// found
+		_current = node;
+		return;
+	}
+
+	// fuzzy found, but we are on previous element.
+	_current = _list._loc[0] ? _list._loc[0]->next[0] : nullptr;
+}
+
+Pair SkipListIterator::_next(){
+	if (_current == nullptr)
+		return nullptr;
+
+	Pair pair = _current->data;
+
+	_current = _current->next[0];
+
+	return pair;
+}
+
+std::unique_ptr<IIterator> SkipList::_getIterator() const{
+	return std::unique_ptr<IIterator>( new SkipListIterator(*this) );
+};

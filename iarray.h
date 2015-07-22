@@ -20,13 +20,10 @@ private:
 
 	virtual Pair _get(const char *key) const override;
 
-	virtual void _rewind(const char *key = nullptr) override;
-	virtual Pair _next() override;
+	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
-
-	uint64_t	_itPos = 0;
 
 private:
 	int _lookupBinSearch(   const char *key, uint64_t &index) const;

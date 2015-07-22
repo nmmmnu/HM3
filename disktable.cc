@@ -8,9 +8,9 @@
 #include <unistd.h>
 
 DiskTable::DiskTable(DiskTable &&other):
-		_fd		(other._fd		),
 		_mem		(other._mem		),
 		_size		(other._size		),
+		_fd		(other._fd		),
 		_datacount	(other._datacount	){
 	other._mem = nullptr;
 	other._size = 0;
@@ -68,9 +68,9 @@ void DiskTable::close(){
 
 Pair DiskTable::_getAt(uint64_t index) const{
 	// index is check in parent
-	
+
 	// TODO: check if we are inside the memory block.
-	
+
 	const char *mem = (char *) _mem;
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 

@@ -29,6 +29,51 @@ static size_t list_populate(IList &list){
 	return size;
 }
 
+static void iterator_test(const char *module, IList &list, IIterator &it){
+	Pair p = nullptr;
+
+	p = it.first();
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Niki") == 0	);
+	p = it.current();
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Niki") == 0	);
+
+	p = it.first("2");
+	PRINTF_TEST("it first fuzzy",	p && strcmp(p.getVal(), "22") == 0	);
+	p = it.current();
+	PRINTF_TEST("it current fuzzy",	p && strcmp(p.getVal(), "22") == 0	);
+
+
+	p = it.first("2 age");
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "22") == 0	);
+	p = it.current();
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "22") == 0	);
+	p = it.next();
+	PRINTF_TEST("it next",		p && strcmp(p.getVal(), "Sofia") == 0	);
+	p = it.current();
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Sofia") == 0	);
+
+	p = it.first("4 os");
+	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Linux") == 0	);
+	p = it.current();
+	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Linux") == 0	);
+	p = it.next();
+	PRINTF_TEST("it next",		! p					);
+	p = it.current();
+	PRINTF_TEST("it current",	! p					);
+
+	p = it.first("5");
+	PRINTF_TEST("it next it",	! p					);
+
+	p = it.first();
+	auto version = list.getVersion();
+	PRINTF_TEST("it invalidate 1",	p					);
+	list.remove("1 name");
+	p = it.next();
+	PRINTF_TEST("it invalidate 2",	! p					);
+
+	PRINTF_TEST("invalidate ver",	version < list.getVersion()		);
+}
+
 static void list_test(const char *module, IList &list){
 	Pair p = nullptr;
 
@@ -111,40 +156,9 @@ static void list_test(const char *module, IList &list){
 
 	list_populate(list);
 
-	p = list.first();
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Niki") == 0	);
-	p = list.current();                          
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Niki") == 0	);
-                                                     
-	p = list.first("2 age");                     
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "22") == 0	);
-	p = list.current();                          
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "22") == 0	);
-	p = list.next();                             
-	PRINTF_TEST("it next",		p && strcmp(p.getVal(), "Sofia") == 0	);
-	p = list.current();                          
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Sofia") == 0	);
-                                                     
-	p = list.first("4 os");                      
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Linux") == 0	);
-	p = list.current();                          
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Linux") == 0	);
-	p = list.next();
-	PRINTF_TEST("it next",		! p					);
-	p = list.current();
-	PRINTF_TEST("it current",	! p					);
+	auto it = list.getIterator();
 
-	p = list.first("5");
-	PRINTF_TEST("it next it",	! p					);
-
-	p = list.first();
-	auto version = list.getVersion();
-	PRINTF_TEST("it invalidate 1",	p					);
-	list.remove("1 name");
-	p = list.next();
-	PRINTF_TEST("it invalidate 2",	! p					);
-
-	PRINTF_TEST("invalidate ver",	version < list.getVersion()		);
+	iterator_test(module, list, *it);
 
 }
 

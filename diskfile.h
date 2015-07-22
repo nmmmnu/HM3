@@ -21,7 +21,7 @@ public:
 	static bool create(const char *filename, IIterator &it, uint64_t datacount);
 	static bool create(const char *filename, IROList &list);
 
-	constexpr 
+	constexpr
 	static size_t sizeofHeader();
 
 private:
@@ -32,7 +32,8 @@ private:
 // ==============================
 
 inline bool DiskFile::create(const char *filename, IROList &list){
-	return create(filename, list.getIterator(), list.getCount());
+	auto iterator = list.getIterator();
+	return create(filename, *iterator, list.getCount());
 }
 
 constexpr

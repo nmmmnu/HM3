@@ -6,9 +6,7 @@
 
 #include "pair.h"
 
-#include "iversion.h"
-
-class IIterator : virtual private IVersion{
+class IIterator{
 public:
 	static const uint64_t DEFAULT_PRINT_LIMIT = 100;
 
@@ -25,29 +23,30 @@ public:
 private:
 	virtual void _rewind(const char *key = nullptr) = 0;
 	virtual Pair _next() = 0;
+	virtual uint64_t _getVersion() = 0;
 
 private:
-	Pair     _current = nullptr;
-	uint64_t _version = 0;
+	Pair		_current = nullptr;
+	uint64_t	_version = 0;
 };
 
 // ==============================
 
 inline Pair IIterator::first(const char *key){
 	_rewind(key);
-	_version = getVersion();
+	_version = _getVersion();
 	return next();
 }
 
 inline Pair IIterator::current(){
-	if (_version != getVersion())
+	if (_version != _getVersion())
 		return nullptr;
 
 	return _current;
 }
 
 inline Pair IIterator::next(){
-	if (_version != getVersion())
+	if (_version != _getVersion())
 		return nullptr;
 
 	_current = _next();
