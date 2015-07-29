@@ -26,9 +26,14 @@ public:
 	Node(const Pair & data) : data(data){}
 
 public:
-	static void *operator new(size_t size, uint8_t height, const std::nothrow_t& tag) {
+	static void *operator new(size_t size, uint8_t height, bool nothrow = false) {
 		size += (height - 1) * sizeof(Node *);
-		return ::operator new(size, tag);
+
+		if (nothrow){
+			return ::operator new(size, std::nothrow);
+		}
+
+		return ::operator new(size);
 	}
 };
 
@@ -104,7 +109,7 @@ bool SkipList::_put(const Pair &newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	Node *newnode = new(height, std::nothrow) Node(newdata);
+	Node *newnode = new(height, true) Node(newdata);
 
 	if (newnode == nullptr){
 		// newdata will be magically destroyed.

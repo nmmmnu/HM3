@@ -47,7 +47,7 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	size_t size_buff = keylen + 1 + vallen + 1;
 	size_t size      = __sizeofBase() + size_buff;
 
-	Blob *p = new(size) Blob();
+	Blob *p = new(size) Blob(); // may throw
 
 	p->created	= htobe64(__getCreateTime(created));
 	p->expires	= htobe32(expires);
