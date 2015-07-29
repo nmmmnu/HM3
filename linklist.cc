@@ -5,8 +5,11 @@
 #include <memory>
 
 struct LinkList::Node{
-	const void	*data;	// system dependent
-	LinkList::Node	*next;	// system dependent
+	Pair		data;
+	LinkList::Node	*next = nullptr;
+
+public:
+	Node(const Pair & data) : data(data){}
 };
 
 LinkList::LinkList(){
@@ -32,9 +35,6 @@ void LinkList::_removeAll(){
 
 		node = node->next;
 
-		Pair data = { copy->data, true };
-		// data will be magically destroyed.
-
 		delete copy;
 	}
 
@@ -44,9 +44,9 @@ void LinkList::_removeAll(){
 bool LinkList::_put(const Pair &newdata){
 	const char *key = newdata.getKey();
 
-	Node *prev = NULL;
+	Node *prev = nullptr;
 	for(Node *node = _head; node; node = node->next){
-		Pair olddata = node->data;
+		Pair & olddata = node->data;
 
 		const int cmp = olddata.cmp(key);
 
@@ -64,10 +64,8 @@ bool LinkList::_put(const Pair &newdata){
 					- olddata.getSize()
 					+ newdata.getSize();
 
-			olddata.getBlobOwnership();
-			// olddata will be magically destroyed.
-
-			node->data = newdata.cloneBlob();
+			// copy assignment
+			olddata = newdata;
 
 			return true;
 		}
@@ -78,13 +76,11 @@ bool LinkList::_put(const Pair &newdata){
 		prev = node;
 	}
 
-	Node *newnode = new(std::nothrow) Node;
-	if (newnode == NULL){
+	Node *newnode = new(std::nothrow) Node(newdata);
+	if (newnode == nullptr){
 		// newdata will be magically destroyed.
 		return false;
 	}
-
-	newnode->data = newdata.cloneBlob();
 
 	// put new pair here...
 	if (prev){
@@ -108,16 +104,16 @@ Pair LinkList::_get(const char *key) const{
 	if (node == nullptr)
 		return nullptr;
 
-	const Pair data = node->data;
+	const Pair & data = node->data;
 
 	return data.cmp(key) == 0 ? data : nullptr;
 }
 
 bool LinkList::_remove(const char *key){
-	Node *prev = NULL;
+	Node *prev = nullptr;
 	Node *node;
 	for(node = _head; node; node = node->next){
-		Pair data = node->data;
+		const Pair & data = node->data;
 		const int cmp = data.cmp(key);
 
 		if (cmp == 0){
@@ -130,9 +126,6 @@ bool LinkList::_remove(const char *key){
 
 			_dataSize -= data.getSize();
 			_dataCount--;
-
-			data.getBlobOwnership();
-			// data will be magically destroyed.
 
 			delete node;
 
@@ -166,7 +159,7 @@ void LinkList::_clear(){
 
 LinkList::Node *LinkList::_locate(const char *key) const{
 	for(Node *node = _head; node; node = node->next){
-		const Pair data = node->data;
+		const Pair & data = node->data;
 
 		const int cmp = data.cmp(key);
 
@@ -219,7 +212,7 @@ Pair LinkListIterator::_next(){
 	if (_current == nullptr)
 		return nullptr;
 
-	Pair pair = _current->data;
+	const Pair & pair = _current->data;
 
 	_current = _current->next;
 

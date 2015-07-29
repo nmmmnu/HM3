@@ -19,6 +19,7 @@ public:
 
 private:
 	virtual Pair _getAt(uint64_t index) const override;
+	virtual Pair _getAt_weak(uint64_t index) const override;
 
 	virtual uint64_t _getCount() const override;
 	virtual size_t _getSize() const override;
@@ -33,6 +34,8 @@ private:
 
 private:
 	uint64_t _getCountFromDisk() const;
+
+	const void *_getAtFromDisk(uint64_t index) const;
 };
 
 #endif

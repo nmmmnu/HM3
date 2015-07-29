@@ -10,6 +10,10 @@ Pair IArray::_get(const char *key) const{
 	return _getAt(index);
 }
 
+Pair IArray::_getAt_weak(uint64_t index) const{
+	return _getAt(index);
+}
+
 // ==============================
 
 int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{
@@ -21,7 +25,7 @@ int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{
 
 	uint64_t i;
 	for(i = 0; i < getCount(); ++i){
-		Pair data = getAt(i);
+		Pair data = _getAt_weak(i);
 
 		cmp = data.cmp(key);
 
@@ -55,7 +59,7 @@ int IArray::_lookupBinSearch(const char *key, uint64_t &index) const{
 	//	uint64_t mid = start + ((end - start) /  2);
 		uint64_t mid = start + ((end - start) >> 1);
 
-		Pair data = getAt(mid);
+		Pair data = _getAt_weak(mid);
 
 		cmp = data.cmp(key);
 

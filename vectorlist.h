@@ -6,18 +6,19 @@
 
 class VectorList : virtual public IList, virtual public IArray{
 public:
-	static const size_t REALLOC_SIZE = 1 * sizeof(void *);
+	static const size_t ELEMENT_SIZE = sizeof(Pair);
+	static const size_t REALLOC_SIZE = 16;
 
 public:
-	VectorList(size_t reallocChunkSize = 0);
+	VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
 	virtual ~VectorList() override;
 
 private:
 	size_t		_reallocSize;
 
-	const void	**_buffer;
-	size_t		_bufferSize;
+	Pair		*_buffer;
+	size_t		_bufferReserved;
 
 	uint64_t	_dataCount;
 	size_t		_dataSize;

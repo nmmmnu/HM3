@@ -6,12 +6,51 @@
 
 #include <utility>	// std::move
 
-#define MODULE_NAME	"Pair"
-
 #define PRINTF_TEST(test, result) \
-	printf("%-15s Testing %-20s %s\n", MODULE_NAME, test, result ? "OK" : "Fail")
+	printf("%-15s Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
-static void pair_test_raw(){
+
+
+static void pair_test_raw(const char *module		= "raw pair"	);
+static void pair_test_null(const char *module		= "null pair"	);
+static void pair_test(const char *module		= "pair"	);
+static void pair_test_expired(const char *module	= "expired pair", bool sl = false);
+
+
+
+int main(int argc, char **argv){
+	pair_test_null();
+	pair_test_raw();
+	pair_test();
+	pair_test_expired();
+
+	return 0;
+}
+
+
+
+static void pair_test_raw_do(const char *module, Pair & p, const char *key, const char *val){
+	p.print();
+
+	PRINTF_TEST("valid",		p.valid()			);
+
+	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
+	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
+
+	PRINTF_TEST("cmp",		p.cmp(key) == 0			);
+	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
+	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
+
+	Pair p2 = p;
+
+	p2.print();
+
+	p2 = p;
+
+	p2.print();
+}
+
+static void pair_test_raw(const char *module){
 	const char *key = "name";
 	const char *val = "Peter";
 
@@ -29,31 +68,22 @@ static void pair_test_raw(){
 		'P', 'e', 't', 'e', 'r', '\0'			// val
 	};
 
-	Pair p = (const void *) raw_memory;
+	Pair p = { (const void *) raw_memory, true };
+	pair_test_raw_do("weak pair", p, key, val);
 
-	p.print();
+	p = (const void *) raw_memory;
+	pair_test_raw_do(module, p, key, val);
 
-	PRINTF_TEST("raw valid",	p.valid()			);
+	raw_memory[20] = ~ raw_memory[20];
 
-	PRINTF_TEST("raw key",		strcmp(p.getKey(), key) == 0	);
-	PRINTF_TEST("raw val",		strcmp(p.getVal(), val) == 0	);
+	Pair cp = (const void *) raw_memory;
 
-	PRINTF_TEST("raw cmp",		p.cmp(key) == 0			);
-	PRINTF_TEST("raw cmp",		p.cmp("~~~ non existent") < 0	);
-	PRINTF_TEST("raw cmp",		p.cmp("!!! non existent") > 0	);
-
-	Pair p2 = p;
-	PRINTF_TEST("copy c-tor buff",	p.getBlob() == p2.getBlob()	);
-
-	p2.print();
-
-	p2 = p;
-	PRINTF_TEST("copy assign buff",	p.getBlob() == p2.getBlob()	);
-
-	p2.print();
+	PRINTF_TEST("valid corrupted",	! cp.valid()			);
 }
 
-static void pair_test_null(){
+
+
+static void pair_test_null(const char *module){
 	Pair p = nullptr;
 
 	p.print();
@@ -64,7 +94,9 @@ static void pair_test_null(){
 	PRINTF_TEST("null cmp",		p.cmp("bla") == 1		);
 }
 
-static void pair_test(){
+
+
+static void pair_test(const char *module){
 	const char *key = "abcdef";
 	const char *val = "1234567890";
 
@@ -90,15 +122,6 @@ static void pair_test(){
 	PRINTF_TEST("valid",		p.valid(t)			);
 
 	{
-	char *corruptor = (char *)p.getKey();
-	corruptor[0] = ~ corruptor[0];
-
-	PRINTF_TEST("valid corrupted",	! p.valid()			);
-
-	corruptor[0] = ~ corruptor[0];
-	}
-
-	{
 	Pair m1 = { key, val };
 	Pair m2 = std::move(m1);
 	PRINTF_TEST("move c-tor",	strcmp(m2.getKey(), key) == 0	);
@@ -106,18 +129,17 @@ static void pair_test(){
 	PRINTF_TEST("copy c-tor",	strcmp(m2.getKey(), key) == 0	);
 	PRINTF_TEST("copy c-tor",	strcmp(m3.getKey(), key) == 0	);
 
-	PRINTF_TEST("copy c-tor buff",	m2.getBlob() != m3.getBlob()	);
-
 	m1 = m2;
 	PRINTF_TEST("copy assign",	strcmp(m1.getKey(), key) == 0	);
-	PRINTF_TEST("copy assign buff",	m2.getBlob() != m3.getBlob()	);
 	}
 
 	p.print();
 	t.print();
 }
 
-static void pair_test_expired(bool sl = false){
+
+
+static void pair_test_expired(const char *module, bool sl){
 	Pair p1 = { "key", "val", 1 };
 
 	PRINTF_TEST("not expired",	p1.valid()			);
@@ -132,12 +154,4 @@ static void pair_test_expired(bool sl = false){
 	PRINTF_TEST("expired",		! p2.valid()			);
 }
 
-int main(int argc, char **argv){
-	pair_test_raw();
-	pair_test_null();
-	pair_test();
-	pair_test_expired();
-
-	return 0;
-}
 

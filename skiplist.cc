@@ -1,9 +1,5 @@
 #include "skiplist.h"
 
-#include <stddef.h>	// offsetof
-
-#include "defs.h"
-
 #include <stdexcept>
 
 std::mt19937 SkipList::__rand{ (uint32_t) time(nullptr) };
@@ -23,8 +19,17 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 */
 
 struct SkipList::Node{
-	const void	*data;		// system dependent
+	Pair		data;
 	SkipList::Node	*next[1];	// system dependent, dynamic, at least 1
+
+public:
+	Node(const Pair & data) : data(data){}
+
+public:
+	static void *operator new(size_t size, uint8_t height, const std::nothrow_t& tag) {
+		size += (height - 1) * sizeof(Node *);
+		return ::operator new(size, tag);
+	}
 };
 
 SkipList::SkipList(uint8_t height){
@@ -34,7 +39,6 @@ SkipList::SkipList(uint8_t height){
 	_height = height;
 	_heads = new Node*[height];
 	_loc   = new Node*[height];
-	//_loc   = & _heads[height]; // C, but much faster
 
 	_clear();
 }
@@ -59,15 +63,12 @@ SkipList::~SkipList(){
 }
 
 void SkipList::_removeAll(){
-	for(Node *node = _heads[0]; node; ){
-		Node *copy = node;
+	for(const Node *node = _heads[0]; node; ){
+		const Node *copy = node;
 
 		node = node->next[0];
 
-		Pair data = { copy->data, true };
-		// data will be magically destroyed.
-
-		delete[] copy;
+		delete copy;
 	}
 
 	_clear();
@@ -81,7 +82,7 @@ bool SkipList::_put(const Pair &newdata){
 	if (node){
 		// update in place. node MUST be not NULL...
 
-		Pair olddata = node->data;
+		Pair & olddata = node->data;
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -93,11 +94,8 @@ bool SkipList::_put(const Pair &newdata){
 			- olddata.getSize()
 			+ newdata.getSize();
 
-		// leave node, update only the data
-		node->data = newdata.cloneBlob();;
-
-		olddata.getBlobOwnership();
-		// olddata will be magically destroyed.
+		// copy assignment
+		olddata = newdata;
 
 		return true;
 	}
@@ -106,10 +104,7 @@ bool SkipList::_put(const Pair &newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	Node *newnode = (Node *) new(std::nothrow) char[
-				offsetof(Node, next) +
-				height * sizeof(Node *)
-			];
+	Node *newnode = new(height, std::nothrow) Node(newdata);
 
 	if (newnode == nullptr){
 		// newdata will be magically destroyed.
@@ -118,8 +113,6 @@ bool SkipList::_put(const Pair &newdata){
 
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->height = height
-
-	newnode->data = newdata.cloneBlob();
 
 	// place new node where it belongs
 
@@ -179,14 +172,12 @@ bool SkipList::_remove(const char *key){
 		}
 	}
 
-	Pair data = { node->data, true };
+	const Pair & data = node->data;
 
 	_dataSize -= data.getSize();
 	_dataCount--;
 
-	// data will be magically destroyed.
-
-	delete[] node;
+	delete node;
 
 	return true;
 }
@@ -213,7 +204,7 @@ void SkipList::printLane(uint8_t lane) const{
 	uint64_t i = 0;
 	const Node *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
-		const Pair data = node->data;
+		const Pair & data = node->data;
 		data.print();
 
 		if (++i > 10)
@@ -253,7 +244,7 @@ const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluatio
 		node = prev ? prev : _heads[height - 1];
 
 		while(node){
-			const Pair data = node->data;
+			const Pair & data = node->data;
 			cmp = data.cmp(key);
 
 			if (cmp >= 0)
@@ -336,7 +327,7 @@ Pair SkipListIterator::_next(){
 	if (_current == nullptr)
 		return nullptr;
 
-	Pair pair = _current->data;
+	const Pair & pair = _current->data;
 
 	_current = _current->next[0];
 

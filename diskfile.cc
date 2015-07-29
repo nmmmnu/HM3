@@ -40,7 +40,7 @@ bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t datacount, std::ofst
 
 	// traverse and write the data.
 	for(auto pair = it.first(); pair; pair = it.next()){
-		file.write( (const char *) pair.getBlob(), pair.getSize() );
+		pair.fwrite(file);
 	}
 
 	return true;

@@ -18,6 +18,8 @@ public:
 private:
 	virtual Pair _getAt(uint64_t index) const = 0;
 
+	virtual Pair _getAt_weak(uint64_t index) const;
+
 	virtual Pair _get(const char *key) const override;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const override;

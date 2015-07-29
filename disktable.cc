@@ -4,8 +4,8 @@
 
 #include <endian.h>	// htobe16
 #include <sys/mman.h>	// mmap
-#include <fcntl.h>	// open,
-#include <unistd.h>
+#include <fcntl.h>	// open
+#include <unistd.h>	// close
 
 DiskTable::DiskTable(DiskTable &&other):
 		_mem		(other._mem		),
@@ -67,15 +67,13 @@ void DiskTable::close(){
 }
 
 Pair DiskTable::_getAt(uint64_t index) const{
-	// index is check in parent
+	return _getAtFromDisk(index);
+}
 
-	// TODO: check if we are inside the memory block.
+Pair DiskTable::_getAt_weak(uint64_t index) const{
+	Pair p = { _getAtFromDisk(index), true };
 
-	const char *mem = (char *) _mem;
-	const DiskTableHeader *head = (DiskTableHeader *) _mem;
-
-	const uint64_t ptr = be64toh( head->data[index] );
-	return & mem[ptr];
+	return p;
 }
 
 uint64_t DiskTable::_getCount() const{
@@ -91,3 +89,14 @@ uint64_t DiskTable::_getCountFromDisk() const{
 	return be64toh(head->size);
 }
 
+const void *DiskTable::_getAtFromDisk(uint64_t index) const{
+	// index is check in parent
+
+	// TODO: check if we are inside the memory block.
+
+	const char *mem = (char *) _mem;
+	const DiskTableHeader *head = (DiskTableHeader *) _mem;
+
+	const uint64_t ptr = be64toh( head->data[index] );
+	return & mem[ptr];
+}

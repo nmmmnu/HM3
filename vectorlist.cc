@@ -1,23 +1,24 @@
 #include "vectorlist.h"
 
-#include "defs.h"
-
 #include <stdlib.h>	// size_t
 
 //#define xmalloc(s)	malloc(s)
-//#define xfree(va)	free(a)
+#define xfree(a)	free(a)
 #define xrealloc(a, s)	realloc(a, s)
 
 
+#define SGN(a)	a == 0 ? 0 : a > 0 ? 1 : -1
+
+
 VectorList::VectorList(size_t reallocSize) :
-	_reallocSize(reallocSize ? reallocSize : REALLOC_SIZE) {
+	_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
 	_clear();
 }
 
 VectorList::VectorList(VectorList &&other):
 		_reallocSize	(other._reallocSize	),
 		_buffer		(other._buffer		),
-		_bufferSize	(other._bufferSize	),
+		_bufferReserved	(other._bufferReserved	),
 		_dataCount	(other._dataCount	),
 		_dataSize	(other._dataSize	){
 	other._clear();
@@ -33,8 +34,7 @@ VectorList::~VectorList(){
 
 void VectorList::_removeAll(){
 	for(uint64_t i = 0; i < _dataCount; ++i){
-		Pair data = { _buffer[i], true };
-		// data will be magically destroyed.
+		_buffer[i].~Pair();
 	}
 
 	_clear(true);
@@ -49,7 +49,7 @@ bool VectorList::_put(const Pair &newdata){
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
 
-		Pair olddata = _buffer[index];
+		Pair & olddata = _buffer[index];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -61,23 +61,22 @@ bool VectorList::_put(const Pair &newdata){
 					- olddata.getSize()
 					+ newdata.getSize();
 
-		olddata.getBlobOwnership();
-		// olddata will be magically destroyed.
+		// copy assignment
+		olddata = newdata;
 
-		_buffer[index] = newdata.cloneBlob();
-		
 		return true;
 	}
 
 	// key not exists, shift, then add
 	if ( ! _shiftR(index) ){
-		// newdata will be magically destroyed.
 		return false;
 	}
 
 	_dataSize += newdata.getSize();
 
-	_buffer[index] = newdata.cloneBlob();
+	// placement new with copy constructor
+	void *placement = & _buffer[index];
+	new(placement) Pair(newdata);
 
 	return true;
 }
@@ -90,10 +89,9 @@ bool VectorList::_remove(const char *key){
 	}
 
 	// proceed with remove
-	Pair data = { _buffer[index], true };
+	Pair & data = _buffer[index];
 	_dataSize -= data.getSize();
-
-	// data will be magically destroyed.
+	data.~Pair();
 
 	_shiftL(index);
 
@@ -101,7 +99,6 @@ bool VectorList::_remove(const char *key){
 }
 
 Pair VectorList::_getAt(uint64_t index) const{
-	// will be double check in parent
 	return _buffer[index];
 }
 
@@ -121,13 +118,13 @@ void VectorList::_clear(bool alsoFree){
 
 	_dataCount = 0;
 	_dataSize = 0;
-	_bufferSize = 0;
+	_bufferReserved = 0;
 	_buffer = nullptr;
 }
 
 bool VectorList::_shiftL(uint64_t index){
 	// this is the most slow operation of them all
-	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * sizeof(void *));
+	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * ELEMENT_SIZE);
 
 	_resize(-1);
 
@@ -139,7 +136,7 @@ bool VectorList::_shiftR(uint64_t index){
 		return false;
 
 	// this is the most slow operation of them all
-	memmove(& _buffer[index + 1], & _buffer[index], (_dataCount - index - 1) * sizeof(void *));
+	memmove(& _buffer[index + 1], & _buffer[index], (_dataCount - index - 1) * ELEMENT_SIZE);
 
 	return true;
 }
@@ -159,23 +156,23 @@ bool VectorList::_resize(int delta){
 		return true;
 	}
 
-	size_t new_bufferSize = __calcNewSize(new_dataCount * sizeof(void *), _reallocSize);
+	size_t new_bufferReserved = __calcNewSize(new_dataCount, _reallocSize);
 
-	if (_bufferSize == new_bufferSize){
+	if (_bufferReserved == new_bufferReserved){
 		// already resized, done :)
 		_dataCount = new_dataCount;
 
 		return true;
 	}
 
-	void *new_buffer = xrealloc(_buffer, new_bufferSize);
+	Pair *new_buffer = (Pair *) xrealloc(_buffer, new_bufferReserved * ELEMENT_SIZE);
 
 	if (new_buffer == nullptr)
 		return false;
 
 	_dataCount	= new_dataCount;
-	_bufferSize	= new_bufferSize;
-	_buffer		= (const void **) new_buffer;
+	_bufferReserved	= new_bufferReserved;
+	_buffer		= new_buffer;
 
 	return true;
 }
@@ -184,7 +181,7 @@ size_t VectorList::__calcNewSize(size_t size, size_t reallocSize){
 	size_t newsize = size / reallocSize;
 
 	if (size % reallocSize)
-		newsize++;
+		++newsize;
 
 	return newsize * reallocSize;
 }

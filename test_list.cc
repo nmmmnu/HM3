@@ -74,6 +74,27 @@ static void iterator_test(const char *module, IList &list, IIterator &it){
 	PRINTF_TEST("invalidate ver",	version < list.getVersion()		);
 }
 
+static void ref_test(const char *module, IList &list){
+	const char *key = "ref_test";
+
+	Pair p = { key, nullptr };
+	p.print();
+
+	list.put(p);
+
+	p.print();
+
+	list.get(key).print();
+
+	p.print();
+
+	list.remove(key);
+
+	p.print();
+
+	PRINTF_TEST("ref test",		true					);
+}
+
 static void list_test(const char *module, IList &list){
 	Pair p = nullptr;
 
@@ -160,8 +181,13 @@ static void list_test(const char *module, IList &list){
 
 	iterator_test(module, list, *it);
 
+	// TEST REFERENCES
+
+	list.removeAll();
+	ref_test(module, list);
 }
 
+#if 1
 static void skiplist_lanes_test(SkipList &list){
 	list.put(Pair("name",		"Niki"		));
 	list.put(Pair("city",		"Sofia"		));
@@ -179,6 +205,7 @@ static void skiplist_lanes_test(SkipList &list){
 
 //	list.print();
 }
+#endif
 
 int main(int argc, char **argv){
 
@@ -192,11 +219,11 @@ int main(int argc, char **argv){
 
 	LinkList ll;
 		list_test("LinkList", ll);
-
 	LinkList ll2 = { std::move(ll) };
 		list_test("Moved LinkList", ll2);
 
 	// =========================
+
 
 	SkipList sl;
 		list_test("SkipList", sl);

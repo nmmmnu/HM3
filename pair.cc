@@ -1,8 +1,6 @@
 #include "pair.h"
 #include "mytime.h"
 
-#include "defs.h"
-
 #include <endian.h>	// htobe16
 #include <stddef.h>	// offsetof
 
@@ -11,6 +9,7 @@
 // ==============================
 
 NMEA0183ChecksumCalculator Pair::__checksumCalculator;
+bool Pair::__checksumUsage = Pair::CHECKSUM;
 
 // ==============================
 
@@ -21,7 +20,19 @@ struct Pair::Blob{
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
 	char		buffer[2];	// dynamic
+
+public:
+	static void *operator new(size_t size_reported, size_t size) {
+		return ::operator new(size);
+	}
+
 } __attribute__((__packed__));
+
+// ==============================
+
+static void null_deleter(void *){
+	// null_deleter
+}
 
 // ==============================
 
@@ -33,14 +44,10 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 		throw exception;
 	}
 
-	size_t size = __sizeofBase() + keylen + 1 + vallen + 1;
+	size_t size_buff = keylen + 1 + vallen + 1;
+	size_t size      = __sizeofBase() + size_buff;
 
-	Blob *p = (Blob *) xmalloc(size);
-
-	if (p == nullptr){
-		std::bad_alloc exception;
-		throw exception;
-	}
+	Blob *p = new(size) Blob();
 
 	p->created	= htobe64(__getCreateTime(created));
 	p->expires	= htobe32(expires);
@@ -55,75 +62,54 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	memcpy(& p->buffer[keylen + 1], val, vallen);
 	p->buffer[keylen + 1 + vallen] = '\0';
 
-	p->checksum = __checksumCalculator.calc((void *) p->buffer, size - __sizeofBase());
+	p->checksum = __checksumCalculator.calc(p->buffer, size_buff);
 
-	// p must be valid POD class
-	_blob = p;
+	_blob.reset(p);
 }
 
 Pair::Pair(const char *key, const char *value,              uint32_t expires, uint32_t created) :
 			Pair(key, value, value ? strlen(value) : 0, expires, created){
-};
-
-Pair::Pair(const void *blob, bool ownBlob) :
-			_blob((const Blob *) blob),
-			_ownBlob(ownBlob){
-};
-
-Pair::Pair(Pair && other) :
-			Pair(other._blob, other._ownBlob){
-	other._ownBlob = false;
-};
-
-Pair::Pair(const Pair & other){
-	if (other._ownBlob)
-		printf("WARNING: copy c-tor with allocation\n");
-
-	const void *blob = other._ownBlob ? other.cloneBlob() : other._blob;
-
-	_blob = (const Blob *) blob;
-	_ownBlob = other._ownBlob;
 }
 
-Pair & Pair::operator=(Pair other){
-	std::swap(_blob,    other._blob   );
-	std::swap(_ownBlob, other._ownBlob);
+Pair::Pair(const void *blob2, bool weak){
+	if (blob2 == nullptr || weak == false)
+		return;
 
-	return *this;
+	Blob *p = (Blob *) blob2;
+
+	_blob.reset(p, null_deleter);
 }
 
-const void *Pair::cloneBlob() const{
-	if (_blob == nullptr)
-		return nullptr;
+Pair::Pair(const void *blob2){
+	if (blob2 == nullptr)
+		return;
 
-	void *p = xmalloc(getSize());
+	const Blob *raw = (const Blob *) blob2;
 
-	if (p == nullptr){
-		std::bad_alloc exception;
-		throw exception;
-	}
+	size_t size_buff = be16toh(raw->keylen) + 1 + be32toh(raw->vallen) + 1;
+	size_t size      = __sizeofBase() + size_buff;
 
-	memcpy(p, _blob, getSize());
+	if (__checksumUsage && raw->checksum != __checksumCalculator.calc(raw->buffer, size_buff))
+		return;
 
-	return p;
-}
+	Blob *p = new(size) Blob();
 
-Pair::~Pair(){
-	if (_ownBlob)
-		xfree((void *) _blob);
+	memcpy(p, raw, size);
+
+	_blob.reset(p);
 }
 
 // ==============================
 
 const char *Pair::getKey() const{
-	if (_blob == nullptr)
+	if (! _blob)
 		return nullptr;
 
-	return & _blob->buffer[0];
+	return _blob->buffer;
 }
 
 const char *Pair::getVal() const{
-	if (_blob == nullptr)
+	if (! _blob)
 		return nullptr;
 
 	// vallen is 0 no matter of endianness
@@ -138,13 +124,7 @@ bool Pair::valid() const{
 		return false;
 
 	// now expires is 0 no matter of endianness
-	if (_blob->expires){
-		if ( MyTime::expired( be64toh(_blob->created), be32toh(_blob->expires) ) )
-			return false;
-	}
-
-	// now check checksum
-	if (_blob->checksum != _getChecksum())
+	if (_blob->expires && MyTime::expired( be64toh(_blob->created), be32toh(_blob->expires) ) )
 		return false;
 
 	// finally all OK
@@ -155,19 +135,25 @@ size_t Pair::getSize() const{
 	return __sizeofBase() + _sizeofBuffer();
 }
 
+bool Pair::fwrite(std::ostream & os) const{
+	os.write( (const char *) _blob.get(), getSize() );
+
+	return true;
+}
+
 void Pair::print() const{
 	if (_blob == nullptr){
 		printf("--- Pair is empty ---\n");
 		return;
 	}
 
-	static const char *format = "%-20s | %-20s | %-*s | %8u | %s\n";
+	static const char *format = "%-20s | %-20s | %-*s | %8u | %4u\n";
 
 	printf(format,
 		getKey(), getVal(),
 		MyTime::STRING_SIZE, MyTime::toString(be64toh(_blob->created)),
 		be32toh(_blob->expires),
-		_ownBlob ? "Y" : "N"
+		_blob.use_count()
 	);
 }
 
@@ -175,10 +161,6 @@ void Pair::print() const{
 
 uint64_t Pair::__getCreateTime(uint32_t created){
 	return created ? MyTime::combine(created) : MyTime::now();
-}
-
-uint8_t Pair::_getChecksum() const{
-	return __checksumCalculator.calc(_blob->buffer, _sizeofBuffer());
 }
 
 constexpr

@@ -4,24 +4,25 @@
 #include "nmea0183checksumcalculator.h"
 
 #include <string.h>	//strcmp
-//#include <stdio.h>
+
+#include <memory>
+#include <ostream>
 
 class Pair{
 public:
 	static const uint16_t MAX_KEY_SIZE = 0xffff;
 	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
 
+	static const bool CHECKSUM = true;
+
 public:
+	Pair() = default;
+
 	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
 	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
 
-	Pair(const void *blob, bool ownBlob = false);
-
-	Pair(Pair && other);
-	Pair(const Pair & other);
-	Pair & operator=(Pair other);
-
-	~Pair();
+	Pair(const void *blob);
+	Pair(const void *blob, bool weak);
 
 	operator bool() const;
 
@@ -35,20 +36,19 @@ public:
 	bool valid() const;
 	bool valid(const Pair &pair) const;
 
+	bool fwrite(std::ostream & os) const;
+
 	size_t getSize() const;
 
 	void print() const;
 
 public:
-	const void *cloneBlob() const;
-	const void *getBlob() const;
-
-	void getBlobOwnership();
+	static void setChecksumUsage(bool checksumUsage);
 
 private:
 	struct Blob;
-	const Blob *_blob = nullptr;
-	bool _ownBlob = true;
+
+	std::shared_ptr<Blob>	_blob;
 
 private:
 	static uint64_t __getCreateTime(uint32_t created);
@@ -56,25 +56,22 @@ private:
 	static size_t __sizeofBase();
 
 	size_t  _sizeofBuffer() const;
-	uint8_t _getChecksum() const;
 
 private:
 	static NMEA0183ChecksumCalculator __checksumCalculator;
+
+	static bool __checksumUsage;
 
 };
 
 // ==============================
 
 inline Pair::operator bool() const{
-	return _blob;
-}
-
-inline const void *Pair::getBlob() const{
-	return _blob;
+	return (bool) _blob;
 }
 
 inline int Pair::cmp(const char *key) const{
-	if (_blob == nullptr)
+	if (! _blob)
 		return 1;
 
 	return key == nullptr ? -1 : strcmp(getKey(), key);
@@ -88,8 +85,8 @@ inline bool Pair::valid(const Pair &pair) const{
 	return valid();
 }
 
-inline void Pair::getBlobOwnership(){
-	_ownBlob = true;
+inline void Pair::setChecksumUsage(bool checksumUsage){
+	__checksumUsage = checksumUsage;
 }
 
 #endif
