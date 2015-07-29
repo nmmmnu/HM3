@@ -1,7 +1,5 @@
 #include "linklist.h"
 
-#include "defs.h"
-
 #include <memory>
 
 struct LinkList::Node{
