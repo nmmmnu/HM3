@@ -72,31 +72,34 @@ Pair::Pair(const char *key, const char *value,              uint32_t expires, ui
 }
 
 Pair::Pair(const void *blob2, bool weak){
-	if (blob2 == nullptr || weak == false)
-		return;
-
-	Blob *p = (Blob *) blob2;
-
-	_blob.reset(p, null_deleter);
-}
-
-Pair::Pair(const void *blob2){
 	if (blob2 == nullptr)
 		return;
 
-	const Blob *raw = (const Blob *) blob2;
+	Blob *blob = (Blob *) blob2;
+
+	if (weak){
+		_blob.reset(blob, null_deleter);
+		return;
+	}
+
+	_blob.reset( _cloneBlob(blob) );
+}
+
+Pair::Blob *Pair::_cloneBlob(const Blob *raw){
+	if (raw == nullptr)
+		return nullptr;
 
 	size_t size_buff = be16toh(raw->keylen) + 1 + be32toh(raw->vallen) + 1;
 	size_t size      = __sizeofBase() + size_buff;
 
 	if (__checksumUsage && raw->checksum != __checksumCalculator.calc(raw->buffer, size_buff))
-		return;
+		return nullptr;
 
 	Blob *p = new(size) Blob();
 
 	memcpy(p, raw, size);
 
-	_blob.reset(p);
+	return p;
 }
 
 // ==============================

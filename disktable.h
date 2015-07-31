@@ -19,7 +19,7 @@ public:
 
 private:
 	virtual Pair _getAt(uint64_t index) const override;
-	virtual Pair _getAt_weak(uint64_t index) const override;
+	virtual int _cmpAt(uint64_t index, const char *key) const override;
 
 	virtual uint64_t _getCount() const override;
 	virtual size_t _getSize() const override;

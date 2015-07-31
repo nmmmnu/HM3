@@ -21,8 +21,7 @@ public:
 	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
 	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
 
-	Pair(const void *blob);
-	Pair(const void *blob, bool weak);
+	Pair(const void *blob, bool weak = false);
 
 	operator bool() const;
 
@@ -58,6 +57,8 @@ private:
 	size_t  _sizeofBuffer() const;
 
 private:
+	static Blob *_cloneBlob(const Blob *blob);
+
 	static NMEA0183ChecksumCalculator __checksumCalculator;
 
 	static bool __checksumUsage;

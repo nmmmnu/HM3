@@ -70,10 +70,9 @@ Pair DiskTable::_getAt(uint64_t index) const{
 	return _getAtFromDisk(index);
 }
 
-Pair DiskTable::_getAt_weak(uint64_t index) const{
+int DiskTable::_cmpAt(uint64_t index, const char *key) const{
 	Pair p = { _getAtFromDisk(index), true };
-
-	return p;
+	return p.cmp(key);
 }
 
 uint64_t DiskTable::_getCount() const{

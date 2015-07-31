@@ -59,13 +59,14 @@ static void pair_test_raw(const char *module){
 	char checksum = (char) nm.calc("name\0Peter\0", 11);
 
 	static char raw_memory[] = {
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,	// created
-		0x00, 0x00, 0x00, 0x00,				// expires
-		0x00, 0x00, 0x00, 0x05,				// vallen
-		0x00, 0x04,					// keylen
-		checksum,					// checksum
-		'n', 'a', 'm', 'e', '\0',			// key
-		'P', 'e', 't', 'e', 'r', '\0'			// val
+		0x50, 0x00, 0x00, 0x00,		// created, 2012-07-13 11:01:20
+		0x00, 0x00, 0x00, 0x00,		// milliseconds
+		0x00, 0x00, 0x00, 0x00,		// expires
+		0x00, 0x00, 0x00, 0x05,		// vallen
+		0x00, 0x04,			// keylen
+		checksum,			// checksum
+		'n', 'a', 'm', 'e', '\0',	// key
+		'P', 'e', 't', 'e', 'r', '\0'	// val
 	};
 
 	Pair p = { (const void *) raw_memory, true };
