@@ -12,7 +12,7 @@ static void printUsage(const char *name){
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
-void find(IROList &list, const char *key){
+void find(ITable &list, const char *key){
 	const Pair pair = list.get(key);
 
 	if (! pair){
@@ -23,7 +23,7 @@ void find(IROList &list, const char *key){
 	pair.print();
 }
 
-void listing(IROList &list, const char *key = nullptr, size_t count = 100){
+void listing(ITable &list, const char *key = nullptr, size_t count = 100){
 	auto it = list.getIterator();
 	for(Pair pair = it->first(key); pair; pair = it->next()){
 		pair.print();

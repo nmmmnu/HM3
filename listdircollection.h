@@ -18,7 +18,7 @@ public:
 	void close();
 
 private:
-	virtual const IROList & _getAt(uint64_t index) const override;
+	virtual const ITable & _getAt(uint64_t index) const override;
 	virtual uint64_t _getCount() const override;
 
 private:

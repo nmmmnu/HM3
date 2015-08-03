@@ -1,10 +1,10 @@
 #ifndef _ILIST_H
 #define _ILIST_H
 
-#include "irolist.h"
+#include "itable.h"
 #include "iversion.h"
 
-class IList : virtual public IROList{
+class IList : virtual public ITable{
 public:
 	void removeAll();
 	bool put(const Pair & pair);

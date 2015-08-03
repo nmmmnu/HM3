@@ -1,7 +1,7 @@
 #include "listdircollection.h"
 #include "myglob.h"
 
-const IROList & ListDirCollection::_getAt(uint64_t index) const{
+const ITable & ListDirCollection::_getAt(uint64_t index) const{
 	return _files[index];
 }
 

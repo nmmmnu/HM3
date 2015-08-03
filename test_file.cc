@@ -15,7 +15,7 @@
 #define PROCESS_STEP	1000 * 10
 
 static void listLoad(IList &list, const char *filename, bool tombstones = true);
-static void listSearch(IROList &list, const char *key);
+static void listSearch(ITable &list, const char *key);
 
 static char *trim(char *s);
 
@@ -185,7 +185,7 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 	fclose(f);
 }
 
-static void listSearch(IROList &list, const char *key){
+static void listSearch(ITable &list, const char *key){
 	const Pair pair = list.get(key);
 
 	if (! pair){

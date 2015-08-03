@@ -1,5 +1,5 @@
-#ifndef _IROLIST_H
-#define _IROLIST_H
+#ifndef _ITable_H
+#define _ITable_H
 
 #include "iiterator.h"
 #include "icountable.h"
@@ -7,7 +7,7 @@
 
 #include <memory>
 
-class IROList : virtual public IVersion, virtual public ICountable{
+class ITable : virtual public IVersion, virtual public ICountable{
 public:
 	Pair get(const char *key) const;
 	Pair operator[](const char *key) const;
@@ -29,27 +29,27 @@ private:
 // ==============================
 
 
-inline Pair IROList::get(const char *key) const{
+inline Pair ITable::get(const char *key) const{
 	return _get(key);
 }
 
-inline Pair IROList::operator[](const char *key) const{
+inline Pair ITable::operator[](const char *key) const{
 	return _get(key);
 }
 
-inline bool IROList::exists(const char *key) const{
+inline bool ITable::exists(const char *key) const{
 	return (bool) _get(key);
 }
 
-inline size_t IROList::getSize() const{
+inline size_t ITable::getSize() const{
 	return _getSize();
 }
 
-inline std::unique_ptr<IIterator> IROList::getIterator() const{
+inline std::unique_ptr<IIterator> ITable::getIterator() const{
 	return _getIterator();
 }
 
-inline void IROList::print(){
+inline void ITable::print(){
 	this->getIterator()->print();
 }
 

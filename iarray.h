@@ -1,9 +1,9 @@
 #ifndef _IARRAY_H
 #define _IARRAY_H
 
-#include "irolist.h"
+#include "itable.h"
 
-class IArray : virtual public IROList{
+class IArray : virtual public ITable{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;

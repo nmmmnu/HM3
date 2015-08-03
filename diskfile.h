@@ -1,7 +1,7 @@
 #ifndef _DISK_FILE_H
 #define _DISK_FILE_H
 
-#include "irolist.h"
+#include "itable.h"
 
 #include <stddef.h>	// ofsetof
 #include <stdint.h>
@@ -19,7 +19,7 @@ struct DiskTableHeader{
 class DiskFile{
 public:
 	static bool create(const char *filename, IIterator &it, uint64_t datacount);
-	static bool create(const char *filename, IROList &list);
+	static bool create(const char *filename, ITable &table);
 
 	constexpr
 	static size_t sizeofHeader();
@@ -31,9 +31,9 @@ private:
 
 // ==============================
 
-inline bool DiskFile::create(const char *filename, IROList &list){
-	auto iterator = list.getIterator();
-	return create(filename, *iterator, list.getCount());
+inline bool DiskFile::create(const char *filename, ITable &table){
+	auto iterator = table.getIterator();
+	return create(filename, *iterator, table.getCount());
 }
 
 constexpr
