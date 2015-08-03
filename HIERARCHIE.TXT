@@ -1,9 +1,21 @@
 
-   IVersion -----------------------------
-            \                             \
-             IIterator                      IList  ----- (Lists)
+
+
+
+
+               IVersion                     IList  ----- (Lists)
                         \                 /        \
-                          --- IROList ---            --- Vector
-                        /                 \        /
-             ICountable                     IArray ----- DiskManager
+                          --- ITable ----            --- Vector
+                        /               \ \        /
+             ICountable                  \  IArray ----- DiskTable
+                                          \
+                                            MultiTable
+
+
+
+             ICountable ----- IIterator -------- (Iterators)
+
+
+
+             ICountable ----- IListCollection --- ListDirCollection
 
