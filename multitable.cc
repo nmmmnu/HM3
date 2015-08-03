@@ -1,34 +1,10 @@
-#include "dirtable.h"
-
-#include "myglob.h"
+#include "multitable.h"
 
 #include <vector>
 
-bool DirTable::open(const char *path){
-	close();
-
-	MyGlob gl;
-	gl.open(path);
-
-	for(const char *filename = gl.first(); filename; filename = gl.next()){
-		DiskTable dt;
-		dt.open(filename);
-
-		_files.push_front(std::move(dt));
-	}
-
-	return true;
-}
-
-void DirTable::close(){
-	incVersion();
-
-	_files.clear();
-}
-
-Pair DirTable::_get(const char *key) const{
-	for(size_t i = 0; i < _files.size(); ++i){
-		Pair pair = _files[i].get(key);
+Pair MultiTable::_get(const char *key) const{
+	for(size_t i = 0; i < _collection.getCount(); ++i){
+		Pair pair = _collection[i].get(key);
 
 		if (pair)
 			return pair;
@@ -37,15 +13,11 @@ Pair DirTable::_get(const char *key) const{
 	return nullptr;
 }
 
-
-
 // ==============================
 
-
-
-class DirTableIterator : public IIterator{
+class MultiTableIterator : public IIterator{
 public:
-	DirTableIterator(const DirTable & list);
+	MultiTableIterator(const MultiTable & list);
 
 private:
 	virtual void _rewind(const char *key = nullptr) override;
@@ -55,24 +27,24 @@ private:
 	};
 
 private:
-	const DirTable &_list;
+	const MultiTable &_list;
 	std::vector<std::unique_ptr<IIterator>> _iterators;
 };
 
-DirTableIterator::DirTableIterator(const DirTable & list) : _list(list){
-	for(size_t i = 0; i < list._files.size(); ++i){
-		auto it = list._files[i].getIterator();
+MultiTableIterator::MultiTableIterator(const MultiTable & list) : _list(list){
+	for(size_t i = 0; i < list._collection.getCount(); ++i){
+		auto it = list._collection[i].getIterator();
 		_iterators.push_back(std::move(it));
 	}
 }
 
-void DirTableIterator::_rewind(const char *key){
+void MultiTableIterator::_rewind(const char *key){
 	for(size_t i = 0; i < _iterators.size(); ++i ){
 		_iterators[i]->first(key);
 	}
 }
 
-Pair DirTableIterator::_next(){
+Pair MultiTableIterator::_next(){
 	Pair r_pair = nullptr;
 
 	// step 1: find minimal in reverse order to find most recent.
@@ -112,6 +84,6 @@ Pair DirTableIterator::_next(){
 
 // ==============================
 
-std::unique_ptr<IIterator> DirTable::_getIterator() const{
-	return std::unique_ptr<IIterator>( new DirTableIterator(*this) );
+std::unique_ptr<IIterator> MultiTable::_getIterator() const{
+	return std::unique_ptr<IIterator>( new MultiTableIterator(*this) );
 }

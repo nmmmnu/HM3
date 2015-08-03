@@ -1,7 +1,8 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "dirtable.h"
+#include "multitable.h"
+#include "listdircollection.h"
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
@@ -42,20 +43,22 @@ int main(int argc, char **argv){
 	const char *path	= argv[2];
 	const char *key		= argv[3];
 
-	DirTable dt;
-	dt.open(path);
+	ListDirCollection lc;
+	lc.open(path);
+
+	MultiTable mt(lc);
 
 	switch(op[0]){
 		case 's':
-			find(dt, key);
+			find(mt, key);
 			break;
 
 		case 'l':
-			listing(dt);
+			listing(mt);
 			break;
 
 		case 'L':
-			listing(dt, key);
+			listing(mt, key);
 			break;
 	}
 

@@ -2,19 +2,16 @@
 #define _DIR_TABLE_H
 
 #include "irolist.h"
-#include "disktable.h"
+#include "ilistcollection.h"
 
-#include <deque>
+class MultiTableIterator;
 
-class DirTableIterator;
-
-class DirTable : virtual public IROList{
-friend class DirTableIterator;
+class MultiTable : virtual public IROList{
+friend class MultiTableIterator;
 public:
-	bool open(const char *path);
-	void close();
+	MultiTable(IListCollection & collection) : _collection(collection){};
 
-protected:
+private:
 	virtual Pair _get(const char *key) const override;
 
 	virtual uint64_t _getCount() const override{
@@ -28,7 +25,8 @@ protected:
 	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
-	std::deque<DiskTable> _files;
+	IListCollection & _collection;
 };
 
 #endif
+

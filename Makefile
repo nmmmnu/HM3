@@ -16,7 +16,8 @@ SRC	=	\
 		pair.cc diskfile.cc			\
 		iiterator.cc iarray.cc			\
 		vectorlist.cc linklist.cc skiplist.cc	\
-		disktable.cc dirtable.cc		\
+		disktable.cc				\
+		multitable.cc listdircollection.cc	\
 		nmea0183checksumcalculator.cc		\
 		mytime.cc myglob.cc
 
@@ -50,7 +51,7 @@ test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o 
 test_glob: test_glob.o myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o myglob.o disktable.o dirtable.o
+test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o myglob.o disktable.o multitable.o listdircollection.o
 	$(LINK) $@ $^		$(LIBS)
 
 %.o: %.cc
