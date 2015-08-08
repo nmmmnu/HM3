@@ -9,9 +9,17 @@
 #include <iostream>
 #include <fstream>
 
+#define DISK_TABLE_VERSION	"001"
+#define DISK_TABLE_LOGO		"ZUSE" DISK_TABLE_VERSION
+#define DISK_TABLE_SIZE		256
+
+#define DISK_TABLE_PADDING	DISK_TABLE_SIZE - 8 - 2 * sizeof(uint64_t)
+
 struct DiskTableHeader{
-	uint64_t	size;		// 8
-	uint64_t	data[1];	// 8, dynamic
+	const char	logo[8] =  DISK_TABLE_LOGO;	// 8
+	uint64_t	size;				// 8
+	char		padding[DISK_TABLE_PADDING];	// calculated
+	uint64_t	data[1];			// 8, dynamic
 } __attribute__((__packed__));
 
 // ==============================

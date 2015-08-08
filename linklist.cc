@@ -218,5 +218,6 @@ Pair LinkListIterator::_next(){
 }
 
 std::unique_ptr<IIterator> LinkList::_getIterator() const{
-	return std::unique_ptr<IIterator>( new LinkListIterator(*this) );
+	//return std::unique_ptr<IIterator>( new LinkListIterator(*this) );
+	return std::make_unique<LinkListIterator>(*this);
 };

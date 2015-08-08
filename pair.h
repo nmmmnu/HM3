@@ -47,7 +47,7 @@ public:
 private:
 	struct Blob;
 
-	std::shared_ptr<Blob>	_blob;
+	std::shared_ptr<const Blob>	_blob;
 
 private:
 	static uint64_t __getCreateTime(uint32_t created);

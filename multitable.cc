@@ -85,5 +85,6 @@ Pair MultiTableIterator::_next(){
 // ==============================
 
 std::unique_ptr<IIterator> MultiTable::_getIterator() const{
-	return std::unique_ptr<IIterator>( new MultiTableIterator(*this) );
+	//return std::unique_ptr<IIterator>( new MultiTableIterator(*this) );
+	return std::make_unique<MultiTableIterator>(*this);
 }

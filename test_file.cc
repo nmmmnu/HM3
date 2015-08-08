@@ -21,28 +21,26 @@ static char *trim(char *s);
 
 static void printUsage(const char *cmd);
 
+static std::unique_ptr<IList> factoryVector(char search){
+	auto vlist = std::make_unique<VectorList>();
+	vlist->setLookupMethod(search);
+	return vlist;
+}
+
 static std::unique_ptr<IList> factory(char what){
 	switch(what){
 	case 'v':
-		{
-			VectorList *vlist = new VectorList();
-			vlist->setLookupMethod(VectorList::LINEAR_SEARCH);
-			return std::unique_ptr<IList>( vlist );
-		}
+		return factoryVector(VectorList::LINEAR_SEARCH);
 
 	case 'V':
-		{
-			VectorList *vlist = new VectorList();
-			vlist->setLookupMethod(VectorList::BINARY_SEARCH);
-			return std::unique_ptr<IList>( vlist );
-		}
+		return factoryVector(VectorList::BINARY_SEARCH);
 
 	case 'l':
-		return std::unique_ptr<IList>( new LinkList() );
+		return std::make_unique<LinkList>();
 
 	default:
 	case 's':
-		return std::unique_ptr<IList>( new SkipList() );
+		return std::make_unique<SkipList>();
 	}
 }
 

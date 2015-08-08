@@ -340,5 +340,6 @@ Pair SkipListIterator::_next(){
 }
 
 std::unique_ptr<IIterator> SkipList::_getIterator() const{
-	return std::unique_ptr<IIterator>( new SkipListIterator(*this) );
+	//return std::unique_ptr<IIterator>( new SkipListIterator(*this) );
+	return std::make_unique<SkipListIterator>(*this);
 };

@@ -29,6 +29,8 @@ bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t datacount, std::ofst
 	// write table header
 	DiskTableHeader header;
 	header.size = htobe64(datacount);
+	memset(header.padding, 0, DISK_TABLE_PADDING);
+
 	file.write( (const char *) & header, sizeofHeader());
 
 	// traverse and write the table.

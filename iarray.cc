@@ -117,5 +117,6 @@ Pair IArrayIterator::_next(){
 // ==============================
 
 std::unique_ptr<IIterator> IArray::_getIterator() const{
-	return std::unique_ptr<IIterator>( new IArrayIterator(*this) );
+	//return std::unique_ptr<IIterator>( new IArrayIterator(*this) );
+	return std::make_unique<IArrayIterator>(*this);
 }
