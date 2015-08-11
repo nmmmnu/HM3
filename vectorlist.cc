@@ -7,8 +7,13 @@
 #define xrealloc(a, s)	realloc(a, s)
 
 
-#define SGN(a)	a == 0 ? 0 : a > 0 ? 1 : -1
+template<typename T>
+T SGN(const T a){
+	if (a == 0)
+		return 0;
 
+	return a > 0 ? 1 : -1;
+}
 
 VectorList::VectorList(size_t reallocSize) :
 	_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {

@@ -3,11 +3,13 @@
 
 #include "nmea0183checksumcalculator.h"
 
-#include <string.h>	//strcmp
-
 #include <memory>
 
 #include <ostream>
+
+#include "pairpod.h"
+
+// ==============================
 
 class Pair{
 public:
@@ -29,16 +31,14 @@ public:
 public:
 	const char *getKey() const;
 	const char *getVal() const;
-
 	int cmp(const char *key) const;
 	int cmp(const Pair &pair) const;
-
 	bool valid() const;
 	bool valid(const Pair &pair) const;
-
-	bool fwrite(std::ostream & os) const;
-
 	size_t getSize() const;
+
+public:
+	bool fwrite(std::ostream & os) const;
 
 	void print() const;
 
@@ -46,21 +46,15 @@ public:
 	static void setChecksumUsage(bool checksumUsage);
 
 private:
-	struct Blob;
-
-	std::shared_ptr<const Blob>	_blob;
+	std::shared_ptr<const PairPOD> pod;
 
 private:
 	static uint64_t __getCreateTime(uint32_t created);
-	constexpr
-	static size_t __sizeofBase();
-
-	size_t  _sizeofBuffer() const;
 
 private:
-	static Blob *_createBlob(size_t size);
+	static PairPOD *_createBlob(size_t size);
 
-	static Blob *_cloneBlob(const Blob *blob);
+	static PairPOD *_cloneBlob(const PairPOD *blob);
 
 	static NMEA0183ChecksumCalculator __checksumCalculator;
 
@@ -71,26 +65,41 @@ private:
 // ==============================
 
 inline Pair::operator bool() const{
-	return (bool) _blob;
+	return (bool) pod;
+}
+
+inline void Pair::setChecksumUsage(bool const checksumUsage){
+	__checksumUsage = checksumUsage;
+}
+
+// ==============================
+
+inline const char *Pair::getKey() const{
+	return pod ? pod->getKey() : nullptr;
+}
+
+inline const char *Pair::getVal() const{
+	return pod ? pod->getVal() : nullptr;
 }
 
 inline int Pair::cmp(const char *key) const{
-	if (! _blob)
-		return 1;
-
-	return key == nullptr ? -1 : strcmp(getKey(), key);
+	return pod ? pod->cmp(key) : 1;
 }
 
 inline int Pair::cmp(const Pair &pair) const{
-	return cmp(pair.getKey());
+	return cmp( pair.getKey() );
+}
+
+inline bool Pair::valid() const{
+	return pod ? pod->valid() : false;
 }
 
 inline bool Pair::valid(const Pair &pair) const{
 	return valid();
 }
 
-inline void Pair::setChecksumUsage(bool checksumUsage){
-	__checksumUsage = checksumUsage;
+inline size_t Pair::getSize() const{
+	return pod ? pod->getSize() : 0;
 }
 
 #endif
