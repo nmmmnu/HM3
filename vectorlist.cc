@@ -8,14 +8,14 @@
 
 
 template<typename T>
-T SGN(const T a){
+inline T SGN(const T a){
 	if (a == 0)
 		return 0;
 
 	return a > 0 ? 1 : -1;
 }
 
-VectorList::VectorList(size_t reallocSize) :
+VectorList::VectorList(size_t const reallocSize) :
 	_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
 	_clear();
 }
@@ -117,7 +117,7 @@ size_t VectorList::_getSize() const{
 
 // ===================================
 
-void VectorList::_clear(bool alsoFree){
+void VectorList::_clear(bool const alsoFree){
 	if (alsoFree && _buffer)
 		xfree(_buffer);
 

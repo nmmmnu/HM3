@@ -24,7 +24,7 @@ public:
 	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
 	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
 
-	Pair(const void *blob, bool weak = false);
+	Pair(const void *blob /*, bool weak = false */ );
 
 	operator bool() const;
 

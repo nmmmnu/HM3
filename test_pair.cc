@@ -69,7 +69,7 @@ static void pair_test_raw(const char *module){
 		'P', 'e', 't', 'e', 'r', '\0'	// val
 	};
 
-	Pair p = { (const void *) raw_memory, true };
+	Pair p = { (const void *) raw_memory /*, true*/ };
 	pair_test_raw_do("weak pair", p, key, val);
 
 	p = (const void *) raw_memory;
