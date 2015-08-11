@@ -17,7 +17,7 @@ private:
 };
 
 
-inline uint8_t IChecksumCalculator::calc(const void *data, size_t size){
+inline uint8_t IChecksumCalculator::calc(const void *data, size_t const size){
 	return _calc(data, size);
 }
 

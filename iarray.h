@@ -36,15 +36,15 @@ private:
 // ==============================
 
 
-inline Pair IArray::getAt(uint64_t index) const{
+inline Pair IArray::getAt(uint64_t const index) const{
 	return index < getCount() ? _getAt(index) : nullptr;
 }
 
-inline Pair IArray::operator[](uint64_t index) const{
+inline Pair IArray::operator[](uint64_t const index) const{
 	return getAt(index);
 }
 
-inline void IArray::setLookupMethod(uint8_t lookupMethod){
+inline void IArray::setLookupMethod(uint8_t const lookupMethod){
 	_lookupMethod = lookupMethod;
 }
 

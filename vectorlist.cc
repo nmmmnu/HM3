@@ -98,7 +98,7 @@ bool VectorList::_remove(const char *key){
 	return true;
 }
 
-Pair VectorList::_getAt(uint64_t index) const{
+Pair VectorList::_getAt(uint64_t const index) const{
 	return _buffer[index];
 }
 
@@ -122,7 +122,7 @@ void VectorList::_clear(bool alsoFree){
 	_buffer = nullptr;
 }
 
-bool VectorList::_shiftL(uint64_t index){
+bool VectorList::_shiftL(uint64_t const index){
 	// this is the most slow operation of them all
 	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * ELEMENT_SIZE);
 
@@ -131,7 +131,7 @@ bool VectorList::_shiftL(uint64_t index){
 	return true;
 }
 
-bool VectorList::_shiftR(uint64_t index){
+bool VectorList::_shiftR(uint64_t const index){
 	if (! _resize(1))
 		return false;
 
@@ -141,22 +141,20 @@ bool VectorList::_shiftR(uint64_t index){
 	return true;
 }
 
-bool VectorList::_resize(int delta){
+bool VectorList::_resize(int const delta){
 	if (delta == 0){
 		// already resized, done :)
 		return true;
 	}
 
-	delta = SGN(delta);
-
-	uint64_t new_dataCount = _dataCount + delta;
+	uint64_t const new_dataCount = _dataCount + SGN(delta);
 
 	if (new_dataCount == 0){
 		_clear(true);
 		return true;
 	}
 
-	size_t new_bufferReserved = __calcNewSize(new_dataCount, _reallocSize);
+	size_t const new_bufferReserved = __calcNewSize(new_dataCount, _reallocSize);
 
 	if (_bufferReserved == new_bufferReserved){
 		// already resized, done :)
@@ -177,7 +175,7 @@ bool VectorList::_resize(int delta){
 	return true;
 }
 
-size_t VectorList::__calcNewSize(size_t size, size_t reallocSize){
+size_t VectorList::__calcNewSize(size_t const size, size_t const reallocSize){
 	size_t newsize = size / reallocSize;
 
 	if (size % reallocSize)

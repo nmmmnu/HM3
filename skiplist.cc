@@ -205,7 +205,7 @@ void SkipList::printLanes() const{
 	}
 }
 
-void SkipList::printLane(uint8_t lane) const{
+void SkipList::printLane(uint8_t const lane) const{
 	uint64_t i = 0;
 	const Node *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
@@ -229,7 +229,7 @@ void SkipList::_clear(){
 	//memset(_loc, 0, _height * sizeof(Node *) );
 }
 
-const SkipList::Node *SkipList::_locate(const char *key, bool complete_evaluation) const{
+const SkipList::Node *SkipList::_locate(const char *key, bool const complete_evaluation) const{
 	// it is extremly dangerous to have key == nullptr here.
 	if (key == nullptr){
 		std::logic_error exception("Key can not be nullptr in SkipList::_locate");

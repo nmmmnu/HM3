@@ -66,11 +66,11 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-Pair DiskTable::_getAt(uint64_t index) const{
+Pair DiskTable::_getAt(uint64_t const index) const{
 	return _getAtFromDisk(index);
 }
 
-int DiskTable::_cmpAt(uint64_t index, const char *key) const{
+int DiskTable::_cmpAt(uint64_t const index, const char *key) const{
 	Pair p = { _getAtFromDisk(index), true };
 	return p.cmp(key);
 }
@@ -88,7 +88,7 @@ uint64_t DiskTable::_getCountFromDisk() const{
 	return be64toh(head->size);
 }
 
-const void *DiskTable::_getAtFromDisk(uint64_t index) const{
+const void *DiskTable::_getAtFromDisk(uint64_t const index) const{
 	// index is check in parent
 
 	// TODO: check if we are inside the memory block.

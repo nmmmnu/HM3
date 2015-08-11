@@ -9,8 +9,10 @@
 #include <iostream>
 #include <fstream>
 
+#define DISK_TABLE_TITLE	"ZUSE"
 #define DISK_TABLE_VERSION	"001"
-#define DISK_TABLE_LOGO		"ZUSE" DISK_TABLE_VERSION
+
+#define DISK_TABLE_LOGO		DISK_TABLE_TITLE DISK_TABLE_VERSION
 #define DISK_TABLE_SIZE		256
 
 #define DISK_TABLE_PADDING	DISK_TABLE_SIZE - 8 - 2 * sizeof(uint64_t)

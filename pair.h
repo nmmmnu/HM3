@@ -6,6 +6,7 @@
 #include <string.h>	//strcmp
 
 #include <memory>
+
 #include <ostream>
 
 class Pair{
@@ -57,6 +58,8 @@ private:
 	size_t  _sizeofBuffer() const;
 
 private:
+	static Blob *_createBlob(size_t size);
+
 	static Blob *_cloneBlob(const Blob *blob);
 
 	static NMEA0183ChecksumCalculator __checksumCalculator;

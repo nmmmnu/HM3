@@ -20,13 +20,16 @@ struct Pair::Blob{
 	uint16_t	keylen;		// 2
 	uint8_t		checksum;	// 1
 	char		buffer[2];	// dynamic
+} __attribute__((__packed__));
 
+// ==============================
+
+#if 0
 public:
 	static void *operator new(size_t size_reported, size_t size) {
 		return ::operator new(size);
 	}
-
-} __attribute__((__packed__));
+#endif
 
 // ==============================
 
@@ -47,7 +50,7 @@ Pair::Pair(const char *key, const void *val, size_t vallen, uint32_t expires, ui
 	size_t size_buff = keylen + 1 + vallen + 1;
 	size_t size      = __sizeofBase() + size_buff;
 
-	Blob *p = new(size) Blob(); // may throw
+	Blob *p = _createBlob(size); // may throw
 
 	p->created	= htobe64(__getCreateTime(created));
 	p->expires	= htobe32(expires);
@@ -95,9 +98,19 @@ Pair::Blob *Pair::_cloneBlob(const Blob *raw){
 	if (__checksumUsage && raw->checksum != __checksumCalculator.calc(raw->buffer, size_buff))
 		return nullptr;
 
-	Blob *p = new(size) Blob();
+	Blob *p = _createBlob(size); // may throw
 
 	memcpy(p, raw, size);
+
+	return p;
+}
+
+Pair::Blob *Pair::_createBlob(size_t size){
+	// allocate memory
+	void *addr = ::operator new(size); // may throw
+
+	// placement new
+	Blob *p = new(addr) Blob();
 
 	return p;
 }

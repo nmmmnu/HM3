@@ -17,11 +17,11 @@ private:
 
 // ==============================
 
-inline const ITable & IListCollection::getAt(uint64_t index) const{
+inline const ITable & IListCollection::getAt(uint64_t const index) const{
 	return _getAt( std::min(index, getCount()) );
 }
 
-inline const ITable & IListCollection::operator[](uint64_t index) const{
+inline const ITable & IListCollection::operator[](uint64_t const index) const{
 	return getAt(index);
 }
 

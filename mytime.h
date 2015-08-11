@@ -17,22 +17,31 @@ public:
 
 	static uint64_t now();
 
-	inline static bool expired(uint64_t date, uint32_t expiration){
-		return date + combine(expiration) < now();
-	}
+	static bool expired(uint64_t date, uint32_t expiration);
 
-	inline static uint64_t combine(uint32_t sec, uint32_t usec = 0){
-		return (uint64_t) sec << 32 | usec;
-	};
+	static uint64_t combine(uint32_t sec, uint32_t usec = 0);
 
-	inline static uint32_t uncombine(uint64_t timestamp){
-		return timestamp >> 32;
-	};
+	static uint32_t uncombine(uint64_t timestamp);
 
 private:
 	static char buffer[STRING_SIZE];
 
 };
+
+// ==============================
+
+inline bool MyTime::expired(uint64_t const date, uint32_t const expiration){
+	return date + combine(expiration) < now();
+}
+
+inline uint64_t MyTime::combine(uint32_t const sec, uint32_t const usec){
+	return (uint64_t) sec << 32 | usec;
+};
+
+inline uint32_t MyTime::uncombine(uint64_t const timestamp){
+	return timestamp >> 32;
+};
+
 
 #endif
 

@@ -1,10 +1,7 @@
 #include "diskfile.h"
 
-bool DiskFile::create(const char *filename, IIterator &it, uint64_t datacount){
-	if (datacount == 0){
-		// very slow operation
-		datacount = it.iteratorCount();
-	}
+bool DiskFile::create(const char *filename, IIterator &it, uint64_t const datacount2){
+	uint64_t const datacount = datacount2 ? datacount2 : it.iteratorCount();
 
 	std::ofstream file(filename, std::ios::out | std::ios::binary);
 
@@ -14,11 +11,11 @@ bool DiskFile::create(const char *filename, IIterator &it, uint64_t datacount){
 	return _writeIteratorToFile(it, datacount, file);
 }
 
-bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t datacount, std::ofstream &file){
+bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t const datacount, std::ofstream &file){
 	uint64_t be;
 
-	const size_t headerSize = DiskFile::sizeofHeader();
-	const size_t tableSize  = sizeof(uint64_t) * datacount;
+	size_t const headerSize = DiskFile::sizeofHeader();
+	size_t const tableSize  = sizeof(uint64_t) * datacount;
 
 	/* preallocating the file do not really speed up the fwrite process.
 	posix_fallocate(fileno(F), 0, total_size);

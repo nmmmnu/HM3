@@ -10,7 +10,7 @@ Pair IArray::_get(const char *key) const{
 	return _getAt(index);
 }
 
-int IArray::_cmpAt(uint64_t index, const char *key) const{
+int IArray::_cmpAt(uint64_t const index, const char *key) const{
 	return getAt(index).cmp(key);
 }
 
