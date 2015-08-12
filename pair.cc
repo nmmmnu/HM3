@@ -9,14 +9,6 @@ bool Pair::__checksumUsage = Pair::CHECKSUM;
 
 // ==============================
 
-/*
-static void null_deleter(void *){
-	// null_deleter
-}
-*/
-
-// ==============================
-
 Pair::Pair(const char *key, const void *val, size_t const vallen, uint32_t const expires, uint32_t const created){
 	size_t const keylen = strlen(key);
 
@@ -51,17 +43,14 @@ Pair::Pair(const char *key, const void *val, size_t const vallen, uint32_t const
 Pair::Pair(const char *key, const char *value, uint32_t expires, uint32_t created) :
 			Pair(key, value, value ? strlen(value) : 0, expires, created){}
 
-Pair::Pair(const void *blob2 /*, bool const weak*/){
+Pair::Pair(std::shared_ptr<const PairPOD> && pod) : pod(pod){}
+
+Pair::Pair(const void *blob2){
 	if (blob2 == nullptr)
 		return;
 
 	PairPOD *blob = (PairPOD *) blob2;
-/*
-	if (weak){
-		pod.reset(blob, null_deleter);
-		return;
-	}
-*/
+
 	pod.reset( _cloneBlob(blob) );
 }
 

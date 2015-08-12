@@ -7,6 +7,8 @@
 #include <fcntl.h>	// open
 #include <unistd.h>	// close
 
+//static void null_deleter(const void *ptr){};
+
 DiskTable::DiskTable(DiskTable &&other):
 		_mem		(other._mem		),
 		_size		(other._size		),
@@ -33,7 +35,7 @@ bool DiskTable::open(const char *filename){
 		return false;
 	}
 
-	const void *mem = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, /* offset */ 0);
+	const void *mem = mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, /* offset */ 0);
 
 	if (mem == MAP_FAILED){
 		::close(fd);
@@ -62,13 +64,21 @@ void DiskTable::close(){
 	munmap((void *) _mem, _size);
 	::close(_fd);
 
-	_mem = NULL;
+	_mem = nullptr;
 	_size = 0;
 }
 
 Pair DiskTable::_getAt(uint64_t const index) const{
+/*
+	auto p =  _getAtFromDisk(index);
+
+	std::shared_ptr<const PairPOD> pod{ p, null_deleter };
+
+	return Pair{ std::move(pod) };
+*/
 	return _getAtFromDisk(index);
 }
+
 
 int DiskTable::_cmpAt(uint64_t const index, const char *key) const{
 	const PairPOD *p = _getAtFromDisk(index);
