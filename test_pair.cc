@@ -1,10 +1,13 @@
 #include "pair.h"
+#include "pairpod.h"
 
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
 #include <unistd.h>	// sleep
 
 #include <utility>	// std::move
+
+#include "nmea0183checksumcalculator.h"
 
 #define PRINTF_TEST(test, result) \
 	printf("%-15s Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
@@ -37,7 +40,7 @@ static void pair_test_raw_do(const char *module, Pair & p, const char *key, cons
 	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
 	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
 
-	PRINTF_TEST("cmp",		p.cmp(key) == 0			);
+	PRINTF_TEST("cmp key",		p.cmp(key) == 0			);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
 	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 
@@ -48,6 +51,17 @@ static void pair_test_raw_do(const char *module, Pair & p, const char *key, cons
 	p2 = p;
 
 	p2.print();
+}
+
+static void pairpod_test(const char *module, PairPOD & p, const char *key, const char *val){
+	PRINTF_TEST("valid",		p.valid()			);
+
+	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
+	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
+
+	PRINTF_TEST("cmp key",		p.cmp(key) == 0			);
+	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
+	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 }
 
 static void pair_test_raw(const char *module){
@@ -69,10 +83,10 @@ static void pair_test_raw(const char *module){
 		'P', 'e', 't', 'e', 'r', '\0'	// val
 	};
 
-	Pair p = { (const void *) raw_memory /*, true*/ };
-	pair_test_raw_do("weak pair", p, key, val);
+	PairPOD *pp = (PairPOD *) raw_memory;
+	pairpod_test("pod pair", *pp, key, val);
 
-	p = (const void *) raw_memory;
+	Pair p = (const void *) raw_memory;
 	pair_test_raw_do(module, p, key, val);
 
 	raw_memory[20] = ~ raw_memory[20];

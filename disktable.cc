@@ -2,6 +2,8 @@
 
 #include "diskfile.h"
 
+#include "pairpod.h"
+
 #include <endian.h>	// htobe16
 #include <sys/mman.h>	// mmap
 #include <fcntl.h>	// open
@@ -81,7 +83,7 @@ Pair DiskTable::_getAt(uint64_t const index) const{
 
 
 int DiskTable::_cmpAt(uint64_t const index, const char *key) const{
-	const PairPOD *p = _getAtFromDisk(index);
+	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
 	return p->cmp(key);
 }
 
@@ -98,7 +100,7 @@ uint64_t DiskTable::_getCountFromDisk() const{
 	return be64toh(head->size);
 }
 
-const PairPOD *DiskTable::_getAtFromDisk(uint64_t const index) const{
+const void *DiskTable::_getAtFromDisk(uint64_t const index) const{
 	// index is check in parent
 
 	// TODO: check if we are inside the memory block.
@@ -107,5 +109,5 @@ const PairPOD *DiskTable::_getAtFromDisk(uint64_t const index) const{
 	const DiskTableHeader *head = (DiskTableHeader *) _mem;
 
 	const uint64_t ptr = be64toh( head->data[index] );
-	return (PairPOD *) & mem[ptr];
+	return & mem[ptr];
 }

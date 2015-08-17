@@ -26,12 +26,11 @@ public:
 	Node(const Pair & data) : data(data){}
 
 public:
-	static void *operator new(size_t size, uint8_t height, bool nothrow = false) {
+	static void *operator new(size_t size, uint8_t const height, bool const nothrow = false) {
 		size += (height - 1) * sizeof(Node *);
 
-		if (nothrow){
+		if (nothrow)
 			return ::operator new(size, std::nothrow);
-		}
 
 		return ::operator new(size);
 	}

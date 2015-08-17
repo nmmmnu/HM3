@@ -7,10 +7,11 @@
 
 #include "mytime.h"
 
+#include "nmea0183checksumcalculator.h"
+
 class Pair;
 
 struct PairPOD{
-friend class Pair;
 
 public:
 	uint64_t	created;	// 8
@@ -29,11 +30,14 @@ public:
 	bool valid() const;
 //	bool valid(const PairPOD &pair) const;
 
+	uint8_t calcChecksum() const;
+
 	size_t getSize() const;
 
 private:
 	size_t  _sizeofBuffer() const;
 
+	friend class Pair;
 	constexpr
 	static size_t __sizeofBase();
 
@@ -58,8 +62,16 @@ inline int PairPOD::cmp(const char *key) const{
 }
 
 inline bool PairPOD::valid() const{
+	// check key size
+	if (keylen == 0)
+		return false;
+
 	// now expires is 0 no matter of endianness
 	if (expires && MyTime::expired( be64toh(created), be32toh(expires) ) )
+		return false;
+
+	// calc checksum
+	if (calcChecksum() != checksum)
 		return false;
 
 	// finally all OK
@@ -77,6 +89,12 @@ inline size_t PairPOD::_sizeofBuffer() const{
 constexpr
 inline size_t PairPOD::__sizeofBase(){
 	return offsetof(PairPOD, buffer);
+}
+
+inline uint8_t PairPOD::calcChecksum() const{
+	NMEA0183ChecksumCalculator chk;
+
+	return chk.calc(buffer, _sizeofBuffer());
 }
 
 #endif

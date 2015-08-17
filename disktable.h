@@ -35,7 +35,7 @@ private:
 private:
 	uint64_t _getCountFromDisk() const;
 
-	const PairPOD *_getAtFromDisk(uint64_t index) const;
+	const void *_getAtFromDisk(uint64_t index) const;
 };
 
 #endif

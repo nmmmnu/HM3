@@ -109,7 +109,7 @@ int main(int argc, char **argv){
 	const char *key		= argv[4];
 	const char *filename2	= argv[4];
 
-	Pair::setChecksumUsage(false);
+//	Pair::setChecksumUsage(false);
 
 	switch(op[0]){
 	case 's':	return op_search(
