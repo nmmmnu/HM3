@@ -1,6 +1,8 @@
 test_pair
 test_list
 test_file
+test_file.1
+test_stl
 test_glob
 test_dir
 

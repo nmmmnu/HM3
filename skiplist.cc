@@ -144,7 +144,7 @@ bool SkipList::_put(const Pair &newdata){
 	// newnode->next[i] = NULL;
 
 	_dataSize += newdata.getSize();
-	_dataCount++;
+	++_dataCount;
 
 	return true;
 }
@@ -240,8 +240,8 @@ const SkipList::Node *SkipList::_locate(const char *key, bool const complete_eva
 
 	int cmp = 1;
 
-	const Node *node = NULL;
-	const Node *prev = NULL;
+	const Node *node = nullptr;
+	const Node *prev = nullptr;
 
 	uint8_t height = _height;
 	while(height){
@@ -259,7 +259,7 @@ const SkipList::Node *SkipList::_locate(const char *key, bool const complete_eva
 		}
 
 
-		if (cmp == 0 && complete_evaluation == false)
+		if (complete_evaluation == false && cmp == 0)
 			return node;
 
 		_loc[height - 1] = (Node *) prev;

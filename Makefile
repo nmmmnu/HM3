@@ -29,6 +29,7 @@ TARGETS	=	\
 		test_pair	\
 		test_list	\
 		test_file	\
+		test_stl	\
 		test_glob	\
 		test_dir
 
@@ -46,6 +47,9 @@ test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o 
 	$(LINK) $@ $^		$(LIBS)
 
 test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o vectorlist.o linklist.o skiplist.o  disktable.o diskfile.o
+	$(LINK) $@ $^		$(LIBS)
+
+test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_glob: test_glob.o myglob.o
