@@ -17,7 +17,7 @@ public:
 
 	std::unique_ptr<IIterator> getIterator() const;
 
-	void print();
+	void print() const;
 
 private:
 	virtual Pair _get(const char *key) const = 0;
@@ -49,7 +49,7 @@ inline std::unique_ptr<IIterator> ITable::getIterator() const{
 	return _getIterator();
 }
 
-inline void ITable::print(){
+inline void ITable::print() const{
 	this->getIterator()->print();
 }
 

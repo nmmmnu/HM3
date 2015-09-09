@@ -1,20 +1,6 @@
 #include "iarray.h"
 
-#include <stdio.h>
-
-Pair IArray::_get(const char *key) const{
-	uint64_t index;
-	if (lookup(key, index))
-		return nullptr;
-
-	return _getAt(index);
-}
-
-int IArray::_cmpAt(uint64_t const index, const char *key) const{
-	return getAt(index).cmp(key);
-}
-
-// ==============================
+//#include <stdio.h>
 
 int IArray::_lookupLinearSearch(const char *key, uint64_t &index) const{
 	if (isEmpty()){

@@ -2,7 +2,6 @@
 #define _ILIST_H
 
 #include "itable.h"
-#include "iversion.h"
 
 class IList : virtual public ITable{
 public:

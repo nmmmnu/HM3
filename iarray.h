@@ -35,7 +35,6 @@ private:
 
 // ==============================
 
-
 inline Pair IArray::getAt(uint64_t const index) const{
 	return index < getCount() ? _getAt(index) : nullptr;
 }
@@ -54,6 +53,17 @@ inline int IArray::lookup(const char *key, uint64_t &index) const{
 		return _lookupLinearSearch(key, index);
 	else
 		return _lookupBinSearch(key, index);
+}
+
+// ==============================
+
+inline int IArray::_cmpAt(uint64_t const index, const char *key) const{
+	return getAt(index).cmp(key);
+}
+
+inline Pair IArray::_get(const char *key) const{
+	uint64_t index;
+	return lookup(key, index) ? nullptr : _getAt(index);
 }
 
 #endif
