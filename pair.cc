@@ -34,14 +34,24 @@ Pair::Pair(const void *blob2){
 
 	PairPOD *blob = (PairPOD *) blob2;
 
-	if (! blob->valid() )
+	if (blob->valid() == false)
+		return;
+
+	const auto keylen = be16toh(blob->keylen);
+	
+	if (keylen == 0 || keylen > MAX_KEY_SIZE)
+		return;
+
+	const auto vallen = be32toh(blob->vallen);
+
+	if (vallen > MAX_VAL_SIZE)
 		return;
 
 	created = be64toh(blob->created);
 	expires = be32toh(blob->expires);
 
-	key = std::string(blob->getKey(), be16toh(blob->keylen));
-	val = std::string(blob->getVal(), be32toh(blob->vallen));
+	key = std::string(blob->getKey(), keylen);
+	val = std::string(blob->getVal(), vallen);
 
 }
 
@@ -98,35 +108,3 @@ uint64_t Pair::__getCreateTime(uint32_t const created){
 	return created ? MyTime::combine(created) : MyTime::now();
 }
 
-// ==============================
-
-#if 0
-	size_t const keylen = strlen(key);
-
-	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE){
-		std::logic_error exception("Key or value size too big");
-		throw exception;
-	}
-
-	size_t const size_buff = keylen + 1 + vallen + 1;
-	size_t const size      = PairPOD::__sizeofBase() + size_buff;
-
-	PairPOD *p = _createBlob(size); // may throw
-
-	p->created	= htobe64(__getCreateTime(created));
-	p->expires	= htobe32(expires);
-	p->vallen	= htobe32(vallen);
-	p->keylen	= htobe16(keylen);
-
-	// memcpy so we can switch to blobs later.
-	memcpy(& p->buffer[0], key, keylen);
-	p->buffer[keylen] = '\0';
-
-	// this is safe with NULL pointer.
-	memcpy(& p->buffer[keylen + 1], val, vallen);
-	p->buffer[keylen + 1 + vallen] = '\0';
-
-	p->checksum = __checksumCalculator.calc(p->buffer, size_buff);
-
-	pod.reset(p);
-#endif

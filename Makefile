@@ -12,18 +12,9 @@ LIBS	= -lstdc++
 #-ljemalloc
 #-fpack-struct
 
-SRC	=	\
-		pair.cc diskfile.cc			\
-		iiterator.cc iarray.cc			\
-		vectorlist.cc linklist.cc skiplist.cc	\
-		disktable.cc				\
-		multitable.cc listdircollection.cc	\
-		nmea0183checksumcalculator.cc		\
-		mytime.cc myglob.cc
+SRC	= $(wildcard *.cc)
 
 
-
-OBJECTS	=	$(SRC:%.cc=%.o)
 
 TARGETS	=	\
 		test_pair	\
@@ -38,7 +29,8 @@ all: $(TARGETS)
 
 
 clean:
-	rm -f *.o *.d $(TARGETS)
+	rm -f *.o *.d		\
+			$(TARGETS)
 
 test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
