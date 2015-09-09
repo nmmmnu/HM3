@@ -1,27 +1,21 @@
 #include "listdircollection.h"
 #include "myglob.h"
 
-const ITable & ListDirCollection::_getAt(uint64_t const index) const{
-	return _files[index];
-}
-
-uint64_t ListDirCollection::_getCount() const{
-	return _files.size();
-}
-
-// ==============================
-
-bool ListDirCollection::open(const char *path){
+bool ListDirCollection::open(const std::string &path){
 	close();
 
 	MyGlob gl;
-	gl.open(path);
+	if (gl.open(path) == false)
+		return false;
+	
+	auto vector = gl.getData();
 
-	for(const char *filename = gl.first(); filename; filename = gl.next()){
+	_files.reserve( vector.size() );
+	
+	for (auto it = vector.rbegin(); it != vector.rend(); ++it){
 		DiskTable dt;
-		dt.open(filename);
-
-		_files.push_front(std::move(dt));
+		dt.open( *it );
+		_files.push_back( std::move(dt) );
 	}
 
 	return true;

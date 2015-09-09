@@ -1,6 +1,6 @@
 #include "myglob.h"
 
-#include <stdio.h>
+#include <iostream>
 
 static void print_usage(const char *name){
 	printf("Usage:\n");
@@ -24,8 +24,8 @@ int main(int argc, char **argv){
 
 	MyGlob gl = getGlobSimulateMove(path);
 
-	for(auto s = gl.first(); s; s = gl.next())
-		printf("%s\n", s);
+	for(auto s : gl.getData())
+		std::cout << s << std::endl;
 
 	return 0;
 }

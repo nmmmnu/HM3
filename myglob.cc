@@ -2,51 +2,44 @@
 
 #include <sys/stat.h>	// stat
 
-MyGlob::MyGlob(MyGlob &&other) :
-		_isOpen(other._isOpen),
-		_globresults(other._globresults),
-		_it(other._it){
-	other._isOpen = false;
-}
+bool MyGlob::open(const std::string &path){
+	glob_t globresults;
+	_data.clear();
 
-bool MyGlob::open(const char *path){
-	close();
-
-	int result = glob(path, 0, nullptr, & _globresults);
-
-	switch(result){
-	case 0:
-		_isOpen = true;
-		return true;
-
-	case GLOB_NOMATCH:
+	if (__open(path.c_str(), globresults) == false)	
 		return false;
 
-	default:
-		return false;
-	}
-}
 
-void MyGlob::close(){
-	if (! _isOpen)
-		return;
-
-	globfree(& _globresults);
-	_isOpen = false;
-}
-
-const char *MyGlob::next(){
-	if (! _isOpen)
-		return nullptr;
-
-	while(_it < _globresults.gl_pathc){
-		const char *filename = _globresults.gl_pathv[_it++];
+	
+	size_t i;
+	for(i = 0; i < globresults.gl_pathc; ++i){
+		const char *filename = globresults.gl_pathv[i];
 
 		if (__checkFile( filename ))
-			return filename;
+			_data.push_back(filename);
 	}
 
-	return nullptr;
+
+
+	__close(globresults);
+	
+	return i > 0;
+}
+
+bool MyGlob::__open(const char *path, glob_t &globresults){
+	int result = glob(path, 0, nullptr, & globresults);
+
+	if (result != 0)
+		return false;
+
+	if (result == GLOB_NOMATCH)
+		return false;
+
+	return true;
+}
+
+void MyGlob::__close(glob_t &globresults){
+	globfree(& globresults);
 }
 
 bool MyGlob::__checkFile(const char *filename){

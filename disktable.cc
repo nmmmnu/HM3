@@ -20,10 +20,10 @@ DiskTable::DiskTable(DiskTable &&other):
 	other._size = 0;
 }
 
-bool DiskTable::open(const char *filename){
+bool DiskTable::open(const std::string &filename){
 	close();
 
-	int fd = ::open(filename, O_RDONLY);
+	int fd = ::open(filename.c_str(), O_RDONLY);
 
 	if (fd < 0)
 		return false;

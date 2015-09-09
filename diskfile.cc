@@ -1,6 +1,6 @@
 #include "diskfile.h"
 
-bool DiskFile::create(const char *filename, IIterator &it, uint64_t const datacount2){
+bool DiskFile::create(const std::string &filename, IIterator &it, uint64_t const datacount2){
 	uint64_t const datacount = datacount2 ? datacount2 : it.iteratorCount();
 
 	std::ofstream file(filename, std::ios::out | std::ios::binary);

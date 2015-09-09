@@ -3,44 +3,32 @@
 
 #include "icountable.h"
 
-#include <stdint.h>
-#include <stdlib.h>	// size_t
 #include <glob.h>	// glob
+
+#include <vector>
+#include <string>
 
 class MyGlob{
 public:
-	MyGlob(){};
-	MyGlob(MyGlob &&other);
+	MyGlob() = default;
 	MyGlob& operator=(MyGlob other) = delete;
-	virtual ~MyGlob(){
-		close();
-	};
 
-	bool open(const char *path);
-	void close();
-
-	inline void rewind();
-	inline const char *first();
-	const char *next();
-
+	bool open(const std::string &path);
+	std::vector<std::string> &getData();
+	
 private:
+	static bool __open(const char *path, glob_t &globresults);
+	static void __close(glob_t &globresults);
 	static bool __checkFile(const char *filename);
 
 private:
-	bool _isOpen = false;
-
-	glob_t _globresults;
-
-	size_t _it = 0;
+	std::vector<std::string> _data;
 };
 
-inline void MyGlob::rewind(){
-	_it = 0;
-}
+// ==============================
 
-inline const char *MyGlob::first(){
-	rewind();
-	return next();
+inline std::vector<std::string> &MyGlob::getData(){
+	return _data;
 }
 
 #endif

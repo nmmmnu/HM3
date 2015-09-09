@@ -9,6 +9,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <string>
+
 #define DISK_TABLE_TITLE	"ZUSE"
 #define DISK_TABLE_VERSION	"001"
 
@@ -28,8 +30,8 @@ struct DiskTableHeader{
 
 class DiskFile{
 public:
-	static bool create(const char *filename, IIterator &it, uint64_t datacount);
-	static bool create(const char *filename, ITable &table);
+	static bool create(const std::string &filename, IIterator &it, uint64_t datacount);
+	static bool create(const std::string &filename, ITable &table);
 
 	constexpr
 	static size_t sizeofHeader();
@@ -41,7 +43,7 @@ private:
 
 // ==============================
 
-inline bool DiskFile::create(const char *filename, ITable &table){
+inline bool DiskFile::create(const std::string &filename, ITable &table){
 	auto iterator = table.getIterator();
 	return create(filename, *iterator, table.getCount());
 }

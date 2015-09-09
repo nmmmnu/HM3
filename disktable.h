@@ -3,6 +3,8 @@
 
 #include "iarray.h"
 
+#include <string>
+
 class DiskTable : virtual public IArray{
 public:
 	DiskTable() = default;
@@ -12,8 +14,9 @@ public:
 	virtual ~DiskTable() override{
 		close();
 	}
+	
+	bool open(const std::string &filename);
 
-	bool open(const char *filename);
 	void close();
 
 

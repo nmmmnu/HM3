@@ -1,7 +1,7 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include <set>	// std::vector
+#include <set>		// std::vector
 #include <algorithm>	// std::binary_search
 
 #include "pair.h"

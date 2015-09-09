@@ -4,17 +4,18 @@
 #include "ilistcollection.h"
 #include "disktable.h"
 
-#include <deque>
+#include <vector>
+#include <string>
 
 class ListDirCollection : public IListCollection{
 public:
 	ListDirCollection() = default;
 
-	ListDirCollection(const char *path){
+	ListDirCollection(const std::string &path){
 		open(path);
 	}
 
-	bool open(const char *path);
+	bool open(const std::string &path);
 	void close();
 
 private:
@@ -22,9 +23,22 @@ private:
 	virtual uint64_t _getCount() const override;
 
 private:
-	std::deque<DiskTable> _files;
+	std::vector<DiskTable> _files;
 
 };
+
+// ==============================
+
+inline const ITable & ListDirCollection::_getAt(uint64_t const index) const{
+	return _files[index];
+}
+
+inline uint64_t ListDirCollection::_getCount() const{
+	return _files.size();
+}
+
+// ==============================
+
 
 #endif
 
