@@ -71,13 +71,6 @@ void DiskTable::close(){
 }
 
 Pair DiskTable::_getAt(uint64_t const index) const{
-/*
-	auto p =  _getAtFromDisk(index);
-
-	std::shared_ptr<const PairPOD> pod{ p, null_deleter };
-
-	return Pair{ std::move(pod) };
-*/
 	return _getAtFromDisk(index);
 }
 
@@ -87,7 +80,7 @@ int DiskTable::_cmpAt(uint64_t const index, const char *key) const{
 	return p->cmp(key);
 }
 
-uint64_t DiskTable::_getCount() const{
+DiskTable::count_type DiskTable::_getCount() const{
 	return _datacount;
 };
 

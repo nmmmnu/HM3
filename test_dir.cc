@@ -12,18 +12,18 @@ static void printUsage(const char *name){
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
-void find(ITable &list, const char *key){
+void find(const ITable &list, const std::string &key){
 	const Pair pair = list.get(key);
 
 	if (! pair){
-		printf("Key '%s' not found...\n", key);
+		printf("Key '%s' not found...\n", key.c_str());
 		return;
 	}
 
 	pair.print();
 }
 
-void listing(ITable &list, const char *key = nullptr, size_t count = 100){
+void listing(const ITable &list, const std::string &key = std::string(), size_t count = 100){
 	auto it = list.getIterator();
 	for(Pair pair = it->first(key); pair; pair = it->next()){
 		pair.print();
@@ -39,9 +39,9 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	const char *op		= argv[1];
-	const char *path	= argv[2];
-	const char *key		= argv[3];
+	const auto op	= argv[1];
+	const auto path	= argv[2];
+	const auto key	= argv[3];
 
 	ListDirCollection lc;
 	lc.open(path);
@@ -60,6 +60,10 @@ int main(int argc, char **argv){
 		case 'L':
 			listing(mt, key);
 			break;
+		
+		default:
+			printUsage(argv[0]);
+			return 1;
 	}
 
 	return 0;

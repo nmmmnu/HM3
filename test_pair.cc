@@ -117,10 +117,10 @@ static void pair_test(const char *module){
 
 	const Pair p = { key, val };
 
-	const Pair t = { key, "" };
+	const Pair t = Pair::tombstone(key);
 
 	PRINTF_TEST("null bull ok",	p == true			);
-	PRINTF_TEST("tombstone",	t.tombstone()			);
+	PRINTF_TEST("tombstone",	t.isTombstone()			);
 
 	PRINTF_TEST("key",		p.getKey() == key		);
 	PRINTF_TEST("val",		p.getVal() == val		);

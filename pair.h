@@ -18,6 +18,10 @@ public:
 
 	Pair(const std::string &key, const std::string &value, uint32_t expires = 0, uint32_t created = 0);
 
+	static Pair tombstone(const std::string &key){
+		return Pair(key, std::string());
+	}
+
 	Pair(const void *blob);
 
 	operator bool() const;
@@ -29,7 +33,7 @@ public:
 	int cmp(const char *key) const;
 	int cmp(const std::string &key) const;
 	int cmp(const Pair &pair) const;
-	bool tombstone() const;
+	bool isTombstone() const;
 	bool valid() const;
 	bool valid(const Pair &pair) const;
 	size_t getSize() const;
@@ -66,7 +70,7 @@ inline const std::string &Pair::getVal() const{
 	return val;
 }
 
-inline bool Pair::tombstone() const{
+inline bool Pair::isTombstone() const{
 	return val.empty();
 }
 

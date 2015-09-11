@@ -33,51 +33,51 @@ static void iterator_test(const char *module, IList &list, IIterator &it){
 	Pair p = nullptr;
 
 	p = it.first();
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Niki") == 0	);
+	PRINTF_TEST("it first",		p && p.getVal() == "Niki"	);
 	p = it.current();
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Niki") == 0	);
+	PRINTF_TEST("it current",	p && p.getVal() == "Niki"	);
 
 	p = it.first("2");
-	PRINTF_TEST("it first fuzzy",	p && strcmp(p.getVal(), "22") == 0	);
-	p = it.current();
-	PRINTF_TEST("it current fuzzy",	p && strcmp(p.getVal(), "22") == 0	);
+	PRINTF_TEST("it first fuzzy",	p && p.getVal() == "22"		);
+	p = it.current();		
+	PRINTF_TEST("it current fuzzy",	p && p.getVal() == "22"		);
 
 
 	p = it.first("2 age");
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "22") == 0	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "22") == 0	);
+	PRINTF_TEST("it first",		p && p.getVal() == "22"		);
+	p = it.current();		
+	PRINTF_TEST("it current",	p && p.getVal() == "22"		);
 	p = it.next();
-	PRINTF_TEST("it next",		p && strcmp(p.getVal(), "Sofia") == 0	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Sofia") == 0	);
+	PRINTF_TEST("it next",		p && p.getVal() == "Sofia"	);
+	p = it.current();	
+	PRINTF_TEST("it current",	p && p.getVal() == "Sofia"	);
 
 	p = it.first("4 os");
-	PRINTF_TEST("it first",		p && strcmp(p.getVal(), "Linux") == 0	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && strcmp(p.getVal(), "Linux") == 0	);
+	PRINTF_TEST("it first",		p && p.getVal() == "Linux"	);
+	p = it.current();	
+	PRINTF_TEST("it current",	p && p.getVal() == "Linux"	);
 	p = it.next();
-	PRINTF_TEST("it next",		! p					);
+	PRINTF_TEST("it next",		! p				);
 	p = it.current();
-	PRINTF_TEST("it current",	! p					);
+	PRINTF_TEST("it current",	! p				);
 
 	p = it.first("5");
-	PRINTF_TEST("it next it",	! p					);
+	PRINTF_TEST("it next it",	! p				);
 
 	p = it.first();
 	auto version = list.getVersion();
-	PRINTF_TEST("it invalidate 1",	p					);
+	PRINTF_TEST("it invalidate 1",	p				);
 	list.remove("1 name");
 	p = it.next();
-	PRINTF_TEST("it invalidate 2",	! p					);
+	PRINTF_TEST("it invalidate 2",	! p				);
 
-	PRINTF_TEST("invalidate ver",	version < list.getVersion()		);
+	PRINTF_TEST("invalidate ver",	version < list.getVersion()	);
 }
 
 static void ref_test(const char *module, IList &list){
 	const char *key = "ref_test";
 
-	Pair p = { key, nullptr };
+	const Pair p = Pair::tombstone(key);
 	p.print();
 
 	list.put(p);
@@ -113,10 +113,10 @@ static void list_test(const char *module, IList &list){
 	// TEST GET
 
 	p = list.get("3 city");
-	PRINTF_TEST("get",		p && ! strcmp(p.getVal(), "Sofia")	);
-
-	p = list["3 city"];
-	PRINTF_TEST("get[]",		p && ! strcmp(p.getVal(), "Sofia")	);
+	PRINTF_TEST("get",		p && p.getVal() == "Sofia"		);
+		
+	p = list["3 city"];		
+	PRINTF_TEST("get[]",		p && p.getVal() == "Sofia"		);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -130,7 +130,7 @@ static void list_test(const char *module, IList &list){
 	list.put( Pair(key_overwr, "original") );
 	list.put( Pair(key_overwr, val_overwr) );
 	p = list.get(key_overwr);
-	PRINTF_TEST("overwrite",	p && ! strcmp(p.getVal(), val_overwr)	);
+	PRINTF_TEST("overwrite",	p && p.getVal() == val_overwr		);
 
 
 
@@ -152,12 +152,13 @@ static void list_test(const char *module, IList &list){
 
 	p = list.get("3 city");
 
-	PRINTF_TEST("remove",		p && ! strcmp(p.getVal(), "Sofia")	);
+	PRINTF_TEST("remove",		p && p.getVal() == "Sofia"		);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
 	PRINTF_TEST("remove sizeof",	list.getSize() == p.getSize()		);
 
 	// overwrite sizeof test
-	const Pair sopair = {"3 city", nullptr};
+	const Pair sopair = { "3 city", "" };
+
 	list.put(sopair);
 	PRINTF_TEST("overwrite count",	list.getCount() == 1			);
 	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair.getSize()	);

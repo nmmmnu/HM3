@@ -1,9 +1,6 @@
 #ifndef _IITERATOR_H
 #define _IITERATOR_H
 
-#include <stdint.h>
-#include <stdio.h>
-
 #include "pair.h"
 
 class IIterator{
@@ -13,7 +10,7 @@ public:
 public:
 	virtual ~IIterator(){};
 
-	Pair first(const char *key = nullptr);
+	Pair first(const std::string &key = std::string() );
 	Pair current();
 	Pair next();
 
@@ -21,7 +18,7 @@ public:
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 
 private:
-	virtual void _rewind(const char *key = nullptr) = 0;
+	virtual void _rewind(const std::string &key) = 0;
 	virtual Pair _next() = 0;
 	virtual uint64_t _getVersion() = 0;
 
@@ -32,7 +29,7 @@ private:
 
 // ==============================
 
-inline Pair IIterator::first(const char *key){
+inline Pair IIterator::first(const std::string &key){
 	_rewind(key);
 	_version = _getVersion();
 	return next();

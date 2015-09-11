@@ -22,9 +22,10 @@ public:
 
 private:
 	virtual Pair _getAt(uint64_t index) const override;
+	virtual int _cmpAt(uint64_t index, const std::string &key) const override;
 	virtual int _cmpAt(uint64_t index, const char *key) const override;
 
-	virtual uint64_t _getCount() const override;
+	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
 
 private:
@@ -33,12 +34,18 @@ private:
 
 	int		_fd;
 
-	uint64_t	_datacount	= 0;
+	count_type	_datacount	= 0;
 
 private:
 	uint64_t _getCountFromDisk() const;
 
 	const void *_getAtFromDisk(uint64_t index) const;
 };
+
+// ==============================
+
+inline int DiskTable::_cmpAt(uint64_t const index, const std::string &key) const{
+	return _cmpAt(index, key.c_str());
+}
 
 #endif

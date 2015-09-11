@@ -20,18 +20,18 @@ private:
 	Pair		*_buffer;
 	size_t		_bufferReserved;
 
-	uint64_t	_dataCount;
+	count_type	_dataCount;
 	size_t		_dataSize;
 
 private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &data) override;
-	virtual bool _remove(const char *key) override;
+	virtual bool _remove(const std::string &keykey) override;
 
 	virtual Pair _getAt(uint64_t index) const override;
 
-	virtual uint64_t _getCount() const override;
+	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
 
 private:
@@ -45,5 +45,19 @@ private:
 private:
 	static size_t __calcNewSize(size_t size, size_t reallocSize);
 };
+
+// ===================================
+
+inline Pair VectorList::_getAt(uint64_t const index) const{
+	return _buffer[index];
+}
+
+inline VectorList::count_type VectorList::_getCount() const{
+	return _dataCount;
+}
+
+inline size_t VectorList::_getSize() const{
+	return _dataSize;
+}
 
 #endif

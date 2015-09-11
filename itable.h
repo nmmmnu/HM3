@@ -9,9 +9,9 @@
 
 class ITable : virtual public IVersion, virtual public ICountable{
 public:
-	Pair get(const char *key) const;
-	Pair operator[](const char *key) const;
-	bool exists(const char *key) const;
+	Pair get(const std::string &key) const;
+	Pair operator[](const std::string &key) const;
+	bool exists(const std::string &key) const;
 
 	size_t getSize() const;
 
@@ -20,7 +20,7 @@ public:
 	void print() const;
 
 private:
-	virtual Pair _get(const char *key) const = 0;
+	virtual Pair _get(const std::string &key) const = 0;
 	virtual size_t _getSize() const = 0;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const = 0;
@@ -29,15 +29,15 @@ private:
 // ==============================
 
 
-inline Pair ITable::get(const char *key) const{
+inline Pair ITable::get(const std::string &key) const{
 	return _get(key);
 }
 
-inline Pair ITable::operator[](const char *key) const{
+inline Pair ITable::operator[](const std::string &key) const{
 	return _get(key);
 }
 
-inline bool ITable::exists(const char *key) const{
+inline bool ITable::exists(const std::string &key) const{
 	return (bool) _get(key);
 }
 

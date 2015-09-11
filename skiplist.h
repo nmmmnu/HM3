@@ -22,10 +22,10 @@ private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &pair) override;
-	virtual Pair _get(const char *key) const override;
-	virtual bool _remove(const char *key) override;
+	virtual Pair _get(const std::string &key) const override;
+	virtual bool _remove(const std::string &key) override;
 
-	virtual uint64_t _getCount() const override;
+	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const override;
@@ -41,18 +41,28 @@ private:
 	Node		**_heads;
 	Node		**_loc;
 
-	uint64_t	_dataCount;
+	count_type	_dataCount;
 	size_t		_dataSize;
 
 private:
 	void _clear();
 
-	const Node *_locate(const char *key, bool complete_evaluation = false) const;
+	const Node *_locate(const std::string &key, bool complete_evaluation = false) const;
 
 	uint8_t _getRandomHeight();
 
 private:
 	static std::mt19937 __rand;
 };
+
+// ==============================
+
+inline SkipList::count_type SkipList::_getCount() const{
+	return _dataCount;
+}
+
+inline size_t SkipList::_getSize() const{
+	return _dataSize;
+}
 
 #endif

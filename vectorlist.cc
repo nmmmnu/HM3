@@ -46,7 +46,7 @@ void VectorList::_removeAll(){
 }
 
 bool VectorList::_put(const Pair &newdata){
-	const char *key = newdata.getKey();
+	auto key = newdata.getKey();
 
 	uint64_t index;
 	int cmp = lookup(key, index);
@@ -86,7 +86,7 @@ bool VectorList::_put(const Pair &newdata){
 	return true;
 }
 
-bool VectorList::_remove(const char *key){
+bool VectorList::_remove(const std::string &key){
 	uint64_t index;
 	if (lookup(key, index)){
 		// the key does not exists in the vector.
@@ -101,18 +101,6 @@ bool VectorList::_remove(const char *key){
 	_shiftL(index);
 
 	return true;
-}
-
-Pair VectorList::_getAt(uint64_t const index) const{
-	return _buffer[index];
-}
-
-uint64_t VectorList::_getCount() const{
-	return _dataCount;
-}
-
-size_t VectorList::_getSize() const{
-	return _dataSize;
 }
 
 // ===================================

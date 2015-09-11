@@ -1,7 +1,8 @@
-#include <stdio.h>	// printf
+#include <cstdio>	// printf
 #include <ctype.h>	// isspace
 
 #include <memory>
+#include <fstream>
 
 #include "disktable.h"
 #include "diskfile.h"
@@ -14,10 +15,8 @@
 
 #define PROCESS_STEP	1000 * 10
 
-static void listLoad(IList &list, const char *filename, bool tombstones = true);
-static void listSearch(ITable &list, const char *key);
-
-static char *trim(char *s);
+static void listLoad(IList &list, const std::string &filename, bool tombstones = true);
+static void listSearch(ITable &list, const std::string &key);
 
 static void printUsage(const char *cmd);
 
@@ -44,7 +43,7 @@ static std::unique_ptr<IList> factory(char what){
 	}
 }
 
-static int op_search(IList &list, const char *filename, const char *key){
+static int op_search(IList &list, const std::string &filename, const std::string &key){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -58,7 +57,7 @@ static int op_search(IList &list, const char *filename, const char *key){
 	return 0;
 }
 
-static int op_write(IList &list, const char *filename, const char *filename2){
+static int op_write(IList &list, const std::string &filename, const std::string &filename2){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -72,7 +71,7 @@ static int op_write(IList &list, const char *filename, const char *filename2){
 	return 0;
 }
 
-static int op_filesearch(const char *filename, const char *key){
+static int op_filesearch(const std::string &filename, const std::string &key){
 	DiskTable list;
 
 	list.open(filename);
@@ -81,7 +80,7 @@ static int op_filesearch(const char *filename, const char *key){
 	return 0;
 }
 
-static int op_list(const char *filename, const char *key = nullptr, size_t count = 10){
+static int op_list(const std::string &filename, const std::string &key = std::string(), size_t count = 10){
 	DiskTable list;
 	list.open(filename);
 
@@ -103,11 +102,11 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	const char *op		= argv[1];
-	const char *what	= argv[2];
-	const char *filename	= argv[3];
-	const char *key		= argv[4];
-	const char *filename2	= argv[4];
+	const auto op		= argv[1];
+	const auto what		= argv[2];
+	const auto filename	= argv[3];
+	const auto key		= argv[4];
+	const auto filename2	= argv[4];
 
 //	Pair::setChecksumUsage(false);
 
@@ -159,17 +158,22 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(IList &list, const char *filename, bool tombstones){
-	const size_t BUFFER_SIZE = 1024;
-	static char buffer[BUFFER_SIZE];
+static void listLoad(IList &list, const std::string &filename, bool const tombstones){ 
+	static const char *trim_ch = " \t\n";
 
-	FILE *f = fopen(filename, "r");
+	const std::string empty;
+
+	std::ifstream f;
+	f.open(filename);
+
 	unsigned int i = 0;
-	char *key;
-	while( (key = fgets(buffer, BUFFER_SIZE, f)) ){
-		trim(key);
+	
+	for(std::string line; getline(f, line);){
+		// trim
+		line.erase(line.find_last_not_of(trim_ch) + 1);
 
-		const char *val = tombstones ? nullptr : filename;
+		const std::string &key = line;
+		const std::string &val = tombstones ? empty : key;
 
 		list.put( Pair{ key, val } );
 
@@ -179,27 +183,15 @@ static void listLoad(IList &list, const char *filename, bool tombstones){
 			printf("Processed %10u records, %10zu bytes...\n", i, list.getSize() );
 		}
 	}
-
-	fclose(f);
 }
 
-static void listSearch(ITable &list, const char *key){
+static void listSearch(ITable &list, const std::string &key){
 	const Pair pair = list.get(key);
 
 	if (! pair){
-		printf("Key '%s' not found...\n", key);
+		printf("Key '%s' not found...\n", key.c_str());
 		return;
 	}
 
 	pair.print();
-}
-
-static char *trim(char *s){
-	char *end = s + strlen(s) - 1;
-	while(end > s && isspace((unsigned char) *end))
-		--end;
-
-	*(end + 1) = 0;
-
-	return s;
 }

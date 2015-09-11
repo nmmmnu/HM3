@@ -11,16 +11,17 @@ public:
 public:
 	Pair getAt(uint64_t index) const;
 	Pair operator[](uint64_t index) const;
-	int lookup(const char *key, uint64_t &index) const;
+	int lookup(const std::string &key, uint64_t &index) const;
 
 	void setLookupMethod(uint8_t lookupMethod);
 
 private:
 	virtual Pair _getAt(uint64_t index) const = 0;
 
+	virtual int _cmpAt(uint64_t index, const std::string &key) const;
 	virtual int _cmpAt(uint64_t index, const char *key) const;
 
-	virtual Pair _get(const char *key) const override;
+	virtual Pair _get(const std::string &key) const override;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
@@ -28,8 +29,8 @@ private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
-	int _lookupBinSearch(   const char *key, uint64_t &index) const;
-	int _lookupLinearSearch(const char *key, uint64_t &index) const;
+	int _lookupBinSearch(   const std::string &key, uint64_t &index) const;
+	int _lookupLinearSearch(const std::string &key, uint64_t &index) const;
 
 };
 
@@ -47,7 +48,7 @@ inline void IArray::setLookupMethod(uint8_t const lookupMethod){
 	_lookupMethod = lookupMethod;
 }
 
-inline int IArray::lookup(const char *key, uint64_t &index) const{
+inline int IArray::lookup(const std::string &key, uint64_t &index) const{
 	// until there are only 2 methods
 	if (_lookupMethod == LINEAR_SEARCH)
 		return _lookupLinearSearch(key, index);
@@ -57,11 +58,15 @@ inline int IArray::lookup(const char *key, uint64_t &index) const{
 
 // ==============================
 
+inline int IArray::_cmpAt(uint64_t const index, const std::string &key) const{
+	return getAt(index).cmp(key);
+}
+
 inline int IArray::_cmpAt(uint64_t const index, const char *key) const{
 	return getAt(index).cmp(key);
 }
 
-inline Pair IArray::_get(const char *key) const{
+inline Pair IArray::_get(const std::string &key) const{
 	uint64_t index;
 	return lookup(key, index) ? nullptr : _getAt(index);
 }

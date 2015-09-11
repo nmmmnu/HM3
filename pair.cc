@@ -20,7 +20,7 @@ Pair::Pair(const std::string &key, const std::string &val, uint32_t const expire
 	if (key.size() > MAX_KEY_SIZE || val.size() > MAX_VAL_SIZE){
 		std::logic_error exception("Key or value size too big");
 		throw exception;
-	}
+	}	
 }
 
 Pair::Pair(const void *blob2){

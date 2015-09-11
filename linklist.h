@@ -16,10 +16,10 @@ private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &pair) override;
-	virtual Pair _get(const char *key) const override;
-	virtual bool _remove(const char *key) override;
+	virtual Pair _get(const std::string &key) const override;
+	virtual bool _remove(const std::string &key) override;
 
-	virtual uint64_t _getCount() const override;
+	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const override;
@@ -29,13 +29,23 @@ private:
 
 	Node		*_head;
 
-	uint64_t	_dataCount;
+	count_type	_dataCount;
 	size_t		_dataSize;
 
 private:
 	void _clear();
 
-	Node *_locate(const char *key) const;
+	Node *_locate(const std::string &key) const;
 };
+
+// ==============================
+
+inline LinkList::count_type LinkList::_getCount() const{
+	return _dataCount;
+}
+
+inline size_t LinkList::_getSize() const{
+	return _dataSize;
+}
 
 #endif

@@ -1,22 +1,25 @@
 #ifndef _ICOUNTABLE_H
 #define _ICOUNTABLE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 class ICountable{
 public:
+	typedef uint64_t count_type;
+
+public:
 	virtual ~ICountable(){};
 	
-	uint64_t getCount() const;
+	count_type getCount() const;
 	bool isEmpty() const;
 
 private:
-	virtual uint64_t _getCount() const = 0;
+	virtual count_type _getCount() const = 0;
 };
 
 // ==============================
 
-inline uint64_t ICountable::getCount() const{
+inline ICountable::count_type ICountable::getCount() const{
 	return _getCount();	
 }
 
