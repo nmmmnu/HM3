@@ -16,10 +16,7 @@ public:
 public:
 	Pair() = default;
 
-//	Pair(std::string &key, std::string &value,              uint32_t expires = 0, uint32_t created = 0);
-
-	Pair(const char *key, const void *value, size_t valLen, uint32_t expires = 0, uint32_t created = 0);
-	Pair(const char *key, const char *value,                uint32_t expires = 0, uint32_t created = 0);
+	Pair(const std::string &key, const std::string &value, uint32_t expires = 0, uint32_t created = 0);
 
 	Pair(const void *blob);
 
@@ -27,10 +24,12 @@ public:
 	operator const void *() const;
 
 public:
-	const char *getKey() const;
-	const char *getVal() const;
+	const std::string &getKey() const;
+	const std::string &getVal() const;
 	int cmp(const char *key) const;
+	int cmp(const std::string &key) const;
 	int cmp(const Pair &pair) const;
+	bool tombstone() const;
 	bool valid() const;
 	bool valid(const Pair &pair) const;
 	size_t getSize() const;
@@ -59,12 +58,27 @@ inline Pair::operator bool() const{
 
 // ==============================
 
-inline const char *Pair::getKey() const{
-	return key.empty() ? nullptr : key.c_str();
+inline const std::string &Pair::getKey() const{
+	return key;
 }
 
-inline const char *Pair::getVal() const{
-	return val.empty() ? nullptr : val.c_str();
+inline const std::string &Pair::getVal() const{
+	return val;
+}
+
+inline bool Pair::tombstone() const{
+	return val.empty();
+}
+
+inline int Pair::cmp(const std::string &key2) const{
+	if (key2.empty())
+		return -1;
+
+	// std::string.compare gives 0 if internal string is nullptr
+	if (key.empty())
+		return +1;
+
+	return key.compare(key2);
 }
 
 inline int Pair::cmp(const char *key2) const{
@@ -72,7 +86,7 @@ inline int Pair::cmp(const char *key2) const{
 		return -1;
 
 	// std::string.compare gives 0 if internal string is nullptr
-	if (getKey() == nullptr)
+	if (key.empty())
 		return +1;
 
 	return key.compare(key2);

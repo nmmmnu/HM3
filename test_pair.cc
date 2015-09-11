@@ -32,13 +32,13 @@ int main(int argc, char **argv){
 
 
 
-static void pair_test_raw_do(const char *module, Pair & p, const char *key, const char *val){
+static void pair_test_raw_do(const char *module, const Pair & p, const std::string &key, const std::string &val){
 	p.print();
 
 	PRINTF_TEST("valid",		p.valid()			);
 
-	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
-	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
+	PRINTF_TEST("key",		p.getKey() == key		);
+	PRINTF_TEST("val",		p.getVal() == val		);
 
 	PRINTF_TEST("cmp key",		p.cmp(key) == 0			);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
@@ -53,20 +53,20 @@ static void pair_test_raw_do(const char *module, Pair & p, const char *key, cons
 	p2.print();
 }
 
-static void pairpod_test(const char *module, PairPOD & p, const char *key, const char *val){
+static void pairpod_test(const char *module, const PairPOD & p, const std::string &key, const std::string &val){
 	PRINTF_TEST("valid",		p.valid()			);
 
-	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
-	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
+	PRINTF_TEST("key",		p.getKey() == key		);
+	PRINTF_TEST("val",		p.getVal() == val		);
 
-	PRINTF_TEST("cmp key",		p.cmp(key) == 0			);
+	PRINTF_TEST("cmp key",		p.cmp(key.c_str()) == 0		);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
 	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 }
 
 static void pair_test_raw(const char *module){
-	const char *key = "name";
-	const char *val = "Peter";
+	const std::string key = "name";
+	const std::string val = "Peter";
 
 	NMEA0183ChecksumCalculator nm;
 
@@ -83,15 +83,15 @@ static void pair_test_raw(const char *module){
 		'P', 'e', 't', 'e', 'r', '\0'	// val
 	};
 
-	PairPOD *pp = (PairPOD *) raw_memory;
+	auto pp = (const PairPOD *) raw_memory;
 	pairpod_test("pod pair", *pp, key, val);
 
-	Pair p = (const void *) raw_memory;
+	const Pair p = (const void *) raw_memory;
 	pair_test_raw_do(module, p, key, val);
 
 	raw_memory[20] = ~ raw_memory[20];
 
-	Pair cp = (const void *) raw_memory;
+	const Pair cp = (const void *) raw_memory;
 
 	PRINTF_TEST("valid corrupted",	! cp.valid()			);
 }
@@ -99,31 +99,31 @@ static void pair_test_raw(const char *module){
 
 
 static void pair_test_null(const char *module){
-	Pair p = nullptr;
+	const Pair p = nullptr;
 
 	p.print();
 
 	PRINTF_TEST("null bool",	p == false			);
-	PRINTF_TEST("null key",		p.getKey() == nullptr		);
-	PRINTF_TEST("null val",		p.getVal() == nullptr		);
+	PRINTF_TEST("null key",		p.getKey().empty()		);
+	PRINTF_TEST("null val",		p.getVal().empty()		);
 	PRINTF_TEST("null cmp",		p.cmp("bla") == 1		);
 }
 
 
 
 static void pair_test(const char *module){
-	const char *key = "abcdef";
-	const char *val = "1234567890";
+	const std::string key = "abcdef";
+	const std::string val = "1234567890";
 
 	const Pair p = { key, val };
 
-	const Pair t = { key, nullptr };
+	const Pair t = { key, "" };
 
 	PRINTF_TEST("null bull ok",	p == true			);
-	PRINTF_TEST("tombstone",	t.getVal() == nullptr		);
+	PRINTF_TEST("tombstone",	t.tombstone()			);
 
-	PRINTF_TEST("key",		strcmp(p.getKey(), key) == 0	);
-	PRINTF_TEST("val",		strcmp(p.getVal(), val) == 0	);
+	PRINTF_TEST("key",		p.getKey() == key		);
+	PRINTF_TEST("val",		p.getVal() == val		);
 
 	PRINTF_TEST("cmp",		p.cmp(key) == 0			);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
@@ -138,14 +138,16 @@ static void pair_test(const char *module){
 
 	{
 	Pair m1 = { key, val };
-	Pair m2 = std::move(m1);
-	PRINTF_TEST("move c-tor",	strcmp(m2.getKey(), key) == 0	);
-	Pair m3 = m2;
-	PRINTF_TEST("copy c-tor",	strcmp(m2.getKey(), key) == 0	);
-	PRINTF_TEST("copy c-tor",	strcmp(m3.getKey(), key) == 0	);
+
+	const Pair m2 = std::move(m1);
+	PRINTF_TEST("move c-tor",	m2.getKey() == key		);
+
+	const Pair m3 = m2;
+	PRINTF_TEST("copy c-tor",	m2.getKey() == key		);
+	PRINTF_TEST("copy c-tor",	m3.getKey() == key		);
 
 	m1 = m2;
-	PRINTF_TEST("copy assign",	strcmp(m1.getKey(), key) == 0	);
+	PRINTF_TEST("copy assign",	m1.getKey() == key		);
 	}
 
 	p.print();
@@ -155,17 +157,17 @@ static void pair_test(const char *module){
 
 
 static void pair_test_expired(const char *module, bool sl){
-	Pair p1 = { "key", "val", 1 };
+	const Pair p1 = { "key", "val", 1 };
 
 	PRINTF_TEST("not expired",	p1.valid()			);
 
 	if (sl){
 		printf("sleep for 2 sec...\n");
 		sleep(2);
-		PRINTF_TEST("expired",		! p1.valid()			);
+		PRINTF_TEST("expired",		! p1.valid()		);
 	}
 
-	Pair p2 = { "key", "val", 1, 3600 * 24 /* 1970-01-02 */ };
+	const Pair p2 = { "key", "val", 1, 3600 * 24 /* 1970-01-02 */ };
 	PRINTF_TEST("expired",		! p2.valid()			);
 }
 

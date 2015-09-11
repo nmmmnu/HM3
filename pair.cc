@@ -6,27 +6,22 @@
 
 // ==============================
 
-Pair::Pair(const char *key, const void *val, size_t const vallen, uint32_t const expires, uint32_t const created):
+Pair::Pair(const std::string &key, const std::string &val, uint32_t const expires, uint32_t const created):
 		created(__getCreateTime(created)),
 		expires(expires),
 		key(key),
-		val( (const char *) val, vallen)
+		val(val)
 {
-	size_t const keylen = strlen(key);
-
-	if (keylen == 0){
+	if (key.empty()){
 		std::logic_error exception("Key is zero size");
 		throw exception;
 	}
 
-	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE){
+	if (key.size() > MAX_KEY_SIZE || val.size() > MAX_VAL_SIZE){
 		std::logic_error exception("Key or value size too big");
 		throw exception;
 	}
 }
-
-Pair::Pair(const char *key, const char *value, uint32_t expires, uint32_t created) :
-			Pair(key, value, value ? strlen(value) : 0, expires, created){}
 
 Pair::Pair(const void *blob2){
 	if (blob2 == nullptr)
@@ -51,8 +46,9 @@ Pair::Pair(const void *blob2){
 	expires = be32toh(blob->expires);
 
 	key = std::string(blob->getKey(), keylen);
-	val = std::string(blob->getVal(), vallen);
-
+	
+	if (vallen > 0)
+		val = std::string(blob->getVal(), vallen);
 }
 
 // ==============================
@@ -92,7 +88,7 @@ void Pair::print() const{
 	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
 
 	printf(format,
-		getKey(), getVal(),
+		getKey().c_str(), getVal().c_str(),
 		MyTime::STRING_SIZE, MyTime::toString(created),
 		expires
 	);
