@@ -1,8 +1,10 @@
-#include <stdio.h>	// printf
+#include <cstdio>	// printf
 #include <ctype.h>	// isspace
 
 #include <set>		// std::vector
 #include <algorithm>	// std::binary_search
+#include <string>
+#include <fstream>
 
 #include "pair.h"
 
@@ -16,10 +18,7 @@ struct pcomp{
 	}
 };
 
-static void listLoad(std::set<Pair,pcomp> &list, const char *filename, bool tombstones = true);
-//static void listSearch(std::set<Pair,pcomp> &list, const char *key);
-
-static char *trim(char *s);
+static void listLoad(std::set<Pair,pcomp> &list, const std::string &filename, bool tombstones = true);
 
 static int op_search(std::set<Pair,pcomp> &list, const char *filename, const char *key){
 	printf("Load start...\n");
@@ -57,36 +56,30 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(std::set<Pair,pcomp> &list, const char *filename, bool tombstones){
-	const size_t BUFFER_SIZE = 1024;
-	static char buffer[BUFFER_SIZE];
+static void listLoad(std::set<Pair,pcomp> &list, const std::string &filename, bool const tombstones){ 
+	static const char *trim_ch = " \t\n";
 
-	FILE *f = fopen(filename, "r");
+	const std::string empty;
+
+	std::ifstream f;
+	f.open(filename);
+
 	unsigned int i = 0;
-	char *key;
-	while( (key = fgets(buffer, BUFFER_SIZE, f)) ){
-		trim(key);
+	
+	for(std::string line; getline(f, line);){
+		// trim
+		line.erase(line.find_last_not_of(trim_ch) + 1);
 
-		const char *val = tombstones ? nullptr : filename;
+		const std::string &key = line;
+		const std::string &val = tombstones ? empty : key;
 
 		list.insert( Pair{ key, val } );
 
 		++i;
 
 		if (i % ( PROCESS_STEP ) == 0){
-			printf("Processed %10u records...\n", i );
+			printf("Processed %10u records, %10zu bytes...\n", i, list.size() );
 		}
 	}
-
-	fclose(f);
 }
 
-static char *trim(char *s){
-	char *end = s + strlen(s) - 1;
-	while(end > s && isspace((unsigned char) *end))
-		--end;
-
-	*(end + 1) = 0;
-
-	return s;
-}
