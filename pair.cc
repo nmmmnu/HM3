@@ -6,11 +6,11 @@
 
 // ==============================
 
-Pair::Pair(const std::string &key, const std::string &val, uint32_t const expires, uint32_t const created):
+Pair::Pair(const std::string &key2, const std::string &val2, uint32_t const expires, uint32_t const created):
 		created(__getCreateTime(created)),
 		expires(expires),
-		key(key),
-		val(val)
+		key(key2),
+		val(val2)
 {
 	if (key.empty()){
 		std::logic_error exception("Key is zero size");
@@ -63,17 +63,17 @@ bool Pair::fwrite(std::ostream & os) const{
 
 	NMEA0183ChecksumCalculator chk;
 
-	chk.add(key.c_str(), key.size());
+	chk.add(key.data(), key.size());
 	chk.add("\0", 1);
-	chk.add(val.c_str(), val.size());
+	chk.add(val.data(), val.size());
 	chk.add("\0", 1);
 
 	p.checksum	= chk.get();
 
 	os.write((const char *) & p, p.__sizeofBase() );
-	os.write(key.c_str(), key.size());
+	os.write(key.data(), key.size());
 	os.write("\0", 1);
-	os.write(val.c_str(), val.size());
+	os.write(val.data(), val.size());
 	os.write("\0", 1);
 
 	return true;
@@ -88,7 +88,7 @@ void Pair::print() const{
 	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
 
 	printf(format,
-		getKey().c_str(), getVal().c_str(),
+		getKey().data(), getVal().data(),
 		MyTime::STRING_SIZE, MyTime::toString(created),
 		expires
 	);

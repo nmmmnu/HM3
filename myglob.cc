@@ -6,7 +6,7 @@ bool MyGlob::open(const std::string &path){
 	glob_t globresults;
 	_data.clear();
 
-	if (__open(path.c_str(), globresults) == false)	
+	if (__open(path.data(), globresults) == false)	
 		return false;
 
 

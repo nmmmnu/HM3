@@ -38,14 +38,22 @@ private:
 
 private:
 	uint64_t _getCountFromDisk() const;
-
+	
 	const void *_getAtFromDisk(uint64_t index) const;
 };
 
 // ==============================
 
 inline int DiskTable::_cmpAt(uint64_t const index, const std::string &key) const{
-	return _cmpAt(index, key.c_str());
+	return _cmpAt(index, key.data());
+}
+
+inline Pair DiskTable::_getAt(uint64_t const index) const{
+	return _getAtFromDisk(index);
+}
+
+inline DiskTable::count_type DiskTable::_getCount() const{
+	return _datacount;
 }
 
 #endif

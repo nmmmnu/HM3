@@ -29,7 +29,7 @@ private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
-	int _lookupBinSearch(   const std::string &key, uint64_t &index) const;
+	int _lookupBinarySearch(const std::string &key, uint64_t &index) const;
 	int _lookupLinearSearch(const std::string &key, uint64_t &index) const;
 
 };
@@ -53,7 +53,7 @@ inline int IArray::lookup(const std::string &key, uint64_t &index) const{
 	if (_lookupMethod == LINEAR_SEARCH)
 		return _lookupLinearSearch(key, index);
 	else
-		return _lookupBinSearch(key, index);
+		return _lookupBinarySearch(key, index);
 }
 
 // ==============================

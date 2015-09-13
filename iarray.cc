@@ -1,7 +1,5 @@
 #include "iarray.h"
 
-//#include <stdio.h>
-
 int IArray::_lookupLinearSearch(const std::string &key, uint64_t &index) const{
 	if (isEmpty()){
 		index = 0; return 1;
@@ -25,7 +23,7 @@ int IArray::_lookupLinearSearch(const std::string &key, uint64_t &index) const{
 	index = i; return cmp;
 }
 
-int IArray::_lookupBinSearch(const std::string &key, uint64_t &index) const{
+int IArray::_lookupBinarySearch(const std::string &key, uint64_t &index) const{
 	if (isEmpty()){
 		index = 0; return 1;
 	}

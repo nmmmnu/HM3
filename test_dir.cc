@@ -16,7 +16,7 @@ void find(const ITable &list, const std::string &key){
 	const Pair pair = list.get(key);
 
 	if (! pair){
-		printf("Key '%s' not found...\n", key.c_str());
+		printf("Key '%s' not found...\n", key.data());
 		return;
 	}
 

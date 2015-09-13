@@ -16,7 +16,9 @@ public:
 public:
 	Pair() = default;
 
-	Pair(const std::string &key, const std::string &value, uint32_t expires = 0, uint32_t created = 0);
+	Pair(const std::string &key, const std::string &val, uint32_t expires = 0, uint32_t created = 0);
+	
+	//Pair(const char *key, const char *val, uint32_t expires = 0, uint32_t created = 0);
 
 	static Pair tombstone(const std::string &key){
 		return Pair(key, std::string());

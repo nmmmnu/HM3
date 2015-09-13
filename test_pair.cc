@@ -59,7 +59,7 @@ static void pairpod_test(const char *module, const PairPOD & p, const std::strin
 	PRINTF_TEST("key",		p.getKey() == key		);
 	PRINTF_TEST("val",		p.getVal() == val		);
 
-	PRINTF_TEST("cmp key",		p.cmp(key.c_str()) == 0		);
+	PRINTF_TEST("cmp key",		p.cmp(key.data()) == 0		);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
 	PRINTF_TEST("cmp",		p.cmp("!!! non existent") > 0	);
 }
