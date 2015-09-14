@@ -17,12 +17,12 @@ SRC	= $(wildcard *.cc)
 
 
 TARGETS	=	\
-		test_mystringref	\
-		test_pair		\
-		test_list		\
-		test_file		\
-		test_stl		\
-		test_glob		\
+		test_stringref	\
+		test_pair	\
+		test_list	\
+		test_file	\
+		test_stl	\
+		test_glob	\
 		test_dir
 
 
@@ -33,25 +33,25 @@ clean:
 	rm -f *.o *.d		\
 			$(TARGETS)
 
-test_mystringref: test_mystringref.o mystringref.o
+test_stringref: test_stringref.o stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
+test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o vectorlist.o linklist.o skiplist.o
+test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o vectorlist.o linklist.o skiplist.o stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o vectorlist.o linklist.o skiplist.o  disktable.o diskfile.o
+test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o vectorlist.o linklist.o skiplist.o  disktable.o diskfile.o stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
+test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o myglob.o disktable.o multitable.o listdircollection.o stringref.o
+	$(LINK) $@ $^		$(LIBS)
+
+test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_glob: test_glob.o myglob.o
-	$(LINK) $@ $^		$(LIBS)
-
-test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o iiterator.o iarray.o myglob.o disktable.o multitable.o listdircollection.o
 	$(LINK) $@ $^		$(LIBS)
 
 %.o: %.cc
