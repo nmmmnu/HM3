@@ -45,10 +45,12 @@ public:
 	bool operator ==(const char *data) const;
 	bool operator ==(const std::string &data) const;
 	bool operator ==(const MyStringRef &data) const;
+	bool operator ==(char c) const;
 
 	bool operator !=(const char *data) const;
 	bool operator !=(const std::string &data) const;
 	bool operator !=(const MyStringRef &data) const;
+	bool operator !=(char c) const;
 
 	// ==================================
 
@@ -119,6 +121,10 @@ inline bool MyStringRef::operator ==(const MyStringRef &data) const{
 	return compare(data) == 0;
 }
 
+inline bool MyStringRef::operator ==(char const c) const{
+	return _size == 1 && _data[0] == c;
+}
+
 // ==================================
 
 inline bool MyStringRef::operator !=(const char *data) const{
@@ -131,6 +137,10 @@ inline bool MyStringRef::operator !=(const std::string &data) const{
 
 inline bool MyStringRef::operator !=(const MyStringRef &data) const{
 	return ! (*this == data);
+}
+
+inline bool MyStringRef::operator !=(char const c) const{
+	return ! (*this == c);
 }
 
 #endif

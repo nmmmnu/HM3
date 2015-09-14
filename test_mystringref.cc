@@ -42,6 +42,26 @@ static void test_ref(const char *module, const MyStringRef &sr1){
 	std::cout <<  sr1 << std::endl;
 }
 
+static void test_small_ref(const char *module){
+	const MyStringRef sr1a = { hello, 1 };
+	const char sr1b[] = { hello[0], '\0' };
+
+	PRINTF_TEST("size",		sr1a.size() == 1			);
+
+	PRINTF_TEST("eq char *",	sr1a == sr1b				);
+	PRINTF_TEST("eq  string",	sr1a == std::string(sr1b)		);
+	PRINTF_TEST("eq MyStringRef",	sr1a == MyStringRef(sr1b)		);
+	PRINTF_TEST("eq char",		sr1a == sr1b[0]				);
+}
+
+static void test_string_ref(const char *module){
+	const MyStringRef srs = hello;
+	const std::string str = srs;
+
+	PRINTF_TEST("string size",	str.size() == strlen(hello)		);
+	PRINTF_TEST("string equal",	str == hello				);
+}
+
 int main(){
 	MyStringRef sre;
 
@@ -49,20 +69,12 @@ int main(){
 	PRINTF_TEST("data",		strcmp(sre.data(), "") == 0		);
 	PRINTF_TEST("empty",		sre.empty()				);
 
+	test_string_ref("string");
 
-	const MyStringRef sr1a = { hello, 1 };
-
-	PRINTF_TEST("small size",	sr1a.size() == 1			);
-	PRINTF_TEST("small equal",	sr1a == "h"				);
-
-	const MyStringRef srs = hello;
-	const std::string str = srs;
-
-	PRINTF_TEST("string size",	str.size() == strlen(hello)		);
-	PRINTF_TEST("string equal",	str == hello				);
+	test_small_ref("sm MyStringRef");
 
 	test_ref("char *", hello);
-	test_ref("string", str);
+	test_ref("string", std::string(hello));
 
 	return 0;
 }
