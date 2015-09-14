@@ -17,11 +17,12 @@ SRC	= $(wildcard *.cc)
 
 
 TARGETS	=	\
-		test_pair	\
-		test_list	\
-		test_file	\
-		test_stl	\
-		test_glob	\
+		test_mystringref	\
+		test_pair		\
+		test_list		\
+		test_file		\
+		test_stl		\
+		test_glob		\
 		test_dir
 
 
@@ -31,6 +32,9 @@ all: $(TARGETS)
 clean:
 	rm -f *.o *.d		\
 			$(TARGETS)
+
+test_mystringref: test_mystringref.o mystringref.o
+	$(LINK) $@ $^		$(LIBS)
 
 test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
