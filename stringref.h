@@ -27,12 +27,10 @@ public:
 
 	bool empty() const;
 
-	char charAt(size_t index) const;
-
-	std::string toString() const;
-
 	// ==================================
 
+	int compare(const char *data, size_t const size) const;
+	
 	int compare(const char *data) const;
 	int compare(const std::string &s) const;
 	int compare(const StringRef &sr) const;
@@ -41,7 +39,9 @@ public:
 
 	operator std::string() const;
 
-	char operator [] (size_t index) const;
+	const char &operator [] (size_t index) const;
+
+	// ==================================
 
 	bool operator ==(const char *data) const;
 	bool operator ==(const std::string &data) const;
@@ -64,12 +64,12 @@ public:
 	}
 
 private:
-	size_t			_size	= 0;
-	const char		*_data	= __zeroStr;
+	size_t		_size	= 0;
+	const char	*_data	= "";
 
 private:
-	constexpr
-	static const char	*__zeroStr = "";
+	static size_t _strlen(const char *s);
+	static const char *_strptr(const char *s);
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -78,10 +78,10 @@ std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
 inline StringRef::StringRef(const char *data, size_t const size) :
 		_size(size),
-		_data(size ? data : __zeroStr){}
+		_data(_strptr(data)){}
 
 inline StringRef::StringRef(const char *data) :
-		StringRef(data, data ? strlen(data) : 0){}
+		StringRef(data, _strlen(data)){}
 
 inline StringRef::StringRef(const std::string &s) :
 		_size(s.size()),
@@ -93,32 +93,28 @@ inline bool StringRef::empty() const{
 	return _size == 0;
 }
 
-inline char StringRef::charAt(size_t const index) const{
-	return _data[index];
-}
-
-inline std::string StringRef::toString() const{
-	return std::string(_data, _size);
-}
-
 // ==================================
 
+inline int StringRef::compare(const char *data) const{
+	return compare(data, _strlen(data) );
+}
+
 inline int StringRef::compare(const std::string &s) const{
-	return compare(s.data() );
+	return compare(s.data(), s.size() );
 }
 
 inline int StringRef::compare(const StringRef &sr) const{
-	return compare(sr.data() );
+	return compare(sr.data(), sr.size() );
 }
 
 // ==================================
 
 inline StringRef::operator std::string() const{
-	return toString();
+	return std::string(_data, _size);
 }
 
-inline char StringRef::operator [] (size_t const index) const{
-	return charAt(index);
+inline const char &StringRef::operator [] (size_t const index) const{
+	return _data[index];
 }
 
 // ==================================
@@ -159,30 +155,37 @@ inline bool StringRef::operator !=(char const c) const{
 
 // ==================================
 
-inline int StringRef::compare(const char *data) const{
+inline int StringRef::compare(const char *data, size_t const size) const{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
-	auto data_size = strlen(data);
-
 	// check prefix
-	if ( int res = memcmp(_data, data, std::min(_size, data_size ) ) )
+	if ( int res = memcmp(_data, data, std::min(_size, size ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
-	if (_size == data_size)
+	if (_size == size)
 		return 0;
 
-	return _size < data_size ? -1 : +1;
+	return _size < size ? -1 : +1;
+}
+
+// ==================================
+
+inline size_t StringRef::_strlen(const char *s){
+	return s ? strlen(s) : 0;
+}
+
+inline const char *StringRef::_strptr(const char *s){
+	return s ? s : "";
 }
 
 // ==================================
 
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
-	for(size_t i = 0; i < sr.size(); ++i)
-		os << sr[i];
-	return os;
+	return os.write(sr.c_str(), sr.size());
 }
+
 
 #endif
 

@@ -37,7 +37,6 @@ static void test_ref(const char *module, const StringRef &sr1){
 	PRINTF_TEST("|= StringRef",	sr1 != StringRef(bla)			);
 
 	PRINTF_TEST("[] char *",	sr1[0] == hello[0]			);
-	PRINTF_TEST("charAt char *",	sr1.charAt(0) == hello[0]		);
 
 	std::cout <<  sr1 << std::endl;
 }

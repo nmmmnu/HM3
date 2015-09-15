@@ -7,6 +7,7 @@
 #include "stringref.h"
 
 #include "mytime.h"
+#include "stringref.h"
 
 // ==============================
 
@@ -23,7 +24,7 @@ public:
 	//Pair(const char *key, const char *val, uint32_t expires = 0, uint32_t created = 0);
 
 	static Pair tombstone(const StringRef &key){
-		return Pair(key, StringRef());
+		return Pair(key, StringRef{} );
 	}
 
 	Pair(const void *blob);
@@ -34,8 +35,8 @@ public:
 public:
 	const std::string &getKey() const;
 	const std::string &getVal() const;
-	int cmp(const char *key) const;
 	int cmp(const StringRef &key) const;
+	int cmp(const char *key) const;
 	int cmp(const Pair &pair) const;
 	bool isTombstone() const;
 	bool valid() const;
@@ -86,18 +87,12 @@ inline int Pair::cmp(const StringRef &key2) const{
 	if (key.empty())
 		return +1;
 
+	//return key.compare(key2);
 	return - key2.compare(key);
 }
 
-inline int Pair::cmp(const char *key2) const{
-	if (key2 == nullptr)
-		return -1;
-
-	// std::string.compare gives 0 if internal string is nullptr
-	if (key.empty())
-		return +1;
-
-	return key.compare(key2);
+inline int Pair::cmp(const char *key) const{
+	return cmp( StringRef{key} );
 }
 
 inline int Pair::cmp(const Pair &pair) const{
