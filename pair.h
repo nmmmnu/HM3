@@ -4,6 +4,8 @@
 #include <string>
 #include <ostream>
 
+#include "stringref.h"
+
 #include "mytime.h"
 
 // ==============================
@@ -16,12 +18,12 @@ public:
 public:
 	Pair() = default;
 
-	Pair(const std::string &key, const std::string &val, uint32_t expires = 0, uint32_t created = 0);
+	Pair(const StringRef &key, const StringRef &val, uint32_t expires = 0, uint32_t created = 0);
 	
 	//Pair(const char *key, const char *val, uint32_t expires = 0, uint32_t created = 0);
 
-	static Pair tombstone(const std::string &key){
-		return Pair(key, std::string());
+	static Pair tombstone(const StringRef &key){
+		return Pair(key, StringRef());
 	}
 
 	Pair(const void *blob);
@@ -33,7 +35,7 @@ public:
 	const std::string &getKey() const;
 	const std::string &getVal() const;
 	int cmp(const char *key) const;
-	int cmp(const std::string &key) const;
+	int cmp(const StringRef &key) const;
 	int cmp(const Pair &pair) const;
 	bool isTombstone() const;
 	bool valid() const;
@@ -76,7 +78,7 @@ inline bool Pair::isTombstone() const{
 	return val.empty();
 }
 
-inline int Pair::cmp(const std::string &key2) const{
+inline int Pair::cmp(const StringRef &key2) const{
 	if (key2.empty())
 		return -1;
 
@@ -84,7 +86,7 @@ inline int Pair::cmp(const std::string &key2) const{
 	if (key.empty())
 		return +1;
 
-	return key.compare(key2);
+	return - key2.compare(key);
 }
 
 inline int Pair::cmp(const char *key2) const{

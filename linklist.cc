@@ -96,7 +96,7 @@ bool LinkList::_put(const Pair &newdata){
 	return true;
 }
 
-Pair LinkList::_get(const std::string &key) const{
+Pair LinkList::_get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
@@ -107,7 +107,7 @@ Pair LinkList::_get(const std::string &key) const{
 	return data.cmp(key) == 0 ? data : nullptr;
 }
 
-bool LinkList::_remove(const std::string &key){
+bool LinkList::_remove(const StringRef &key){
 	Node *prev = nullptr;
 	Node *node;
 	for(node = _head; node; node = node->next){
@@ -147,7 +147,7 @@ void LinkList::_clear(){
 	_head = nullptr;
 }
 
-LinkList::Node *LinkList::_locate(const std::string &key) const{
+LinkList::Node *LinkList::_locate(const StringRef &key) const{
 	for(Node *node = _head; node; node = node->next){
 		const Pair & data = node->data;
 
@@ -177,7 +177,7 @@ public:
 			_current(list._head){}
 
 private:
-	virtual void _rewind(const std::string &key) override;
+	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
 	virtual uint64_t _getVersion() override{
 		return _list.getVersion();
@@ -189,7 +189,7 @@ private:
 };
 
 
-void LinkListIterator::_rewind(const std::string &key){
+void LinkListIterator::_rewind(const StringRef &key){
 	if (key.empty()){
 		_current = _list._head;
 		return;

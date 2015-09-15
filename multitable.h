@@ -12,7 +12,7 @@ public:
 	MultiTable(IListCollection & collection) : _collection(collection){};
 
 private:
-	virtual Pair _get(const std::string &key) const override;
+	virtual Pair _get(const StringRef &key) const override;
 
 	virtual uint64_t _getCount() const override{
 		return 0;

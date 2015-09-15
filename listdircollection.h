@@ -4,18 +4,19 @@
 #include "ilistcollection.h"
 #include "disktable.h"
 
+#include "stringref.h"
+
 #include <vector>
-#include <string>
 
 class ListDirCollection : public IListCollection{
 public:
 	ListDirCollection() = default;
 
-	ListDirCollection(const std::string &path){
+	ListDirCollection(const StringRef &path){
 		open(path);
 	}
 
-	bool open(const std::string &path);
+	bool open(const StringRef &path);
 	void close();
 
 private:
@@ -36,9 +37,6 @@ inline const ITable & ListDirCollection::_getAt(uint64_t const index) const{
 inline uint64_t ListDirCollection::_getCount() const{
 	return _files.size();
 }
-
-// ==============================
-
 
 #endif
 

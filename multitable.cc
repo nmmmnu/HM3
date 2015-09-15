@@ -2,7 +2,7 @@
 
 #include <vector>
 
-Pair MultiTable::_get(const std::string &key) const{
+Pair MultiTable::_get(const StringRef &key) const{
 	for(size_t i = 0; i < _collection.getCount(); ++i){
 		Pair pair = _collection[i].get(key);
 
@@ -20,7 +20,7 @@ public:
 	MultiTableIterator(const MultiTable & list);
 
 private:
-	virtual void _rewind(const std::string &key) override;
+	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
 	virtual uint64_t _getVersion() override{
 		return _list.getVersion();
@@ -38,7 +38,7 @@ MultiTableIterator::MultiTableIterator(const MultiTable & list) : _list(list){
 	}
 }
 
-void MultiTableIterator::_rewind(const std::string &key){
+void MultiTableIterator::_rewind(const StringRef &key){
 	for(size_t i = 0; i < _iterators.size(); ++i ){
 		_iterators[i]->first(key);
 	}

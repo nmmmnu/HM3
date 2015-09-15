@@ -5,13 +5,15 @@
 #include "icountable.h"
 #include "iversion.h"
 
+#include "stringref.h"
+
 #include <memory>
 
 class ITable : virtual public IVersion, virtual public ICountable{
 public:
-	Pair get(const std::string &key) const;
-	Pair operator[](const std::string &key) const;
-	bool exists(const std::string &key) const;
+	Pair get(const StringRef &key) const;
+	Pair operator[](const StringRef &key) const;
+	bool exists(const StringRef &key) const;
 
 	size_t getSize() const;
 
@@ -20,7 +22,7 @@ public:
 	void print() const;
 
 private:
-	virtual Pair _get(const std::string &key) const = 0;
+	virtual Pair _get(const StringRef &key) const = 0;
 	virtual size_t _getSize() const = 0;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const = 0;
@@ -29,15 +31,15 @@ private:
 // ==============================
 
 
-inline Pair ITable::get(const std::string &key) const{
+inline Pair ITable::get(const StringRef &key) const{
 	return _get(key);
 }
 
-inline Pair ITable::operator[](const std::string &key) const{
+inline Pair ITable::operator[](const StringRef &key) const{
 	return _get(key);
 }
 
-inline bool ITable::exists(const std::string &key) const{
+inline bool ITable::exists(const StringRef &key) const{
 	return (bool) _get(key);
 }
 

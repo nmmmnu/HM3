@@ -32,13 +32,13 @@ int main(int argc, char **argv){
 
 
 
-static void pair_test_raw_do(const char *module, const Pair & p, const std::string &key, const std::string &val){
+static void pair_test_raw_do(const char *module, const Pair & p, const StringRef &key, const StringRef &val){
 	p.print();
 
 	PRINTF_TEST("valid",		p.valid()			);
 
-	PRINTF_TEST("key",		p.getKey() == key		);
-	PRINTF_TEST("val",		p.getVal() == val		);
+	PRINTF_TEST("key",		key == p.getKey()		);
+	PRINTF_TEST("val",		val == p.getVal()		);
 
 	PRINTF_TEST("cmp key",		p.cmp(key) == 0			);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
@@ -53,11 +53,11 @@ static void pair_test_raw_do(const char *module, const Pair & p, const std::stri
 	p2.print();
 }
 
-static void pairpod_test(const char *module, const PairPOD & p, const std::string &key, const std::string &val){
+static void pairpod_test(const char *module, const PairPOD & p, const StringRef &key, const StringRef &val){
 	PRINTF_TEST("valid",		p.valid()			);
 
-	PRINTF_TEST("key",		p.getKey() == key		);
-	PRINTF_TEST("val",		p.getVal() == val		);
+	PRINTF_TEST("key",		key == p.getKey()		);
+	PRINTF_TEST("val",		val == p.getVal()		);
 
 	PRINTF_TEST("cmp key",		p.cmp(key.data()) == 0		);
 	PRINTF_TEST("cmp",		p.cmp("~~~ non existent") < 0	);
@@ -65,8 +65,8 @@ static void pairpod_test(const char *module, const PairPOD & p, const std::strin
 }
 
 static void pair_test_raw(const char *module){
-	const std::string key = "name";
-	const std::string val = "Peter";
+	const char *key = "name";
+	const char *val = "Peter";
 
 	NMEA0183ChecksumCalculator nm;
 
@@ -112,8 +112,8 @@ static void pair_test_null(const char *module){
 
 
 static void pair_test(const char *module){
-	const std::string key = "abcdef";
-	const std::string val = "1234567890";
+	const char *key = "abcdef";
+	const char *val = "1234567890";
 
 	const Pair p = { key, val };
 

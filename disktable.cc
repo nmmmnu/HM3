@@ -20,7 +20,7 @@ DiskTable::DiskTable(DiskTable &&other):
 	other._size = 0;
 }
 
-bool DiskTable::open(const std::string &filename){
+bool DiskTable::open(const StringRef &filename){
 	close();
 
 	int fd = ::open(filename.data(), O_RDONLY);
@@ -70,9 +70,9 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-int DiskTable::_cmpAt(uint64_t const index, const char *key) const{
+int DiskTable::_cmpAt(uint64_t const index, const StringRef &key) const{
 	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
-	return p->cmp(key);
+	return p->cmp(key.data());
 }
 
 size_t DiskTable::_getSize() const{

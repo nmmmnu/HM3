@@ -18,7 +18,7 @@ struct pcomp{
 	}
 };
 
-static void listLoad(std::set<Pair,pcomp> &list, const std::string &filename, bool tombstones = true);
+static void listLoad(std::set<Pair,pcomp> &list, const StringRef &filename, bool tombstones = true);
 
 static int op_search(std::set<Pair,pcomp> &list, const char *filename, const char *key){
 	printf("Load start...\n");
@@ -56,7 +56,7 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(std::set<Pair,pcomp> &list, const std::string &filename, bool const tombstones){ 
+static void listLoad(std::set<Pair,pcomp> &list, const StringRef &filename, bool const tombstones){ 
 	static const char *trim_ch = " \t\n";
 
 	const std::string empty;

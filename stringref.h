@@ -1,6 +1,7 @@
 #ifndef MY_STRING_REF_H
 #define MY_STRING_REF_H
 
+#include <cstring>
 #include <string>
 #include <ostream>
 
@@ -75,6 +76,19 @@ std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
 // ==================================
 
+inline StringRef::StringRef(const char *data, size_t const size) :
+		_size(size),
+		_data(size ? data : __zeroStr){}
+
+inline StringRef::StringRef(const char *data) :
+		StringRef(data, data ? strlen(data) : 0){}
+
+inline StringRef::StringRef(const std::string &s) :
+		_size(s.size()),
+		_data(s.data()){}
+
+// ==================================
+
 inline bool StringRef::empty() const{
 	return _size == 0;
 }
@@ -141,6 +155,33 @@ inline bool StringRef::operator !=(const StringRef &data) const{
 
 inline bool StringRef::operator !=(char const c) const{
 	return ! (*this == c);
+}
+
+// ==================================
+
+inline int StringRef::compare(const char *data) const{
+	// Lazy based on LLVM::StringRef
+	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
+
+	auto data_size = strlen(data);
+
+	// check prefix
+	if ( int res = memcmp(_data, data, std::min(_size, data_size ) ) )
+		return res < 0 ? -1 : +1;
+
+	// prefixes match, so we only need to check the lengths.
+	if (_size == data_size)
+		return 0;
+
+	return _size < data_size ? -1 : +1;
+}
+
+// ==================================
+
+inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
+	for(size_t i = 0; i < sr.size(); ++i)
+		os << sr[i];
+	return os;
 }
 
 #endif

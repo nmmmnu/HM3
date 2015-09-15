@@ -1,7 +1,7 @@
 #include "listdircollection.h"
 #include "myglob.h"
 
-bool ListDirCollection::open(const std::string &path){
+bool ListDirCollection::open(const StringRef &path){
 	close();
 
 	MyGlob gl;

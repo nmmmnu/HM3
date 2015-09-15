@@ -3,7 +3,7 @@
 
 #include "iarray.h"
 
-#include <string>
+#include "stringref.h"
 
 class DiskTable : virtual public IArray{
 public:
@@ -15,15 +15,14 @@ public:
 		close();
 	}
 	
-	bool open(const std::string &filename);
+	bool open(const StringRef &filename);
 
 	void close();
 
 
 private:
 	virtual Pair _getAt(uint64_t index) const override;
-	virtual int _cmpAt(uint64_t index, const std::string &key) const override;
-	virtual int _cmpAt(uint64_t index, const char *key) const override;
+	virtual int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
 	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
@@ -43,10 +42,6 @@ private:
 };
 
 // ==============================
-
-inline int DiskTable::_cmpAt(uint64_t const index, const std::string &key) const{
-	return _cmpAt(index, key.data());
-}
 
 inline Pair DiskTable::_getAt(uint64_t const index) const{
 	return _getAtFromDisk(index);

@@ -22,8 +22,8 @@ private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &pair) override;
-	virtual Pair _get(const std::string &key) const override;
-	virtual bool _remove(const std::string &key) override;
+	virtual Pair _get(const StringRef &key) const override;
+	virtual bool _remove(const StringRef &key) override;
 
 	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
@@ -47,7 +47,7 @@ private:
 private:
 	void _clear();
 
-	const Node *_locate(const std::string &key, bool complete_evaluation = false) const;
+	const Node *_locate(const StringRef &key, bool complete_evaluation = false) const;
 
 	uint8_t _getRandomHeight();
 

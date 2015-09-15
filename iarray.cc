@@ -1,6 +1,6 @@
 #include "iarray.h"
 
-int IArray::_lookupLinearSearch(const std::string &key, uint64_t &index) const{
+int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
 	if (isEmpty()){
 		index = 0; return 1;
 	}
@@ -23,7 +23,7 @@ int IArray::_lookupLinearSearch(const std::string &key, uint64_t &index) const{
 	index = i; return cmp;
 }
 
-int IArray::_lookupBinarySearch(const std::string &key, uint64_t &index) const{
+int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 	if (isEmpty()){
 		index = 0; return 1;
 	}
@@ -68,7 +68,7 @@ public:
 			_list(list){}
 
 private:
-	virtual void _rewind(const std::string &key) override;
+	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
 	virtual uint64_t _getVersion() override{
 		return _list.getVersion();
@@ -79,7 +79,7 @@ private:
 	uint64_t	_itPos = 0;
 };
 
-void IArrayIterator::_rewind(const std::string &key){
+void IArrayIterator::_rewind(const StringRef &key){
 	if (key.empty()){
 		_itPos = 0;
 		return;

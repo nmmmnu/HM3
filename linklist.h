@@ -16,8 +16,8 @@ private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &pair) override;
-	virtual Pair _get(const std::string &key) const override;
-	virtual bool _remove(const std::string &key) override;
+	virtual Pair _get(const StringRef &key) const override;
+	virtual bool _remove(const StringRef &key) override;
 
 	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
@@ -35,7 +35,7 @@ private:
 private:
 	void _clear();
 
-	Node *_locate(const std::string &key) const;
+	Node *_locate(const StringRef &key) const;
 };
 
 // ==============================

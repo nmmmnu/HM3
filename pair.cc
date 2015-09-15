@@ -6,7 +6,7 @@
 
 // ==============================
 
-Pair::Pair(const std::string &key2, const std::string &val2, uint32_t const expires, uint32_t const created):
+Pair::Pair(const StringRef &key2, const StringRef &val2, uint32_t const expires, uint32_t const created):
 		created(__getCreateTime(created)),
 		expires(expires),
 		key(key2),

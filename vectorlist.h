@@ -10,7 +10,7 @@ public:
 	static const size_t REALLOC_SIZE = 16;
 
 public:
-	VectorList(size_t reallocSize = 0);
+	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
 	virtual ~VectorList() override;
 
@@ -27,7 +27,7 @@ private:
 	virtual void _removeAll() override;
 
 	virtual bool _put(const Pair &data) override;
-	virtual bool _remove(const std::string &keykey) override;
+	virtual bool _remove(const StringRef &keykey) override;
 
 	virtual Pair _getAt(uint64_t index) const override;
 

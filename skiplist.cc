@@ -149,13 +149,13 @@ bool SkipList::_put(const Pair &newdata){
 	return true;
 }
 
-Pair SkipList::_get(const std::string &key) const{
+Pair SkipList::_get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;
 }
 
-bool SkipList::_remove(const std::string &key){
+bool SkipList::_remove(const StringRef &key){
 	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
@@ -220,7 +220,7 @@ void SkipList::_clear(){
 	//memset(_loc, 0, _height * sizeof(Node *) );
 }
 
-const SkipList::Node *SkipList::_locate(const std::string &key, bool const complete_evaluation) const{
+const SkipList::Node *SkipList::_locate(const StringRef &key, bool const complete_evaluation) const{
 	// it is extremly dangerous to have key == nullptr here.
 	if (key.empty()){
 		std::logic_error exception("Key can not be nullptr in SkipList::_locate");
@@ -290,7 +290,7 @@ public:
 			_current(list._heads[0]){}
 
 private:
-	virtual void _rewind(const std::string &key) override;
+	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
 	virtual uint64_t _getVersion() override{
 		return _list.getVersion();
@@ -301,7 +301,7 @@ private:
 	const SkipList::Node	*_current;
 };
 
-void SkipListIterator::_rewind(const std::string &key){
+void SkipListIterator::_rewind(const StringRef &key){
 	if (key.empty()){
 		_current = _list._heads[0];
 		return;

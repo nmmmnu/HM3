@@ -15,8 +15,8 @@
 
 #define PROCESS_STEP	1000 * 10
 
-static void listLoad(IList &list, const std::string &filename, bool tombstones = true);
-static void listSearch(ITable &list, const std::string &key);
+static void listLoad(IList &list, const StringRef &filename, bool tombstones = true);
+static void listSearch(ITable &list, const StringRef &key);
 
 static void printUsage(const char *cmd);
 
@@ -43,7 +43,7 @@ static std::unique_ptr<IList> factory(char what){
 	}
 }
 
-static int op_search(IList &list, const std::string &filename, const std::string &key){
+static int op_search(IList &list, const StringRef &filename, const StringRef &key){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -57,7 +57,7 @@ static int op_search(IList &list, const std::string &filename, const std::string
 	return 0;
 }
 
-static int op_write(IList &list, const std::string &filename, const std::string &filename2){
+static int op_write(IList &list, const StringRef &filename, const StringRef &filename2){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -71,7 +71,7 @@ static int op_write(IList &list, const std::string &filename, const std::string 
 	return 0;
 }
 
-static int op_filesearch(const std::string &filename, const std::string &key){
+static int op_filesearch(const StringRef &filename, const StringRef &key){
 	DiskTable list;
 
 	list.open(filename);
@@ -80,7 +80,7 @@ static int op_filesearch(const std::string &filename, const std::string &key){
 	return 0;
 }
 
-static int op_list(const std::string &filename, const std::string &key = std::string(), size_t count = 10){
+static int op_list(const StringRef &filename, const StringRef &key = StringRef(), size_t count = 10){
 	DiskTable list;
 	list.open(filename);
 
@@ -158,7 +158,7 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(IList &list, const std::string &filename, bool const tombstones){ 
+static void listLoad(IList &list, const StringRef &filename, bool const tombstones){ 
 	static const char *trim_ch = " \t\n";
 
 	const std::string empty;
@@ -185,7 +185,7 @@ static void listLoad(IList &list, const std::string &filename, bool const tombst
 	}
 }
 
-static void listSearch(ITable &list, const std::string &key){
+static void listSearch(ITable &list, const StringRef &key){
 	const Pair pair = list.get(key);
 
 	if (! pair){

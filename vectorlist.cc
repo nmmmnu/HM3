@@ -86,7 +86,7 @@ bool VectorList::_put(const Pair &newdata){
 	return true;
 }
 
-bool VectorList::_remove(const std::string &key){
+bool VectorList::_remove(const StringRef &key){
 	uint64_t index;
 	if (lookup(key, index)){
 		// the key does not exists in the vector.
