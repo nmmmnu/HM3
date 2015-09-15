@@ -30,7 +30,7 @@ static void test_ref(const char *module, const StringRef &sr1){
 
 	PRINTF_TEST("== char *",	sr1 == hello				);
 	PRINTF_TEST("== string",	sr1 == std::string(hello)		);
-	PRINTF_TEST("== StringRef",	sr1 == StringRef(hello)		);
+	PRINTF_TEST("== StringRef",	sr1 == StringRef(hello)			);
 
 	PRINTF_TEST("|= char *",	sr1 != bla				);
 	PRINTF_TEST("|= string",	sr1 != std::string(bla)			);

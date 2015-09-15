@@ -68,8 +68,10 @@ private:
 	const char	*_data	= "";
 
 private:
-	static size_t _strlen(const char *s);
-	static const char *_strptr(const char *s);
+	static size_t __strlen(const char *s);
+	static const char *__strptr(const char *s);
+	
+	static int __compare(const char *s1, size_t const size1, const char *s2, size_t const size2);
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -78,10 +80,10 @@ std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
 inline StringRef::StringRef(const char *data, size_t const size) :
 		_size(size),
-		_data(_strptr(data)){}
+		_data(__strptr(data)){}
 
 inline StringRef::StringRef(const char *data) :
-		StringRef(data, _strlen(data)){}
+		StringRef(data, __strlen(data)){}
 
 inline StringRef::StringRef(const std::string &s) :
 		_size(s.size()),
@@ -95,8 +97,12 @@ inline bool StringRef::empty() const{
 
 // ==================================
 
+inline int StringRef::compare(const char *data, size_t const size) const{
+	return __compare(_data, _size, data, size);
+}
+
 inline int StringRef::compare(const char *data) const{
-	return compare(data, _strlen(data) );
+	return compare(data, __strlen(data) );
 }
 
 inline int StringRef::compare(const std::string &s) const{
@@ -155,28 +161,28 @@ inline bool StringRef::operator !=(char const c) const{
 
 // ==================================
 
-inline int StringRef::compare(const char *data, size_t const size) const{
+inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2){
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
 	// check prefix
-	if ( int res = memcmp(_data, data, std::min(_size, size ) ) )
+	if ( int res = memcmp(s1, s2, std::min(size1, size2 ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
-	if (_size == size)
+	if (size1 == size2)
 		return 0;
 
-	return _size < size ? -1 : +1;
+	return size1 < size2 ? -1 : +1;
 }
 
 // ==================================
 
-inline size_t StringRef::_strlen(const char *s){
+inline size_t StringRef::__strlen(const char *s){
 	return s ? strlen(s) : 0;
 }
 
-inline const char *StringRef::_strptr(const char *s){
+inline const char *StringRef::__strptr(const char *s){
 	return s ? s : "";
 }
 
