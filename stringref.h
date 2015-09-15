@@ -4,13 +4,13 @@
 #include <string>
 #include <ostream>
 
-class MyStringRef{
+class StringRef{
 public:
-	MyStringRef() = default;
+	StringRef() = default;
 
-	MyStringRef(const char *data, size_t const size);
-	MyStringRef(const char *data);
-	MyStringRef(const std::string &s);
+	StringRef(const char *data, size_t const size);
+	StringRef(const char *data);
+	StringRef(const std::string &s);
 
 	// ==================================
 
@@ -34,7 +34,7 @@ public:
 
 	int compare(const char *data) const;
 	int compare(const std::string &s) const;
-	int compare(const MyStringRef &sr) const;
+	int compare(const StringRef &sr) const;
 
 	// ==================================
 
@@ -44,12 +44,12 @@ public:
 
 	bool operator ==(const char *data) const;
 	bool operator ==(const std::string &data) const;
-	bool operator ==(const MyStringRef &data) const;
+	bool operator ==(const StringRef &data) const;
 	bool operator ==(char c) const;
 
 	bool operator !=(const char *data) const;
 	bool operator !=(const std::string &data) const;
-	bool operator !=(const MyStringRef &data) const;
+	bool operator !=(const StringRef &data) const;
 	bool operator !=(char c) const;
 
 	// ==================================
@@ -71,75 +71,75 @@ private:
 	static const char	*__zeroStr = "";
 };
 
-std::ostream& operator << (std::ostream& os, const MyStringRef &sr);
+std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
 // ==================================
 
-inline bool MyStringRef::empty() const{
+inline bool StringRef::empty() const{
 	return _size == 0;
 }
 
-inline char MyStringRef::charAt(size_t const index) const{
+inline char StringRef::charAt(size_t const index) const{
 	return _data[index];
 }
 
-inline std::string MyStringRef::toString() const{
+inline std::string StringRef::toString() const{
 	return std::string(_data, _size);
 }
 
 // ==================================
 
-inline int MyStringRef::compare(const std::string &s) const{
+inline int StringRef::compare(const std::string &s) const{
 	return compare(s.data() );
 }
 
-inline int MyStringRef::compare(const MyStringRef &sr) const{
+inline int StringRef::compare(const StringRef &sr) const{
 	return compare(sr.data() );
 }
 
 // ==================================
 
-inline MyStringRef::operator std::string() const{
+inline StringRef::operator std::string() const{
 	return toString();
 }
 
-inline char MyStringRef::operator [] (size_t const index) const{
+inline char StringRef::operator [] (size_t const index) const{
 	return charAt(index);
 }
 
 // ==================================
 
-inline bool MyStringRef::operator ==(const char *data) const{
+inline bool StringRef::operator ==(const char *data) const{
 	return compare(data) == 0;
 }
 
-inline bool MyStringRef::operator ==(const std::string &data) const{
+inline bool StringRef::operator ==(const std::string &data) const{
 	return compare(data) == 0;
 }
 
-inline bool MyStringRef::operator ==(const MyStringRef &data) const{
+inline bool StringRef::operator ==(const StringRef &data) const{
 	return compare(data) == 0;
 }
 
-inline bool MyStringRef::operator ==(char const c) const{
+inline bool StringRef::operator ==(char const c) const{
 	return _size == 1 && _data[0] == c;
 }
 
 // ==================================
 
-inline bool MyStringRef::operator !=(const char *data) const{
+inline bool StringRef::operator !=(const char *data) const{
 	return ! (*this == data);
 }
 
-inline bool MyStringRef::operator !=(const std::string &data) const{
+inline bool StringRef::operator !=(const std::string &data) const{
 	return ! (*this == data);
 }
 
-inline bool MyStringRef::operator !=(const MyStringRef &data) const{
+inline bool StringRef::operator !=(const StringRef &data) const{
 	return ! (*this == data);
 }
 
-inline bool MyStringRef::operator !=(char const c) const{
+inline bool StringRef::operator !=(char const c) const{
 	return ! (*this == c);
 }
 

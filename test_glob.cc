@@ -24,8 +24,8 @@ int main(int argc, char **argv){
 
 	MyGlob gl = getGlobSimulateMove(path);
 
-	for(auto s : gl.getData())
-		std::cout << s << std::endl;
+//	for(const StringRef &s : gl.getData())
+//		std::cout << s << std::endl;
 
 	return 0;
 }

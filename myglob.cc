@@ -2,26 +2,29 @@
 
 #include <sys/stat.h>	// stat
 
-bool MyGlob::open(const std::string &path){
-	glob_t globresults;
+bool MyGlob::open(const StringRef &path){
+	if (_isOpen)
+		close();
+		
+	
 	_data.clear();
 
-	if (__open(path.data(), globresults) == false)	
+	if (__open(path.data(), _globresults) == false)	
 		return false;
 
-
+	_isOpen = true;
+	
+	
 	
 	size_t i;
-	for(i = 0; i < globresults.gl_pathc; ++i){
-		const char *filename = globresults.gl_pathv[i];
+	for(i = 0; i < _globresults.gl_pathc; ++i){
+		const char *filename = _globresults.gl_pathv[i];
 
 		if (__checkFile( filename ))
 			_data.push_back(filename);
 	}
 
-
-
-	__close(globresults);
+	
 	
 	return i > 0;
 }
@@ -38,8 +41,14 @@ bool MyGlob::__open(const char *path, glob_t &globresults){
 	return true;
 }
 
-void MyGlob::__close(glob_t &globresults){
-	globfree(& globresults);
+void MyGlob::close(){
+	if (_isOpen){
+		globfree(& _globresults);
+		
+		_data.clear();
+	}
+	
+	_isOpen = false;
 }
 
 bool MyGlob::__checkFile(const char *filename){

@@ -1,10 +1,10 @@
-#include "mystringref.h"
+#include "stringref.h"
 
 #include <cstring>
 
 // ==================================
 
-std::ostream& operator << (std::ostream& os, const MyStringRef &sr) {
+std::ostream& operator << (std::ostream& os, const StringRef &sr) {
 	for(size_t i = 0; i < sr.size(); ++i)
 		os << sr[i];
 	return os;
@@ -12,18 +12,18 @@ std::ostream& operator << (std::ostream& os, const MyStringRef &sr) {
 
 // ==================================
 
-MyStringRef::MyStringRef(const char *data, size_t const size) :
+StringRef::StringRef(const char *data, size_t const size) :
 		_size(size),
 		_data(size ? data : __zeroStr){}
 
-MyStringRef::MyStringRef(const char *data) :
-		MyStringRef(data, data ? strlen(data) : 0){}
+StringRef::StringRef(const char *data) :
+		StringRef(data, data ? strlen(data) : 0){}
 
-MyStringRef::MyStringRef(const std::string &s) :
+StringRef::StringRef(const std::string &s) :
 		_size(s.size()),
 		_data(s.data()){}
 
-int MyStringRef::compare(const char *data) const{
+int StringRef::compare(const char *data) const{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 

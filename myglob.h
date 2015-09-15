@@ -1,35 +1,37 @@
 #ifndef _MYGLOB_H
 #define _MYGLOB_H
 
-#include "icountable.h"
+#include "stringref.h"
 
 #include <glob.h>	// glob
 
 #include <vector>
-#include <string>
 
-class MyGlob{
+class MyGlob final{
 public:
 	MyGlob() = default;
 	MyGlob& operator=(MyGlob other) = delete;
+	
+	~MyGlob(){
+		close();
+	}
 
-	bool open(const std::string &path);
-	std::vector<std::string> &getData();
+	bool open(const StringRef &path);
+	void close();
+
+	std::vector<StringRef> &getData(){
+		return _data;
+	}
 	
 private:
 	static bool __open(const char *path, glob_t &globresults);
-	static void __close(glob_t &globresults);
 	static bool __checkFile(const char *filename);
 
 private:
-	std::vector<std::string> _data;
+	glob_t			_globresults;
+	bool			_isOpen		= false;
+	std::vector<StringRef>	_data;
 };
-
-// ==============================
-
-inline std::vector<std::string> &MyGlob::getData(){
-	return _data;
-}
 
 #endif
 
