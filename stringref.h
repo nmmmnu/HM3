@@ -38,7 +38,7 @@ public:
 
 	operator std::string() const;
 
-	char operator [] (size_t index) const;
+	const char &operator [] (size_t index) const;
 
 	bool operator ==(const char *data) const;
 	bool operator ==(const std::string &data) const;
@@ -99,7 +99,7 @@ inline StringRef::operator std::string() const{
 	return std::string(_data, _size);
 }
 
-inline char StringRef::operator [] (size_t const index) const{
+inline const char &StringRef::operator [] (size_t const index) const{
 	return _data[index];
 }
 
