@@ -46,6 +46,11 @@ public:
 	
 	bool operator ==(char c) const;
 
+	bool operator !=(const char *data) const;
+	bool operator !=(const std::string &data) const;
+	bool operator !=(const StringRef &data) const;
+	bool operator !=(char c) const;
+
 	// ==================================
 
 	const char *c_str() const{
@@ -65,11 +70,6 @@ private:
 	static const char *_strptr(const char *s);
 
 };
-
-template <typename T>
-bool operator != (const StringRef &sr, const T &other){
-	return ! (sr == other);
-}
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
@@ -120,6 +120,25 @@ inline bool StringRef::operator ==(const StringRef &data) const{
 inline bool StringRef::operator ==(char const c) const{
 	return _size == 1 && _data[0] == c;
 }
+
+// ==================================
+
+inline bool StringRef::operator !=(const char *data) const{
+	return ! (*this == data);
+}
+
+inline bool StringRef::operator !=(const std::string &data) const{
+	return ! (*this == data);
+}
+
+inline bool StringRef::operator !=(const StringRef &data) const{
+	return ! (*this == data);
+}
+
+inline bool StringRef::operator !=(char const data) const{
+	return ! (*this == data);
+}
+
 
 // ==================================
 
