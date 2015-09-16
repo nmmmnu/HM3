@@ -30,7 +30,7 @@ public:
 	// ==================================
 
 	int compare(const char *data, size_t const size) const;
-	
+
 	int compare(const char *data) const;
 	int compare(const std::string &s) const;
 	int compare(const StringRef &sr) const;
@@ -70,13 +70,17 @@ private:
 private:
 	static size_t __strlen(const char *s);
 	static const char *__strptr(const char *s);
-	
-	static int __compare(const char *s1, size_t const size1, const char *s2, size_t const size2);
+
+	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2);
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
+
+
 // ==================================
+
+
 
 inline StringRef::StringRef(const char *data, size_t const size) :
 		_size(size),
@@ -186,12 +190,15 @@ inline const char *StringRef::__strptr(const char *s){
 	return s ? s : "";
 }
 
+
+
 // ==================================
+
+
 
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
 	return os.write(sr.c_str(), sr.size());
 }
-
 
 #endif
 
