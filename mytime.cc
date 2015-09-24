@@ -5,7 +5,7 @@
 
 char MyTime::buffer[STRING_SIZE];
 
-uint64_t MyTime::now(){
+uint64_t MyTime::now() noexcept{
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
@@ -13,7 +13,7 @@ uint64_t MyTime::now(){
 	return combine(tv.tv_sec, tv.tv_usec);
 }
 
-const char *MyTime::toString(uint64_t date2, const char *format){
+const char *MyTime::toString(uint64_t date2, const char *format) noexcept{
 	time_t date = uncombine(date2);
 
 	if (date == 0)

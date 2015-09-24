@@ -11,7 +11,7 @@ public:
 	virtual ~IIterator(){};
 
 	Pair first(const StringRef &key = StringRef() );
-	Pair current();
+	Pair current() const;
 	Pair next();
 
 	uint64_t iteratorCount();
@@ -20,7 +20,7 @@ public:
 private:
 	virtual void _rewind(const StringRef &key) = 0;
 	virtual Pair _next() = 0;
-	virtual uint64_t _getVersion() = 0;
+	virtual uint64_t _getVersion() const = 0;
 
 private:
 	Pair		_current = nullptr;
@@ -35,7 +35,7 @@ inline Pair IIterator::first(const StringRef &key){
 	return next();
 }
 
-inline Pair IIterator::current(){
+inline Pair IIterator::current() const{
 	if (_version != _getVersion())
 		return nullptr;
 

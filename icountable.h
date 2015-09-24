@@ -8,8 +8,8 @@ public:
 	typedef uint64_t count_type;
 
 public:
-	virtual ~ICountable(){};
-	
+	virtual ~ICountable() = default;
+
 	count_type getCount() const;
 	bool isEmpty() const;
 
@@ -20,7 +20,7 @@ private:
 // ==============================
 
 inline ICountable::count_type ICountable::getCount() const{
-	return _getCount();	
+	return _getCount();
 }
 
 inline bool ICountable::ICountable::isEmpty() const{

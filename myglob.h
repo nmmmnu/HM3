@@ -11,21 +11,21 @@ class MyGlob final{
 public:
 	MyGlob() = default;
 	MyGlob& operator=(MyGlob other) = delete;
-	
-	~MyGlob(){
+
+	~MyGlob() noexcept{
 		close();
 	}
 
-	bool open(const StringRef &path);
-	void close();
+	bool open(const StringRef &path) noexcept;
+	void close() noexcept;
 
-	std::vector<StringRef> &getData(){
+	std::vector<StringRef> &getData() noexcept{
 		return _data;
 	}
-	
+
 private:
-	static bool __open(const char *path, glob_t &globresults);
-	static bool __checkFile(const char *filename);
+	static bool __open(const char *path, glob_t &globresults) noexcept;
+	static bool __checkFile(const char *filename) noexcept;
 
 private:
 	glob_t			_globresults;

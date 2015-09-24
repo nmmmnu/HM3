@@ -23,7 +23,9 @@ static void printUsage(const char *cmd);
 static std::unique_ptr<IList> factoryVector(char search){
 	auto vlist = std::make_unique<VectorList>();
 	vlist->setLookupMethod(search);
-	return vlist;
+	// clang C++14 problem
+	// http://stackoverflow.com/questions/32742741/clang-error-with-stdunique-ptr/32743110
+	return std::move(vlist);
 }
 
 static std::unique_ptr<IList> factory(char what){
@@ -158,7 +160,7 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(IList &list, const StringRef &filename, bool const tombstones){ 
+static void listLoad(IList &list, const StringRef &filename, bool const tombstones){
 	static const char *trim_ch = " \t\n";
 
 	const std::string empty;
@@ -167,7 +169,7 @@ static void listLoad(IList &list, const StringRef &filename, bool const tombston
 	f.open(filename);
 
 	unsigned int i = 0;
-	
+
 	for(std::string line; getline(f, line);){
 		// trim
 		line.erase(line.find_last_not_of(trim_ch) + 1);

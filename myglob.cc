@@ -2,20 +2,20 @@
 
 #include <sys/stat.h>	// stat
 
-bool MyGlob::open(const StringRef &path){
+bool MyGlob::open(const StringRef &path) noexcept{
 	if (_isOpen)
 		close();
-		
-	
+
+
 	_data.clear();
 
-	if (__open(path.data(), _globresults) == false)	
+	if (__open(path.data(), _globresults) == false)
 		return false;
 
 	_isOpen = true;
-	
-	
-	
+
+
+
 	size_t i;
 	for(i = 0; i < _globresults.gl_pathc; ++i){
 		const char *filename = _globresults.gl_pathv[i];
@@ -24,12 +24,12 @@ bool MyGlob::open(const StringRef &path){
 			_data.push_back(filename);
 	}
 
-	
-	
+
+
 	return i > 0;
 }
 
-bool MyGlob::__open(const char *path, glob_t &globresults){
+bool MyGlob::__open(const char *path, glob_t &globresults) noexcept{
 	int result = glob(path, 0, nullptr, & globresults);
 
 	if (result != 0)
@@ -41,17 +41,17 @@ bool MyGlob::__open(const char *path, glob_t &globresults){
 	return true;
 }
 
-void MyGlob::close(){
+void MyGlob::close() noexcept{
 	if (_isOpen){
 		globfree(& _globresults);
-		
+
 		_data.clear();
 	}
-	
+
 	_isOpen = false;
 }
 
-bool MyGlob::__checkFile(const char *filename){
+bool MyGlob::__checkFile(const char *filename) noexcept{
 	struct stat s;
 	stat(filename, & s);
 
