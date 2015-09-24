@@ -163,8 +163,6 @@ static void printUsage(const char *cmd){
 static void listLoad(IList &list, const StringRef &filename, bool const tombstones){
 	static const char *trim_ch = " \t\n";
 
-	const std::string empty;
-
 	std::ifstream f;
 	f.open(filename);
 
@@ -174,8 +172,8 @@ static void listLoad(IList &list, const StringRef &filename, bool const tombston
 		// trim
 		line.erase(line.find_last_not_of(trim_ch) + 1);
 
-		const std::string &key = line;
-		const std::string &val = tombstones ? empty : key;
+		const StringRef key = line;
+		const StringRef val = tombstones ? nullptr : key;
 
 		if (! key.empty())
 			list.put( Pair{ key, val } );
