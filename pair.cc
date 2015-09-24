@@ -20,7 +20,7 @@ Pair::Pair(const StringRef &key2, const StringRef &val2, uint32_t const expires,
 	if (key.size() > MAX_KEY_SIZE || val.size() > MAX_VAL_SIZE){
 		std::logic_error exception("Key or value size too big");
 		throw exception;
-	}	
+	}
 }
 
 Pair::Pair(const void *blob2){
@@ -33,7 +33,7 @@ Pair::Pair(const void *blob2){
 		return;
 
 	const auto keylen = be16toh(blob->keylen);
-	
+
 	if (keylen == 0 || keylen > MAX_KEY_SIZE)
 		return;
 
@@ -46,12 +46,22 @@ Pair::Pair(const void *blob2){
 	expires = be32toh(blob->expires);
 
 	key = std::string(blob->getKey(), keylen);
-	
+
 	if (vallen > 0)
 		val = std::string(blob->getVal(), vallen);
 }
 
 // ==============================
+
+void Pair::swap(Pair &other) noexcept{
+	using std::swap;
+
+	swap(created, other.created);
+	swap(expires, other.expires);
+
+	key.swap(other.key);
+	val.swap(other.val);
+}
 
 bool Pair::fwrite(std::ostream & os) const{
 	PairPOD p;
@@ -79,7 +89,7 @@ bool Pair::fwrite(std::ostream & os) const{
 	return true;
 }
 
-void Pair::print() const{
+void Pair::print() const noexcept{
 	if (*this == false){
 		printf("--- Pair is empty ---\n");
 		return;
@@ -94,13 +104,13 @@ void Pair::print() const{
 	);
 }
 
-size_t Pair::getSize() const{
+size_t Pair::getSize() const noexcept{
 	return PairPOD::__sizeofBase() + key.size() + 1 + val.size() + 1;
 }
 
 // ==============================
 
-uint64_t Pair::__getCreateTime(uint32_t const created){
+uint64_t Pair::__getCreateTime(uint32_t const created) noexcept{
 	return created ? MyTime::combine(created) : MyTime::now();
 }
 

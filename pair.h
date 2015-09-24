@@ -3,6 +3,7 @@
 
 #include <string>
 #include <ostream>
+#include <utility>	// swap
 
 #include "stringref.h"
 
@@ -20,8 +21,6 @@ public:
 	Pair() = default;
 
 	Pair(const StringRef &key, const StringRef &val, uint32_t expires = 0, uint32_t created = 0);
-	
-	//Pair(const char *key, const char *val, uint32_t expires = 0, uint32_t created = 0);
 
 	static Pair tombstone(const StringRef &key){
 		return Pair(key, StringRef{} );
@@ -29,24 +28,26 @@ public:
 
 	Pair(const void *blob);
 
-	operator bool() const;
-	operator const void *() const;
+	operator bool() const noexcept;
+//	operator const void *() const;
 
 public:
-	const std::string &getKey() const;
-	const std::string &getVal() const;
-	int cmp(const StringRef &key) const;
-	int cmp(const char *key) const;
-	int cmp(const Pair &pair) const;
-	bool isTombstone() const;
-	bool valid() const;
-	bool valid(const Pair &pair) const;
-	size_t getSize() const;
+	const std::string &getKey() const noexcept;
+	const std::string &getVal() const noexcept;
+	int cmp(const StringRef &key) const noexcept;
+	int cmp(const char *key) const noexcept;
+	int cmp(const Pair &pair) const noexcept;
+	bool isTombstone() const noexcept;
+	bool valid() const noexcept;
+	bool valid(const Pair &pair) const noexcept;
+	size_t getSize() const noexcept;
 
 public:
 	bool fwrite(std::ostream & os) const;
 
-	void print() const;
+	void print() const noexcept;
+
+	void swap(Pair &other) noexcept;
 
 private:
 	uint64_t	created;
@@ -55,31 +56,35 @@ private:
 	std::string	val;
 
 private:
-	static uint64_t __getCreateTime(uint32_t created);
+	static uint64_t __getCreateTime(uint32_t created) noexcept;
 
 };
 
+inline void swap(Pair &a, Pair &b) noexcept{
+	a.swap(b);
+}
+
 // ==============================
 
-inline Pair::operator bool() const{
+inline Pair::operator bool() const noexcept{
 	return valid();
 }
 
 // ==============================
 
-inline const std::string &Pair::getKey() const{
+inline const std::string &Pair::getKey() const noexcept{
 	return key;
 }
 
-inline const std::string &Pair::getVal() const{
+inline const std::string &Pair::getVal() const noexcept{
 	return val;
 }
 
-inline bool Pair::isTombstone() const{
+inline bool Pair::isTombstone() const noexcept{
 	return val.empty();
 }
 
-inline int Pair::cmp(const StringRef &key2) const{
+inline int Pair::cmp(const StringRef &key2) const noexcept{
 	if (key2.empty())
 		return -1;
 
@@ -91,15 +96,15 @@ inline int Pair::cmp(const StringRef &key2) const{
 	return - key2.compare(key);
 }
 
-inline int Pair::cmp(const char *key) const{
+inline int Pair::cmp(const char *key) const noexcept{
 	return cmp( StringRef{key} );
 }
 
-inline int Pair::cmp(const Pair &pair) const{
+inline int Pair::cmp(const Pair &pair) const noexcept{
 	return cmp( pair.getKey() );
 }
 
-inline bool Pair::valid() const{
+inline bool Pair::valid() const noexcept{
 	// check key size
 	if (key.empty())
 		return false;
@@ -112,7 +117,7 @@ inline bool Pair::valid() const{
 	return true;
 }
 
-inline bool Pair::valid(const Pair &pair) const{
+inline bool Pair::valid(const Pair &pair) const noexcept{
 	return valid();
 }
 

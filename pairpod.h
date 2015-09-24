@@ -22,36 +22,36 @@ public:
 	char		buffer[1];	// dynamic
 
 public:
-	const char *getKey() const;
-	const char *getVal() const;
+	const char *getKey() const noexcept;
+	const char *getVal() const noexcept;
 
-	int cmp(const char *key, size_t size) const;
-	int cmp(const char *key) const;
+	int cmp(const char *key, size_t size) const noexcept;
+	int cmp(const char *key) const noexcept;
 
-	bool valid() const;
+	bool valid() const noexcept;
 //	bool valid(const PairPOD &pair) const;
 
-	uint8_t calcChecksum() const;
+	uint8_t calcChecksum() const noexcept;
 
-	size_t getSize() const;
+	size_t getSize() const noexcept;
 
 private:
-	size_t  _sizeofBuffer() const;
+	size_t  _sizeofBuffer() const noexcept;
 
 	friend class Pair;
 	constexpr
-	static size_t __sizeofBase();
+	static size_t __sizeofBase() noexcept;
 
-	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2);
+	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 } __attribute__((__packed__));
 
 // ==============================
 
-inline const char *PairPOD::getKey() const{
+inline const char *PairPOD::getKey() const noexcept{
 	return buffer;
 }
 
-inline const char *PairPOD::getVal() const{
+inline const char *PairPOD::getVal() const noexcept{
 	// vallen is 0 no matter of endianness
 	if (vallen == 0)
 		return nullptr;
@@ -59,15 +59,15 @@ inline const char *PairPOD::getVal() const{
 	return & buffer[ be16toh(keylen) + 1 ];
 }
 
-inline int PairPOD::cmp(const char *key, size_t const size) const{
+inline int PairPOD::cmp(const char *key, size_t const size) const noexcept{
 	return key == nullptr ? -1 : __compare(getKey(), be16toh(keylen), key, size);
 }
 
-inline int PairPOD::cmp(const char *key) const{
+inline int PairPOD::cmp(const char *key) const noexcept{
 	return cmp(key, strlen(key));
 }
 
-inline bool PairPOD::valid() const{
+inline bool PairPOD::valid() const noexcept{
 	// check key size
 	if (keylen == 0)
 		return false;
@@ -84,26 +84,26 @@ inline bool PairPOD::valid() const{
 	return true;
 }
 
-inline size_t PairPOD::getSize() const{
+inline size_t PairPOD::getSize() const noexcept{
 	return __sizeofBase() + _sizeofBuffer();
 }
 
-inline size_t PairPOD::_sizeofBuffer() const{
+inline size_t PairPOD::_sizeofBuffer() const noexcept{
 	return be16toh(keylen) + 1 + be32toh(vallen) + 1;
 }
 
 constexpr
-inline size_t PairPOD::__sizeofBase(){
+inline size_t PairPOD::__sizeofBase() noexcept{
 	return offsetof(PairPOD, buffer);
 }
 
-inline uint8_t PairPOD::calcChecksum() const{
+inline uint8_t PairPOD::calcChecksum() const noexcept{
 	NMEA0183ChecksumCalculator chk;
 
 	return chk.calc(buffer, _sizeofBuffer());
 }
 
-inline int PairPOD::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2){
+inline int PairPOD::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 

@@ -15,51 +15,51 @@ public:
 
 	// ==================================
 
-	const char *data() const{
+	const char *data() const noexcept{
 		return _data;
 	}
 
-	size_t size() const{
+	size_t size() const noexcept{
 		return _size;
 	}
 
 	// ==================================
 
-	bool empty() const;
+	bool empty() const noexcept;
 
 	// ==================================
 
-	int compare(const char *data, size_t const size) const;
+	int compare(const char *data, size_t const size) const noexcept;
 
-	int compare(const char *data) const;
-	int compare(const std::string &s) const;
-	int compare(const StringRef &sr) const;
+	int compare(const char *data) const noexcept;
+	int compare(const std::string &s) const noexcept;
+	int compare(const StringRef &sr) const noexcept;
 
 	// ==================================
 
 	operator std::string() const;
 
-	const char &operator [] (size_t index) const;
+	const char &operator [] (size_t index) const noexcept;
 
 	// ==================================
 
-	bool operator ==(const char *data) const;
-	bool operator ==(const std::string &data) const;
-	bool operator ==(const StringRef &data) const;
-	bool operator ==(char c) const;
+	bool operator ==(const char *data) const noexcept;
+	bool operator ==(const std::string &data) const noexcept;
+	bool operator ==(const StringRef &data) const noexcept;
+	bool operator ==(char c) const noexcept;
 
-	bool operator !=(const char *data) const;
-	bool operator !=(const std::string &data) const;
-	bool operator !=(const StringRef &data) const;
-	bool operator !=(char c) const;
+	bool operator !=(const char *data) const noexcept;
+	bool operator !=(const std::string &data) const noexcept;
+	bool operator !=(const StringRef &data) const noexcept;
+	bool operator !=(char c) const noexcept;
 
 	// ==================================
 
-	const char *c_str() const{
+	const char *c_str() const noexcept{
 		return data();
 	}
 
-	size_t length() const{
+	size_t length() const noexcept{
 		return size();
 	}
 
@@ -68,10 +68,10 @@ private:
 	const char	*_data	= "";
 
 private:
-	static size_t __strlen(const char *s);
-	static const char *__strptr(const char *s);
+	static size_t __strlen(const char *s) noexcept;
+	static const char *__strptr(const char *s) noexcept;
 
-	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2);
+	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -95,25 +95,25 @@ inline StringRef::StringRef(const std::string &s) :
 
 // ==================================
 
-inline bool StringRef::empty() const{
+inline bool StringRef::empty() const noexcept{
 	return _size == 0;
 }
 
 // ==================================
 
-inline int StringRef::compare(const char *data, size_t const size) const{
+inline int StringRef::compare(const char *data, size_t const size) const noexcept{
 	return __compare(_data, _size, data, size);
 }
 
-inline int StringRef::compare(const char *data) const{
+inline int StringRef::compare(const char *data) const noexcept{
 	return compare(data, __strlen(data) );
 }
 
-inline int StringRef::compare(const std::string &s) const{
+inline int StringRef::compare(const std::string &s) const noexcept{
 	return compare(s.data(), s.size() );
 }
 
-inline int StringRef::compare(const StringRef &sr) const{
+inline int StringRef::compare(const StringRef &sr) const noexcept{
 	return compare(sr.data(), sr.size() );
 }
 
@@ -123,49 +123,49 @@ inline StringRef::operator std::string() const{
 	return std::string(_data, _size);
 }
 
-inline const char &StringRef::operator [] (size_t const index) const{
+inline const char &StringRef::operator [] (size_t const index) const noexcept{
 	return _data[index];
 }
 
 // ==================================
 
-inline bool StringRef::operator ==(const char *data) const{
+inline bool StringRef::operator ==(const char *data) const noexcept{
 	return compare(data) == 0;
 }
 
-inline bool StringRef::operator ==(const std::string &data) const{
+inline bool StringRef::operator ==(const std::string &data) const noexcept{
 	return compare(data) == 0;
 }
 
-inline bool StringRef::operator ==(const StringRef &data) const{
+inline bool StringRef::operator ==(const StringRef &data) const noexcept{
 	return compare(data) == 0;
 }
 
-inline bool StringRef::operator ==(char const c) const{
+inline bool StringRef::operator ==(char const c) const noexcept{
 	return _size == 1 && _data[0] == c;
 }
 
 // ==================================
 
-inline bool StringRef::operator !=(const char *data) const{
+inline bool StringRef::operator !=(const char *data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(const std::string &data) const{
+inline bool StringRef::operator !=(const std::string &data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(const StringRef &data) const{
+inline bool StringRef::operator !=(const StringRef &data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(char const c) const{
+inline bool StringRef::operator !=(char const c) const noexcept{
 	return ! (*this == c);
 }
 
 // ==================================
 
-inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2){
+inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
@@ -182,11 +182,11 @@ inline int StringRef::__compare(const char *s1, size_t const size1, const char *
 
 // ==================================
 
-inline size_t StringRef::__strlen(const char *s){
+inline size_t StringRef::__strlen(const char *s) noexcept{
 	return s ? strlen(s) : 0;
 }
 
-inline const char *StringRef::__strptr(const char *s){
+inline const char *StringRef::__strptr(const char *s) noexcept{
 	return s ? s : "";
 }
 
@@ -197,7 +197,7 @@ inline const char *StringRef::__strptr(const char *s){
 
 
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
-	return os.write(sr.c_str(), sr.size());
+	return os.write(sr.data(), sr.size());
 }
 
 #endif
