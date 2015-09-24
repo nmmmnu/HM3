@@ -18,3 +18,5 @@ data.*
 data/*
 _ot/*
 
+callgrind.out.*
+

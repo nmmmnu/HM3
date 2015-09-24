@@ -46,7 +46,7 @@ void VectorList::_removeAll(){
 }
 
 bool VectorList::_put(const Pair &newdata){
-	auto key = newdata.getKey();
+	const StringRef &key = newdata.getKey();
 
 	uint64_t index;
 	int cmp = lookup(key, index);

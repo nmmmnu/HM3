@@ -40,7 +40,7 @@ void LinkList::_removeAll(){
 }
 
 bool LinkList::_put(const Pair &newdata){
-	auto key = newdata.getKey();
+	const StringRef &key = newdata.getKey();
 
 	Node *prev = nullptr;
 	for(Node *node = _head; node; node = node->next){
@@ -179,7 +179,7 @@ public:
 private:
 	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
-	virtual uint64_t _getVersion() override{
+	virtual uint64_t _getVersion() const override{
 		return _list.getVersion();
 	};
 

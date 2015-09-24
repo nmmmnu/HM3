@@ -79,7 +79,7 @@ void SkipList::_removeAll(){
 }
 
 bool SkipList::_put(const Pair &newdata){
-	auto key = newdata.getKey();
+	const StringRef &key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
 
@@ -292,7 +292,7 @@ public:
 private:
 	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
-	virtual uint64_t _getVersion() override{
+	virtual uint64_t _getVersion() const override{
 		return _list.getVersion();
 	};
 

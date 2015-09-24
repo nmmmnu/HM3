@@ -177,7 +177,8 @@ static void listLoad(IList &list, const StringRef &filename, bool const tombston
 		const std::string &key = line;
 		const std::string &val = tombstones ? empty : key;
 
-		list.put( Pair{ key, val } );
+		if (! key.empty())
+			list.put( Pair{ key, val } );
 
 		++i;
 

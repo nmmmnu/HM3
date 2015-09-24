@@ -25,8 +25,13 @@ private:
 	virtual Pair _get(const StringRef &key) const override;
 	virtual bool _remove(const StringRef &key) override;
 
-	virtual count_type _getCount() const override;
-	virtual size_t _getSize() const override;
+	virtual count_type _getCount() const noexcept override{
+		return _dataCount;
+	}
+
+	virtual size_t _getSize() const noexcept override{
+		return _dataSize;
+	}
 
 	virtual std::unique_ptr<IIterator> _getIterator() const override;
 
@@ -54,15 +59,5 @@ private:
 private:
 	static std::mt19937 __rand;
 };
-
-// ==============================
-
-inline SkipList::count_type SkipList::_getCount() const{
-	return _dataCount;
-}
-
-inline size_t SkipList::_getSize() const{
-	return _dataSize;
-}
 
 #endif

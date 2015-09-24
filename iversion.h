@@ -4,11 +4,13 @@
 class IVersion{
 public:
 	virtual ~IVersion(){};
-	
-	uint64_t getVersion() const;
+
+	uint64_t getVersion() const noexcept{
+		return _version;
+	}
 
 protected:
-	void     incVersion();
+	void     incVersion() noexcept;
 
 private:
 	uint64_t _version = 0;
@@ -17,11 +19,7 @@ private:
 
 // ==============================
 
-inline uint64_t IVersion::getVersion() const{
-	return _version;
-}
-
-inline void IVersion::incVersion(){
+inline void IVersion::incVersion() noexcept{
 	++_version;
 }
 
