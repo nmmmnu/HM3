@@ -14,7 +14,7 @@ public:
 	virtual ~DiskTable() override{
 		close();
 	}
-	
+
 	bool open(const StringRef &filename);
 
 	void close();
@@ -37,14 +37,14 @@ private:
 
 private:
 	uint64_t _getCountFromDisk() const;
-	
+
 	const void *_getAtFromDisk(uint64_t index) const;
 };
 
 // ==============================
 
 inline Pair DiskTable::_getAt(uint64_t const index) const{
-	return _getAtFromDisk(index);
+	return index < getCount() ? _getAtFromDisk(index) : nullptr;
 }
 
 inline DiskTable::count_type DiskTable::_getCount() const{

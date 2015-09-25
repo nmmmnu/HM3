@@ -18,7 +18,7 @@ public:
 private:
 	virtual Pair _getAt(uint64_t index) const = 0;
 
-	virtual int _cmpAt(uint64_t index, const StringRef &key) const;
+	virtual int _cmpAt(uint64_t index, const StringRef &key) const = 0;
 
 	virtual Pair _get(const StringRef &key) const override;
 
@@ -28,6 +28,8 @@ private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
+	int _cmpAtNaive(uint64_t index, const StringRef &key) const;
+
 	int _lookupBinarySearch(const StringRef &key, uint64_t &index) const;
 	int _lookupLinearSearch(const StringRef &key, uint64_t &index) const;
 
@@ -36,7 +38,10 @@ private:
 // ==============================
 
 inline Pair IArray::getAt(uint64_t const index) const{
-	return index < getCount() ? _getAt(index) : nullptr;
+	// if we check for getCount() here,
+	// there will be virtual dispatch.
+	// return index < getCount() ? _getAt(index) : nullptr;
+	return _getAt(index);
 }
 
 inline Pair IArray::operator[](uint64_t const index) const{
@@ -57,7 +62,8 @@ inline int IArray::lookup(const StringRef &key, uint64_t &index) const{
 
 // ==============================
 
-inline int IArray::_cmpAt(uint64_t const index, const StringRef &key) const{
+inline int IArray::_cmpAtNaive(uint64_t const index, const StringRef &key) const{
+	// this is done using virtual dispatch
 	return getAt(index).cmp(key);
 }
 

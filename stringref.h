@@ -72,6 +72,8 @@ private:
 	static const char *__strptr(const char *s) noexcept;
 
 	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
+
+	static size_t __std_min(size_t const a, size_t const b) noexcept;
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -170,7 +172,7 @@ inline int StringRef::__compare(const char *s1, size_t const size1, const char *
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
 	// check prefix
-	if ( int res = memcmp(s1, s2, std::min(size1, size2 ) ) )
+	if ( int res = memcmp(s1, s2, __std_min(size1, size2 ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
@@ -190,7 +192,10 @@ inline const char *StringRef::__strptr(const char *s) noexcept{
 	return s ? s : "";
 }
 
-
+// this apears to be faster than std::min
+inline size_t StringRef::__std_min(size_t const a, size_t const b) noexcept{
+	return a > b ? a : b;
+}
 
 // ==================================
 

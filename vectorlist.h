@@ -30,6 +30,7 @@ private:
 	virtual bool _remove(const StringRef &keykey) override;
 
 	virtual Pair _getAt(uint64_t index) const override;
+	virtual int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
 	virtual count_type _getCount() const override;
 	virtual size_t _getSize() const override;
@@ -49,7 +50,11 @@ private:
 // ===================================
 
 inline Pair VectorList::_getAt(uint64_t const index) const{
-	return _buffer[index];
+	return index < getCount() ? _buffer[index] : nullptr;
+}
+
+inline int VectorList::_cmpAt(uint64_t const index, const StringRef &key) const{
+	return _getAt(index).cmp(key);
 }
 
 inline VectorList::count_type VectorList::_getCount() const{

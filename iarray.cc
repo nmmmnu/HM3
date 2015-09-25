@@ -7,8 +7,10 @@ int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
 
 	int cmp = -1;
 
+	count_type count = getCount();
+
 	uint64_t i;
-	for(i = 0; i < getCount(); ++i){
+	for(i = 0; i < count; ++i){
 		cmp = _cmpAt(i, key);
 
 		if (cmp == 0){
