@@ -17,11 +17,20 @@ private:
 	void _removeAll() override;
 
 	bool _put(const Pair &pair) override;
+	bool _put(Pair &&pair) override;
 	Pair _get(const StringRef &key) const override;
 	bool _remove(const StringRef &key) override;
 
-	count_type _getCount() const override;
-	size_t _getSize() const override;
+	count_type _getCount() const override{
+		return _dataCount;
+	}
+
+	size_t _getSize() const override{
+		return _dataSize;
+	}
+
+	template <typename UPAIR>
+	bool _putT(UPAIR &&data);
 
 	std::unique_ptr<IIterator> _getIterator() const override;
 
@@ -41,12 +50,12 @@ private:
 
 // ==============================
 
-inline LinkList::count_type LinkList::_getCount() const{
-	return _dataCount;
+inline bool LinkList::_put(const Pair &data){
+	return _putT(data);
 }
 
-inline size_t LinkList::_getSize() const{
-	return _dataSize;
+inline bool LinkList::_put(Pair &&data){
+	return _putT(std::move(data));
 }
 
 #endif

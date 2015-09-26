@@ -7,13 +7,14 @@ class IList : virtual public ITable{
 public:
 	void removeAll();
 	bool put(const Pair & pair);
+	bool put(Pair && pair);
 	bool remove(const StringRef &key);
 
 private:
 	virtual void _removeAll() = 0;
 
 	virtual bool _put(const Pair & pair) = 0;
-	virtual bool _put(Pair && pair){ return false; };
+	virtual bool _put(Pair && pair) = 0;
 	virtual bool _remove(const StringRef &key) = 0;
 
 };
@@ -32,6 +33,15 @@ inline bool IList::put(const Pair & pair){
 	if (pair){
 		incVersion();
 		return  _put(pair);
+	}
+
+	return false;
+}
+
+inline bool IList::put(Pair && pair){
+	if (pair){
+		incVersion();
+		return  _put(std::move(pair));
 	}
 
 	return false;

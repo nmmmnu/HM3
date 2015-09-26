@@ -23,6 +23,7 @@ private:
 	virtual void _removeAll() override;
 
 	bool _put(const Pair &pair) override;
+	bool _put(Pair &&pair) override;
 	Pair _get(const StringRef &key) const override;
 	bool _remove(const StringRef &key) override;
 
@@ -33,6 +34,9 @@ private:
 	size_t _getSize() const noexcept override{
 		return _dataSize;
 	}
+
+	template <typename UPAIR>
+	bool _putT(UPAIR &&data);
 
 	std::unique_ptr<IIterator> _getIterator() const override;
 
@@ -62,5 +66,16 @@ private:
 private:
 	static std::mt19937 __rand;
 };
+
+// ==============================
+
+inline bool SkipList::_put(const Pair &data){
+	return _putT(data);
+}
+
+inline bool SkipList::_put(Pair &&data){
+	return _putT(std::move(data));
+}
+
 
 #endif

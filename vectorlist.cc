@@ -56,7 +56,8 @@ void VectorList::_removeAll(){
 	_clear(true);
 }
 
-bool VectorList::_put(const Pair &newdata){
+template <typename UPAIR>
+bool VectorList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	uint64_t index;
@@ -78,7 +79,7 @@ bool VectorList::_put(const Pair &newdata){
 					+ newdata.getSize();
 
 		// copy assignment
-		olddata = newdata;
+		olddata = std::forward<UPAIR>(newdata);
 
 		return true;
 	}
@@ -92,10 +93,13 @@ bool VectorList::_put(const Pair &newdata){
 
 	// placement new with copy constructor
 	void *placement = & _buffer[index];
-	new(placement) Pair(newdata);
+	new(placement) Pair(std::forward<UPAIR>(newdata));
 
 	return true;
 }
+
+template bool VectorList::_putT(Pair &&newdata);
+template bool VectorList::_putT(const Pair &newdata);
 
 bool VectorList::_remove(const StringRef &key){
 	uint64_t index;

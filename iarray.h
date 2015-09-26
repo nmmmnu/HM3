@@ -65,7 +65,8 @@ inline int IArray::lookup(const StringRef &key, uint64_t &index) const{
 // ==============================
 
 inline int IArray::_cmpAtNaive(uint64_t const index, const StringRef &key) const{
-	// this is done using virtual dispatch
+	// this is done using virtual dispatch,
+	// also will do copy
 	return getAt(index).cmp(key);
 }
 

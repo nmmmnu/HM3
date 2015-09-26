@@ -24,6 +24,7 @@ struct SkipList::Node{
 
 public:
 	Node(const Pair & data) : data(data){}
+	Node(Pair && data) : data(std::move(data)){}
 
 public:
 	static void *operator new(size_t size, uint8_t const height, bool const nothrow = false) {
@@ -102,7 +103,8 @@ void SkipList::_removeAll(){
 	_clear();
 }
 
-bool SkipList::_put(const Pair &newdata){
+template <typename UPAIR>
+bool SkipList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
@@ -123,7 +125,7 @@ bool SkipList::_put(const Pair &newdata){
 			+ newdata.getSize();
 
 		// copy assignment
-		olddata = newdata;
+		olddata = std::forward<UPAIR>(newdata);
 
 		return true;
 	}
@@ -132,7 +134,7 @@ bool SkipList::_put(const Pair &newdata){
 
 	uint8_t height = _getRandomHeight();
 
-	Node *newnode = new(height, true) Node(newdata);
+	Node *newnode = new(height, true) Node(std::forward<UPAIR>(newdata));
 
 	if (newnode == nullptr){
 		// newdata will be magically destroyed.
@@ -172,6 +174,9 @@ bool SkipList::_put(const Pair &newdata){
 
 	return true;
 }
+
+template bool SkipList::_putT(Pair &&newdata);
+template bool SkipList::_putT(const Pair &newdata);
 
 Pair SkipList::_get(const StringRef &key) const{
 	const Node *node = _locate(key);

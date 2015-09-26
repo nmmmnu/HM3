@@ -11,7 +11,7 @@
 	printf("%-14s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
 
-inline static size_t list_add(IList &list, const Pair &p){
+inline static size_t list_add(IList &list, Pair &&p){
 	list.put(p);
 	return p.getSize();
 }
@@ -21,10 +21,10 @@ static size_t list_populate(IList &list){
 
 	size_t size = 0;
 
-	size += list_add(list, Pair("3 city",	"Sofia"	));
-	size += list_add(list, Pair("1 name",	"Niki"	));
-	size += list_add(list, Pair("4 os",	"Linux"	));
-	size += list_add(list, Pair("2 age",	"22"	));
+	size += list_add(list, {"3 city",	"Sofia"	});
+	size += list_add(list, {"1 name",	"Niki"	});
+	size += list_add(list, {"4 os",		"Linux"	});
+	size += list_add(list, {"2 age",	"22"	});
 
 	return size;
 }

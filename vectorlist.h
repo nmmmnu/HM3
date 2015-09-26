@@ -34,8 +34,13 @@ private:
 	Pair _getAt(uint64_t index) const override;
 	int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
-	count_type _getCount() const override;
-	size_t _getSize() const override;
+	count_type _getCount() const override{
+		return _dataCount;
+	}
+
+	size_t _getSize() const override{
+		return _dataSize;
+	}
 
 private:
 	void _clear(bool alsoFree = false);
@@ -54,20 +59,24 @@ private:
 
 // ===================================
 
+inline bool VectorList::_put(const Pair &data){
+	return _putT(data);
+}
+
+inline bool VectorList::_put(Pair &&data){
+	return _putT(std::move(data));
+}
+
 inline Pair VectorList::_getAt(uint64_t const index) const{
 	return index < getCount() ? _buffer[index] : nullptr;
 }
 
 inline int VectorList::_cmpAt(uint64_t const index, const StringRef &key) const{
-	return _getAt(index).cmp(key);
-}
+	// this would do copy
+	//return _getAt(index).cmp(key);
 
-inline VectorList::count_type VectorList::_getCount() const{
-	return _dataCount;
-}
-
-inline size_t VectorList::_getSize() const{
-	return _dataSize;
+	// this will not
+	return index < getCount() ? _buffer[index].cmp(key) : +1;
 }
 
 #endif

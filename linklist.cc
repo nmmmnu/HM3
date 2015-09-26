@@ -8,6 +8,7 @@ struct LinkList::Node{
 
 public:
 	Node(const Pair & data) : data(data){}
+	Node(Pair && data) : data(std::move(data)){}
 };
 
 LinkList::LinkList(){
@@ -49,7 +50,8 @@ void LinkList::_removeAll(){
 	_clear();
 }
 
-bool LinkList::_put(const Pair &newdata){
+template <typename UPAIR>
+bool LinkList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	Node *prev = nullptr;
@@ -73,7 +75,7 @@ bool LinkList::_put(const Pair &newdata){
 					+ newdata.getSize();
 
 			// copy assignment
-			olddata = newdata;
+			olddata = std::forward<UPAIR>(newdata);
 
 			return true;
 		}
@@ -84,7 +86,7 @@ bool LinkList::_put(const Pair &newdata){
 		prev = node;
 	}
 
-	Node *newnode = new(std::nothrow) Node(newdata);
+	Node *newnode = new(std::nothrow) Node(std::forward<UPAIR>(newdata));
 	if (newnode == nullptr){
 		// newdata will be magically destroyed.
 		return false;
@@ -105,6 +107,9 @@ bool LinkList::_put(const Pair &newdata){
 
 	return true;
 }
+
+template bool LinkList::_putT(Pair &&newdata);
+template bool LinkList::_putT(const Pair &newdata);
 
 Pair LinkList::_get(const StringRef &key) const{
 	const Node *node = _locate(key);
