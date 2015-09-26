@@ -16,31 +16,42 @@ inline T SGN(const T a){
 }
 
 VectorList::VectorList(size_t const reallocSize) :
-	_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
+		_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
 	_clear();
 }
 
 VectorList::VectorList(VectorList &&other):
-		_reallocSize	(other._reallocSize	),
-		_buffer		(other._buffer		),
-		_bufferReserved	(other._bufferReserved	),
-		_dataCount	(other._dataCount	),
-		_dataSize	(other._dataSize	){
+		_reallocSize	(std::move(other._reallocSize		)),
+		_buffer		(std::move(other._buffer		)),
+		_bufferReserved	(std::move(other._bufferReserved	)),
+		_dataCount	(std::move(other._dataCount		)),
+		_dataSize	(std::move(other._dataSize		)){
 	other._clear();
 }
 
+VectorList &VectorList::operator = (VectorList &&other){
+	_removeAll();
+
+	_reallocSize	= std::move(other._reallocSize		);
+	_buffer		= std::move(other._buffer		);
+	_bufferReserved	= std::move(other._bufferReserved	);
+	_dataCount	= std::move(other._dataCount		);
+	_dataSize	= std::move(other._dataSize		);
+
+	other._clear();
+
+	return *this;
+}
+
 VectorList::~VectorList(){
-	// _buffer may be nullptr, when move constructor is on the way...
-	if (_buffer != nullptr)
-		removeAll();
+	removeAll();
 }
 
 
 
 void VectorList::_removeAll(){
-	for(uint64_t i = 0; i < _dataCount; ++i){
+	for(count_type i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
-	}
 
 	_clear(true);
 }

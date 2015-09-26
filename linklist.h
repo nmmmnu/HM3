@@ -10,19 +10,20 @@ friend class LinkListIterator;
 public:
 	LinkList();
 	LinkList(LinkList &&other);
-	virtual ~LinkList() override;
+	LinkList &operator = (LinkList &&other);
+	~LinkList() override;
 
 private:
-	virtual void _removeAll() override;
+	void _removeAll() override;
 
-	virtual bool _put(const Pair &pair) override;
-	virtual Pair _get(const StringRef &key) const override;
-	virtual bool _remove(const StringRef &key) override;
+	bool _put(const Pair &pair) override;
+	Pair _get(const StringRef &key) const override;
+	bool _remove(const StringRef &key) override;
 
-	virtual count_type _getCount() const override;
-	virtual size_t _getSize() const override;
+	count_type _getCount() const override;
+	size_t _getSize() const override;
 
-	virtual std::unique_ptr<IIterator> _getIterator() const override;
+	std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
 	struct Node;

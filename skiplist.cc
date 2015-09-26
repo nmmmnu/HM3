@@ -48,25 +48,49 @@ SkipList::SkipList(uint8_t height){
 }
 
 SkipList::SkipList(SkipList &&other):
-		_height		(other._height		),
-		_heads		(other._heads		),
-		_loc		(other._loc		),
-		_dataCount	(other._dataCount	),
-		_dataSize	(other._dataSize	){
+		_height		(std::move(other._height	)),
+		_heads		(std::move(other._heads		)),
+		_loc		(std::move(other._loc		)),
+		_dataCount	(std::move(other._dataCount	)),
+		_dataSize	(std::move(other._dataSize	)){
 	other._heads = nullptr;
 	other._loc = nullptr;
+
+	other._clear();
+}
+
+SkipList &SkipList::operator = (SkipList &&other){
+	// code without swap() is way too complicated.
+
+	SkipList tmp = std::move(other);
+
+	swap(tmp);
+
+	return *this;
+}
+
+void SkipList::swap(SkipList &other) noexcept{
+	using std::swap;
+
+	swap(_height	, other._height		);
+	swap(_heads	, other._heads		);
+	swap(_loc	, other._loc		);
+	swap(_dataCount	, other._dataCount	);
+	swap(_dataSize	, other._dataSize	);
 }
 
 SkipList::~SkipList(){
-	// _heads may be nullptr, when move constructor is on the way...
-	if (_heads != nullptr)
-		removeAll();
+	removeAll();
 
 	delete[] _heads;
 	delete[] _loc;
 }
 
 void SkipList::_removeAll(){
+	// _heads may be nullptr, when move constructor is on the way...
+	if (_heads == nullptr)
+		return;
+
 	for(const Node *node = _heads[0]; node; ){
 		const Node *copy = node;
 
@@ -214,10 +238,12 @@ void SkipList::_clear(){
 	_dataSize = 0;
 	_dataCount = 0;
 
-	memset(_heads, 0, _height * sizeof(Node *) );
+	if (_heads)
+		memset(_heads, 0, _height * sizeof(Node *) );
 
 	// no need to clean _loc
-	//memset(_loc, 0, _height * sizeof(Node *) );
+	//if (_loc)
+	//	memset(_loc, 0, _height * sizeof(Node *) );
 }
 
 const SkipList::Node *SkipList::_locate(const StringRef &key, bool const complete_evaluation) const{

@@ -39,22 +39,22 @@ static void iterator_test(const char *module, IList &list, IIterator &it){
 
 	p = it.first("2");
 	PRINTF_TEST("it first fuzzy",	p && p.getVal() == "22"		);
-	p = it.current();		
+	p = it.current();
 	PRINTF_TEST("it current fuzzy",	p && p.getVal() == "22"		);
 
 
 	p = it.first("2 age");
 	PRINTF_TEST("it first",		p && p.getVal() == "22"		);
-	p = it.current();		
+	p = it.current();
 	PRINTF_TEST("it current",	p && p.getVal() == "22"		);
 	p = it.next();
 	PRINTF_TEST("it next",		p && p.getVal() == "Sofia"	);
-	p = it.current();	
+	p = it.current();
 	PRINTF_TEST("it current",	p && p.getVal() == "Sofia"	);
 
 	p = it.first("4 os");
 	PRINTF_TEST("it first",		p && p.getVal() == "Linux"	);
-	p = it.current();	
+	p = it.current();
 	PRINTF_TEST("it current",	p && p.getVal() == "Linux"	);
 	p = it.next();
 	PRINTF_TEST("it next",		! p				);
@@ -95,7 +95,8 @@ static void ref_test(const char *module, IList &list){
 	PRINTF_TEST("ref test",		true					);
 }
 
-static void list_test(const char *module, IList &list){
+template <class LIST>
+static void list_test(const char *module, LIST &list){
 	Pair p = nullptr;
 
 	// TEST GENERAL
@@ -114,9 +115,9 @@ static void list_test(const char *module, IList &list){
 
 	p = list.get("3 city");
 	PRINTF_TEST("get",		p && p.getVal() == "Sofia"		);
-		
-	p = list["3 city"];		
-	PRINTF_TEST("get[]",		p && p.getVal() == "Sofia"		);
+
+//	p = list["3 city"];
+//	PRINTF_TEST("get[]",		p && p.getVal() == "Sofia"		);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -186,9 +187,22 @@ static void list_test(const char *module, IList &list){
 
 	list.removeAll();
 	ref_test(module, list);
+
+	// MOVE TESTS
+
+	size = list_populate(list);
+
+	LIST mlist = std::move(list);
+	PRINTF_TEST("move c-tor 1",	mlist.getSize() == size			);
+	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
+
+	//n1.print();
+
+	list = std::move(mlist);
+	PRINTF_TEST("move assign 1",	list.getSize() == size			);
+	PRINTF_TEST("move assign 2",	mlist.isEmpty()				);
 }
 
-#if 1
 static void skiplist_lanes_test(SkipList &list){
 	list.put(Pair("name",		"Niki"		));
 	list.put(Pair("city",		"Sofia"		));
@@ -206,33 +220,23 @@ static void skiplist_lanes_test(SkipList &list){
 
 //	list.print();
 }
-#endif
 
 int main(int argc, char **argv){
 
 	VectorList vl;
 		list_test("Vector", vl);
 
-	VectorList vl2 = { std::move(vl) };
-		list_test("Moved Vector", vl2);
-
 	// =========================
 
 	LinkList ll;
 		list_test("LinkList", ll);
-	LinkList ll2 = { std::move(ll) };
-		list_test("Moved LinkList", ll2);
 
 	// =========================
-
 
 	SkipList sl;
 		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
-
-	SkipList sl2 = { std::move(sl) };
-		list_test("Moved SkipList", sl2);
 
 	// =========================
 

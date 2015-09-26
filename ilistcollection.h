@@ -3,9 +3,11 @@
 
 #include "itable.h"
 
+#include <stdexcept>
+
 class IListCollection : public ICountable{
 public:
-	virtual ~IListCollection(){};
+	virtual ~IListCollection() = default;
 
 	const ITable & getAt(uint64_t index) const;
 
@@ -18,7 +20,8 @@ private:
 // ==============================
 
 inline const ITable & IListCollection::getAt(uint64_t const index) const{
-	return _getAt( std::min(index, getCount()) );
+	// if we check getCount() here, there will be virtual dispatch
+	return _getAt(index);
 }
 
 inline const ITable & IListCollection::operator[](uint64_t const index) const{

@@ -12,7 +12,8 @@ public:
 public:
 	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
-	virtual ~VectorList() override;
+	VectorList &operator = (VectorList &&other);
+	~VectorList() override;
 
 private:
 	size_t		_reallocSize;
@@ -24,16 +25,17 @@ private:
 	size_t		_dataSize;
 
 private:
-	virtual void _removeAll() override;
+	void _removeAll() override;
 
-	virtual bool _put(const Pair &data) override;
-	virtual bool _remove(const StringRef &keykey) override;
+	bool _put(const Pair &data) override;
+	bool _put(Pair &&data) override;
+	bool _remove(const StringRef &key) override;
 
-	virtual Pair _getAt(uint64_t index) const override;
-	virtual int  _cmpAt(uint64_t index, const StringRef &key) const override;
+	Pair _getAt(uint64_t index) const override;
+	int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
-	virtual count_type _getCount() const override;
-	virtual size_t _getSize() const override;
+	count_type _getCount() const override;
+	size_t _getSize() const override;
 
 private:
 	void _clear(bool alsoFree = false);
@@ -42,6 +44,9 @@ private:
 	bool _shiftR(uint64_t index);
 
 	bool _resize(int delta);
+
+	template <typename UPAIR>
+	bool _putT(UPAIR &&data);
 
 private:
 	static size_t __calcNewSize(size_t size, size_t reallocSize);

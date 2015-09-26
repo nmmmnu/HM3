@@ -12,12 +12,26 @@
 //static void null_deleter(const void *ptr){};
 
 DiskTable::DiskTable(DiskTable &&other):
-		_mem		(other._mem		),
-		_size		(other._size		),
-		_fd		(other._fd		),
-		_datacount	(other._datacount	){
+		_mem		(std::move(other._mem		)),
+		_size		(std::move(other._size		)),
+		_fd		(std::move(other._fd		)),
+		_datacount	(std::move(other._datacount	)){
 	other._mem = nullptr;
 	other._size = 0;
+}
+
+DiskTable &DiskTable::operator = (DiskTable &&other){
+	close();
+
+	_mem		= std::move(other._mem		);
+	_size		= std::move(other._size		);
+	_fd		= std::move(other._fd		);
+	_datacount	= std::move(other._datacount	);
+
+	other._mem = nullptr;
+	other._size = 0;
+
+	return *this;
 }
 
 bool DiskTable::open(const StringRef &filename){

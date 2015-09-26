@@ -15,16 +15,26 @@ LinkList::LinkList(){
 }
 
 LinkList::LinkList(LinkList &&other):
-		_head		(other._head		),
-		_dataCount	(other._dataCount	),
-		_dataSize	(other._dataSize	){
+		_head		(std::move(other._head		)),
+		_dataCount	(std::move(other._dataCount	)),
+		_dataSize	(std::move(other._dataSize	)){
 	other._clear();
 }
 
+LinkList &LinkList::operator = (LinkList &&other){
+	_removeAll();
+
+	_head		= std::move(other._head		);
+	_dataCount	= std::move(other._dataCount	);
+	_dataSize	= std::move(other._dataSize	);
+
+	other._clear();
+
+	return *this;
+}
+
 LinkList::~LinkList(){
-	// _head may be nullptr, when move constructor is on the way...
-	if (_head != nullptr)
-		removeAll();
+	removeAll();
 }
 
 void LinkList::_removeAll(){

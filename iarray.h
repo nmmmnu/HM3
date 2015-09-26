@@ -20,18 +20,20 @@ private:
 
 	virtual int _cmpAt(uint64_t index, const StringRef &key) const = 0;
 
-	virtual Pair _get(const StringRef &key) const override;
+private:
+	Pair _get(const StringRef &key) const override;
 
-	virtual std::unique_ptr<IIterator> _getIterator() const override;
+	std::unique_ptr<IIterator> _getIterator() const override;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
-	int _cmpAtNaive(uint64_t index, const StringRef &key) const;
-
 	int _lookupBinarySearch(const StringRef &key, uint64_t &index) const;
 	int _lookupLinearSearch(const StringRef &key, uint64_t &index) const;
+
+protected:
+	int _cmpAtNaive(uint64_t index, const StringRef &key) const;
 
 };
 

@@ -8,10 +8,9 @@
 class DiskTable : virtual public IArray{
 public:
 	DiskTable() = default;
-
 	DiskTable(DiskTable &&other);
-
-	virtual ~DiskTable() override{
+	DiskTable &operator = (DiskTable &&other);
+	~DiskTable() override{
 		close();
 	}
 
@@ -21,11 +20,11 @@ public:
 
 
 private:
-	virtual Pair _getAt(uint64_t index) const override;
-	virtual int  _cmpAt(uint64_t index, const StringRef &key) const override;
+	Pair _getAt(uint64_t index) const override;
+	int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
-	virtual count_type _getCount() const override;
-	virtual size_t _getSize() const override;
+	count_type _getCount() const override;
+	size_t _getSize() const override;
 
 private:
 	const void	*_mem		= nullptr;
