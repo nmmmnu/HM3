@@ -19,8 +19,10 @@ DiskTable::DiskTable(DiskTable &&other):
 	other._mem = nullptr;
 	other._size = 0;
 }
-
+/*
 DiskTable &DiskTable::operator = (DiskTable &&other){
+	IArray::operator= (std::move(other));
+
 	close();
 
 	_mem		= std::move(other._mem		);
@@ -33,7 +35,7 @@ DiskTable &DiskTable::operator = (DiskTable &&other){
 
 	return *this;
 }
-
+*/
 bool DiskTable::open(const StringRef &filename){
 	close();
 

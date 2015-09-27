@@ -28,7 +28,7 @@ VectorList::VectorList(VectorList &&other):
 		_dataSize	(std::move(other._dataSize		)){
 	other._clear();
 }
-
+/*
 VectorList &VectorList::operator = (VectorList &&other){
 	_removeAll();
 
@@ -42,7 +42,7 @@ VectorList &VectorList::operator = (VectorList &&other){
 
 	return *this;
 }
-
+*/
 VectorList::~VectorList(){
 	removeAll();
 }

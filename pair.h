@@ -38,8 +38,8 @@ public:
 	int cmp(const char *key) const noexcept;
 	int cmp(const Pair &pair) const noexcept;
 	bool isTombstone() const noexcept;
-	bool valid() const noexcept;
-	bool valid(const Pair &pair) const noexcept;
+	bool valid(bool tombstoneCheck = false) const noexcept;
+	bool valid(const Pair &pair, bool tombstoneCheck = false) const noexcept;
 	size_t getSize() const noexcept;
 
 public:
@@ -104,9 +104,13 @@ inline int Pair::cmp(const Pair &pair) const noexcept{
 	return cmp( pair.getKey() );
 }
 
-inline bool Pair::valid() const noexcept{
+inline bool Pair::valid(bool tombstoneCheck) const noexcept{
 	// check key size
 	if (key.empty())
+		return false;
+
+	// check val size
+	if (tombstoneCheck && val.empty())
 		return false;
 
 	// check expires
@@ -117,8 +121,8 @@ inline bool Pair::valid() const noexcept{
 	return true;
 }
 
-inline bool Pair::valid(const Pair &pair) const noexcept{
-	return valid();
+inline bool Pair::valid(const Pair &pair, bool tombstoneCheck) const noexcept{
+	return valid(tombstoneCheck);
 }
 
 #endif

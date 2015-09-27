@@ -198,9 +198,9 @@ static void list_test(const char *module, LIST &list){
 
 	//n1.print();
 
-	list = std::move(mlist);
-	PRINTF_TEST("move assign 1",	list.getSize() == size			);
-	PRINTF_TEST("move assign 2",	mlist.isEmpty()				);
+//	list = std::move(mlist);
+//	PRINTF_TEST("move assign 1",	list.getSize() == size			);
+//	PRINTF_TEST("move assign 2",	mlist.isEmpty()				);
 }
 
 static void skiplist_lanes_test(SkipList &list){

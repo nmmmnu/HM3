@@ -10,7 +10,6 @@ friend class LinkListIterator;
 public:
 	LinkList();
 	LinkList(LinkList &&other);
-	LinkList &operator = (LinkList &&other);
 	~LinkList() override;
 
 private:

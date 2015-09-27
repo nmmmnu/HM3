@@ -12,7 +12,6 @@ public:
 public:
 	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
-	VectorList &operator = (VectorList &&other);
 	~VectorList() override;
 
 private:

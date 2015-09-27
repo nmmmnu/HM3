@@ -21,8 +21,10 @@ LinkList::LinkList(LinkList &&other):
 		_dataSize	(std::move(other._dataSize	)){
 	other._clear();
 }
-
+/*
 LinkList &LinkList::operator = (LinkList &&other){
+	IList::operator= (std::move(other));
+
 	_removeAll();
 
 	_head		= std::move(other._head		);
@@ -33,7 +35,7 @@ LinkList &LinkList::operator = (LinkList &&other){
 
 	return *this;
 }
-
+*/
 LinkList::~LinkList(){
 	removeAll();
 }

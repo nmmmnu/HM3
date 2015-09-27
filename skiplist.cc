@@ -59,7 +59,7 @@ SkipList::SkipList(SkipList &&other):
 
 	other._clear();
 }
-
+/*
 SkipList &SkipList::operator = (SkipList &&other){
 	// code without swap() is way too complicated.
 
@@ -79,7 +79,7 @@ void SkipList::swap(SkipList &other) noexcept{
 	swap(_dataCount	, other._dataCount	);
 	swap(_dataSize	, other._dataSize	);
 }
-
+*/
 SkipList::~SkipList(){
 	removeAll();
 

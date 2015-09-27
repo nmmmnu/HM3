@@ -16,7 +16,6 @@ public:
 public:
 	explicit SkipList(uint8_t height = DEFAULT_HEIGHT);
 	SkipList(SkipList &&other);
-	SkipList &operator = (SkipList &&other);
 	~SkipList() override;
 
 private:
@@ -61,7 +60,7 @@ private:
 
 	uint8_t _getRandomHeight();
 
-	void swap(SkipList &other) noexcept;
+//	void swap(SkipList &other) noexcept;
 
 private:
 	static std::mt19937 __rand;

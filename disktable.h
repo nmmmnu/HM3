@@ -9,7 +9,6 @@ class DiskTable : virtual public IArray{
 public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other);
-	DiskTable &operator = (DiskTable &&other);
 	~DiskTable() override{
 		close();
 	}
