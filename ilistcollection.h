@@ -5,16 +5,16 @@
 
 #include <stdexcept>
 
-class IListCollection : public ICountable{
+class IListCollection : public ICountable<IListCollection>{
+friend class ICountable<IListCollection>;
+
 public:
-	virtual ~IListCollection() = default;
-
 	const ITable & getAt(uint64_t index) const;
-
 	const ITable & operator[](uint64_t index) const;
 
 private:
 	virtual const ITable & _getAt(uint64_t index) const = 0;
+	virtual count_type _getCount() const = 0;
 };
 
 // ==============================

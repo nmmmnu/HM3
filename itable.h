@@ -9,7 +9,9 @@
 
 #include <memory>
 
-class ITable : virtual public IVersion, virtual public ICountable{
+class ITable : virtual public IVersion, public ICountable<ITable>{
+friend class ICountable<ITable>;
+
 public:
 	Pair get(const StringRef &key) const;
 	Pair operator[](const StringRef &key) const;
@@ -24,6 +26,7 @@ public:
 private:
 	virtual Pair _get(const StringRef &key) const = 0;
 	virtual size_t _getSize() const = 0;
+	virtual count_type _getCount() const = 0;
 
 	virtual std::unique_ptr<IIterator> _getIterator() const = 0;
 };

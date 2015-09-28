@@ -3,29 +3,25 @@
 
 #include <cstdint>
 
+template <typename T, typename TCOUNT = uint64_t>
 class ICountable{
 public:
-	typedef uint64_t count_type;
+	typedef TCOUNT count_type;
 
 public:
-	virtual ~ICountable() = default;
+	count_type getCount() const{
+		return impl()._getCount();
+	}
 
-	count_type getCount() const;
-	bool isEmpty() const;
+	bool isEmpty() const{
+		return impl()._getCount() == 0;
+	}
 
 private:
-	virtual count_type _getCount() const = 0;
+	const T &impl() const{
+		return *( static_cast<const T*>(this) );
+	}
 };
-
-// ==============================
-
-inline ICountable::count_type ICountable::getCount() const{
-	return _getCount();
-}
-
-inline bool ICountable::ICountable::isEmpty() const{
-	return _getCount() == 0;
-}
 
 #endif
 
