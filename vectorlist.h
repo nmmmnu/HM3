@@ -4,7 +4,7 @@
 #include "ilist.h"
 #include "iarray.h"
 
-class VectorList : virtual public IList, virtual public IArray{
+class VectorList : public IList, public IArray{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
@@ -20,20 +20,20 @@ private:
 	Pair		*_buffer;
 	size_t		_bufferReserved;
 
-	count_type	_dataCount;
+	uint64_t	_dataCount;
 	size_t		_dataSize;
 
 private:
-	void _removeAll() override;
+	bool _removeAll() override;
 
 	bool _put(const Pair &data) override;
 	bool _put(Pair &&data) override;
 	bool _remove(const StringRef &key) override;
 
-	Pair _getAt(uint64_t index) const override;
-	int  _cmpAt(uint64_t index, const StringRef &key) const override;
+	Pair _getAt(uint64_t uint64_t) const override;
+	int  _cmpAt(uint64_t uint64_t, const StringRef &key) const override;
 
-	count_type _getCount() const override{
+	uint64_t _getCount() const override{
 		return _dataCount;
 	}
 
@@ -67,15 +67,15 @@ inline bool VectorList::_put(Pair &&data){
 }
 
 inline Pair VectorList::_getAt(uint64_t const index) const{
-	return index < getCount() ? _buffer[index] : nullptr;
+	return index < _dataCount ? _buffer[index] : nullptr;
 }
 
-inline int VectorList::_cmpAt(uint64_t const index, const StringRef &key) const{
+inline int  VectorList::_cmpAt(uint64_t const index, const StringRef &key) const{
 	// this would do copy
 	//return _getAt(index).cmp(key);
 
 	// this will not
-	return index < getCount() ? _buffer[index].cmp(key) : +1;
+	return index < _dataCount ? _buffer[index].cmp(key) : +1;
 }
 
 #endif

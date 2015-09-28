@@ -49,11 +49,13 @@ VectorList::~VectorList(){
 
 
 
-void VectorList::_removeAll(){
-	for(count_type i = 0; i < _dataCount; ++i)
+bool VectorList::_removeAll(){
+	for(uint64_t i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
 
 	_clear(true);
+
+	return true;
 }
 
 template <typename UPAIR>

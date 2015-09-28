@@ -7,8 +7,9 @@
 
 class SkipListIterator;
 
-class SkipList : virtual public IList{
-friend class SkipListIterator;
+class SkipList : public IList{
+	friend class SkipListIterator;
+
 public:
 	static const uint8_t MAX_HEIGHT		= 64;
 	static const uint8_t DEFAULT_HEIGHT	= 32;
@@ -19,14 +20,14 @@ public:
 	~SkipList() override;
 
 private:
-	virtual void _removeAll() override;
+	bool _removeAll() override;
 
 	bool _put(const Pair &pair) override;
 	bool _put(Pair &&pair) override;
 	Pair _get(const StringRef &key) const override;
 	bool _remove(const StringRef &key) override;
 
-	count_type _getCount() const noexcept override{
+	uint64_t _getCount() const noexcept override{
 		return _dataCount;
 	}
 
@@ -50,7 +51,7 @@ private:
 	Node		**_heads;
 	Node		**_loc;
 
-	count_type	_dataCount;
+	uint64_t	_dataCount;
 	size_t		_dataSize;
 
 private:

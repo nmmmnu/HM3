@@ -87,10 +87,10 @@ SkipList::~SkipList(){
 	delete[] _loc;
 }
 
-void SkipList::_removeAll(){
+bool SkipList::_removeAll(){
 	// _heads may be nullptr, when move constructor is on the way...
 	if (_heads == nullptr)
-		return;
+		return true;
 
 	for(const Node *node = _heads[0]; node; ){
 		const Node *copy = node;
@@ -101,6 +101,8 @@ void SkipList::_removeAll(){
 	}
 
 	_clear();
+
+	return true;
 }
 
 template <typename UPAIR>

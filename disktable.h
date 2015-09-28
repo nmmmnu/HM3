@@ -22,8 +22,8 @@ private:
 	Pair _getAt(uint64_t index) const override;
 	int  _cmpAt(uint64_t index, const StringRef &key) const override;
 
-	count_type _getCount() const override{
-		return _datacount;
+	uint64_t _getCount() const override{
+		return _dataCount;
 	}
 
 	size_t _getSize() const override;
@@ -34,7 +34,7 @@ private:
 
 	int		_fd;
 
-	count_type	_datacount	= 0;
+	uint64_t	_dataCount	= 0;
 
 private:
 	uint64_t _getCountFromDisk() const;
@@ -45,7 +45,7 @@ private:
 // ==============================
 
 inline Pair DiskTable::_getAt(uint64_t const index) const{
-	return index < getCount() ? _getAtFromDisk(index) : nullptr;
+	return index < _dataCount ? _getAtFromDisk(index) : nullptr;
 }
 
 #endif

@@ -5,22 +5,23 @@
 
 class LinkListIterator;
 
-class LinkList : virtual public IList{
-friend class LinkListIterator;
+class LinkList : public IList{
+	friend class LinkListIterator;
+
 public:
 	LinkList();
 	LinkList(LinkList &&other);
 	~LinkList() override;
 
 private:
-	void _removeAll() override;
+	bool _removeAll() override;
 
 	bool _put(const Pair &pair) override;
 	bool _put(Pair &&pair) override;
 	Pair _get(const StringRef &key) const override;
 	bool _remove(const StringRef &key) override;
 
-	count_type _getCount() const override{
+	uint64_t _getCount() const override{
 		return _dataCount;
 	}
 
@@ -38,7 +39,7 @@ private:
 
 	Node		*_head;
 
-	count_type	_dataCount;
+	uint64_t	_dataCount;
 	size_t		_dataSize;
 
 private:

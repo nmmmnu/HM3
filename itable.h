@@ -9,7 +9,10 @@
 
 #include <memory>
 
-class ITable : virtual public IVersion, virtual public ICountable{
+class ITable : public IVersion, public ICountable{
+public:
+	virtual ~ITable() = default;
+
 public:
 	Pair get(const StringRef &key) const;
 	Pair operator[](const StringRef &key) const;
@@ -52,7 +55,7 @@ inline std::unique_ptr<IIterator> ITable::getIterator() const{
 }
 
 inline void ITable::print() const{
-	this->getIterator()->print();
+	getIterator()->print();
 }
 
 #endif

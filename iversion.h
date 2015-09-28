@@ -2,26 +2,22 @@
 #define _IVERSION_H
 
 class IVersion{
-public:
-	virtual ~IVersion(){};
+protected:
+	~IVersion() = default;
 
+public:
 	uint64_t getVersion() const noexcept{
 		return _version;
 	}
 
 protected:
-	void     incVersion() noexcept;
-
+	void     incVersion() noexcept{
+		++_version;
+	}
 private:
 	uint64_t _version = 0;
 
 };
-
-// ==============================
-
-inline void IVersion::incVersion() noexcept{
-	++_version;
-}
 
 #endif
 

@@ -1,13 +1,13 @@
 #include "iarray.h"
 
 int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
-	if (isEmpty()){
+	uint64_t const count = getCount();
+
+	if (count == 0){
 		index = 0; return 1;
 	}
 
 	int cmp = -1;
-
-	count_type count = getCount();
 
 	uint64_t i;
 	for(i = 0; i < count; ++i){
@@ -26,7 +26,9 @@ int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
 }
 
 int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
-	if (isEmpty()){
+	uint64_t const count = getCount();
+
+	if (count == 0){
 		index = 0; return 1;
 	}
 
@@ -36,7 +38,7 @@ int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 	 */
 
 	uint64_t start = 0;
-	uint64_t end   = getCount();
+	uint64_t end   = count;
 	int cmp = 0;
 
 	while (start < end){

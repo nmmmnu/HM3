@@ -4,22 +4,20 @@
 #include <cstdint>
 
 class ICountable{
-public:
-	typedef uint64_t count_type;
+protected:
+	~ICountable() = default;
 
 public:
-	virtual ~ICountable() = default;
-
-	count_type getCount() const;
+	uint64_t getCount() const;
 	bool isEmpty() const;
 
 private:
-	virtual count_type _getCount() const = 0;
+	virtual uint64_t _getCount() const = 0;
 };
 
 // ==============================
 
-inline ICountable::count_type ICountable::getCount() const{
+inline uint64_t ICountable::getCount() const{
 	return _getCount();
 }
 

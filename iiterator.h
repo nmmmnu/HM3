@@ -1,6 +1,7 @@
 #ifndef _IITERATOR_H
 #define _IITERATOR_H
 
+#include "icountable.h"
 #include "pair.h"
 
 class IIterator{
@@ -8,7 +9,7 @@ public:
 	static const uint64_t DEFAULT_PRINT_LIMIT = 100;
 
 public:
-	virtual ~IIterator(){};
+	virtual ~IIterator() = default;
 
 	Pair first(const StringRef &key = StringRef() );
 	Pair current() const;

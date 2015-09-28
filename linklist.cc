@@ -40,7 +40,7 @@ LinkList::~LinkList(){
 	removeAll();
 }
 
-void LinkList::_removeAll(){
+bool LinkList::_removeAll(){
 	for(Node *node = _head; node; ){
 		Node *copy = node;
 
@@ -50,6 +50,8 @@ void LinkList::_removeAll(){
 	}
 
 	_clear();
+
+	return true;
 }
 
 template <typename UPAIR>

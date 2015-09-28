@@ -5,13 +5,13 @@
 
 class IList : virtual public ITable{
 public:
-	void removeAll();
+	bool removeAll();
 	bool put(const Pair & pair);
 	bool put(Pair && pair);
 	bool remove(const StringRef &key);
 
 private:
-	virtual void _removeAll() = 0;
+	virtual bool _removeAll() = 0;
 
 	virtual bool _put(const Pair & pair) = 0;
 	virtual bool _put(Pair && pair) = 0;
@@ -21,12 +21,12 @@ private:
 
 // ==============================
 
-inline void IList::removeAll(){
+inline bool IList::removeAll(){
 	if (getSize() == 0)
-		return;
+		return true;
 
 	incVersion();
-	_removeAll();
+	return _removeAll();
 }
 
 inline bool IList::put(const Pair & pair){

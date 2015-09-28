@@ -15,7 +15,7 @@ DiskTable::DiskTable(DiskTable &&other):
 		_mem		(std::move(other._mem		)),
 		_size		(std::move(other._size		)),
 		_fd		(std::move(other._fd		)),
-		_datacount	(std::move(other._datacount	)){
+		_dataCount	(std::move(other._dataCount	)){
 	other._mem = nullptr;
 	other._size = 0;
 }
@@ -65,9 +65,9 @@ bool DiskTable::open(const StringRef &filename){
 	_mem = mem;
 
 	// memoize count instead to read it from the disk each time
-	_datacount = _getCountFromDisk();
+	_dataCount = _getCountFromDisk();
 
-	if (size < DiskFile::sizeofHeader() + _datacount * sizeof(uint64_t)){
+	if (size < DiskFile::sizeofHeader() + _dataCount * sizeof(uint64_t)){
 		close();
 		return false;
 	}
@@ -92,7 +92,7 @@ int DiskTable::_cmpAt(uint64_t const index, const StringRef &key) const{
 }
 
 size_t DiskTable::_getSize() const{
-	return _size - DiskFile::sizeofHeader() - _datacount * sizeof(uint64_t);
+	return _size - DiskFile::sizeofHeader() - _dataCount * sizeof(uint64_t);
 }
 
 uint64_t DiskTable::_getCountFromDisk() const{
