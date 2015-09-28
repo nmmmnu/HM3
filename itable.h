@@ -9,8 +9,12 @@
 
 #include <memory>
 
-class ITable : virtual public IVersion, public ICountable<ITable>{
-friend class ICountable<ITable>;
+template <typename T>
+class ITable : public IVersion, public ICountable<ITable<T>, uint64_t>{
+	friend class ICountable<ITable>;
+
+public:
+	typedef uint64_t count_type;
 
 public:
 	Pair get(const StringRef &key) const;
@@ -24,38 +28,58 @@ public:
 	void print() const;
 
 private:
-	virtual Pair _get(const StringRef &key) const = 0;
-	virtual size_t _getSize() const = 0;
-	virtual count_type _getCount() const = 0;
+	Pair _get(const StringRef &key) const{
+		return impl()._get(key);
+	}
 
-	virtual std::unique_ptr<IIterator> _getIterator() const = 0;
+	size_t _getSize() const{
+		return impl()._getSize();
+	}
+
+	count_type _getCount() const{
+		return impl()._getCount();
+	}
+
+	std::unique_ptr<IIterator> _getIterator() const{
+		return impl()._getIterator();
+	};
+
+private:
+	const T &impl() const{
+		return *( static_cast<const T*>(this) );
+	}
 };
 
 // ==============================
 
-
-inline Pair ITable::get(const StringRef &key) const{
+template <typename T>
+inline Pair ITable<T>::get(const StringRef &key) const{
 	return _get(key);
 }
 
-inline Pair ITable::operator[](const StringRef &key) const{
+template <typename T>
+inline Pair ITable<T>::operator[](const StringRef &key) const{
 	return _get(key);
 }
 
-inline bool ITable::exists(const StringRef &key) const{
+template <typename T>
+inline bool ITable<T>::exists(const StringRef &key) const{
 	return (bool) _get(key);
 }
 
-inline size_t ITable::getSize() const{
+template <typename T>
+inline size_t ITable<T>::getSize() const{
 	return _getSize();
 }
 
-inline std::unique_ptr<IIterator> ITable::getIterator() const{
+template <typename T>
+inline std::unique_ptr<IIterator> ITable<T>::getIterator() const{
 	return _getIterator();
 }
 
-inline void ITable::print() const{
-	this->getIterator()->print();
+template <typename T>
+inline void ITable<T>::print() const{
+	_getIterator()->print();
 }
 
 #endif

@@ -3,58 +3,71 @@
 
 #include "itable.h"
 
-class IArray : virtual public ITable{
+template <typename T>
+class IArray : public ITable<IArray<T>>{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;
 
 public:
-	Pair getAt(uint64_t index) const;
-	Pair operator[](uint64_t index) const;
-	int lookup(const StringRef &key, uint64_t &index) const;
+	typedef uint64_t count_type;
+
+public:
+	Pair getAt(count_type index) const;
+	Pair operator[](count_type index) const;
+	int lookup(const StringRef &key, count_type &index) const;
 
 	void setLookupMethod(uint8_t lookupMethod);
 
 private:
-	virtual Pair _getAt(uint64_t index) const = 0;
+	Pair _getAt(count_type const index) const{
+		return impl()._getAt(index);
+	};
 
-	virtual int _cmpAt(uint64_t index, const StringRef &key) const = 0;
+	int _cmpAt(count_type const index, const StringRef &key) const{
+		return impl()._cmpAt(index, key);
+	};
 
 private:
-	Pair _get(const StringRef &key) const override;
+	Pair _get(const StringRef &key) const;
 
-	std::unique_ptr<IIterator> _getIterator() const override;
+	std::unique_ptr<IIterator> _getIterator() const;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
-	int _lookupBinarySearch(const StringRef &key, uint64_t &index) const;
-	int _lookupLinearSearch(const StringRef &key, uint64_t &index) const;
+	int _lookupBinarySearch(const StringRef &key, count_type &index) const;
+	int _lookupLinearSearch(const StringRef &key, count_type &index) const;
 
 protected:
-	int _cmpAtNaive(uint64_t index, const StringRef &key) const;
+	int _cmpAtNaive(count_type index, const StringRef &key) const;
 
+private:
+	const T &impl() const{
+		return *( static_cast<const T*>(this) );
+	}
 };
 
 // ==============================
 
-inline Pair IArray::getAt(uint64_t const index) const{
-	// if we check for getCount() here,
-	// there will be virtual dispatch.
-	// return index < getCount() ? _getAt(index) : nullptr;
-	return _getAt(index);
+template <typename T>
+inline Pair IArray<T>::getAt(count_type const index) const{
+	return index < this->getCount() ? _getAt(index) : nullptr;
 }
 
-inline Pair IArray::operator[](uint64_t const index) const{
+template <typename T>
+inline Pair IArray<T>::operator[](count_type const index) const{
 	return getAt(index);
 }
 
-inline void IArray::setLookupMethod(uint8_t const lookupMethod){
+template <typename T>
+inline void IArray<T>::setLookupMethod(uint8_t const lookupMethod){
 	_lookupMethod = lookupMethod;
 }
 
-inline int IArray::lookup(const StringRef &key, uint64_t &index) const{
+template <typename T>
+inline int IArray<T>::lookup(const StringRef &key, count_type &index) const{
 	// until there are only 2 methods
 	if (_lookupMethod == LINEAR_SEARCH)
 		return _lookupLinearSearch(key, index);
@@ -64,14 +77,15 @@ inline int IArray::lookup(const StringRef &key, uint64_t &index) const{
 
 // ==============================
 
-inline int IArray::_cmpAtNaive(uint64_t const index, const StringRef &key) const{
-	// this is done using virtual dispatch,
-	// also will do copy
+template <typename T>
+inline int IArray<T>::_cmpAtNaive(count_type const index, const StringRef &key) const{
+	// this will do copy
 	return getAt(index).cmp(key);
 }
 
-inline Pair IArray::_get(const StringRef &key) const{
-	uint64_t index;
+template <typename T>
+inline Pair IArray<T>::_get(const StringRef &key) const{
+	count_type index;
 	return lookup(key, index) ? nullptr : _getAt(index);
 }
 

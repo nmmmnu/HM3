@@ -4,17 +4,20 @@
 #include <cstdint>
 
 template <typename T, typename TCOUNT = uint64_t>
-class ICountable{
-public:
-	typedef TCOUNT count_type;
+	class ICountable{
 
 public:
-	count_type getCount() const{
-		return impl()._getCount();
+	TCOUNT getCount() const{
+		return _getCount();
 	}
 
 	bool isEmpty() const{
-		return impl()._getCount() == 0;
+		return _getCount() == 0;
+	}
+
+private:
+	TCOUNT _getCount() const{
+		return impl()._getCount();
 	}
 
 private:

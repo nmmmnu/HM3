@@ -3,8 +3,6 @@
 
 class IVersion{
 public:
-	virtual ~IVersion(){};
-
 	uint64_t getVersion() const noexcept{
 		return _version;
 	}

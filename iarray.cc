@@ -1,13 +1,14 @@
 #include "iarray.h"
 
-int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
-	if (isEmpty()){
+template <typename T>
+int IArray<T>::_lookupLinearSearch(const StringRef &key, count_type &index) const{
+	if (this->isEmpty()){
 		index = 0; return 1;
 	}
 
 	int cmp = -1;
 
-	count_type count = getCount();
+	count_type count = this->getCount();
 
 	uint64_t i;
 	for(i = 0; i < count; ++i){
@@ -25,8 +26,9 @@ int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
 	index = i; return cmp;
 }
 
-int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
-	if (isEmpty()){
+template <typename T>
+int IArray<T>::_lookupBinarySearch(const StringRef &key, count_type &index) const{
+	if (this->isEmpty()){
 		index = 0; return 1;
 	}
 
@@ -36,7 +38,7 @@ int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 	 */
 
 	uint64_t start = 0;
-	uint64_t end   = getCount();
+	uint64_t end   = this->getCount();
 	int cmp = 0;
 
 	while (start < end){
@@ -66,7 +68,7 @@ int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 
 class IArrayIterator : public IIterator{
 public:
-	IArrayIterator(const IArray & list) :
+	IArrayIterator(const IArray<T> & list) :
 			_list(list){}
 
 private:
@@ -87,7 +89,7 @@ void IArrayIterator::_rewind(const StringRef &key){
 		return;
 	}
 
-	uint64_t index;
+	count_type index;
 	_list.lookup(key, index);
 
 	_itPos = index;
@@ -102,7 +104,8 @@ Pair IArrayIterator::_next(){
 
 // ==============================
 
-std::unique_ptr<IIterator> IArray::_getIterator() const{
+template <typename T>
+std::unique_ptr<IIterator> IArray<T>::_getIterator() const{
 	//return std::unique_ptr<IIterator>( new IArrayIterator(*this) );
 	return std::make_unique<IArrayIterator>(*this);
 }
