@@ -12,7 +12,7 @@ public:
 	MultiTable(IListCollection & collection) : _collection(collection){};
 
 private:
-	virtual Pair _get(const StringRef &key) const override;
+	virtual Pair _get(const StringRef &key) const final;
 
 	virtual uint64_t _getCount() const override{
 		return 0;
@@ -22,7 +22,7 @@ private:
 		return 0;
 	}
 
-	virtual std::unique_ptr<IIterator> _getIterator() const override;
+	virtual std::unique_ptr<IIterator> _getIterator() const final;
 
 private:
 	IListCollection & _collection;

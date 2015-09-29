@@ -20,25 +20,25 @@ public:
 	~SkipList() override;
 
 private:
-	bool _removeAll() override;
+	bool _removeAll() final;
 
-	bool _put(const Pair &pair) override;
-	bool _put(Pair &&pair) override;
-	Pair _get(const StringRef &key) const override;
-	bool _remove(const StringRef &key) override;
+	bool _put(const Pair &pair) final;
+	bool _put(Pair &&pair) final;
+	Pair _get(const StringRef &key) const final;
+	bool _remove(const StringRef &key) final;
 
-	uint64_t _getCount() const noexcept override{
+	uint64_t _getCount() const noexcept final{
 		return _dataCount;
 	}
 
-	size_t _getSize() const noexcept override{
+	size_t _getSize() const noexcept final{
 		return _dataSize;
 	}
 
 	template <typename UPAIR>
 	bool _putT(UPAIR &&data);
 
-	std::unique_ptr<IIterator> _getIterator() const override;
+	std::unique_ptr<IIterator> _getIterator() const final;
 
 public:
 	void printLanes() const;

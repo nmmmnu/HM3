@@ -21,9 +21,9 @@ private:
 	virtual int _cmpAt(uint64_t index, const StringRef &key) const = 0;
 
 private:
-	Pair _get(const StringRef &key) const override;
+	Pair _get(const StringRef &key) const final;
 
-	std::unique_ptr<IIterator> _getIterator() const override;
+	std::unique_ptr<IIterator> _getIterator() const final;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

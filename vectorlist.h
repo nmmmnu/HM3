@@ -24,20 +24,20 @@ private:
 	size_t		_dataSize;
 
 private:
-	bool _removeAll() override;
+	bool _removeAll() final;
 
-	bool _put(const Pair &data) override;
-	bool _put(Pair &&data) override;
-	bool _remove(const StringRef &key) override;
+	bool _put(const Pair &data) final;
+	bool _put(Pair &&data) final;
+	bool _remove(const StringRef &key) final;
 
-	Pair _getAt(uint64_t uint64_t) const override;
-	int  _cmpAt(uint64_t uint64_t, const StringRef &key) const override;
+	Pair _getAt(uint64_t uint64_t) const final;
+	int  _cmpAt(uint64_t uint64_t, const StringRef &key) const final;
 
-	uint64_t _getCount() const override{
+	uint64_t _getCount() const final{
 		return _dataCount;
 	}
 
-	size_t _getSize() const override{
+	size_t _getSize() const final{
 		return _dataSize;
 	}
 

@@ -20,8 +20,10 @@ public:
 	void close();
 
 private:
-	const ITable & _getAt(uint64_t index) const override;
-	uint64_t _getCount() const override;
+	const ITable & _getAt(uint64_t index) const final;
+	uint64_t _getCount() const final{
+		return _files.size();
+	}
 
 private:
 	std::vector<DiskTable> _files;
@@ -31,23 +33,19 @@ private:
 // ==============================
 
 inline const ITable & ListDirCollection::_getAt(uint64_t const index) const{
-	// if we check getCount() here, because there will be NO virtual dispatch
+	uint64_t const count = _getCount();
 
-	if (isEmpty()){
+	if (count == 0){
 		std::logic_error exception("collection is empty");
 		throw exception;
 	}
 
-	if (index >= getCount()){
+	if (index >= count){
 		std::logic_error exception("collection index out of bounds");
 		throw exception;
 	}
 
 	return _files[index];
-}
-
-inline uint64_t ListDirCollection::_getCount() const{
-	return _files.size();
 }
 
 #endif

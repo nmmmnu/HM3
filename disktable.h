@@ -19,14 +19,14 @@ public:
 
 
 private:
-	Pair _getAt(uint64_t index) const override;
-	int  _cmpAt(uint64_t index, const StringRef &key) const override;
+	Pair _getAt(uint64_t index) const final;
+	int  _cmpAt(uint64_t index, const StringRef &key) const final;
 
-	uint64_t _getCount() const override{
+	uint64_t _getCount() const final{
 		return _dataCount;
 	}
 
-	size_t _getSize() const override;
+	size_t _getSize() const final;
 
 private:
 	const void	*_mem		= nullptr;
