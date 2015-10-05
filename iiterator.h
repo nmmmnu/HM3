@@ -15,6 +15,8 @@ public:
 	Pair current() const;
 	Pair next();
 
+	uint64_t getVersion() const;
+
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);
 
@@ -50,6 +52,10 @@ inline Pair IIterator::next(){
 	_current = _next();
 
 	return _current;
+}
+
+inline uint64_t IIterator::getVersion() const{
+	return _getVersion();
 }
 
 #endif

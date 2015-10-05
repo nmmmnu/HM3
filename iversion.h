@@ -1,6 +1,8 @@
 #ifndef _IVERSION_H
 #define _IVERSION_H
 
+#include <cstdint>
+
 class IVersion{
 protected:
 	~IVersion() = default;

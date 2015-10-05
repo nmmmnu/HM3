@@ -21,7 +21,7 @@ inline uint64_t ICountable::getCount() const{
 	return _getCount();
 }
 
-inline bool ICountable::ICountable::isEmpty() const{
+inline bool ICountable::isEmpty() const{
 	return _getCount() == 0;
 }
 
