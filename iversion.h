@@ -8,7 +8,10 @@ protected:
 	~IVersion() = default;
 
 public:
-	uint64_t getVersion() const noexcept{
+	typedef uint32_t version_type;
+
+public:
+	version_type getVersion() const noexcept{
 		return _version;
 	}
 
@@ -17,7 +20,7 @@ protected:
 		++_version;
 	}
 private:
-	uint64_t _version = 0;
+	version_type _version = 0;
 
 };
 

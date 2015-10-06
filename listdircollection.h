@@ -21,7 +21,7 @@ public:
 
 private:
 	const ITable & _getAt(uint64_t index) const final;
-	uint64_t _getCount() const final{
+	count_type _getCount() const final{
 		return _files.size();
 	}
 

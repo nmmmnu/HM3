@@ -33,7 +33,7 @@ private:
 	Pair _getAt(uint64_t uint64_t) const final;
 	int  _cmpAt(uint64_t uint64_t, const StringRef &key) const final;
 
-	uint64_t _getCount() const final{
+	count_type _getCount() const final{
 		return _dataCount;
 	}
 

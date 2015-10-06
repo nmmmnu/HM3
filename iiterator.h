@@ -8,14 +8,16 @@ class IIterator{
 public:
 	static const uint64_t DEFAULT_PRINT_LIMIT = 100;
 
+	typedef IVersion::version_type version_type;
 public:
 	virtual ~IIterator() = default;
 
+public:
 	Pair first(const StringRef &key = StringRef() );
 	Pair current() const;
 	Pair next();
 
-	uint64_t getVersion() const;
+	IVersion::version_type getVersion() const;
 
 	uint64_t iteratorCount();
 	void print(uint64_t limit = DEFAULT_PRINT_LIMIT);

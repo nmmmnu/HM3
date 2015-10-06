@@ -27,7 +27,7 @@ private:
 	Pair _get(const StringRef &key) const final;
 	bool _remove(const StringRef &key) final;
 
-	uint64_t _getCount() const noexcept final{
+	count_type _getCount() const noexcept final{
 		return _dataCount;
 	}
 

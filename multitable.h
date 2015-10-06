@@ -14,11 +14,11 @@ public:
 private:
 	virtual Pair _get(const StringRef &key) const final;
 
-	virtual uint64_t _getCount() const override{
+	count_type _getCount() const final{
 		return 0;
 	};
 
-	virtual size_t _getSize() const override{
+	size_t _getSize() const final{
 		return 0;
 	}
 

@@ -8,16 +8,19 @@ protected:
 	~ICountable() = default;
 
 public:
-	uint64_t getCount() const;
+	typedef uint64_t count_type;
+
+public:
+	count_type getCount() const;
 	bool isEmpty() const;
 
 private:
-	virtual uint64_t _getCount() const = 0;
+	virtual count_type _getCount() const = 0;
 };
 
 // ==============================
 
-inline uint64_t ICountable::getCount() const{
+inline ICountable::count_type ICountable::getCount() const{
 	return _getCount();
 }
 
