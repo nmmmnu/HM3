@@ -9,8 +9,8 @@ uint64_t IIterator::iteratorCount(){
 	return count;
 }
 
-void IIterator::print(uint64_t limit){
-	uint64_t count = 0;
+void IIterator::print(unsigned const limit){
+	unsigned count = 0;
 
 	for(Pair p = first(); p; p = next()){
 		p.print();

@@ -319,15 +319,13 @@ uint8_t SkipList::_getRandomHeight(){
 class SkipListIterator : public IIterator{
 public:
 	SkipListIterator(const SkipList & list) :
+			IIterator(list),
 			_list(list),
 			_current(list._heads[0]){}
 
 private:
 	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
-	virtual version_type _getVersion() const override{
-		return _list.getVersion();
-	};
 
 private:
 	const SkipList		& _list;

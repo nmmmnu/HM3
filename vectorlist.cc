@@ -62,8 +62,9 @@ template <typename UPAIR>
 bool VectorList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
-	uint64_t index;
-	int cmp = lookup(key, index);
+	const auto l = lookup(key);
+	auto const cmp   = l.first;
+	auto const index = l.second;
 
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
@@ -104,8 +105,11 @@ template bool VectorList::_putT(Pair &&newdata);
 template bool VectorList::_putT(const Pair &newdata);
 
 bool VectorList::_remove(const StringRef &key){
-	uint64_t index;
-	if (lookup(key, index)){
+	const auto l = lookup(key);
+	const auto cmp = l.first;
+	const auto index = l.second;
+
+	if (cmp){
 		// the key does not exists in the vector.
 		return true;
 	}

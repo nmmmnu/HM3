@@ -22,7 +22,6 @@ public:
 private:
 	void _rewind(const StringRef &key) final;
 	Pair _next() final;
-	version_type _getVersion() const final;
 
 private:
 	typedef std::vector<std::unique_ptr<IIterator>>	ivector;
@@ -32,7 +31,9 @@ private:
 	ivector			_iterators;
 };
 
-MultiTableIterator::MultiTableIterator(const MultiTable & list) : _list(list){
+MultiTableIterator::MultiTableIterator(const MultiTable & list) :
+				IIterator(list),
+				_list(list){
 	auto count = list._collection.getCount();
 	_iterators.reserve(count);
 	for(size_type i = 0; i < count; ++i){
@@ -45,18 +46,6 @@ void MultiTableIterator::_rewind(const StringRef &key){
 	for(size_t i = 0; i < _iterators.size(); ++i ){
 		_iterators[i]->first(key);
 	}
-}
-
-MultiTableIterator::version_type MultiTableIterator::_getVersion() const{
-	uint64_t ver = 0;
-
-	for(size_type i = 0; i < _iterators.size(); ++i ){
-		auto ver2 = _iterators[i]->getVersion();
-		if (ver < ver2)
-			ver = ver2;
-	}
-
-	return ver;
 }
 
 Pair MultiTableIterator::_next(){

@@ -8,6 +8,7 @@ class MultiTableIterator;
 
 class MultiTable : virtual public ITable{
 friend class MultiTableIterator;
+
 public:
 	MultiTable(IListCollection & collection) : _collection(collection){};
 
@@ -22,7 +23,7 @@ private:
 		return 0;
 	}
 
-	virtual std::unique_ptr<IIterator> _getIterator() const final;
+	std::unique_ptr<IIterator> _getIterator() const final;
 
 private:
 	IListCollection & _collection;

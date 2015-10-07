@@ -1,35 +1,39 @@
 #include "iarray.h"
 
-int IArray::_lookupLinearSearch(const StringRef &key, uint64_t &index) const{
-	uint64_t const count = getCount();
+IArray::locator IArray::_lookupLinearSearch(const StringRef &key) const{
+	auto const count = getCount();
 
 	if (count == 0){
-		index = 0; return 1;
+		// index = 0; return 1;
+		return std::make_pair(1, 0);
 	}
 
 	int cmp = -1;
 
-	uint64_t i;
+	count_type i;
 	for(i = 0; i < count; ++i){
 		cmp = _cmpAt(i, key);
 
 		if (cmp == 0){
 			// found
-			index = i; return 0;
+			// index = i; return 0;
+			return std::make_pair(0, i);
 		}
 
 		if (cmp > 0)
 			break;
 	}
 
-	index = i; return cmp;
+	// index = i; return cmp;
+	return std::make_pair(cmp, i);
 }
 
-int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
-	uint64_t const count = getCount();
+IArray::locator IArray::_lookupBinarySearch(const StringRef &key) const{
+	auto const count = getCount();
 
 	if (count == 0){
-		index = 0; return 1;
+		// index = 0; return 1;
+		return std::make_pair(1, 0);
 	}
 
 	/*
@@ -37,19 +41,20 @@ int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
 	 */
 
-	uint64_t start = 0;
-	uint64_t end   = count;
+	count_type start = 0;
+	count_type end   = count;
 	int cmp = 0;
 
 	while (start < end){
-	//	uint64_t mid = start + ((end - start) /  2);
-		uint64_t mid = start + ((end - start) >> 1);
+	//	count_type mid = start + ((end - start) /  2);
+		count_type mid = start + ((end - start) >> 1);
 
 		cmp = _cmpAt(mid, key);
 
 		if (cmp == 0){
 			// found
-			index = mid; return 0;
+			// index = mid; return 0;
+			return std::make_pair(0, mid);
 		}
 
 		if (cmp < 0){
@@ -61,22 +66,21 @@ int IArray::_lookupBinarySearch(const StringRef &key, uint64_t &index) const{
 		}
 	}
 
-	index = start; return cmp;
+	// index = start; return cmp;
+	return std::make_pair(cmp, start);
 }
 
 // ==============================
 
 class IArrayIterator : public IIterator{
 public:
-	IArrayIterator(const IArray & list) :
+	IArrayIterator(const IArray &list) :
+			IIterator(list),
 			_list(list){}
 
 private:
-	virtual void _rewind(const StringRef &key) override;
-	virtual Pair _next() override;
-	virtual version_type _getVersion() const override{
-		return _list.getVersion();
-	};
+	virtual void _rewind(const StringRef &key) final;
+	virtual Pair _next() final;
 
 private:
 	const IArray	& _list;
@@ -89,10 +93,9 @@ void IArrayIterator::_rewind(const StringRef &key){
 		return;
 	}
 
-	uint64_t index;
-	_list.lookup(key, index);
+	const auto l = _list.lookup(key);
 
-	_itPos = index;
+	_itPos = l.second;
 }
 
 Pair IArrayIterator::_next(){

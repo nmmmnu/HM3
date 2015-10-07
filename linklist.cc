@@ -192,15 +192,13 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 class LinkListIterator : public IIterator{
 public:
 	LinkListIterator(const LinkList & list) :
+			IIterator(list),
 			_list(list),
 			_current(list._head){}
 
 private:
-	virtual void _rewind(const StringRef &key) override;
-	virtual Pair _next() override;
-	virtual version_type _getVersion() const override{
-		return _list.getVersion();
-	};
+	void _rewind(const StringRef &key) final;
+	Pair _next() final;
 
 private:
 	const LinkList		& _list;
