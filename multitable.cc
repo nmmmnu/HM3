@@ -22,7 +22,7 @@ public:
 private:
 	void _rewind(const StringRef &key) final;
 	Pair _next() final;
-	uint64_t _getVersion() const final;
+	version_type _getVersion() const final;
 
 private:
 	typedef std::vector<std::unique_ptr<IIterator>>	ivector;
@@ -47,7 +47,7 @@ void MultiTableIterator::_rewind(const StringRef &key){
 	}
 }
 
-uint64_t MultiTableIterator::_getVersion() const{
+MultiTableIterator::version_type MultiTableIterator::_getVersion() const{
 	uint64_t ver = 0;
 
 	for(size_type i = 0; i < _iterators.size(); ++i ){

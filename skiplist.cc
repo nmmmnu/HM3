@@ -325,7 +325,7 @@ public:
 private:
 	virtual void _rewind(const StringRef &key) override;
 	virtual Pair _next() override;
-	virtual uint64_t _getVersion() const override{
+	virtual version_type _getVersion() const override{
 		return _list.getVersion();
 	};
 

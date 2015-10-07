@@ -2,6 +2,7 @@
 #define _IITERATOR_H
 
 #include "icountable.h"
+#include "iversion.h"
 #include "pair.h"
 
 class IIterator{
@@ -9,6 +10,7 @@ public:
 	static const uint64_t DEFAULT_PRINT_LIMIT = 100;
 
 	typedef IVersion::version_type version_type;
+
 public:
 	virtual ~IIterator() = default;
 
@@ -25,11 +27,11 @@ public:
 private:
 	virtual void _rewind(const StringRef &key) = 0;
 	virtual Pair _next() = 0;
-	virtual uint64_t _getVersion() const = 0;
+	virtual version_type _getVersion() const = 0;
 
 private:
 	Pair		_current = nullptr;
-	uint64_t	_version = 0;
+	version_type	_version = 0;
 };
 
 // ==============================
@@ -56,7 +58,7 @@ inline Pair IIterator::next(){
 	return _current;
 }
 
-inline uint64_t IIterator::getVersion() const{
+inline IIterator::version_type IIterator::getVersion() const{
 	return _getVersion();
 }
 
