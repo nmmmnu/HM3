@@ -3,7 +3,7 @@
 #include <vector>
 
 Pair MultiTable::_get(const StringRef &key) const{
-	for(size_t i = 0; i < _collection.getCount(); ++i){
+	for(size_t i = 0; i < _collection.size(); ++i){
 		Pair pair = _collection[i].get(key);
 
 		if (pair)
@@ -14,7 +14,7 @@ Pair MultiTable::_get(const StringRef &key) const{
 }
 
 // ==============================
-
+/*
 class MultiTableIterator : public IIterator{
 public:
 	MultiTableIterator(const MultiTable & list);
@@ -92,3 +92,4 @@ std::unique_ptr<IIterator> MultiTable::_getIterator() const{
 	//return std::unique_ptr<IIterator>( new MultiTableIterator(*this) );
 	return std::make_unique<MultiTableIterator>(*this);
 }
+*/

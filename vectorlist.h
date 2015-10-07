@@ -1,10 +1,9 @@
 #ifndef _VECTOR_LIST_H
 #define _VECTOR_LIST_H
 
-#include "ilist.h"
 #include "iarray.h"
 
-class VectorList : public IList, public IArray{
+class VectorList : public IArray<VectorList>{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
@@ -12,7 +11,7 @@ public:
 public:
 	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
-	~VectorList() override;
+	~VectorList();
 
 private:
 	size_t		_reallocSize;
@@ -23,23 +22,34 @@ private:
 	uint64_t	_dataCount;
 	size_t		_dataSize;
 
-private:
-	bool _removeAll() final;
+public:
+	bool removeAll();
 
-	bool _put(const Pair &data) final;
-	bool _put(Pair &&data) final;
-	bool _remove(const StringRef &key) final;
+	bool remove(const StringRef &key);
 
-	Pair _getAt(uint64_t uint64_t) const final;
-	int  _cmpAt(uint64_t uint64_t, const StringRef &key) const final;
+	Pair getAt(count_type index) const;
+	int  cmpAt(count_type index, const StringRef &key) const;
 
-	count_type _getCount() const final{
+	count_type getCount() const{
 		return _dataCount;
 	}
 
-	size_t _getSize() const final{
+	size_t getSize() const{
 		return _dataSize;
 	}
+
+public:
+	bool put(const Pair &pair){
+		return _putT(pair);
+	}
+
+	bool put(Pair &&pair){
+		return _putT(std::move(pair));
+	}
+
+private:
+	template <typename UPAIR>
+	bool _putT(UPAIR &&data);
 
 private:
 	void _clear(bool alsoFree = false);
@@ -49,33 +59,18 @@ private:
 
 	bool _resize(int delta);
 
-	template <typename UPAIR>
-	bool _putT(UPAIR &&data);
-
 private:
 	static size_t __calcNewSize(size_t size, size_t reallocSize);
 };
 
 // ===================================
 
-inline bool VectorList::_put(const Pair &data){
-	return _putT(data);
+inline Pair VectorList::getAt(count_type const index) const{
+	return index < getCount() ? _buffer[index] : nullptr;
 }
 
-inline bool VectorList::_put(Pair &&data){
-	return _putT(std::move(data));
-}
-
-inline Pair VectorList::_getAt(uint64_t const index) const{
-	return index < _dataCount ? _buffer[index] : nullptr;
-}
-
-inline int  VectorList::_cmpAt(uint64_t const index, const StringRef &key) const{
-	// this would do copy
-	//return _getAt(index).cmp(key);
-
-	// this will not
-	return index < _dataCount ? _buffer[index].cmp(key) : +1;
+inline int  VectorList::cmpAt(count_type const index, const StringRef &key) const{
+	return index < getCount() ? _buffer[index].cmp(key) : +1;
 }
 
 #endif

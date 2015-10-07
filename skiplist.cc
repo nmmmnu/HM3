@@ -87,10 +87,12 @@ SkipList::~SkipList(){
 	delete[] _loc;
 }
 
-bool SkipList::_removeAll(){
+bool SkipList::removeAll(){
 	// _heads may be nullptr, when move constructor is on the way...
 	if (_heads == nullptr)
 		return true;
+
+	incVersion();
 
 	for(const Node *node = _heads[0]; node; ){
 		const Node *copy = node;
@@ -107,6 +109,8 @@ bool SkipList::_removeAll(){
 
 template <typename UPAIR>
 bool SkipList::_putT(UPAIR&& newdata){
+	incVersion();
+
 	const StringRef &key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
@@ -180,20 +184,21 @@ bool SkipList::_putT(UPAIR&& newdata){
 template bool SkipList::_putT(Pair &&newdata);
 template bool SkipList::_putT(const Pair &newdata);
 
-Pair SkipList::_get(const StringRef &key) const{
+Pair SkipList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	return node ? node->data : nullptr;
 }
 
-bool SkipList::_remove(const StringRef &key){
+bool SkipList::remove(const StringRef &key){
+	incVersion();
+
 	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
 		return true;
 
-	uint8_t i;
-	for(i = 0; i < _height; ++i){
+	for(uint8_t i = 0; i < _height; ++i){
 		Node *prev = (Node *) _loc[i];
 
 		if (prev){
@@ -315,7 +320,7 @@ uint8_t SkipList::_getRandomHeight(){
 // ==============================
 
 
-
+/*
 class SkipListIterator : public IIterator{
 public:
 	SkipListIterator(const SkipList & list) :
@@ -365,3 +370,4 @@ std::unique_ptr<IIterator> SkipList::_getIterator() const{
 	//return std::unique_ptr<IIterator>( new SkipListIterator(*this) );
 	return std::make_unique<SkipListIterator>(*this);
 };
+*/

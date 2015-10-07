@@ -1,45 +1,49 @@
 #ifndef _LINK_LIST_LIST_H
 #define _LINK_LIST_LIST_H
 
-#include "ilist.h"
+#include <cstdint>
 
-class LinkListIterator;
+#include "list.h"
 
 class LinkList : public IList{
-	friend class LinkListIterator;
-
 public:
 	LinkList();
 	LinkList(LinkList &&other);
-	~LinkList() override;
+	~LinkList();
 
-private:
-	bool _removeAll() final;
+public:
+	bool removeAll();
 
-	bool _put(const Pair &pair) final;
-	bool _put(Pair &&pair) final;
-	Pair _get(const StringRef &key) const final;
-	bool _remove(const StringRef &key) final;
+	Pair get(const StringRef &key) const;
+	bool remove(const StringRef &key);
 
-	count_type _getCount() const final{
+	count_type getCount() const{
 		return _dataCount;
 	}
 
-	size_t _getSize() const final{
+	size_t getSize() const{
 		return _dataSize;
 	}
 
+public:
+	bool put(const Pair &pair){
+		return _putT(pair);
+	}
+
+	bool put(Pair &&pair){
+		return _putT(std::move(pair));
+	}
+
+private:
 	template <typename UPAIR>
 	bool _putT(UPAIR &&data);
-
-	std::unique_ptr<IIterator> _getIterator() const final;
 
 private:
 	struct Node;
 
 	Node		*_head;
 
-	uint64_t	_dataCount;
+	count_type	_dataCount;
 	size_t		_dataSize;
 
 private:
@@ -49,13 +53,5 @@ private:
 };
 
 // ==============================
-
-inline bool LinkList::_put(const Pair &data){
-	return _putT(data);
-}
-
-inline bool LinkList::_put(Pair &&data){
-	return _putT(std::move(data));
-}
 
 #endif

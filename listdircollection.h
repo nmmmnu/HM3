@@ -1,14 +1,17 @@
 #ifndef _LIST_DIR_COLLECTION_H
 #define _LIST_DIR_COLLECTION_H
 
-#include "ilistcollection.h"
 #include "disktable.h"
 
 #include "stringref.h"
 
 #include <vector>
 
-class ListDirCollection : public IListCollection{
+class ListDirCollection{
+public:
+	typedef std::vector<DiskTable>	dt_vector;
+	typedef dt_vector::size_type	size_type;
+
 public:
 	ListDirCollection() = default;
 
@@ -20,21 +23,21 @@ public:
 	void close();
 
 private:
-	const ITable & _getAt(uint64_t index) const final;
-	count_type _getCount() const final{
+	const DiskTable & operator[](size_type index) const;
+
+	size_type size() const{
 		return _files.size();
 	}
 
 private:
-	std::vector<DiskTable> _files;
+	dt_vector _files;
 
 };
 
 // ==============================
 
-inline const ITable & ListDirCollection::_getAt(uint64_t const index) const{
-	uint64_t const count = _getCount();
-
+inline const DiskTable & ListDirCollection::operator[](size_type const index) const{
+	auto const count = size();
 	if (count == 0){
 		std::logic_error exception("collection is empty");
 		throw exception;

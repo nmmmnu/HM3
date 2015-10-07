@@ -1,18 +1,20 @@
 #include "diskfile.h"
 
-bool DiskFile::create(const StringRef &filename, IIterator &it, uint64_t const datacount2){
-	uint64_t const datacount = datacount2 ? datacount2 : it.iteratorCount();
-
+template <class LIST>
+bool DiskFile::create(const LIST &list, const StringRef &filename){
 	std::ofstream file(filename, std::ios::out | std::ios::binary);
 
 	if (! file)
 		return false;
 
-	return _writeIteratorToFile(it, datacount, file);
+	return _writeListToFile(list, file);
 }
 
-bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t const datacount, std::ofstream &file){
+template <class LIST>
+bool DiskFile::_writeListToFile(const LIST &list, std::ofstream &file){
 	uint64_t be;
+
+	auto const datacount = list.getCount();
 
 	size_t const headerSize = DiskFile::sizeofHeader();
 	size_t const tableSize  = sizeof(uint64_t) * datacount;
@@ -31,14 +33,14 @@ bool DiskFile::_writeIteratorToFile(IIterator &it, uint64_t const datacount, std
 	file.write( (const char *) & header, sizeofHeader());
 
 	// traverse and write the table.
-	for(auto pair = it.first(); pair; pair = it.next()){
+	for(auto pair : list){
 		be = htobe64(current);
 		file.write( (const char *) & be, sizeof(uint64_t));
 		current += pair.getSize();
 	}
 
 	// traverse and write the data.
-	for(auto pair = it.first(); pair; pair = it.next()){
+	for(auto pair : list){
 		pair.fwrite(file);
 	}
 

@@ -3,13 +3,11 @@
 
 #include "iarray.h"
 
-#include "stringref.h"
-
-class DiskTable : virtual public IArray{
+class DiskTable : public IArray<DiskTable>{
 public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other);
-	~DiskTable() override{
+	~DiskTable(){
 		close();
 	}
 
@@ -18,15 +16,15 @@ public:
 	void close();
 
 
-private:
-	Pair _getAt(uint64_t index) const final;
-	int  _cmpAt(uint64_t index, const StringRef &key) const final;
+public:
+	Pair getAt(count_type index) const;
+	int  cmpAt(count_type index, const StringRef &key) const;
 
-	count_type _getCount() const final{
+	count_type getCount() const{
 		return _dataCount;
 	}
 
-	size_t _getSize() const final;
+	size_t getSize() const;
 
 private:
 	const void	*_mem		= nullptr;
@@ -39,13 +37,13 @@ private:
 private:
 	uint64_t _getCountFromDisk() const;
 
-	const void *_getAtFromDisk(uint64_t index) const;
+	const void *_getAtFromDisk(count_type index) const;
 };
 
 // ==============================
 
-inline Pair DiskTable::_getAt(uint64_t const index) const{
-	return index < _dataCount ? _getAtFromDisk(index) : nullptr;
+inline Pair DiskTable::getAt(count_type const index) const{
+	return index < getCount() ? _getAtFromDisk(index) : nullptr;
 }
 
 #endif

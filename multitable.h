@@ -1,12 +1,11 @@
 #ifndef _DIR_TABLE_H
 #define _DIR_TABLE_H
 
-#include "itable.h"
-#include "ilistcollection.h"
+#include "list.h"
 
 class MultiTableIterator;
 
-class MultiTable : virtual public ITable{
+class MultiTable : public I{
 friend class MultiTableIterator;
 
 public:

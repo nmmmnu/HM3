@@ -11,12 +11,35 @@
 	printf("%-14s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
 
-inline static size_t list_add(IList &list, Pair &&p){
+
+static void skiplist_lanes_test(SkipList &list){
+	list.put(Pair("name",		"Niki"		));
+	list.put(Pair("city",		"Sofia"		));
+	list.put(Pair("state",		"na"		));
+	list.put(Pair("zip",		"1000"		));
+	list.put(Pair("country",	"BG"		));
+	list.put(Pair("phone",		"+358 888 1000"	));
+	list.put(Pair("fax",		"+358 888 2000"	));
+	list.put(Pair("email",		"user@aol.com"	));
+	list.put(Pair("laptop",		"Dell"		));
+	list.put(Pair("os",		"Archlinux"	));
+	list.put(Pair("mouse",		"Logitech"	));
+
+	list.printLanes();
+
+//	list.print();
+}
+
+
+
+template <class LIST>
+inline static size_t list_add(LIST &list, Pair &&p){
 	list.put(p);
 	return p.getSize();
 }
 
-static size_t list_populate(IList &list){
+template <class LIST>
+static size_t list_populate(LIST &list){
 	list.removeAll();
 
 	size_t size = 0;
@@ -29,52 +52,10 @@ static size_t list_populate(IList &list){
 	return size;
 }
 
-static void iterator_test(const char *module, IList &list, IIterator &it){
-	Pair p = nullptr;
-
-	p = it.first();
-	PRINTF_TEST("it first",		p && p.getVal() == "Niki"	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && p.getVal() == "Niki"	);
-
-	p = it.first("2");
-	PRINTF_TEST("it first fuzzy",	p && p.getVal() == "22"		);
-	p = it.current();
-	PRINTF_TEST("it current fuzzy",	p && p.getVal() == "22"		);
 
 
-	p = it.first("2 age");
-	PRINTF_TEST("it first",		p && p.getVal() == "22"		);
-	p = it.current();
-	PRINTF_TEST("it current",	p && p.getVal() == "22"		);
-	p = it.next();
-	PRINTF_TEST("it next",		p && p.getVal() == "Sofia"	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && p.getVal() == "Sofia"	);
-
-	p = it.first("4 os");
-	PRINTF_TEST("it first",		p && p.getVal() == "Linux"	);
-	p = it.current();
-	PRINTF_TEST("it current",	p && p.getVal() == "Linux"	);
-	p = it.next();
-	PRINTF_TEST("it next",		! p				);
-	p = it.current();
-	PRINTF_TEST("it current",	! p				);
-
-	p = it.first("5");
-	PRINTF_TEST("it next it",	! p				);
-
-	p = it.first();
-	auto version = list.getVersion();
-	PRINTF_TEST("it invalidate 1",	p				);
-	list.remove("1 name");
-	p = it.next();
-	PRINTF_TEST("it invalidate 2",	! p				);
-
-	PRINTF_TEST("invalidate ver",	version < list.getVersion()	);
-}
-
-static void ref_test(const char *module, IList &list){
+template <class LIST>
+static void ref_test(const char *module, LIST &list){
 	const char *key = "ref_test";
 
 	const Pair p = Pair::tombstone(key);
@@ -95,9 +76,30 @@ static void ref_test(const char *module, IList &list){
 	PRINTF_TEST("ref test",		true					);
 }
 
+template <class IT>
+inline void iterator_test_deref(const char *module, IT &it, IT &et, const char *value){
+	PRINTF_TEST("*it deref",	it != et && (*it).getVal() == value	);
+	++it;
+}
+
+template <class LIST>
+static void iterator_test(const char *module, LIST &list){
+	auto it = list.begin();
+	auto et = list.end();
+
+	iterator_test_deref(module, it, et, "Niki"	);
+	iterator_test_deref(module, it, et, "22"	);
+	iterator_test_deref(module, it, et, "Sofia"	);
+	iterator_test_deref(module, it, et, "Linux"	);
+
+	PRINTF_TEST("*it end()",	it == et				);
+}
+
 template <class LIST>
 static void list_test(const char *module, LIST &list){
 	Pair p = nullptr;
+
+
 
 	// TEST GENERAL
 
@@ -106,7 +108,7 @@ static void list_test(const char *module, LIST &list){
 	list.print();
 
 	PRINTF_TEST("count",		list.getCount() == 4			);
-	PRINTF_TEST("empty",		! list.isEmpty()			);
+//	PRINTF_TEST("empty",		! list.isEmpty()			);
 	PRINTF_TEST("sizeof",		list.getSize() == size			);
 
 
@@ -121,6 +123,7 @@ static void list_test(const char *module, LIST &list){
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
+
 
 
 	// TEST OVERWRITE
@@ -171,7 +174,7 @@ static void list_test(const char *module, LIST &list){
 	list.remove("nonexistent");
 
 	PRINTF_TEST("remove count",	list.getCount() == 0			);
-	PRINTF_TEST("remove empty",	list.isEmpty()				);
+//	PRINTF_TEST("remove empty",	list.isEmpty()				);
 
 
 
@@ -179,9 +182,7 @@ static void list_test(const char *module, LIST &list){
 
 	list_populate(list);
 
-	auto it = list.getIterator();
-
-	iterator_test(module, list, *it);
+	iterator_test(module, list);
 
 	// TEST REFERENCES
 
@@ -194,31 +195,7 @@ static void list_test(const char *module, LIST &list){
 
 	LIST mlist = std::move(list);
 	PRINTF_TEST("move c-tor 1",	mlist.getSize() == size			);
-	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
-
-	//n1.print();
-
-//	list = std::move(mlist);
-//	PRINTF_TEST("move assign 1",	list.getSize() == size			);
-//	PRINTF_TEST("move assign 2",	mlist.isEmpty()				);
-}
-
-static void skiplist_lanes_test(SkipList &list){
-	list.put(Pair("name",		"Niki"		));
-	list.put(Pair("city",		"Sofia"		));
-	list.put(Pair("state",		"na"		));
-	list.put(Pair("zip",		"1000"		));
-	list.put(Pair("country",	"BG"		));
-	list.put(Pair("phone",		"+358 888 1000"	));
-	list.put(Pair("fax",		"+358 888 2000"	));
-	list.put(Pair("email",		"user@aol.com"	));
-	list.put(Pair("laptop",		"Dell"		));
-	list.put(Pair("os",		"Archlinux"	));
-	list.put(Pair("mouse",		"Logitech"	));
-
-	list.printLanes();
-
-//	list.print();
+//	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
 int main(int argc, char **argv){
@@ -229,12 +206,12 @@ int main(int argc, char **argv){
 	// =========================
 
 	LinkList ll;
-		list_test("LinkList", ll);
+//		list_test("LinkList", ll);
 
 	// =========================
 
 	SkipList sl;
-		list_test("SkipList", sl);
+//		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
 
@@ -242,4 +219,5 @@ int main(int argc, char **argv){
 
 	return 0;
 }
+
 

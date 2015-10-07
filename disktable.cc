@@ -9,8 +9,6 @@
 #include <fcntl.h>	// open
 #include <unistd.h>	// close
 
-//static void null_deleter(const void *ptr){};
-
 DiskTable::DiskTable(DiskTable &&other):
 		_mem		(std::move(other._mem		)),
 		_size		(std::move(other._size		)),
@@ -19,23 +17,7 @@ DiskTable::DiskTable(DiskTable &&other):
 	other._mem = nullptr;
 	other._size = 0;
 }
-/*
-DiskTable &DiskTable::operator = (DiskTable &&other){
-	IArray::operator= (std::move(other));
 
-	close();
-
-	_mem		= std::move(other._mem		);
-	_size		= std::move(other._size		);
-	_fd		= std::move(other._fd		);
-	_datacount	= std::move(other._datacount	);
-
-	other._mem = nullptr;
-	other._size = 0;
-
-	return *this;
-}
-*/
 bool DiskTable::open(const StringRef &filename){
 	close();
 
@@ -86,12 +68,13 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-int DiskTable::_cmpAt(uint64_t const index, const StringRef &key) const{
+int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
 	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
-	return p->cmp(key.data());
+	// StringRef is not null terminated
+	return p->cmp(key.data(), key.size());
 }
 
-size_t DiskTable::_getSize() const{
+size_t DiskTable::getSize() const{
 	return _size - DiskFile::sizeofHeader() - _dataCount * sizeof(uint64_t);
 }
 
@@ -100,7 +83,7 @@ uint64_t DiskTable::_getCountFromDisk() const{
 	return be64toh(head->size);
 }
 
-const void *DiskTable::_getAtFromDisk(uint64_t const index) const{
+const void *DiskTable::_getAtFromDisk(count_type const index) const{
 	// index is check in parent
 
 	// TODO: check if we are inside the memory block.

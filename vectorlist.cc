@@ -7,6 +7,7 @@
 #define xrealloc(a, s)	realloc(a, s)
 
 
+
 template<typename T>
 inline T SGN(const T a){
 	if (a == 0)
@@ -14,6 +15,8 @@ inline T SGN(const T a){
 
 	return a > 0 ? 1 : -1;
 }
+
+
 
 VectorList::VectorList(size_t const reallocSize) :
 		_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
@@ -28,29 +31,13 @@ VectorList::VectorList(VectorList &&other):
 		_dataSize	(std::move(other._dataSize		)){
 	other._clear();
 }
-/*
-VectorList &VectorList::operator = (VectorList &&other){
-	_removeAll();
 
-	_reallocSize	= std::move(other._reallocSize		);
-	_buffer		= std::move(other._buffer		);
-	_bufferReserved	= std::move(other._bufferReserved	);
-	_dataCount	= std::move(other._dataCount		);
-	_dataSize	= std::move(other._dataSize		);
-
-	other._clear();
-
-	return *this;
-}
-*/
 VectorList::~VectorList(){
 	removeAll();
 }
 
-
-
-bool VectorList::_removeAll(){
-	for(uint64_t i = 0; i < _dataCount; ++i)
+bool VectorList::removeAll(){
+	for(count_type i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
 
 	_clear(true);
@@ -104,7 +91,7 @@ bool VectorList::_putT(UPAIR&& newdata){
 template bool VectorList::_putT(Pair &&newdata);
 template bool VectorList::_putT(const Pair &newdata);
 
-bool VectorList::_remove(const StringRef &key){
+bool VectorList::remove(const StringRef &key){
 	const auto l = lookup(key);
 	const auto cmp = l.first;
 	const auto index = l.second;

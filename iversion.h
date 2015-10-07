@@ -16,7 +16,7 @@ public:
 	}
 
 protected:
-	void     incVersion() noexcept{
+	void incVersion() noexcept{
 		++_version;
 	}
 private:

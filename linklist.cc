@@ -21,26 +21,14 @@ LinkList::LinkList(LinkList &&other):
 		_dataSize	(std::move(other._dataSize	)){
 	other._clear();
 }
-/*
-LinkList &LinkList::operator = (LinkList &&other){
-	IList::operator= (std::move(other));
 
-	_removeAll();
-
-	_head		= std::move(other._head		);
-	_dataCount	= std::move(other._dataCount	);
-	_dataSize	= std::move(other._dataSize	);
-
-	other._clear();
-
-	return *this;
-}
-*/
 LinkList::~LinkList(){
 	removeAll();
 }
 
-bool LinkList::_removeAll(){
+bool LinkList::removeAll(){
+	incVersion();
+
 	for(Node *node = _head; node; ){
 		Node *copy = node;
 
@@ -56,6 +44,8 @@ bool LinkList::_removeAll(){
 
 template <typename UPAIR>
 bool LinkList::_putT(UPAIR&& newdata){
+	incVersion();
+
 	const StringRef &key = newdata.getKey();
 
 	Node *prev = nullptr;
@@ -115,7 +105,7 @@ bool LinkList::_putT(UPAIR&& newdata){
 template bool LinkList::_putT(Pair &&newdata);
 template bool LinkList::_putT(const Pair &newdata);
 
-Pair LinkList::_get(const StringRef &key) const{
+Pair LinkList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
@@ -126,10 +116,11 @@ Pair LinkList::_get(const StringRef &key) const{
 	return data.cmp(key) == 0 ? data : nullptr;
 }
 
-bool LinkList::_remove(const StringRef &key){
+bool LinkList::remove(const StringRef &key){
+	incVersion();
+
 	Node *prev = nullptr;
-	Node *node;
-	for(node = _head; node; node = node->next){
+	for(Node *node = _head; node; node = node->next){
 		const Pair & data = node->data;
 		const int cmp = data.cmp(key);
 
@@ -145,7 +136,6 @@ bool LinkList::_remove(const StringRef &key){
 			_dataCount--;
 
 			delete node;
-
 			return true;
 		}
 
@@ -188,7 +178,7 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 // ==============================
 
 
-
+/*
 class LinkListIterator : public IIterator{
 public:
 	LinkListIterator(const LinkList & list) :
@@ -230,3 +220,4 @@ std::unique_ptr<IIterator> LinkList::_getIterator() const{
 	//return std::unique_ptr<IIterator>( new LinkListIterator(*this) );
 	return std::make_unique<LinkListIterator>(*this);
 };
+*/
