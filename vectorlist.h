@@ -28,6 +28,8 @@ public:
 	bool remove(const StringRef &key);
 
 	Pair getAt(count_type index) const;
+
+	const Pair &getAtR(count_type index) const;
 	int  cmpAt(count_type index, const StringRef &key) const;
 
 	count_type getCount() const{
@@ -65,12 +67,18 @@ private:
 
 // ===================================
 
-inline Pair VectorList::getAt(count_type const index) const{
-	return index < getCount() ? _buffer[index] : nullptr;
+inline const Pair &VectorList::getAtR(count_type const index) const{
+	static Pair zero;
+
+	return index < getCount() ? _buffer[index] : zero;
 }
 
 inline int  VectorList::cmpAt(count_type const index, const StringRef &key) const{
 	return index < getCount() ? _buffer[index].cmp(key) : +1;
+}
+
+inline Pair VectorList::getAt(count_type index) const{
+	return getAtR(index);
 }
 
 #endif

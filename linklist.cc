@@ -27,8 +27,6 @@ LinkList::~LinkList(){
 }
 
 bool LinkList::removeAll(){
-	incVersion();
-
 	for(Node *node = _head; node; ){
 		Node *copy = node;
 
@@ -44,8 +42,6 @@ bool LinkList::removeAll(){
 
 template <typename UPAIR>
 bool LinkList::_putT(UPAIR&& newdata){
-	incVersion();
-
 	const StringRef &key = newdata.getKey();
 
 	Node *prev = nullptr;
@@ -117,8 +113,6 @@ Pair LinkList::get(const StringRef &key) const{
 }
 
 bool LinkList::remove(const StringRef &key){
-	incVersion();
-
 	Node *prev = nullptr;
 	for(Node *node = _head; node; node = node->next){
 		const Pair & data = node->data;
@@ -178,46 +172,43 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 // ==============================
 
 
-/*
-class LinkListIterator : public IIterator{
-public:
-	LinkListIterator(const LinkList & list) :
-			IIterator(list),
-			_list(list),
-			_current(list._head){}
 
-private:
-	void _rewind(const StringRef &key) final;
-	Pair _next() final;
+LinkList::Iterator::Iterator(const LinkList &list, const Node *node) :
+		_list(list),
+		_node(node){}
 
-private:
-	const LinkList		& _list;
-	const LinkList::Node	*_current;
-};
+LinkList::Iterator &LinkList::Iterator::operator++(){
+	if (_node)
+		_node = _node->next;
 
-
-void LinkListIterator::_rewind(const StringRef &key){
-	if (key.empty()){
-		_current = _list._head;
-		return;
-	}
-
-	_current = _list._locate(key);
+	return *this;
 }
 
-Pair LinkListIterator::_next(){
-	if (_current == nullptr)
-		return nullptr;
+const Pair &LinkList::Iterator::operator*() const{
+	static Pair zero;
 
-	const Pair & pair = _current->data;
+	if (_node)
+		return _node->data;
 
-	_current = _current->next;
-
-	return pair;
+	return zero;
 }
 
-std::unique_ptr<IIterator> LinkList::_getIterator() const{
-	//return std::unique_ptr<IIterator>( new LinkListIterator(*this) );
-	return std::make_unique<LinkListIterator>(*this);
-};
-*/
+bool LinkList::Iterator::operator==(const Iterator &other) const{
+	return &_list == &other._list && _node == other._node;
+}
+
+bool LinkList::Iterator::operator!=(const Iterator &other) const{
+	return ! ( *this == other );
+}
+
+// ==============================
+
+LinkList::Iterator LinkList::begin() const{
+	return Iterator(*this, _head);
+}
+
+LinkList::Iterator LinkList::end() const{
+	return Iterator(*this, nullptr);
+}
+
+

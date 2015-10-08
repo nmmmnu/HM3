@@ -4,10 +4,13 @@
 #include "list.h"
 
 template <class T>
-class IArray : public IList{
+class IArray : public IList<IArray<T> >{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;
+
+	// propagating count_type...
+	typedef typename IList<IArray<T> >::count_type count_type;
 
 	typedef std::pair<int, count_type> locator;
 
@@ -33,6 +36,11 @@ public:
 
 	count_type getCount() const{
 		return static_cast<const T*>(this)->getCount();
+	}
+
+private:
+	const Pair &getAtR(count_type const index) const{
+		return static_cast<const T*>(this)->getAtR(index);
 	}
 
 public:

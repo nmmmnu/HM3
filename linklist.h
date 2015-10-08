@@ -5,7 +5,10 @@
 
 #include "list.h"
 
-class LinkList : public IList{
+class LinkList : public IList<LinkList>{
+public:
+	class Iterator;
+
 public:
 	LinkList();
 	LinkList(LinkList &&other);
@@ -34,6 +37,10 @@ public:
 		return _putT(std::move(pair));
 	}
 
+public:
+	Iterator begin() const;
+	Iterator end() const;
+
 private:
 	template <typename UPAIR>
 	bool _putT(UPAIR &&data);
@@ -53,5 +60,18 @@ private:
 };
 
 // ==============================
+
+class LinkList::Iterator{
+public:
+	Iterator(const LinkList &list, const Node *node);
+	Iterator &operator++();
+	const Pair &operator*() const;
+	bool operator==(const Iterator &other) const;
+	bool operator!=(const Iterator &other) const;
+
+private:
+	const LinkList	&_list;
+	const Node	*_node;
+};
 
 #endif

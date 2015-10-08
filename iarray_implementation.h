@@ -91,8 +91,8 @@ public:
 		return *this;
 	}
 
-	Pair operator*() const{
-		return _inbound() ? _list.getAt(_pos) : nullptr;
+	const Pair &operator*() const{
+		return _list.getAtR(_pos);
 	}
 
 	bool operator==(const Iterator &other) const{
@@ -101,19 +101,6 @@ public:
 
 	bool operator!=(const Iterator &other) const{
 		return ! ( *this == other );
-	}
-
-private:
-	bool _inbound() const{
-		auto const count = _list.getCount();
-
-		if (count == 0)
-			return false;
-
-		if (_pos >= count)
-			return false;
-
-		return true;
 	}
 
 private:
@@ -133,3 +120,18 @@ auto IArray<T>::end() const -> Iterator{
 	return Iterator(*this, getCount());
 }
 
+// ==============================
+
+#if 0
+	bool _inbound3() const{
+		auto const count = _list.getCount();
+
+		if (count == 0)
+			return false;
+
+		if (_pos >= count)
+			return false;
+
+		return true;
+	}
+#endif

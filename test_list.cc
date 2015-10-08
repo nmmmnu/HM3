@@ -105,10 +105,11 @@ static void list_test(const char *module, LIST &list){
 
 	size_t size = list_populate(list);
 
+	PRINTF_TEST("print it",		true					);
 	list.print();
 
 	PRINTF_TEST("count",		list.getCount() == 4			);
-//	PRINTF_TEST("empty",		! list.isEmpty()			);
+	PRINTF_TEST("empty",		! list.isEmpty()			);
 	PRINTF_TEST("sizeof",		list.getSize() == size			);
 
 
@@ -174,7 +175,7 @@ static void list_test(const char *module, LIST &list){
 	list.remove("nonexistent");
 
 	PRINTF_TEST("remove count",	list.getCount() == 0			);
-//	PRINTF_TEST("remove empty",	list.isEmpty()				);
+	PRINTF_TEST("remove empty",	list.isEmpty()				);
 
 
 
@@ -195,7 +196,7 @@ static void list_test(const char *module, LIST &list){
 
 	LIST mlist = std::move(list);
 	PRINTF_TEST("move c-tor 1",	mlist.getSize() == size			);
-//	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
+	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
 int main(int argc, char **argv){
@@ -206,12 +207,12 @@ int main(int argc, char **argv){
 	// =========================
 
 	LinkList ll;
-//		list_test("LinkList", ll);
+		list_test("LinkList", ll);
 
 	// =========================
 
 	SkipList sl;
-//		list_test("SkipList", sl);
+		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
 

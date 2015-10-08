@@ -92,8 +92,6 @@ bool SkipList::removeAll(){
 	if (_heads == nullptr)
 		return true;
 
-	incVersion();
-
 	for(const Node *node = _heads[0]; node; ){
 		const Node *copy = node;
 
@@ -109,8 +107,6 @@ bool SkipList::removeAll(){
 
 template <typename UPAIR>
 bool SkipList::_putT(UPAIR&& newdata){
-	incVersion();
-
 	const StringRef &key = newdata.getKey();
 
 	Node *node = (Node *) _locate(key);
@@ -191,8 +187,6 @@ Pair SkipList::get(const StringRef &key) const{
 }
 
 bool SkipList::remove(const StringRef &key){
-	incVersion();
-
 	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
@@ -320,54 +314,42 @@ uint8_t SkipList::_getRandomHeight(){
 // ==============================
 
 
-/*
-class SkipListIterator : public IIterator{
-public:
-	SkipListIterator(const SkipList & list) :
-			IIterator(list),
-			_list(list),
-			_current(list._heads[0]){}
 
-private:
-	virtual void _rewind(const StringRef &key) override;
-	virtual Pair _next() override;
+SkipList::Iterator::Iterator(const SkipList &list, const Node *node) :
+		_list(list),
+		_node(node){}
 
-private:
-	const SkipList		& _list;
-	const SkipList::Node	*_current;
-};
+SkipList::Iterator &SkipList::Iterator::operator++(){
+	if (_node)
+		_node = _node->next[0];
 
-void SkipListIterator::_rewind(const StringRef &key){
-	if (key.empty()){
-		_current = _list._heads[0];
-		return;
-	}
-
-	auto node = _list._locate(key, true);
-
-	if (node){
-		// found
-		_current = node;
-		return;
-	}
-
-	// fuzzy found, but we are on previous element.
-	_current = _list._loc[0] ? _list._loc[0]->next[0] : nullptr;
+	return *this;
 }
 
-Pair SkipListIterator::_next(){
-	if (_current == nullptr)
-		return nullptr;
+const Pair &SkipList::Iterator::operator*() const{
+	static Pair zero;
 
-	const Pair & pair = _current->data;
+	if (_node)
+		return _node->data;
 
-	_current = _current->next[0];
-
-	return pair;
+	return zero;
 }
 
-std::unique_ptr<IIterator> SkipList::_getIterator() const{
-	//return std::unique_ptr<IIterator>( new SkipListIterator(*this) );
-	return std::make_unique<SkipListIterator>(*this);
-};
-*/
+bool SkipList::Iterator::operator==(const Iterator &other) const{
+	return &_list == &other._list && _node == other._node;
+}
+
+bool SkipList::Iterator::operator!=(const Iterator &other) const{
+	return ! ( *this == other );
+}
+
+// ==============================
+
+SkipList::Iterator SkipList::begin() const{
+	return Iterator(*this, _heads[0]);
+}
+
+SkipList::Iterator SkipList::end() const{
+	return Iterator(*this, nullptr);
+}
+

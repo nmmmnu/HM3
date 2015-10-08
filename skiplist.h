@@ -5,12 +5,12 @@
 
 #include <random>
 
-class SkipListIterator;
-
-class SkipList : public IList{
+class SkipList : public IList<SkipList>{
 public:
 	static const uint8_t MAX_HEIGHT		= 64;
 	static const uint8_t DEFAULT_HEIGHT	= 32;
+
+	class Iterator;
 
 public:
 	explicit SkipList(uint8_t height = DEFAULT_HEIGHT);
@@ -40,6 +40,10 @@ public:
 		return _putT(std::move(pair));
 	}
 
+public:
+	Iterator begin() const;
+	Iterator end() const;
+
 private:
 	template <typename UPAIR>
 	bool _putT(UPAIR &&data);
@@ -67,6 +71,21 @@ private:
 
 private:
 	static std::mt19937 __rand;
+};
+
+// ==============================
+
+class SkipList::Iterator{
+public:
+	Iterator(const SkipList &list, const Node *node);
+	Iterator &operator++();
+	const Pair &operator*() const;
+	bool operator==(const Iterator &other) const;
+	bool operator!=(const Iterator &other) const;
+
+private:
+	const SkipList	&_list;
+	const Node	*_node;
 };
 
 #endif
