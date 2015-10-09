@@ -1,7 +1,7 @@
 #ifndef _SKIP_LIST_LIST_H
 #define _SKIP_LIST_LIST_H
 
-#include "list.h"
+#include "ilist.h"
 
 #include <random>
 
@@ -45,7 +45,7 @@ public:
 	Iterator end() const;
 
 private:
-	template <typename UPAIR>
+	template <class UPAIR>
 	bool _putT(UPAIR &&data);
 
 public:
@@ -76,16 +76,20 @@ private:
 // ==============================
 
 class SkipList::Iterator{
+private:
+	friend class SkipList;
+	Iterator(const Node *node);
+
 public:
-	Iterator(const SkipList &list, const Node *node);
 	Iterator &operator++();
 	const Pair &operator*() const;
 	bool operator==(const Iterator &other) const;
 	bool operator!=(const Iterator &other) const;
 
 private:
-	const SkipList	&_list;
 	const Node	*_node;
+
+	static Pair	zero;
 };
 
 #endif

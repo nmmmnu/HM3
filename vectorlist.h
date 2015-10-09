@@ -3,10 +3,14 @@
 
 #include "iarray.h"
 
-class VectorList : public IArray<VectorList>{
+class VectorList : public IList<VectorList>, public IArray<VectorList>{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
+
+	typedef IListDefs::count_type count_type;
+
+	class Iterator;
 
 public:
 	explicit VectorList(size_t reallocSize = 0);
@@ -28,8 +32,6 @@ public:
 	bool remove(const StringRef &key);
 
 	Pair getAt(count_type index) const;
-
-	const Pair &getAtR(count_type index) const;
 	int  cmpAt(count_type index, const StringRef &key) const;
 
 	count_type getCount() const{
@@ -39,6 +41,9 @@ public:
 	size_t getSize() const{
 		return _dataSize;
 	}
+
+private:
+	const Pair &getAtR(count_type index) const;
 
 public:
 	bool put(const Pair &pair){
@@ -50,8 +55,12 @@ public:
 	}
 
 private:
-	template <typename UPAIR>
+	template <class UPAIR>
 	bool _putT(UPAIR &&data);
+
+public:
+	Iterator begin() const;
+	Iterator end() const;
 
 private:
 	void _clear(bool alsoFree = false);
@@ -67,18 +76,40 @@ private:
 
 // ===================================
 
+class VectorList::Iterator{
+private:
+	friend class VectorList;
+	Iterator(const VectorList &list, count_type const pos);
+
+public:
+	Iterator &operator++();
+	Iterator &operator--();
+
+	const Pair &operator*() const;
+
+	bool operator==(const Iterator &other) const;
+	bool operator!=(const Iterator &other) const;
+
+private:
+	const VectorList	&_list;
+	count_type		_pos;
+};
+
+// ===================================
+
+
 inline const Pair &VectorList::getAtR(count_type const index) const{
 	static Pair zero;
 
 	return index < getCount() ? _buffer[index] : zero;
 }
 
-inline int  VectorList::cmpAt(count_type const index, const StringRef &key) const{
-	return index < getCount() ? _buffer[index].cmp(key) : +1;
-}
-
 inline Pair VectorList::getAt(count_type index) const{
 	return getAtR(index);
+}
+
+inline int  VectorList::cmpAt(count_type const index, const StringRef &key) const{
+	return getAtR(index).cmp(key);
 }
 
 #endif

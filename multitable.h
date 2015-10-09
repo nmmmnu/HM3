@@ -1,28 +1,26 @@
 #ifndef _DIR_TABLE_H
 #define _DIR_TABLE_H
 
-#include "list.h"
+#include "ilist.h"
 
 class MultiTableIterator;
 
-class MultiTable : public I{
+class MultiTable : public IList<MultiTable>{
 friend class MultiTableIterator;
 
 public:
 	MultiTable(IListCollection & collection) : _collection(collection){};
 
-private:
-	virtual Pair _get(const StringRef &key) const final;
+public:
+	virtual Pair _get(const StringRef &key) const;
 
-	count_type _getCount() const final{
+	count_type getCount() const{
 		return 0;
 	};
 
-	size_t _getSize() const final{
+	size_t getSize() const{
 		return 0;
 	}
-
-	std::unique_ptr<IIterator> _getIterator() const final;
 
 private:
 	IListCollection & _collection;

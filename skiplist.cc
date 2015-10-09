@@ -105,7 +105,7 @@ bool SkipList::removeAll(){
 	return true;
 }
 
-template <typename UPAIR>
+template <class UPAIR>
 bool SkipList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
@@ -315,8 +315,9 @@ uint8_t SkipList::_getRandomHeight(){
 
 
 
-SkipList::Iterator::Iterator(const SkipList &list, const Node *node) :
-		_list(list),
+Pair	SkipList::Iterator::zero;
+
+SkipList::Iterator::Iterator(const Node *node) :
 		_node(node){}
 
 SkipList::Iterator &SkipList::Iterator::operator++(){
@@ -327,16 +328,11 @@ SkipList::Iterator &SkipList::Iterator::operator++(){
 }
 
 const Pair &SkipList::Iterator::operator*() const{
-	static Pair zero;
-
-	if (_node)
-		return _node->data;
-
-	return zero;
+	return _node ? _node->data : zero;
 }
 
 bool SkipList::Iterator::operator==(const Iterator &other) const{
-	return &_list == &other._list && _node == other._node;
+	return _node == other._node;
 }
 
 bool SkipList::Iterator::operator!=(const Iterator &other) const{
@@ -346,10 +342,10 @@ bool SkipList::Iterator::operator!=(const Iterator &other) const{
 // ==============================
 
 SkipList::Iterator SkipList::begin() const{
-	return Iterator(*this, _heads[0]);
+	return Iterator(_heads[0]);
 }
 
 SkipList::Iterator SkipList::end() const{
-	return Iterator(*this, nullptr);
+	return Iterator(nullptr);
 }
 

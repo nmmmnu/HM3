@@ -40,7 +40,7 @@ bool LinkList::removeAll(){
 	return true;
 }
 
-template <typename UPAIR>
+template <class UPAIR>
 bool LinkList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
@@ -173,8 +173,9 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 
 
 
-LinkList::Iterator::Iterator(const LinkList &list, const Node *node) :
-		_list(list),
+Pair	LinkList::Iterator::zero;
+
+LinkList::Iterator::Iterator(const Node *node) :
 		_node(node){}
 
 LinkList::Iterator &LinkList::Iterator::operator++(){
@@ -185,30 +186,25 @@ LinkList::Iterator &LinkList::Iterator::operator++(){
 }
 
 const Pair &LinkList::Iterator::operator*() const{
-	static Pair zero;
-
-	if (_node)
-		return _node->data;
-
-	return zero;
+	return _node ? _node->data : zero;
 }
 
 bool LinkList::Iterator::operator==(const Iterator &other) const{
-	return &_list == &other._list && _node == other._node;
+	return _node == other._node;
 }
 
 bool LinkList::Iterator::operator!=(const Iterator &other) const{
-	return ! ( *this == other );
+	return _node != other._node;
 }
 
 // ==============================
 
 LinkList::Iterator LinkList::begin() const{
-	return Iterator(*this, _head);
+	return Iterator(_head);
 }
 
 LinkList::Iterator LinkList::end() const{
-	return Iterator(*this, nullptr);
+	return Iterator(nullptr);
 }
 
 

@@ -45,7 +45,7 @@ bool VectorList::removeAll(){
 	return true;
 }
 
-template <typename UPAIR>
+template <class UPAIR>
 bool VectorList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
@@ -184,4 +184,43 @@ size_t VectorList::__calcNewSize(size_t const size, size_t const reallocSize){
 
 	return newsize * reallocSize;
 }
+
+// ===================================
+
+VectorList::Iterator::Iterator(const VectorList &list, count_type const pos) :
+			_list(list),
+			_pos(pos){}
+
+VectorList::Iterator &VectorList::Iterator::operator++(){
+	++_pos;
+	return *this;
+}
+
+VectorList::Iterator &VectorList::Iterator::operator--(){
+	--_pos;
+	return *this;
+}
+
+const Pair &VectorList::Iterator::operator*() const{
+	return _list.getAtR(_pos);
+}
+
+bool VectorList::Iterator::operator==(const Iterator &other) const{
+	return &_list == &other._list && _pos == other._pos;
+}
+
+bool VectorList::Iterator::operator!=(const Iterator &other) const{
+	return ! ( *this == other );
+}
+
+// ===================================
+
+auto VectorList::begin() const -> Iterator{
+	return Iterator(*this, 0);
+}
+
+auto VectorList::end() const -> Iterator{
+	return Iterator(*this, getCount());
+}
+
 

@@ -1,20 +1,20 @@
 #ifndef _IARRAY_H
 #define _IARRAY_H
 
-#include "list.h"
+#include "ilist.h"
 
 template <class T>
-class IArray : public IList<IArray<T> >{
+class IArray{
 public:
 	static const uint8_t LINEAR_SEARCH	= 0;
 	static const uint8_t BINARY_SEARCH	= 1;
 
 	// propagating count_type...
-	typedef typename IList<IArray<T> >::count_type count_type;
+	//typedef typename IList<IArray<T> >::count_type count_type;
+
+	typedef IListDefs::count_type count_type;
 
 	typedef std::pair<int, count_type> locator;
-
-	class Iterator;
 
 public:
 	Pair get(const StringRef &key) const;
@@ -37,15 +37,6 @@ public:
 	count_type getCount() const{
 		return static_cast<const T*>(this)->getCount();
 	}
-
-private:
-	const Pair &getAtR(count_type const index) const{
-		return static_cast<const T*>(this)->getAtR(index);
-	}
-
-public:
-	Iterator begin() const;
-	Iterator end() const;
 
 private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;

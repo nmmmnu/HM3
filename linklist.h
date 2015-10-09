@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "list.h"
+#include "ilist.h"
 
 class LinkList : public IList<LinkList>{
 public:
@@ -42,7 +42,7 @@ public:
 	Iterator end() const;
 
 private:
-	template <typename UPAIR>
+	template <class UPAIR>
 	bool _putT(UPAIR &&data);
 
 private:
@@ -62,16 +62,21 @@ private:
 // ==============================
 
 class LinkList::Iterator{
+protected:
+	friend class LinkList;
+
+	Iterator(const Node *node);
+
 public:
-	Iterator(const LinkList &list, const Node *node);
 	Iterator &operator++();
 	const Pair &operator*() const;
 	bool operator==(const Iterator &other) const;
 	bool operator!=(const Iterator &other) const;
 
 private:
-	const LinkList	&_list;
 	const Node	*_node;
+
+	static Pair	zero;
 };
 
 #endif

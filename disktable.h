@@ -3,7 +3,12 @@
 
 #include "iarray.h"
 
-class DiskTable : public IArray<DiskTable>{
+class DiskTable : public IList<DiskTable>, public IArray<DiskTable>{
+public:
+	typedef IListDefs::count_type count_type;
+
+	class Iterator;
+
 public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other);
@@ -15,9 +20,9 @@ public:
 
 	void close();
 
-
 public:
 	Pair getAt(count_type index) const;
+
 	int  cmpAt(count_type index, const StringRef &key) const;
 
 	count_type getCount() const{
@@ -25,6 +30,10 @@ public:
 	}
 
 	size_t getSize() const;
+
+public:
+	Iterator begin() const;
+	Iterator end() const;
 
 private:
 	const void	*_mem		= nullptr;
@@ -40,9 +49,30 @@ private:
 	const void *_getAtFromDisk(count_type index) const;
 };
 
+// ===================================
+
+class DiskTable::Iterator{
+private:
+	friend class DiskTable;
+	Iterator(const DiskTable &list, count_type const pos);
+
+public:
+	Iterator &operator++();
+	Iterator &operator--();
+
+	Pair operator*() const;
+
+	bool operator==(const Iterator &other) const;
+	bool operator!=(const Iterator &other) const;
+
+private:
+	const DiskTable		&_list;
+	count_type		_pos;
+};
+
 // ==============================
 
-inline Pair DiskTable::getAt(count_type const index) const{
+inline Pair DiskTable::getAt(count_type index) const{
 	return index < getCount() ? _getAtFromDisk(index) : nullptr;
 }
 

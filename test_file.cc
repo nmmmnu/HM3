@@ -81,12 +81,13 @@ static int op_list(const StringRef &filename, const StringRef &key = StringRef()
 	DiskTable list;
 	list.open(filename);
 
-	for(auto it = list.begin(); it != list.end(); ++it){
-		(*it).print();
+	for(const Pair &p : list ){
+		p.print();
 
 		if (--count == 0)
 			break;
 	}
+
 	return 0;
 }
 

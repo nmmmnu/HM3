@@ -94,3 +94,43 @@ const void *DiskTable::_getAtFromDisk(count_type const index) const{
 	const uint64_t ptr = be64toh( head->data[index] );
 	return & mem[ptr];
 }
+
+// ===================================
+
+DiskTable::Iterator::Iterator(const DiskTable &list, count_type const pos) :
+			_list(list),
+			_pos(pos){}
+
+DiskTable::Iterator &DiskTable::Iterator::operator++(){
+	++_pos;
+	return *this;
+}
+
+DiskTable::Iterator &DiskTable::Iterator::operator--(){
+	--_pos;
+	return *this;
+}
+
+Pair DiskTable::Iterator::operator*() const{
+	return _list.getAt(_pos);
+}
+
+bool DiskTable::Iterator::operator==(const Iterator &other) const{
+	return &_list == &other._list && _pos == other._pos;
+}
+
+bool DiskTable::Iterator::operator!=(const Iterator &other) const{
+	return ! ( *this == other );
+}
+
+// ===================================
+
+auto DiskTable::begin() const -> Iterator{
+	return Iterator(*this, 0);
+}
+
+auto DiskTable::end() const -> Iterator{
+	return Iterator(*this, getCount());
+}
+
+

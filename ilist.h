@@ -5,11 +5,18 @@
 
 #include "pair.h"
 
-template <class T>
-class IList{
+
+
+class IListDefs{
 public:
 	typedef uint32_t count_type;
 
+};
+
+// ==============================
+
+template <class T>
+class IList : public IListDefs{
 protected:
 	constexpr
 	static const count_type PRINT_COUNT = 10;
