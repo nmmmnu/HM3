@@ -3,6 +3,8 @@
 
 #include "ilist.h"
 
+#include <tuple>
+
 template <class T>
 class IArray{
 public:
@@ -14,12 +16,10 @@ public:
 
 	typedef IListDefs::count_type count_type;
 
-	typedef std::pair<int, count_type> locator;
-
 public:
 	Pair get(const StringRef &key) const;
 
-	locator lookup(const StringRef &key) const;
+	std::tuple<int, count_type> lookup(const StringRef &key) const;
 
 	void setLookupMethod(uint8_t const lookupMethod){
 		_lookupMethod = lookupMethod;
@@ -42,15 +42,15 @@ private:
 	uint8_t		_lookupMethod = BINARY_SEARCH;
 
 private:
-	locator _lookupBinarySearch(const StringRef &key) const;
-	locator _lookupLinearSearch(const StringRef &key) const;
+	std::tuple<int, count_type> _lookupBinarySearch(const StringRef &key) const;
+	std::tuple<int, count_type> _lookupLinearSearch(const StringRef &key) const;
 
 };
 
 // ==============================
 
 template <class T>
-auto IArray<T>::lookup(const StringRef &key) const -> locator{
+auto IArray<T>::lookup(const StringRef &key) const -> std::tuple<int, count_type>{
 	// until there are only 2 methods
 	if (_lookupMethod == LINEAR_SEARCH)
 		return _lookupLinearSearch(key);
@@ -63,7 +63,7 @@ auto IArray<T>::lookup(const StringRef &key) const -> locator{
 template <class T>
 Pair IArray<T>::get(const StringRef &key) const{
 	const auto l = lookup(key);
-	return l.first ? nullptr : getAt(l.second);
+	return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
 }
 
 // ==============================

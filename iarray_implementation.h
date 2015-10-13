@@ -1,7 +1,7 @@
 #include "iarray.h"
 
 template <class T>
-auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> locator{
+auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> std::tuple<int, count_type>{
 	auto const count = getCount();
 
 	if (count == 0){
@@ -26,11 +26,11 @@ auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> locator{
 	}
 
 	// index = i; return cmp;
-	return std::make_pair(cmp, i);
+	return std::make_tuple(cmp, i);
 }
 
 template <class T>
-auto IArray<T>::_lookupBinarySearch(const StringRef &key) const -> locator{
+auto IArray<T>::_lookupBinarySearch(const StringRef &key) const -> std::tuple<int, count_type>{
 	auto const count = getCount();
 
 	if (count == 0){
@@ -69,6 +69,6 @@ auto IArray<T>::_lookupBinarySearch(const StringRef &key) const -> locator{
 	}
 
 	// index = start; return cmp;
-	return std::make_pair(cmp, start);
+	return std::make_tuple(cmp, start);
 }
 

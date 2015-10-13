@@ -1,15 +1,12 @@
-#ifndef _DIR_TABLE_H
-#define _DIR_TABLE_H
+#ifndef _MULTI_TABLE_H
+#define _MULTI_TABLE_H
 
 #include "ilist.h"
-
-class MultiTableIterator;
+#include "multitablecollection.h"
 
 class MultiTable : public IList<MultiTable>{
-friend class MultiTableIterator;
-
 public:
-	MultiTable(IListCollection & collection) : _collection(collection){};
+	MultiTable(MultiTableCollectionDir &collection) : _collection(collection){};
 
 public:
 	virtual Pair _get(const StringRef &key) const;
@@ -23,7 +20,7 @@ public:
 	}
 
 private:
-	IListCollection & _collection;
+	MultiTableCollectionDir	&_collection;
 };
 
 #endif

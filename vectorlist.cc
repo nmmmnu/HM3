@@ -50,8 +50,8 @@ bool VectorList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto l = lookup(key);
-	auto const cmp   = l.first;
-	auto const index = l.second;
+	const auto cmp   = std::get<0>(l);
+	const auto index = std::get<1>(l);
 
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
@@ -93,8 +93,8 @@ template bool VectorList::_putT(const Pair &newdata);
 
 bool VectorList::remove(const StringRef &key){
 	const auto l = lookup(key);
-	const auto cmp = l.first;
-	const auto index = l.second;
+	const auto cmp   = std::get<0>(l);
+	const auto index = std::get<1>(l);
 
 	if (cmp){
 		// the key does not exists in the vector.

@@ -1,5 +1,5 @@
-#ifndef _LIST_DIR_COLLECTION_H
-#define _LIST_DIR_COLLECTION_H
+#ifndef _MULTI_TABLE_COLLECTION_H
+#define _MULTI_TABLE_COLLECTION_H
 
 #include "disktable.h"
 
@@ -7,15 +7,15 @@
 
 #include <vector>
 
-class ListDirCollection{
+class MultiTableCollectionDir{
 public:
 	typedef std::vector<DiskTable>	dt_vector;
 	typedef dt_vector::size_type	size_type;
 
 public:
-	ListDirCollection() = default;
+	MultiTableCollectionDir() = default;
 
-	explicit ListDirCollection(const StringRef &path){
+	explicit MultiTableCollectionDir(const StringRef &path){
 		open(path);
 	}
 
@@ -36,7 +36,7 @@ private:
 
 // ==============================
 
-inline const DiskTable & ListDirCollection::operator[](size_type const index) const{
+inline const DiskTable & MultiTableCollectionDir::operator[](size_type const index) const{
 	auto const count = size();
 	if (count == 0){
 		std::logic_error exception("collection is empty");
