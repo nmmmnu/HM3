@@ -7,7 +7,7 @@
 
 #include <utility>	// std::move
 
-#include "nmea0183checksumcalculator.h"
+//#include "nmea0183checksumcalculator.h"
 
 #define PRINTF_TEST(test, result) \
 	printf("%-15s Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
@@ -68,9 +68,9 @@ static void pair_test_raw(const char *module){
 	const char *key = "name";
 	const char *val = "Peter";
 
-	NMEA0183ChecksumCalculator nm;
+	Checksum<NMEA0183ChecksumCalculator> chk;
 
-	char checksum = (char) nm.calc("name\0Peter\0", 11);
+	char checksum = (char) chk.calc("name\0Peter\0", 11);
 
 	static char raw_memory[] = {
 		0x50, 0x00, 0x00, 0x00,		// created, 2012-07-13 11:01:20

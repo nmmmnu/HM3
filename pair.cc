@@ -71,7 +71,7 @@ bool Pair::fwrite(std::ostream & os) const{
 	p.vallen	= htobe32(val.size());
 	p.keylen	= htobe16(key.size());
 
-	NMEA0183ChecksumCalculator chk;
+	Checksum<NMEA0183ChecksumCalculator> chk;
 
 	chk.add(key.data(), key.size());
 	chk.add("\0", 1);

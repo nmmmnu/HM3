@@ -1,9 +1,10 @@
 #ifndef _PAIR_BLOB_H
 #define _PAIR_BLOB_H
 
-#include <string.h>	// strcmp
+#include <cstring>	// strcmp
+#include <cstddef>	// offsetof
+
 #include <endian.h>	// htobe16
-#include <stddef.h>	// offsetof
 
 #include "mytime.h"
 
@@ -98,7 +99,7 @@ inline size_t PairPOD::__sizeofBase() noexcept{
 }
 
 inline uint8_t PairPOD::calcChecksum() const noexcept{
-	NMEA0183ChecksumCalculator chk;
+	Checksum<NMEA0183ChecksumCalculator> chk;
 
 	return chk.calc(buffer, _sizeofBuffer());
 }
