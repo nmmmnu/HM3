@@ -19,7 +19,6 @@ public:
 
 	MultiTableDirectory(const StringRef &path){
 		open(path);
-		//printf("%lu\n", _files.size());
 	}
 
 	bool open(const StringRef &path);
