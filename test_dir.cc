@@ -2,7 +2,7 @@
 #include <ctype.h>	// isspace
 
 #include "multitable.h"
-#include "listdircollection.h"
+#include "multitabledirectory.h"
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
@@ -12,8 +12,9 @@ static void printUsage(const char *name){
 	printf("\t\tDo not forget about quotes around the directory\n");
 }
 
-void find(const ITable &list, const StringRef &key){
-	const Pair pair = list.get(key);
+template <class LIST>
+void find(const LIST &list, const StringRef &key){
+	const Pair &pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key.data());
@@ -22,7 +23,7 @@ void find(const ITable &list, const StringRef &key){
 
 	pair.print();
 }
-
+/*
 void listing(const ITable &list, const StringRef &key = StringRef(), size_t count = 100){
 	auto it = list.getIterator();
 	for(Pair pair = it->first(key); pair; pair = it->next()){
@@ -32,7 +33,7 @@ void listing(const ITable &list, const StringRef &key = StringRef(), size_t coun
 			break;
 	}
 }
-
+*/
 int main(int argc, char **argv){
 	if (argc <= 3){
 		printUsage(argv[0]);
@@ -43,10 +44,10 @@ int main(int argc, char **argv){
 	const auto path	= argv[2];
 	const auto key	= argv[3];
 
-	ListDirCollection lc;
-	lc.open(path);
+	MultiTableDirectory container;
+	container.open(path);
 
-	MultiTable mt(lc);
+	MultiTable<MultiTableDirectory> mt(container);
 
 	switch(op[0]){
 		case 's':
@@ -54,13 +55,13 @@ int main(int argc, char **argv){
 			break;
 
 		case 'l':
-			listing(mt);
+//			listing(mt);
 			break;
 
 		case 'L':
-			listing(mt, key);
+//			listing(mt, key);
 			break;
-		
+
 		default:
 			printUsage(argv[0]);
 			return 1;

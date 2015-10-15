@@ -1,12 +1,8 @@
-#include "multitable.h"
 
-#include <vector>
-
-Pair MultiTable::_get(const StringRef &key) const{
-	for(size_t i = 0; i < _collection.size(); ++i){
-		Pair pair = _collection[i].get(key);
-
-		if (pair)
+template <class CONTAINER>
+Pair MultiTable<CONTAINER>::get(const StringRef &key) const{
+	for(const DiskTable &dt : _container){
+		if (Pair pair = dt.get(key))
 			return pair;
 	}
 

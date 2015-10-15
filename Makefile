@@ -33,7 +33,7 @@ all: $(TARGETS)
 
 
 clean:
-	rm -f *.o *.d		\
+	rm -f *.o *.d *.gch		\
 			$(TARGETS)
 
 test_stringref: test_stringref.o
@@ -48,7 +48,7 @@ test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o
 test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o disktable.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o myglob.o disktable.o multitable.o listdircollection.o
+test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o myglob.o disktable.o multitabledirectory.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o

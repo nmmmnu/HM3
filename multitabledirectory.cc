@@ -1,8 +1,8 @@
-#include "multitablecollection.h"
+#include "multitabledirectory.h"
 #include "myglob.h"
 
-bool MultiTableCollectionDir::open(const StringRef &path){
-	close();
+bool MultiTableDirectory::open(const StringRef &path){
+	_files.clear();
 
 	MyGlob gl;
 	if (gl.open(path) == false)
@@ -21,7 +21,4 @@ bool MultiTableCollectionDir::open(const StringRef &path){
 	return true;
 }
 
-void MultiTableCollectionDir::close(){
-	_files.clear();
-}
 

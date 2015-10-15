@@ -2,14 +2,19 @@
 #define _MULTI_TABLE_H
 
 #include "ilist.h"
-#include "multitablecollection.h"
 
-class MultiTable : public IList<MultiTable>{
-public:
-	MultiTable(MultiTableCollectionDir &collection) : _collection(collection){};
+#include "disktable.h"
+
+template <class CONTAINER>
+class MultiTable : public IList<MultiTable<CONTAINER> >{
+private:
+	typedef typename IList<MultiTable<CONTAINER> >::count_type count_type;
 
 public:
-	virtual Pair _get(const StringRef &key) const;
+	MultiTable(const CONTAINER &container) : _container(container){};
+
+public:
+	Pair get(const StringRef &key) const;
 
 	count_type getCount() const{
 		return 0;
@@ -20,8 +25,10 @@ public:
 	}
 
 private:
-	MultiTableCollectionDir	&_collection;
+	const CONTAINER	&_container;
 };
+
+#include "multitable_implementation.h"
 
 #endif
 

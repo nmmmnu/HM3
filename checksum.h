@@ -1,7 +1,7 @@
 #ifndef _ICHECKSUM_H
 #define _ICHECKSUM_H
 
-#include <stdlib.h>	// size_t
+#include <cstdlib>	// size_t
 
 #include <memory>
 
@@ -17,7 +17,7 @@ public:
 	Checksum(CALCULATOR &&calculator) : _calculator(std::forward(calculator)){}
 
 public:
-	result_type calc(const void *data, size_t size, uint8_t start = 0) const noexcept{
+	result_type calc(const void *data, size_t size, result_type start = 0) const noexcept{
 		return _calculator(data, size, start);
 	}
 
