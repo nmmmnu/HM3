@@ -25,7 +25,7 @@ void find(const LIST &list, const StringRef &key){
 }
 
 template <class LIST>
-void listing(const LIST &list, const StringRef &key = StringRef(), size_t count = 1000000){
+void listing(const LIST &list, const StringRef &key = StringRef(), size_t count = 100){
 	auto it_end = list.end();
 
 	for(auto it = list.begin(); it != it_end; ++it){

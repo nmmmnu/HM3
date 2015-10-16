@@ -79,14 +79,17 @@ const Pair &MultiTable<CONTAINER>::Iterator::operator*() const{
 
 template <class CONTAINER>
 bool MultiTable<CONTAINER>::Iterator::operator==(const Iterator &other) const{
-	if (&_container == &other._container){
-		// you can simply check if all iterators == end(),
-		// but this is the way it should be done for correctness.
+	if (&_container == &other._container)
+		return false;
 
-		for(size_type i = 0; i < _container.size(); ++i)
-			if (_cur[i] != other._cur[i])
-				return false;
-	}
+	// you can simply check if all iterators == end(),
+	// but this is the way it should be done for correctness.
+
+	auto size = _container.size();
+
+	for(size_type i = 0; i < size; ++i)
+		if (_cur[i] != other._cur[i])
+			return false;
 
 	return true;
 }
