@@ -23,17 +23,21 @@ void find(const LIST &list, const StringRef &key){
 
 	pair.print();
 }
-/*
-void listing(const ITable &list, const StringRef &key = StringRef(), size_t count = 100){
-	auto it = list.getIterator();
-	for(Pair pair = it->first(key); pair; pair = it->next()){
+
+template <class LIST>
+void listing(const LIST &list, const StringRef &key = StringRef(), size_t count = 1000000){
+	auto it_end = list.end();
+
+	for(auto it = list.begin(); it != it_end; ++it){
+		const Pair &pair = *it;
+
 		pair.print();
 
 		if (--count == 0)
 			break;
 	}
 }
-*/
+
 int main(int argc, char **argv){
 	if (argc <= 3){
 		printUsage(argv[0]);
@@ -55,11 +59,11 @@ int main(int argc, char **argv){
 			break;
 
 		case 'l':
-//			listing(mt);
+			listing(mt);
 			break;
 
 		case 'L':
-//			listing(mt, key);
+			listing(mt, key);
 			break;
 
 		default:

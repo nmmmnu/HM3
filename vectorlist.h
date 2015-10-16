@@ -79,7 +79,7 @@ private:
 class VectorList::Iterator{
 private:
 	friend class VectorList;
-	Iterator(const VectorList &list, count_type const pos);
+	Iterator(const VectorList &list, count_type pos);
 
 public:
 	Iterator &operator++();
