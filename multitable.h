@@ -51,7 +51,7 @@ private:
 public:
 	Iterator &operator++();
 
-	const Pair &operator*() const;
+	Pair operator*() const;
 
 	bool operator==(const Iterator &other) const;
 	bool operator!=(const Iterator &other) const;
@@ -61,8 +61,6 @@ private:
 
 	vector_type	_cur;
 	vector_type	_end;
-
-	Pair		_pair;
 };
 
 // ===================================

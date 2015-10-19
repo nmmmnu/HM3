@@ -1,8 +1,6 @@
 #ifndef _DISK_FILE_H
 #define _DISK_FILE_H
 
-#include "itable.h"
-
 #include "stringref.h"
 
 #include <cstddef>	// ofsetof
@@ -17,7 +15,10 @@
 #define DISK_TABLE_LOGO		DISK_TABLE_TITLE DISK_TABLE_VERSION
 #define DISK_TABLE_SIZE		256
 
-#define DISK_TABLE_PADDING	DISK_TABLE_SIZE - 8 - 2 * sizeof(uint64_t)
+#define DISK_TABLE_PADDING	DISK_TABLE_SIZE			\
+				- sizeof(char) * 8 /* logo */	\
+				- sizeof(uint64_t) /* size */	\
+				- sizeof(uint64_t) /* data */
 
 struct DiskTableHeader{
 	const char	logo[8] =  DISK_TABLE_LOGO;	// 8
@@ -34,20 +35,15 @@ public:
 	static bool create(const LIST &list, const StringRef &filename);
 
 	constexpr
-	static size_t sizeofHeader();
+	static size_t sizeofHeader(){
+		return offsetof(DiskTableHeader, data);
+	}
 
 private:
 	template <class LIST>
 	static bool _writeListToFile(const LIST &list, std::ofstream &file);
 
 };
-
-// ==============================
-
-constexpr
-inline size_t DiskFile::sizeofHeader(){
-	return offsetof(DiskTableHeader, data);
-}
 
 // ==============================
 

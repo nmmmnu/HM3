@@ -22,22 +22,48 @@ MultiTable<CONTAINER>::Iterator::Iterator(const CONTAINER &container, bool const
 		_cur.push_back(std::move( endIt ? dt.end() : dt.begin()));
 		_end.push_back(std::move(dt.end()));
 	}
-
-	if (!endIt){
-		// rewind iterator...
-		operator++();
-	}
 }
 
 template <class CONTAINER>
 auto MultiTable<CONTAINER>::Iterator::operator++() -> Iterator &{
-	auto size = _container.size();
-
-	_pair = nullptr;
-
 	// step 1: find minimal in reverse order to find most recent.
 
+	Pair p = operator*();
+
+	if (!p){
+		return *this;
+	}
+
+	auto size = _container.size();
+
+	// step 2: increase all duplicates
 	for(size_type i = 0; i < size; ++i ){
+		// do not dereference if is end
+		if (_cur[i] == _end[i])
+			continue;
+
+		const Pair &pair = *(_cur[i]);
+
+		// increase if is same
+		if (pair.cmp(p) == 0)
+			++(_cur[i]);
+	}
+	
+	return *this;
+}
+
+template <class CONTAINER>
+Pair MultiTable<CONTAINER>::Iterator::operator*() const{
+	Pair result;
+		
+	auto size = _container.size();
+
+	// step 1: find minimal in reverse order to find most recent.
+	for(size_type i = 0; i < size; ++i ){
+		// do not dereference if is end
+		if (_cur[i] == _end[i])
+			continue;
+			
 		const Pair &pair = *(_cur[i]);
 
 		// skip if is null
@@ -45,52 +71,31 @@ auto MultiTable<CONTAINER>::Iterator::operator++() -> Iterator &{
 			continue;
 
 		// initialize
-		if (! _pair){
-			_pair = std::move(pair);
+		if (! result){
+			result = pair;
 			continue;
 		}
 
-		// compare and swap pair
-		if (pair.cmp(_pair) < 0){
-			_pair = std::move(pair);
+		// compare and swap pair if is smaller
+		if (pair.cmp(result) < 0){
+			result = pair;
 		}
 	}
 
-	if (!_pair){
-		return *this;
-	}
-
-	// step 2: increase all duplicates
-	for(size_type i = 0; i < size; ++i )
-		if (_cur[i] != _end[i]){
-			const Pair &pair = *(_cur[i]);
-
-			if (pair.cmp(_pair) == 0)
-				++(_cur[i]);
-		}
-
-	return *this;
-}
-
-template <class CONTAINER>
-const Pair &MultiTable<CONTAINER>::Iterator::operator*() const{
-	return _pair;
+	return result;
 }
 
 template <class CONTAINER>
 bool MultiTable<CONTAINER>::Iterator::operator==(const Iterator &other) const{
-	if (&_container == &other._container)
+	if (&_container != &other._container)
 		return false;
-
-	// you can simply check if all iterators == end(),
-	// but this is the way it should be done for correctness.
 
 	auto size = _container.size();
 
-	for(size_type i = 0; i < size; ++i)
+	for(size_type i = 0; i < size; ++i)		
 		if (_cur[i] != other._cur[i])
 			return false;
-
+	
 	return true;
 }
 
