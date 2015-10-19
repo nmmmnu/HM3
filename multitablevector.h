@@ -30,6 +30,22 @@ public:
 	}
 
 protected:
+	void clear(size_type const count = 0){
+		_files.clear();
+
+		if (count)
+		_files.reserve(count);
+	}
+	
+	bool pushBack(const StringRef &filename){
+		DiskTable dt;
+		dt.open(filename);
+		_files.push_back( std::move(dt) );
+		
+		return true;
+	}
+
+private:
 	container_type _files;
 
 };
