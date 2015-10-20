@@ -2,6 +2,7 @@
 #define _SKIP_LIST_LIST_H
 
 #include "ilist.h"
+#include "iiterator.h"
 
 #include <random>
 
@@ -75,7 +76,7 @@ private:
 
 // ==============================
 
-class SkipList::Iterator{
+class SkipList::Iterator : public IIterator<SkipList::Iterator>{
 private:
 	friend class SkipList;
 	Iterator(const Node *node);
@@ -84,7 +85,6 @@ public:
 	Iterator &operator++();
 	const Pair &operator*() const;
 	bool operator==(const Iterator &other) const;
-	bool operator!=(const Iterator &other) const;
 
 private:
 	const Node	*_node;

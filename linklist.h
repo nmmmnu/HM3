@@ -1,9 +1,10 @@
 #ifndef _LINK_LIST_LIST_H
 #define _LINK_LIST_LIST_H
 
-#include <cstdint>
-
 #include "ilist.h"
+#include "iiterator.h"
+
+#include <cstdint>
 
 class LinkList : public IList<LinkList>{
 public:
@@ -61,7 +62,7 @@ private:
 
 // ==============================
 
-class LinkList::Iterator{
+class LinkList::Iterator : public IIterator<LinkList::Iterator>{
 protected:
 	friend class LinkList;
 
@@ -71,7 +72,6 @@ public:
 	Iterator &operator++();
 	const Pair &operator*() const;
 	bool operator==(const Iterator &other) const;
-	bool operator!=(const Iterator &other) const;
 
 private:
 	const Node	*_node;

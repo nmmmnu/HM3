@@ -78,7 +78,8 @@ static void ref_test(const char *module, LIST &list){
 
 template <class IT>
 inline void iterator_test_deref(const char *module, IT &it, IT &et, const char *value){
-	PRINTF_TEST("*it deref",	it != et && (*it).getVal() == value	);
+	PRINTF_TEST("*it   deref",	it != et && (*it).getVal() == value	);
+	PRINTF_TEST(" it-> deref",	it != et && it->getVal() == value	);
 	++it;
 }
 

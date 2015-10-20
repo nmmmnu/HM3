@@ -193,10 +193,6 @@ bool LinkList::Iterator::operator==(const Iterator &other) const{
 	return _node == other._node;
 }
 
-bool LinkList::Iterator::operator!=(const Iterator &other) const{
-	return _node != other._node;
-}
-
 // ==============================
 
 LinkList::Iterator LinkList::begin() const{

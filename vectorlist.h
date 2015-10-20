@@ -2,6 +2,7 @@
 #define _VECTOR_LIST_H
 
 #include "iarray.h"
+#include "iiterator.h"
 
 class VectorList : public IList<VectorList>, public IArray<VectorList>{
 public:
@@ -76,7 +77,7 @@ private:
 
 // ===================================
 
-class VectorList::Iterator{
+class VectorList::Iterator : public IIterator<VectorList::Iterator>{
 private:
 	friend class VectorList;
 	Iterator(const VectorList &list, count_type pos);
@@ -88,7 +89,7 @@ public:
 	const Pair &operator*() const;
 
 	bool operator==(const Iterator &other) const;
-	bool operator!=(const Iterator &other) const;
+//	bool operator!=(const Iterator &other) const;
 
 private:
 	const VectorList	&_list;

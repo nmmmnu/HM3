@@ -2,6 +2,7 @@
 #define _DISK_TABLE_H
 
 #include "iarray.h"
+#include "iiterator.h"
 
 class DiskTable : public IList<DiskTable>, public IArray<DiskTable>{
 public:
@@ -51,7 +52,7 @@ private:
 
 // ===================================
 
-class DiskTable::Iterator{
+class DiskTable::Iterator : public IIterator<DiskTable::Iterator>{
 private:
 	friend class DiskTable;
 	Iterator(const DiskTable &list, count_type const pos);
@@ -63,7 +64,10 @@ public:
 	Pair operator*() const;
 
 	bool operator==(const Iterator &other) const;
-	bool operator!=(const Iterator &other) const;
+
+private:
+	// disabled method...
+	Pair *operator->() const;
 
 private:
 	const DiskTable		&_list;

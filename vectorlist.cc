@@ -209,10 +209,6 @@ bool VectorList::Iterator::operator==(const Iterator &other) const{
 	return &_list == &other._list && _pos == other._pos;
 }
 
-bool VectorList::Iterator::operator!=(const Iterator &other) const{
-	return ! ( *this == other );
-}
-
 // ===================================
 
 auto VectorList::begin() const -> Iterator{

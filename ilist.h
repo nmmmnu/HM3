@@ -19,7 +19,7 @@ template <class T>
 class IList : public IListDefs{
 protected:
 	constexpr
-	static const count_type PRINT_COUNT = 10;
+	static count_type PRINT_COUNT = 10;
 
 public:
 	void print(count_type count = PRINT_COUNT) const;

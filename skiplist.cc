@@ -335,10 +335,6 @@ bool SkipList::Iterator::operator==(const Iterator &other) const{
 	return _node == other._node;
 }
 
-bool SkipList::Iterator::operator!=(const Iterator &other) const{
-	return ! ( *this == other );
-}
-
 // ==============================
 
 SkipList::Iterator SkipList::begin() const{
