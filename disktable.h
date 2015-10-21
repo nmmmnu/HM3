@@ -4,7 +4,7 @@
 #include "iarray.h"
 #include "iiterator.h"
 
-class DiskTable : public IList<DiskTable>, public IArray<DiskTable>{
+class DiskTable : public IList<DiskTable>, public IArray<DiskTable, IArraySearch::Binary>{
 public:
 	typedef IListDefs::count_type count_type;
 

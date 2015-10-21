@@ -125,13 +125,13 @@ static int op_write_v(char const what, const StringRef &filename, const StringRe
 	switch(what){
 	case 'v': {
 			VectorList list;
-			list.setLookupMethod(VectorList::LINEAR_SEARCH);
+		//	list.setLookupMethod(VectorList::LINEAR_SEARCH);
 			return op_write(list, filename, filename2);
 		}
 
 	case 'V': {
 			VectorList list;
-			list.setLookupMethod(VectorList::BINARY_SEARCH);
+		//	list.setLookupMethod(VectorList::BINARY_SEARCH);
 			return op_write(list, filename, filename2);
 		}
 
@@ -171,13 +171,13 @@ static int op_search_v(char const what, const StringRef &filename, const StringR
 	switch(what){
 	case 'v': {
 			VectorList list;
-			list.setLookupMethod(VectorList::LINEAR_SEARCH);
+		//	list.setLookupMethod(VectorList::LINEAR_SEARCH);
 			return op_search(list, filename, key);
 		}
 
 	case 'V': {
 			VectorList list;
-			list.setLookupMethod(VectorList::BINARY_SEARCH);
+		//	list.setLookupMethod(VectorList::BINARY_SEARCH);
 			return op_search(list, filename, key);
 		}
 

@@ -4,7 +4,7 @@
 #include "iarray.h"
 #include "iiterator.h"
 
-class VectorList : public IList<VectorList>, public IArray<VectorList>{
+class VectorList : public IList<VectorList>, public IArray<VectorList, IArraySearch::Binary>{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;

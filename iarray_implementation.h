@@ -1,8 +1,8 @@
 #include "iarray.h"
 
-template <class T>
-auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> std::tuple<int, count_type>{
-	auto const count = getCount();
+template <class ARRAY>
+auto IArraySearch::Linear::processing(const ARRAY &self, const StringRef &key) -> std::tuple<int, count_type>{
+	auto const count = self.getCount();
 
 	if (count == 0){
 		// index = 0; return 1;
@@ -13,7 +13,7 @@ auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> std::tuple<in
 
 	count_type i;
 	for(i = 0; i < count; ++i){
-		cmp = cmpAt(i, key);
+		cmp = self.cmpAt(i, key);
 
 		if (cmp == 0){
 			// found
@@ -29,9 +29,9 @@ auto IArray<T>::_lookupLinearSearch(const StringRef &key) const -> std::tuple<in
 	return std::make_tuple(cmp, i);
 }
 
-template <class T>
-auto IArray<T>::_lookupBinarySearch(const StringRef &key) const -> std::tuple<int, count_type>{
-	auto const count = getCount();
+template <class ARRAY>
+auto IArraySearch::Binary::processing(const ARRAY &self, const StringRef &key) -> std::tuple<int, count_type>{
+	auto const count = self.getCount();
 
 	if (count == 0){
 		// index = 0; return 1;
@@ -51,7 +51,7 @@ auto IArray<T>::_lookupBinarySearch(const StringRef &key) const -> std::tuple<in
 	//	count_type mid = start + ((end - start) /  2);
 		count_type mid = start + ((end - start) >> 1);
 
-		cmp = cmpAt(mid, key);
+		cmp = self.cmpAt(mid, key);
 
 		if (cmp == 0){
 			// found
