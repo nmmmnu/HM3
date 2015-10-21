@@ -77,7 +77,7 @@ static void listSearch(LIST &list, const StringRef &key){
 
 
 
-static int op_list(const StringRef &filename, const StringRef &key = StringRef(), size_t count = 10){
+static int op_list(const StringRef &filename, const StringRef &key = StringRef(), size_t count = 100){
 	DiskTable list;
 	list.open(filename);
 
@@ -129,13 +129,12 @@ static int op_write_v(char const what, const StringRef &filename, const StringRe
 			return op_write(list, filename, filename2);
 		}
 
-	default:
 	case 'V': {
 			VectorList list;
 			list.setLookupMethod(VectorList::BINARY_SEARCH);
 			return op_write(list, filename, filename2);
 		}
-/*
+
 	case 'l': {
 			LinkList list;
 
@@ -148,7 +147,6 @@ static int op_write_v(char const what, const StringRef &filename, const StringRe
 
 			return op_write(list, filename, filename2);
 		}
-*/
 	}
 }
 

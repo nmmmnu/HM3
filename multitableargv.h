@@ -8,10 +8,14 @@ public:
 	MultiTableArgv() = default;
 
 	MultiTableArgv(const int argc, const char **argv){
-		load(argc, argv);
+		open(argc, argv);
 	}
 
-	bool load(const int argc, const char **argv);
+	bool open(const int argc, const char **argv);
+
+	bool openArgv(const int argc, const char **argv){
+		return open(argc - 1, & argv[1]);
+	}
 };
 
 #endif

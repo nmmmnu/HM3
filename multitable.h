@@ -21,7 +21,14 @@ public:
 	Pair get(const StringRef &key) const;
 
 	count_type getCount() const{
-		return 0;
+		auto end_it = end();
+
+		count_type result = 0;
+
+		for(auto it = begin(); it != end_it; ++it)
+			++result;
+
+		return result;
 	};
 
 	size_t getSize() const{
