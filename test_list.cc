@@ -202,7 +202,7 @@ static void list_test(const char *module, LIST &list){
 
 int main(int argc, char **argv){
 
-	VectorList vl;
+	VectorList<> vl;
 		list_test("Vector", vl);
 
 	// =========================
@@ -216,10 +216,6 @@ int main(int argc, char **argv){
 		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
-
-	// =========================
-
-	return 0;
 }
 
 

@@ -1,7 +1,5 @@
 #include "vectorlist.h"
 
-#include <stdlib.h>	// size_t
-
 //#define xmalloc(s)	malloc(s)
 #define xfree(a)	free(a)
 #define xrealloc(a, s)	realloc(a, s)
@@ -18,12 +16,14 @@ inline T SGN(const T a){
 
 
 
-VectorList::VectorList(size_t const reallocSize) :
+template <class LOOKUP>
+VectorList<LOOKUP>::VectorList(size_t const reallocSize) :
 		_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
 	_clear();
 }
 
-VectorList::VectorList(VectorList &&other):
+template <class LOOKUP>
+VectorList<LOOKUP>::VectorList(VectorList &&other):
 		_reallocSize	(std::move(other._reallocSize		)),
 		_buffer		(std::move(other._buffer		)),
 		_bufferReserved	(std::move(other._bufferReserved	)),
@@ -32,11 +32,13 @@ VectorList::VectorList(VectorList &&other):
 	other._clear();
 }
 
-VectorList::~VectorList(){
+template <class LOOKUP>
+VectorList<LOOKUP>::~VectorList(){
 	removeAll();
 }
 
-bool VectorList::removeAll(){
+template <class LOOKUP>
+bool VectorList<LOOKUP>::removeAll(){
 	for(count_type i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
 
@@ -45,8 +47,9 @@ bool VectorList::removeAll(){
 	return true;
 }
 
+template <class LOOKUP>
 template <class UPAIR>
-bool VectorList::_putT(UPAIR&& newdata){
+bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto l = lookup(key);
@@ -88,10 +91,8 @@ bool VectorList::_putT(UPAIR&& newdata){
 	return true;
 }
 
-template bool VectorList::_putT(Pair &&newdata);
-template bool VectorList::_putT(const Pair &newdata);
-
-bool VectorList::remove(const StringRef &key){
+template <class LOOKUP>
+bool VectorList<LOOKUP>::remove(const StringRef &key){
 	const auto l = lookup(key);
 	const auto cmp   = std::get<0>(l);
 	const auto index = std::get<1>(l);
@@ -113,7 +114,8 @@ bool VectorList::remove(const StringRef &key){
 
 // ===================================
 
-void VectorList::_clear(bool const alsoFree){
+template <class LOOKUP>
+void VectorList<LOOKUP>::_clear(bool const alsoFree){
 	if (alsoFree && _buffer)
 		xfree(_buffer);
 
@@ -123,7 +125,8 @@ void VectorList::_clear(bool const alsoFree){
 	_buffer = nullptr;
 }
 
-bool VectorList::_shiftL(uint64_t const index){
+template <class LOOKUP>
+bool VectorList<LOOKUP>::_shiftL(uint64_t const index){
 	// this is the most slow operation of them all
 	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * ELEMENT_SIZE);
 
@@ -132,7 +135,8 @@ bool VectorList::_shiftL(uint64_t const index){
 	return true;
 }
 
-bool VectorList::_shiftR(uint64_t const index){
+template <class LOOKUP>
+bool VectorList<LOOKUP>::_shiftR(uint64_t const index){
 	if (! _resize(1))
 		return false;
 
@@ -142,7 +146,8 @@ bool VectorList::_shiftR(uint64_t const index){
 	return true;
 }
 
-bool VectorList::_resize(int const delta){
+template <class LOOKUP>
+bool VectorList<LOOKUP>::_resize(int const delta){
 	if (delta == 0){
 		// already resized, done :)
 		return true;
@@ -176,7 +181,8 @@ bool VectorList::_resize(int const delta){
 	return true;
 }
 
-size_t VectorList::__calcNewSize(size_t const size, size_t const reallocSize){
+template <class LOOKUP>
+size_t VectorList<LOOKUP>::__calcNewSize(size_t const size, size_t const reallocSize){
 	size_t newsize = size / reallocSize;
 
 	if (size % reallocSize)
@@ -187,36 +193,54 @@ size_t VectorList::__calcNewSize(size_t const size, size_t const reallocSize){
 
 // ===================================
 
-VectorList::Iterator::Iterator(const VectorList &list, count_type const pos) :
+template <class LOOKUP>
+VectorList<LOOKUP>::Iterator::Iterator(const VectorList &list, count_type const pos) :
 			_list(list),
 			_pos(pos){}
 
-VectorList::Iterator &VectorList::Iterator::operator++(){
+template <class LOOKUP>
+auto VectorList<LOOKUP>::Iterator::operator++() -> Iterator &{
 	++_pos;
 	return *this;
 }
 
-VectorList::Iterator &VectorList::Iterator::operator--(){
+template <class LOOKUP>
+auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
 	--_pos;
 	return *this;
 }
 
-const Pair &VectorList::Iterator::operator*() const{
+template <class LOOKUP>
+const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
 	return _list.getAtR(_pos);
 }
 
-bool VectorList::Iterator::operator==(const Iterator &other) const{
+template <class LOOKUP>
+bool VectorList<LOOKUP>::Iterator::operator==(const Iterator &other) const{
 	return &_list == &other._list && _pos == other._pos;
 }
 
 // ===================================
 
-auto VectorList::begin() const -> Iterator{
+template <class LOOKUP>
+auto VectorList<LOOKUP>::begin() const -> Iterator{
 	return Iterator(*this, 0);
 }
 
-auto VectorList::end() const -> Iterator{
+template <class LOOKUP>
+auto VectorList<LOOKUP>::end() const -> Iterator{
 	return Iterator(*this, getCount());
 }
 
+// ===================================
+
+template class VectorList<IArraySearch::Linear>;
+
+template bool VectorList<IArraySearch::Linear>::_putT(Pair &&newdata);
+template bool VectorList<IArraySearch::Linear>::_putT(const Pair &newdata);
+
+template class VectorList<IArraySearch::Binary>;
+
+template bool VectorList<IArraySearch::Binary>::_putT(Pair &&newdata);
+template bool VectorList<IArraySearch::Binary>::_putT(const Pair &newdata);
 

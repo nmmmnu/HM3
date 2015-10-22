@@ -124,14 +124,14 @@ static int op_write(LIST &list, const StringRef &filename, const StringRef &file
 static int op_write_v(char const what, const StringRef &filename, const StringRef &filename2){
 	switch(what){
 	case 'v': {
-			VectorList list;
-		//	list.setLookupMethod(VectorList::LINEAR_SEARCH);
+			VectorList<IArraySearch::Linear> list;
+
 			return op_write(list, filename, filename2);
 		}
 
 	case 'V': {
-			VectorList list;
-		//	list.setLookupMethod(VectorList::BINARY_SEARCH);
+			VectorList<IArraySearch::Binary> list;
+
 			return op_write(list, filename, filename2);
 		}
 
@@ -170,14 +170,14 @@ static int op_search(LIST &list, const StringRef &filename, const StringRef &key
 static int op_search_v(char const what, const StringRef &filename, const StringRef &key){
 	switch(what){
 	case 'v': {
-			VectorList list;
-		//	list.setLookupMethod(VectorList::LINEAR_SEARCH);
+			VectorList<IArraySearch::Linear> list;
+
 			return op_search(list, filename, key);
 		}
 
 	case 'V': {
-			VectorList list;
-		//	list.setLookupMethod(VectorList::BINARY_SEARCH);
+			VectorList<IArraySearch::Binary> list;
+
 			return op_search(list, filename, key);
 		}
 

@@ -4,7 +4,8 @@
 #include "iarraysearch.h"
 #include "iiterator.h"
 
-class VectorList : public IList<VectorList>{
+template <class LOOKUP=IArraySearch::Binary>
+class VectorList : public IList<VectorList<LOOKUP> >{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
@@ -32,8 +33,13 @@ public:
 
 	bool remove(const StringRef &key);
 
-	Pair getAt(count_type index) const;
-	int  cmpAt(count_type index, const StringRef &key) const;
+	Pair getAt(count_type index) const{
+		return getAtR(index);
+	}
+
+	int  cmpAt(count_type index, const StringRef &key) const{
+		return getAtR(index).cmp(key);
+	}
 
 	count_type getCount() const{
 		return _dataCount;
@@ -43,7 +49,6 @@ public:
 		return _dataSize;
 	}
 
-	template <class LOOKUP = IArraySearch::Binary>
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
 	}
@@ -54,7 +59,11 @@ public:
 	}
 
 private:
-	const Pair &getAtR(count_type index) const;
+	const Pair &getAtR(count_type index) const{
+		static Pair zero;
+
+		return index < getCount() ? _buffer[index] : zero;
+	}
 
 public:
 	bool put(const Pair &pair){
@@ -87,7 +96,8 @@ private:
 
 // ===================================
 
-class VectorList::Iterator : public IIterator<VectorList::Iterator>{
+template <class LOOKUP>
+class VectorList<LOOKUP>::Iterator : public IIterator<VectorList<LOOKUP>::Iterator>{
 private:
 	friend class VectorList;
 	Iterator(const VectorList &list, count_type pos);
@@ -105,22 +115,5 @@ private:
 	const VectorList	&_list;
 	count_type		_pos;
 };
-
-// ===================================
-
-
-inline const Pair &VectorList::getAtR(count_type const index) const{
-	static Pair zero;
-
-	return index < getCount() ? _buffer[index] : zero;
-}
-
-inline Pair VectorList::getAt(count_type index) const{
-	return getAtR(index);
-}
-
-inline int  VectorList::cmpAt(count_type const index, const StringRef &key) const{
-	return getAtR(index).cmp(key);
-}
 
 #endif
