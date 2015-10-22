@@ -1,10 +1,10 @@
 #ifndef _VECTOR_LIST_H
 #define _VECTOR_LIST_H
 
-#include "iarray.h"
+#include "iarraysearch.h"
 #include "iiterator.h"
 
-class VectorList : public IList<VectorList>, public IArray<VectorList, IArraySearch::Binary>{
+class VectorList : public IList<VectorList>{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
@@ -41,6 +41,16 @@ public:
 
 	size_t getSize() const{
 		return _dataSize;
+	}
+
+	template <class LOOKUP = IArraySearch::Binary>
+	std::tuple<int, count_type> lookup(const StringRef &key) const{
+		return LOOKUP::processing(*this, key);
+	}
+
+	Pair get(const StringRef &key) const{
+		const auto l = lookup(key);
+		return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
 	}
 
 private:

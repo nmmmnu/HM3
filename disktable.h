@@ -1,10 +1,10 @@
 #ifndef _DISK_TABLE_H
 #define _DISK_TABLE_H
 
-#include "iarray.h"
+#include "iarraysearch.h"
 #include "iiterator.h"
 
-class DiskTable : public IList<DiskTable>, public IArray<DiskTable, IArraySearch::Binary>{
+class DiskTable : public IList<DiskTable>{
 public:
 	typedef IListDefs::count_type count_type;
 
@@ -31,6 +31,16 @@ public:
 	}
 
 	size_t getSize() const;
+
+	template <class LOOKUP = IArraySearch::Binary>
+	std::tuple<int, count_type> lookup(const StringRef &key) const{
+		return LOOKUP::processing(*this, key);
+	}
+
+	Pair get(const StringRef &key) const{
+		const auto l = lookup(key);
+		return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
+	}
 
 public:
 	Iterator begin() const;

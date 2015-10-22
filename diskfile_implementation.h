@@ -1,5 +1,3 @@
-#include "diskfile.h"
-
 template <class LIST>
 bool DiskFile::create(const LIST &list, const StringRef &filename){
 	std::ofstream file(filename, std::ios::out | std::ios::binary);
