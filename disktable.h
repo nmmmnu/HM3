@@ -62,7 +62,7 @@ private:
 
 // ===================================
 
-class DiskTable::Iterator : public IIterator<DiskTable::Iterator>{
+class DiskTable::Iterator : public IIterator<Iterator>{
 private:
 	friend class DiskTable;
 	Iterator(const DiskTable &list, count_type const pos);

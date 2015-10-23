@@ -76,7 +76,7 @@ private:
 
 // ==============================
 
-class SkipList::Iterator : public IIterator<SkipList::Iterator>{
+class SkipList::Iterator : public IIterator<Iterator>{
 private:
 	friend class SkipList;
 	Iterator(const Node *node);

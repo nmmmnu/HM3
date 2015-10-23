@@ -62,7 +62,7 @@ private:
 
 // ==============================
 
-class LinkList::Iterator : public IIterator<LinkList::Iterator>{
+class LinkList::Iterator : public IIterator<Iterator>{
 protected:
 	friend class LinkList;
 
