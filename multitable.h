@@ -29,10 +29,24 @@ public:
 			++result;
 
 		return result;
-	};
+	}
+
+	count_type getCountEstimated() const{
+		count_type result = 0;
+
+		for(const auto &table : *this)
+			result += table.getCount();
+
+		return result;
+	}
 
 	size_t getSize() const{
-		return 0;
+		size_t result = 0;
+
+		for(const auto &table : *this)
+			result += table.getSize();
+
+		return result;
 	}
 
 public:

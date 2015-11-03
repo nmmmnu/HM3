@@ -104,12 +104,15 @@ static void list_test(const char *module, LIST &list){
 
 	// TEST GENERAL
 
-	size_t size = list_populate(list);
+	const size_t size = list_populate(list);
+
+	const typename LIST::count_type count = 4;
 
 	PRINTF_TEST("print it",		true					);
 	list.print();
 
-	PRINTF_TEST("count",		list.getCount() == 4			);
+	PRINTF_TEST("count",		list.getCount() == count		);
+	PRINTF_TEST("count estim",	list.getCountEstimated() >= count	);
 	PRINTF_TEST("empty",		! list.isEmpty()			);
 	PRINTF_TEST("sizeof",		list.getSize() == size			);
 
@@ -193,7 +196,7 @@ static void list_test(const char *module, LIST &list){
 
 	// MOVE TESTS
 
-	size = list_populate(list);
+	/* size = */ list_populate(list);
 
 	LIST mlist = std::move(list);
 	PRINTF_TEST("move c-tor 1",	mlist.getSize() == size			);
