@@ -1,16 +1,17 @@
-#ifndef _MULTI_TABLE_VECTOR_H
-#define _MULTI_TABLE_VECTOR_H
+#ifndef _VECTOR_CONTAINER_H
+#define _VECTOR_CONTAINER_H
 
-#include "disktable.h"
+#include "stringref.h"
 
 #include <vector>
 
-class MultiTableVector{
+template <class TABLE>
+class VectorContainer{
 protected:
-	typedef std::vector<DiskTable>		container_type;
+	typedef typename std::vector<TABLE>		container_type;
 
 public:
-	typedef container_type::size_type	size_type;
+	typedef typename container_type::size_type	size_type;
 
 public:
 	auto size() const{
@@ -36,12 +37,12 @@ protected:
 		if (count)
 		_files.reserve(count);
 	}
-	
+
 	bool pushBack(const StringRef &filename){
-		DiskTable dt;
+		TABLE dt;
 		dt.open(filename);
 		_files.push_back( std::move(dt) );
-		
+
 		return true;
 	}
 

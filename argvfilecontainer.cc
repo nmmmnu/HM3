@@ -1,6 +1,6 @@
-#include "multitableargv.h"
+#include "argvfilecontainer.h"
 
-bool MultiTableArgv::open(const int argc, const char **argv){
+bool ArgvFileContainer::open(const int argc, const char **argv){
 	if (argc < 0)
 		return false;
 

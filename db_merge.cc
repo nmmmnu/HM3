@@ -1,5 +1,5 @@
 #include "multitable.h"
-#include "multitableargv.h"
+#include "argvfilecontainer.h"
 #include "diskfile.h"
 
 static void printUsage(const char *name){
@@ -21,10 +21,10 @@ int main(int argc, char **argv){
 	const char **path	= (const char **) &argv[2];
 	const int  pathc	= argc - 1 - 1;
 
-	MultiTableArgv container;
+	ArgvFileContainer container;
 	container.open(pathc, path);
 
-	MultiTable<MultiTableArgv> mtlist(container);
+	MultiTable<ArgvFileContainer> mtlist(container);
 
 	DiskFile::create(mtlist, "test.bin");
 }

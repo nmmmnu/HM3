@@ -1,7 +1,7 @@
-#include "multitabledirectory.h"
+#include "directorycontainer.h"
 #include "myglob.h"
 
-bool MultiTableDirectory::open(const StringRef &path){
+bool DirectoryContainer::open(const StringRef &path){
 	MyGlob gl;
 	if (gl.open(path) == false)
 		return false;

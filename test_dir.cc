@@ -2,7 +2,7 @@
 #include <ctype.h>	// isspace
 
 #include "multitable.h"
-#include "multitabledirectory.h"
+#include "directorycontainer.h"
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
@@ -48,10 +48,10 @@ int main(int argc, char **argv){
 	const auto path	= argv[2];
 	const auto key	= argv[3];
 
-	MultiTableDirectory container;
+	DirectoryContainer container;
 	container.open(path);
 
-	MultiTable<MultiTableDirectory> mt(container);
+	MultiTable<DirectoryContainer> mt(container);
 
 	switch(op[0]){
 		case 's':
