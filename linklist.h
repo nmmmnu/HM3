@@ -21,7 +21,7 @@ public:
 	Pair get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	count_type getCount() const{
+	count_type getCount(bool const = true) const{
 		return _dataCount;
 	}
 

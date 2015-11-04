@@ -41,7 +41,7 @@ public:
 		return getAtR(index).cmp(key);
 	}
 
-	count_type getCount() const{
+	count_type getCount(bool const = false) const{
 		return _dataCount;
 	}
 

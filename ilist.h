@@ -25,17 +25,12 @@ public:
 	void print(count_type count = PRINT_COUNT) const;
 
 	bool isEmpty() const{
-		return getCountEstimated() == 0;
+		return getCount(true) == 0;
 	}
 
 public:
-	count_type getCount() const{
-		return static_cast<const T*>(this)->getCount();
-	}
-
-	// This must report value equal or LARGE than getCount()
-	count_type getCountEstimated() const{
-		return static_cast<const T*>(this)->getCount();
+	count_type getCount(bool const estimated = false) const{
+		return static_cast<const T*>(this)->getCount(estimated);
 	}
 };
 

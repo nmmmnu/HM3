@@ -112,7 +112,7 @@ static void list_test(const char *module, LIST &list){
 	list.print();
 
 	PRINTF_TEST("count",		list.getCount() == count		);
-	PRINTF_TEST("count estim",	list.getCountEstimated() >= count	);
+	PRINTF_TEST("count estim",	list.getCount(true) >= count		);
 	PRINTF_TEST("empty",		! list.isEmpty()			);
 	PRINTF_TEST("sizeof",		list.getSize() == size			);
 

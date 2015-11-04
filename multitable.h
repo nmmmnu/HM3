@@ -20,7 +20,21 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	count_type getCount() const{
+	count_type getCountReal(bool const estimated = true) const{
+		return estimated ? getCountEstimated() : getCountReal();
+	}
+
+	size_t getSize() const{
+		size_t result = 0;
+
+		for(const auto &table : *this)
+			result += table.getSize();
+
+		return result;
+	}
+
+private:
+	count_type getCountReal() const{
 		auto end_it = end();
 
 		count_type result = 0;
@@ -36,15 +50,6 @@ public:
 
 		for(const auto &table : *this)
 			result += table.getCount();
-
-		return result;
-	}
-
-	size_t getSize() const{
-		size_t result = 0;
-
-		for(const auto &table : *this)
-			result += table.getSize();
 
 		return result;
 	}
