@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 
 	MyDTVector container;
 
-	loadFileContainerFromDirectory(container, path);
+	FileListContainer::loadFromDirectory(container, path);
 
 	LSMTable<MyDTVector> mt(container);
 

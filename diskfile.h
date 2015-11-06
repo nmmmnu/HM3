@@ -33,21 +33,20 @@ struct DiskTableHeader{
 
 // ==============================
 
-class DiskFile{
-public:
-	template <class LIST>
-	static bool create(const LIST &list, const StringRef &filename);
+namespace DiskFile{
 
-	constexpr
-	static size_t sizeofHeader(){
-		return offsetof(DiskTableHeader, data);
-	}
+template <class LIST>
+bool create(const LIST &list, const StringRef &filename);
 
-private:
-	template <class LIST>
-	static bool _writeListToFile(const LIST &list, std::ofstream &file);
+constexpr
+size_t sizeofHeader(){
+	return offsetof(DiskTableHeader, data);
+}
 
-};
+template <class LIST>
+static bool writeListToFile(const LIST &list, std::ofstream &file);
+
+}; // namespace DiskFile
 
 // ==============================
 

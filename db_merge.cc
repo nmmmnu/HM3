@@ -26,7 +26,7 @@ int main(int argc, char **argv){
 	typedef std::vector<DiskTable> MyDTVector;
 
 	MyDTVector container;
-	loadFileContainer(container, pathc, path);
+	FileListContainer::load(container, pathc, path);
 
 	LSMTable<MyDTVector> mtlist(container);
 

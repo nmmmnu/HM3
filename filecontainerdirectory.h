@@ -3,8 +3,10 @@
 
 #include "myglob.h"
 
+namespace FileListContainer{
+
 template <class CONTAINER>
-CONTAINER &loadFileContainerFromDirectory(CONTAINER &vector, const StringRef &path){
+CONTAINER &loadFromDirectory(CONTAINER &vector, const StringRef &path){
 	vector.clear();
 
 	MyGlob gl;
@@ -26,6 +28,8 @@ CONTAINER &loadFileContainerFromDirectory(CONTAINER &vector, const StringRef &pa
 
 	return vector;
 }
+
+}; // namespace ListContainer
 
 #endif
 

@@ -1,8 +1,10 @@
 #ifndef _FILE_CONTAINER_ARGV_H
 #define _FILE_CONTAINER_ARGV_H
 
+namespace FileListContainer{
+
 template <class CONTAINER, class STR_ARRAY>
-CONTAINER &loadFileContainer(CONTAINER &vector, unsigned const count, const STR_ARRAY argv){
+CONTAINER &load(CONTAINER &vector, unsigned const count, const STR_ARRAY argv){
 	vector.clear();
 
 	if (count < 0)
@@ -24,9 +26,11 @@ CONTAINER &loadFileContainer(CONTAINER &vector, unsigned const count, const STR_
 }
 
 template <class CONTAINER>
-inline CONTAINER &loadFileContainerFromArgv(CONTAINER &vector, int const argc, const char **argv){
-	return loadFileContainer(vector, argc - 1, & argv[1]);
+inline CONTAINER &loadFromArgv(CONTAINER &vector, int const argc, const char **argv){
+	return load(vector, argc - 1, & argv[1]);
 }
+
+}; // namespace ListContainer
 
 #endif
 

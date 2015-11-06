@@ -5,11 +5,11 @@ bool DiskFile::create(const LIST &list, const StringRef &filename){
 	if (! file)
 		return false;
 
-	return _writeListToFile(list, file);
+	return writeListToFile(list, file);
 }
 
 template <class LIST>
-bool DiskFile::_writeListToFile(const LIST &list, std::ofstream &file){
+bool DiskFile::writeListToFile(const LIST &list, std::ofstream &file){
 	uint64_t be;
 
 	auto const datacount = list.getCount();

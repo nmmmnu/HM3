@@ -28,6 +28,8 @@ public:
 	Pair get(const StringRef &key) const;
 
 	count_type getCount(bool const estimated = false) const{
+		// TODO: difference_type missing...
+		// distance(begin(), end());
 		return estimated ? getCountEstimated() : getCountReal();
 	}
 
