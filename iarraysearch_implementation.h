@@ -1,7 +1,7 @@
 namespace IArraySearch{
 
 template <class ARRAY>
-auto Linear::processing(const ARRAY &self, const StringRef &key) -> std::tuple<int, count_type>{
+auto Linear::processing(const ARRAY &self, const StringRef &key) -> result_type{
 	auto const count = self.getCount();
 
 	if (count == 0){
@@ -30,7 +30,7 @@ auto Linear::processing(const ARRAY &self, const StringRef &key) -> std::tuple<i
 }
 
 template <class ARRAY>
-auto Binary::processing(const ARRAY &self, const StringRef &key) -> std::tuple<int, count_type>{
+auto Binary::processing(const ARRAY &self, const StringRef &key) -> result_type{
 	auto const count = self.getCount();
 
 	if (count == 0){

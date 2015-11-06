@@ -7,15 +7,16 @@
 
 namespace IArraySearch{
 	typedef IListDefs::count_type count_type;
+	typedef std::tuple<int, IListDefs::count_type> result_type;
 
 	struct Linear{
 		template <class ARRAY>
-		static std::tuple<int, count_type> processing(const ARRAY &array, const StringRef &key);
+		static result_type processing(const ARRAY &array, const StringRef &key);
 	};
 
 	struct Binary{
 		template <class ARRAY>
-		static std::tuple<int, count_type> processing(const ARRAY &array, const StringRef &key);
+		static result_type processing(const ARRAY &array, const StringRef &key);
 	};
 };
 

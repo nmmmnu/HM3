@@ -10,7 +10,7 @@
 template <class CONTAINER>
 class MultiTable : public IList<MultiTable<CONTAINER> >{
 private:
-	typedef typename IList<MultiTable<CONTAINER> >::count_type count_type;
+	typedef IListDefs::count_type count_type;
 
 	class Iterator;
 

@@ -7,8 +7,7 @@
 
 
 
-class IListDefs{
-public:
+struct IListDefs{
 	typedef uint32_t count_type;
 
 };
