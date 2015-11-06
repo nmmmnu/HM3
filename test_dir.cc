@@ -2,7 +2,7 @@
 #include <ctype.h>	// isspace
 
 #include "multitable.h"
-#include "directorycontainer.h"
+#include "filecontainerdirectory.h"
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
@@ -48,10 +48,13 @@ int main(int argc, char **argv){
 	const auto path	= argv[2];
 	const auto key	= argv[3];
 
-	DirectoryContainer container;
-	container.open(path);
+	typedef std::vector<DiskTable> MyDTVector;
 
-	MultiTable<DirectoryContainer> mt(container);
+	MyDTVector container;
+
+	loadFileContainerFromDirectory(container, path);
+
+	MultiTable<MyDTVector> mt(container);
 
 	switch(op[0]){
 		case 's':

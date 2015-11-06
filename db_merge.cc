@@ -1,6 +1,8 @@
 #include "multitable.h"
-#include "argvfilecontainer.h"
+#include "filecontainerargv.h"
 #include "diskfile.h"
+
+#include <vector>
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
@@ -21,10 +23,12 @@ int main(int argc, char **argv){
 	const char **path	= (const char **) &argv[2];
 	const int  pathc	= argc - 1 - 1;
 
-	ArgvFileContainer container;
-	container.open(pathc, path);
+	typedef std::vector<DiskTable> MyDTVector;
 
-	MultiTable<ArgvFileContainer> mtlist(container);
+	MyDTVector container;
+	loadFileContainer(container, pathc, path);
+
+	MultiTable<MyDTVector> mtlist(container);
 
 	DiskFile::create(mtlist, "test.bin");
 }

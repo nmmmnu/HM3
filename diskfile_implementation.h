@@ -35,11 +35,15 @@ bool DiskFile::_writeListToFile(const LIST &list, std::ofstream &file){
 		be = htobe64(current);
 		file.write( (const char *) & be, sizeof(uint64_t));
 		current += pair.getSize();
+
+	//	pair.print();
 	}
 
 	// traverse and write the data.
 	for(auto pair : list){
 		pair.fwrite(file);
+
+	//	pair.print();
 	}
 
 	return true;
