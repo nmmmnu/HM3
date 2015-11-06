@@ -2,6 +2,8 @@
 #include "linklist.h"
 #include "skiplist.h"
 
+#include "hashlist.h"
+
 #include <utility>	// std::move
 
 #include <stdio.h>	// printf
@@ -219,6 +221,11 @@ int main(int argc, char **argv){
 		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
+
+	// =========================
+
+	HashList<VectorList<>, 1024> hlvl;
+		list_test("HashList@Vector", vl);
 }
 
 
