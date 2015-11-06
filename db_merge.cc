@@ -1,4 +1,4 @@
-#include "multitable.h"
+#include "lsmtable.h"
 #include "filecontainerargv.h"
 #include "diskfile.h"
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
 	MyDTVector container;
 	loadFileContainer(container, pathc, path);
 
-	MultiTable<MyDTVector> mtlist(container);
+	LSMTable<MyDTVector> mtlist(container);
 
 	DiskFile::create(mtlist, "test.bin");
 }

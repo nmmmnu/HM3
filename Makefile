@@ -3,7 +3,7 @@ MYCC	= g++
 
 CC_OPT	= -g #-O9
 
-CC	= $(MYCC) -std=c++14 -Wall	\
+CC	= $(MYCC) -std=c++11 -Wall	\
 		-D_FILE_OFFSET_BITS=64	\
 		-MMD -MP		\
 		$(CC_OPT)		\

@@ -1,18 +1,5 @@
-
 template <class CONTAINER>
-Pair MultiTable<CONTAINER>::get(const StringRef &key) const{
-	for(const DiskTable &dt : _container){
-		if (Pair pair = dt.get(key))
-			return pair;
-	}
-
-	return nullptr;
-}
-
-// ===================================
-
-template <class CONTAINER>
-MultiTable<CONTAINER>::Iterator::Iterator(const CONTAINER &container, bool const endIt) :
+MultiTableIterator<CONTAINER>::MultiTableIterator(const CONTAINER &container, bool const endIt) :
 			_container(container){
 
 	_cur.reserve(_container.size());
@@ -25,10 +12,10 @@ MultiTable<CONTAINER>::Iterator::Iterator(const CONTAINER &container, bool const
 }
 
 template <class CONTAINER>
-auto MultiTable<CONTAINER>::Iterator::operator++() -> Iterator &{
+MultiTableIterator<CONTAINER> &MultiTableIterator<CONTAINER>::operator++(){
 	// step 1: find minimal in reverse order to find most recent.
 
-	Pair p = operator*();
+	const Pair &p = operator*();
 
 	if (!p){
 		return *this;
@@ -48,14 +35,14 @@ auto MultiTable<CONTAINER>::Iterator::operator++() -> Iterator &{
 		if (pair.cmp(p) == 0)
 			++(_cur[i]);
 	}
-	
+
 	return *this;
 }
 
 template <class CONTAINER>
-Pair MultiTable<CONTAINER>::Iterator::operator*() const{
+Pair MultiTableIterator<CONTAINER>::operator*() const{
 	Pair result;
-		
+
 	auto size = _container.size();
 
 	// step 1: find minimal in reverse order to find most recent.
@@ -63,7 +50,7 @@ Pair MultiTable<CONTAINER>::Iterator::operator*() const{
 		// do not dereference if is end
 		if (_cur[i] == _end[i])
 			continue;
-			
+
 		const Pair &pair = *(_cur[i]);
 
 		// skip if is null
@@ -86,33 +73,16 @@ Pair MultiTable<CONTAINER>::Iterator::operator*() const{
 }
 
 template <class CONTAINER>
-bool MultiTable<CONTAINER>::Iterator::operator==(const Iterator &other) const{
+bool MultiTableIterator<CONTAINER>::operator==(const MultiTableIterator<CONTAINER> &other) const{
 	if (&_container != &other._container)
 		return false;
 
 	auto size = _container.size();
 
-	for(size_type i = 0; i < size; ++i)		
+	for(size_type i = 0; i < size; ++i)
 		if (_cur[i] != other._cur[i])
 			return false;
-	
+
 	return true;
-}
-
-template <class CONTAINER>
-bool MultiTable<CONTAINER>::Iterator::operator!=(const Iterator &other) const{
-	return ! ( *this == other );
-}
-
-// ===================================
-
-template <class CONTAINER>
-auto MultiTable<CONTAINER>::begin() const -> Iterator{
-	return Iterator(_container);
-}
-
-template <class CONTAINER>
-auto MultiTable<CONTAINER>::end() const -> Iterator{
-	return Iterator(_container, true);
 }
 

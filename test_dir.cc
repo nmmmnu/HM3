@@ -1,7 +1,7 @@
 #include <stdio.h>	// printf
 #include <ctype.h>	// isspace
 
-#include "multitable.h"
+#include "lsmtable.h"
 #include "filecontainerdirectory.h"
 
 static void printUsage(const char *name){
@@ -54,7 +54,7 @@ int main(int argc, char **argv){
 
 	loadFileContainerFromDirectory(container, path);
 
-	MultiTable<MyDTVector> mt(container);
+	LSMTable<MyDTVector> mt(container);
 
 	switch(op[0]){
 		case 's':
