@@ -33,11 +33,6 @@ VectorList<LOOKUP>::VectorList(VectorList &&other):
 }
 
 template <class LOOKUP>
-VectorList<LOOKUP>::~VectorList(){
-	removeAll();
-}
-
-template <class LOOKUP>
 bool VectorList<LOOKUP>::removeAll(){
 	for(count_type i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
@@ -212,7 +207,7 @@ auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
 
 template <class LOOKUP>
 const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
-	return _list.getAtR(_pos);
+	return _list.getAt(_pos);
 }
 
 template <class LOOKUP>

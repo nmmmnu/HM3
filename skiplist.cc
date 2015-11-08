@@ -59,27 +59,7 @@ SkipList::SkipList(SkipList &&other):
 
 	other._clear();
 }
-/*
-SkipList &SkipList::operator = (SkipList &&other){
-	// code without swap() is way too complicated.
 
-	SkipList tmp = std::move(other);
-
-	swap(tmp);
-
-	return *this;
-}
-
-void SkipList::swap(SkipList &other) noexcept{
-	using std::swap;
-
-	swap(_height	, other._height		);
-	swap(_heads	, other._heads		);
-	swap(_loc	, other._loc		);
-	swap(_dataCount	, other._dataCount	);
-	swap(_dataSize	, other._dataSize	);
-}
-*/
 SkipList::~SkipList(){
 	removeAll();
 
@@ -180,10 +160,10 @@ bool SkipList::_putT(UPAIR&& newdata){
 template bool SkipList::_putT(Pair &&newdata);
 template bool SkipList::_putT(const Pair &newdata);
 
-Pair SkipList::get(const StringRef &key) const{
+const Pair &SkipList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
-	return node ? node->data : nullptr;
+	return node ? node->data : ListDefs::zero;
 }
 
 bool SkipList::remove(const StringRef &key){
@@ -315,8 +295,6 @@ uint8_t SkipList::_getRandomHeight(){
 
 
 
-Pair	SkipList::Iterator::zero;
-
 SkipList::Iterator::Iterator(const Node *node) :
 		_node(node){}
 
@@ -328,7 +306,7 @@ SkipList::Iterator &SkipList::Iterator::operator++(){
 }
 
 const Pair &SkipList::Iterator::operator*() const{
-	return _node ? _node->data : zero;
+	return _node ? _node->data : ListDefs::zero;
 }
 
 bool SkipList::Iterator::operator==(const Iterator &other) const{

@@ -10,7 +10,7 @@
 template <class CONTAINER>
 class LSMTable : public IList<LSMTable<CONTAINER> >{
 private:
-	typedef IListDefs::count_type count_type;
+	typedef ListDefs::count_type count_type;
 
 public:
 	LSMTable(const CONTAINER &container) : _container(container){}

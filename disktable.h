@@ -6,8 +6,6 @@
 
 class DiskTable : public IList<DiskTable>{
 public:
-	//type def IListDefs::count_type count_type;
-
 	class Iterator;
 
 public:

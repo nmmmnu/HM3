@@ -13,12 +13,14 @@ public:
 public:
 	LinkList();
 	LinkList(LinkList &&other);
-	~LinkList();
+	~LinkList(){
+		removeAll();
+	}
 
 public:
 	bool removeAll();
 
-	Pair get(const StringRef &key) const;
+	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
 	count_type getCount(bool const = true) const{
@@ -75,8 +77,6 @@ public:
 
 private:
 	const Node	*_node;
-
-	static Pair	zero;
 };
 
 #endif

@@ -10,14 +10,16 @@ public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
 
-	typedef IListDefs::count_type count_type;
+	typedef ListDefs::count_type count_type;
 
 	class Iterator;
 
 public:
 	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
-	~VectorList();
+	~VectorList(){
+		removeAll();
+	}
 
 private:
 	size_t		_reallocSize;
@@ -33,12 +35,12 @@ public:
 
 	bool remove(const StringRef &key);
 
-	Pair getAt(count_type index) const{
-		return getAtR(index);
+	const Pair &getAt(count_type const index) const{
+		return index < getCount() ? _buffer[index] : ListDefs::zero;
 	}
 
-	int  cmpAt(count_type index, const StringRef &key) const{
-		return getAtR(index).cmp(key);
+	int cmpAt(count_type const index, const StringRef &key) const{
+		return getAt(index).cmp(key);
 	}
 
 	count_type getCount(bool const = false) const{
@@ -53,16 +55,9 @@ public:
 		return LOOKUP::processing(*this, key);
 	}
 
-	Pair get(const StringRef &key) const{
-		const auto l = lookup(key);
-		return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
-	}
-
-private:
-	const Pair &getAtR(count_type index) const{
-		static Pair zero;
-
-		return index < getCount() ? _buffer[index] : zero;
+	const Pair &get(const StringRef &key) const{
+		const auto &l = lookup(key);
+		return std::get<0>(l) ? ListDefs::zero : getAt( std::get<1>(l) );
 	}
 
 public:

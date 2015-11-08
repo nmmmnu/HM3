@@ -11,7 +11,7 @@ public:
 		return ! ( *a == *b );
 	}
 
-	const Pair* operator->() const{
+	const Pair *operator->() const{
 		const Pair &p = static_cast<const T*>(this)->operator*();
 
 		return &p;

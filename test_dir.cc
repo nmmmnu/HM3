@@ -13,19 +13,21 @@ static void printUsage(const char *name){
 }
 
 template <class LIST>
-void find(const LIST &list, const StringRef &key){
+int find(const LIST &list, const StringRef &key){
 	const Pair &pair = list.get(key);
 
 	if (! pair){
 		printf("Key '%s' not found...\n", key.data());
-		return;
+		return 100;
 	}
 
 	pair.print();
+
+	return 0;
 }
 
 template <class LIST>
-void listing(const LIST &list, const StringRef &key = StringRef(), size_t count = 100){
+int listing(const LIST &list, const StringRef &key = StringRef(), size_t count = 100){
 	auto it_end = list.end();
 
 	for(auto it = list.begin(); it != it_end; ++it){
@@ -36,6 +38,8 @@ void listing(const LIST &list, const StringRef &key = StringRef(), size_t count 
 		if (--count == 0)
 			break;
 	}
+
+	return 0;
 }
 
 int main(int argc, char **argv){
@@ -57,20 +61,17 @@ int main(int argc, char **argv){
 	LSMTable<MyDTVector> mt(container);
 
 	switch(op[0]){
-		case 's':
-			find(mt, key);
-			break;
+	case 's':
+		return find(mt, key);
 
-		case 'l':
-			listing(mt);
-			break;
+	case 'l':
+		return listing(mt);
 
-		case 'L':
-			listing(mt, key);
-			break;
+	case 'L':
+		return listing(mt, key);
 
-		default:
-			printUsage(argv[0]);
-			return 1;
+	default:
+		printUsage(argv[0]);
+		return 1;
 	}
 }

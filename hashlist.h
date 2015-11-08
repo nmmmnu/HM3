@@ -10,8 +10,9 @@
 template <class LIST, size_t CAPACITY>
 class HashList : public IList<HashList<LIST, CAPACITY> >{
 public:
-	typedef IListDefs::count_type count_type;
-//	typedef capacity_type uint16_t;
+	typedef ListDefs::count_type count_type;
+
+	typedef std::array<LIST, CAPACITY> container_type;
 
 public:
 	HashList() = default;
@@ -19,28 +20,23 @@ public:
 public:
 	bool removeAll();
 
-	Pair get(const StringRef &key) const;
+	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
 	count_type getCount(bool const estimated = false) const noexcept;
 	size_t getSize() const noexcept;
 
 public:
-	bool put(const Pair &pair){
-		return _putT(pair);
-	}
-
-	bool put(Pair &&pair){
-		return _putT(std::move(pair));
-	}
+	bool put(const Pair &pair);
+	bool put(Pair &&pair);
 
 public:
-	MultiTableIterator<LIST *> begin() const{
-		return MultiTableIterator<LIST *>(_container);
+	MultiTableIterator<container_type> begin() const{
+		return MultiTableIterator<container_type>(_container);
 	}
 
-	MultiTableIterator<LIST *> end() const{
-		return MultiTableIterator<LIST *>(_container, true);
+	MultiTableIterator<container_type> end() const{
+		return MultiTableIterator<container_type>(_container, true);
 	}
 
 private:
@@ -58,11 +54,7 @@ private:
 	}
 
 private:
-	template <class UPAIR>
-	bool _putT(UPAIR &&data);
-
-private:
-	LIST	_container[CAPACITY];
+	container_type	_container;
 };
 
 // ===================================

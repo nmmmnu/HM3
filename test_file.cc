@@ -236,7 +236,6 @@ int main(int argc, char **argv){
 	case 'l':	return op_list(
 				filename
 			);
-
 	}
 }
 

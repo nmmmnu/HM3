@@ -7,15 +7,19 @@
 
 
 
-struct IListDefs{
+namespace ListDefs{
 	typedef uint32_t count_type;
 
+	extern const Pair zero;
 };
 
 // ==============================
 
 template <class T>
-class IList : public IListDefs{
+class IList{
+public:
+	typedef ListDefs::count_type count_type;
+
 protected:
 	constexpr
 	static count_type PRINT_COUNT = 10;

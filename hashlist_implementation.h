@@ -1,18 +1,18 @@
 
 template <class LIST, size_t CAPACITY>
 bool HashList<LIST,CAPACITY>::removeAll(){
-	for(const LIST &list : _container)
+	for(LIST &list : _container)
 		list.removeAll();
 
 	return true;
 }
 
 template <class LIST, size_t CAPACITY>
-Pair HashList<LIST,CAPACITY>::get(const StringRef &key) const{
+const Pair &HashList<LIST,CAPACITY>::get(const StringRef &key) const{
 	const auto index = _getBucketForKey(key);
 
 	if (index == 0)
-		return nullptr;
+		return ListDefs::zero;
 
 	return _container[index - 1].get(key);
 }
@@ -48,16 +48,27 @@ size_t HashList<LIST,CAPACITY>::getSize() const noexcept{
 }
 
 template <class LIST, size_t CAPACITY>
-template <class UPAIR>
-bool HashList<LIST,CAPACITY>::_putT(UPAIR&& newdata){
-	const StringRef &key = newdata.getKey();
+bool HashList<LIST,CAPACITY>::put(const Pair &pair){
+	const StringRef &key = pair.getKey();
 
 	const auto index = _getBucketForKey(key);
 
 	if (index == 0)
 		return false;
 
-	return _container[index - 1]._putT(std::forward<UPAIR>(newdata));
+	return _container[index - 1].put(pair);
+}
+
+template <class LIST, size_t CAPACITY>
+bool HashList<LIST,CAPACITY>::put(Pair &&pair){
+	const StringRef &key = pair.getKey();
+
+	const auto index = _getBucketForKey(key);
+
+	if (index == 0)
+		return false;
+
+	return _container[index - 1].put(std::move(pair));
 }
 
 // ===================================

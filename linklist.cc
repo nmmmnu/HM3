@@ -22,10 +22,6 @@ LinkList::LinkList(LinkList &&other):
 	other._clear();
 }
 
-LinkList::~LinkList(){
-	removeAll();
-}
-
 bool LinkList::removeAll(){
 	for(Node *node = _head; node; ){
 		Node *copy = node;
@@ -101,15 +97,15 @@ bool LinkList::_putT(UPAIR&& newdata){
 template bool LinkList::_putT(Pair &&newdata);
 template bool LinkList::_putT(const Pair &newdata);
 
-Pair LinkList::get(const StringRef &key) const{
+const Pair &LinkList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
-		return nullptr;
+		return ListDefs::zero;
 
 	const Pair & data = node->data;
 
-	return data.cmp(key) == 0 ? data : nullptr;
+	return data.cmp(key) == 0 ? data : ListDefs::zero;
 }
 
 bool LinkList::remove(const StringRef &key){
@@ -173,8 +169,6 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 
 
 
-Pair	LinkList::Iterator::zero;
-
 LinkList::Iterator::Iterator(const Node *node) :
 		_node(node){}
 
@@ -186,7 +180,7 @@ LinkList::Iterator &LinkList::Iterator::operator++(){
 }
 
 const Pair &LinkList::Iterator::operator*() const{
-	return _node ? _node->data : zero;
+	return _node ? _node->data : ListDefs::zero;
 }
 
 bool LinkList::Iterator::operator==(const Iterator &other) const{

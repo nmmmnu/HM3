@@ -6,8 +6,8 @@
 #include <tuple>
 
 namespace IArraySearch{
-	typedef IListDefs::count_type count_type;
-	typedef std::tuple<int, IListDefs::count_type> result_type;
+	typedef ListDefs::count_type count_type;
+	typedef std::tuple<int, ListDefs::count_type> result_type;
 
 	struct Linear{
 		template <class ARRAY>

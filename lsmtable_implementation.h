@@ -1,3 +1,4 @@
+#include "disktable.h"
 
 template <class CONTAINER>
 Pair LSMTable<CONTAINER>::get(const StringRef &key) const{

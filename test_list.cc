@@ -81,7 +81,17 @@ static void ref_test(const char *module, LIST &list){
 template <class IT>
 inline void iterator_test_deref(const char *module, IT &it, IT &et, const char *value){
 	PRINTF_TEST("*it   deref",	it != et && (*it).getVal() == value	);
-	PRINTF_TEST(" it-> deref",	it != et && it->getVal() == value	);
+	PRINTF_TEST(" it-> deref",	it != et &&   it->getVal() == value	);
+/*
+	const std::string &s = it->getVal();
+
+	printf(
+		"'%s' '%s' '%s' %d %d\n",
+		value, (*it).getVal().data(), s.c_str(),
+		(*it).getVal() == value,
+		s == value
+	);
+*/
 	++it;
 }
 
@@ -224,8 +234,18 @@ int main(int argc, char **argv){
 
 	// =========================
 
-	HashList<VectorList<>, 1024> hlvl;
-		list_test("HashList@Vector", vl);
+	HashList<VectorList<>, 1024> hl_vl;
+		list_test("HashList@Vector", hl_vl);
+
+	// =========================
+
+	HashList<LinkList, 1024> hl_ll;
+		list_test("HashList@LinkList", hl_ll);
+
+	// =========================
+
+	HashList<SkipList, 1024> hl_sl;
+		list_test("HashList@SkipList", hl_sl);
 }
 
 

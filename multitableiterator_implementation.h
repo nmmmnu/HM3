@@ -1,18 +1,18 @@
-template <class CONTAINER>
-MultiTableIterator<CONTAINER>::MultiTableIterator(const CONTAINER &container, bool const endIt) :
-			_container(container){
+template <class CONTAINER_LIST>
+MultiTableIterator<CONTAINER_LIST>::MultiTableIterator(const CONTAINER_LIST &lists, bool const endIt) :
+			_lists(lists){
 
-	_cur.reserve(_container.size());
-	_end.reserve(_container.size());
+	_cur.reserve(_lists.size());
+	_end.reserve(_lists.size());
 
-	for(const DiskTable &dt : _container){
+	for(const auto &dt : _lists){
 		_cur.push_back(std::move( endIt ? dt.end() : dt.begin()));
 		_end.push_back(std::move(dt.end()));
 	}
 }
 
-template <class CONTAINER>
-MultiTableIterator<CONTAINER> &MultiTableIterator<CONTAINER>::operator++(){
+template <class CONTAINER_LIST>
+MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator++(){
 	// step 1: find minimal in reverse order to find most recent.
 
 	const Pair &p = operator*();
@@ -21,7 +21,7 @@ MultiTableIterator<CONTAINER> &MultiTableIterator<CONTAINER>::operator++(){
 		return *this;
 	}
 
-	auto size = _container.size();
+	auto size = _lists.size();
 
 	// step 2: increase all duplicates
 	for(size_type i = 0; i < size; ++i ){
@@ -39,11 +39,12 @@ MultiTableIterator<CONTAINER> &MultiTableIterator<CONTAINER>::operator++(){
 	return *this;
 }
 
-template <class CONTAINER>
-Pair MultiTableIterator<CONTAINER>::operator*() const{
-	Pair result;
+template <class CONTAINER_LIST>
+const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
+	// const refference that can be binded several times :)
+	const Pair *resultRef = nullptr;
 
-	auto size = _container.size();
+	const auto size = _lists.size();
 
 	// step 1: find minimal in reverse order to find most recent.
 	for(size_type i = 0; i < size; ++i ){
@@ -58,26 +59,26 @@ Pair MultiTableIterator<CONTAINER>::operator*() const{
 			continue;
 
 		// initialize
-		if (! result){
-			result = pair;
+		if (resultRef == nullptr){
+			resultRef = &pair;
 			continue;
 		}
 
 		// compare and swap pair if is smaller
-		if (pair.cmp(result) < 0){
-			result = pair;
+		if (pair.cmp(*resultRef) < 0){
+			resultRef = &pair;
 		}
 	}
 
-	return result;
+	return resultRef ? *resultRef : ListDefs::zero;
 }
 
-template <class CONTAINER>
-bool MultiTableIterator<CONTAINER>::operator==(const MultiTableIterator<CONTAINER> &other) const{
-	if (&_container != &other._container)
+template <class CONTAINER_LIST>
+bool MultiTableIterator<CONTAINER_LIST>::operator==(const MultiTableIterator<CONTAINER_LIST> &other) const{
+	if (&_lists != &other._lists)
 		return false;
 
-	auto size = _container.size();
+	auto size = _lists.size();
 
 	for(size_type i = 0; i < size; ++i)
 		if (_cur[i] != other._cur[i])

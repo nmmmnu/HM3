@@ -44,13 +44,13 @@ test_stringref: test_stringref.o
 test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o
+test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o disktable.o
+test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o disktable.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o myglob.o disktable.o
+test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o myglob.o disktable.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
@@ -59,7 +59,7 @@ test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
 test_glob: test_glob.o myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o disktable.o disktable.o
+db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o disktable.o
 	$(LINK) $@ $^		$(LIBS)
 
 
