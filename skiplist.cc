@@ -202,7 +202,7 @@ void SkipList::printLanes() const{
 	uint8_t i;
 	for(i = _height; i > 0; --i){
 		printf("Lane # %5u :\n", i - 1);
-		printLane(i - 1);
+		printLane((uint8_t) (i - 1));
 	}
 }
 

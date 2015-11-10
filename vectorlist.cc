@@ -47,7 +47,7 @@ template <class UPAIR>
 bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
-	const auto l = lookup(key);
+	const auto &l = lookup(key);
 	const auto cmp   = std::get<0>(l);
 	const auto index = std::get<1>(l);
 
@@ -88,7 +88,7 @@ bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::remove(const StringRef &key){
-	const auto l = lookup(key);
+	const auto &l = lookup(key);
 	const auto cmp   = std::get<0>(l);
 	const auto index = std::get<1>(l);
 

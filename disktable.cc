@@ -111,8 +111,10 @@ DiskTable::Iterator &DiskTable::Iterator::operator--(){
 	return *this;
 }
 
-Pair DiskTable::Iterator::operator*() const{
-	return _list.getAt(_pos);
+const Pair &DiskTable::Iterator::operator*() const{
+	tmp_pairPlaceholderDeref = _list.getAt(_pos);
+
+	return tmp_pairPlaceholderDeref;
 }
 
 bool DiskTable::Iterator::operator==(const Iterator &other) const{

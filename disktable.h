@@ -20,9 +20,11 @@ public:
 	void close();
 
 public:
+	Pair get(const StringRef &key) const;
+
 	Pair getAt(count_type index) const;
 
-	int  cmpAt(count_type index, const StringRef &key) const;
+	int cmpAt(count_type index, const StringRef &key) const;
 
 	count_type getCount() const{
 		return _dataCount;
@@ -33,11 +35,6 @@ public:
 	template <class LOOKUP = IArraySearch::Binary>
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
-	}
-
-	Pair get(const StringRef &key) const{
-		const auto l = lookup(key);
-		return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
 	}
 
 public:
@@ -69,23 +66,29 @@ public:
 	Iterator &operator++();
 	Iterator &operator--();
 
-	Pair operator*() const;
+	const Pair &operator*() const;
 
 	bool operator==(const Iterator &other) const;
 
 private:
-	// disabled method...
-	Pair *operator->() const;
+	const DiskTable	&_list;
+	count_type	_pos;
 
 private:
-	const DiskTable		&_list;
-	count_type		_pos;
+	/* !!! */ mutable
+	Pair		tmp_pairPlaceholderDeref;
+
 };
 
 // ==============================
 
 inline Pair DiskTable::getAt(count_type index) const{
 	return index < getCount() ? _getAtFromDisk(index) : nullptr;
+}
+
+inline Pair DiskTable::get(const StringRef &key) const{
+	const auto &l = lookup(key);
+	return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
 }
 
 #endif

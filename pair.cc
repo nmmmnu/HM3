@@ -68,7 +68,7 @@ bool Pair::fwrite(std::ostream & os) const{
 
 	p.created	= htobe64(created);
 	p.expires	= htobe32(expires);
-	p.vallen	= htobe32(val.size());
+	p.vallen	= htobe32((uint32_t)val.size());
 	p.keylen	= htobe16(key.size());
 
 	Checksum<NMEA0183ChecksumCalculator> chk;

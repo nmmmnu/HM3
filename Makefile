@@ -3,7 +3,7 @@ MYCC	= g++
 
 CC_OPT	= -g #-O9
 
-CC	= $(MYCC) -std=c++11 -Wall	\
+CC	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
 		-D_FILE_OFFSET_BITS=64	\
 		-MMD -MP		\
 		$(CC_OPT)		\
@@ -23,11 +23,12 @@ TARGETS	=	\
 		db_merge	\
 		\
 		test_stringref	\
+		test_glob	\
+		test_stl	\
+		\
 		test_pair	\
 		test_list	\
 		test_file	\
-		test_stl	\
-		test_glob	\
 		test_dir
 
 

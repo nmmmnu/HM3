@@ -5,10 +5,10 @@
 
 #include "pair.h"
 
-
+// ==============================
 
 namespace ListDefs{
-	typedef uint32_t count_type;
+	typedef uint64_t count_type;
 
 	extern const Pair zero;
 };
