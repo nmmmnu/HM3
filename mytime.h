@@ -7,10 +7,10 @@
 
 class MyTime{
 public:
-	constexpr static size_t STRING_SIZE		= 20;	// strlen("1980-01-01 00:00:00");
+	constexpr static size_t STRING_SIZE			= 20;	// strlen("1980-01-01 00:00:00");
 
 	constexpr static const char *DATA_FORMAT_STANDARD	= "%Y-%m-%d %H:%M:%S";
-	constexpr static const char *DATA_FORMAT_NUMBER	= "%Y%m%d.%H%M%S";
+	constexpr static const char *DATA_FORMAT_NUMBER		= "%Y%m%d.%H%M%S";
 
 public:
 	static const char *toString(uint64_t date, const char *format = DATA_FORMAT_STANDARD) noexcept;
@@ -39,9 +39,8 @@ constexpr inline uint64_t MyTime::combine(uint32_t const sec, uint32_t const use
 };
 
 constexpr inline uint32_t MyTime::uncombine(uint64_t const timestamp) noexcept{
-	return timestamp >> 32;
+	return (uint32_t) (timestamp >> 32);
 };
-
 
 #endif
 
