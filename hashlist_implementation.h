@@ -28,8 +28,8 @@ bool HashList<LIST,CAPACITY>::remove(const StringRef &key){
 }
 
 template <class LIST, size_t CAPACITY>
-auto HashList<LIST,CAPACITY>::getCount(bool const estimated) const noexcept -> count_type{
-	count_type result = 0;
+size_t HashList<LIST,CAPACITY>::getCount(bool const estimated) const noexcept{
+	size_t result = 0;
 
 	for(const LIST &list : _container)
 		result += list.getCount(estimated);

@@ -1,3 +1,12 @@
+namespace DiskFile{
+
+constexpr
+static size_t sizeofHeader(){
+	return offsetof(DiskTableHeader, data);
+}
+
+}; // namespace DiskFile
+
 template <class LIST>
 bool DiskFile::create(const LIST &list, const StringRef &filename){
 	std::ofstream file(filename, std::ios::out | std::ios::binary);

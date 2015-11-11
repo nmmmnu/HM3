@@ -23,8 +23,8 @@ size_t LSMTable<CONTAINER>::getSize() const{
 // ===================================
 
 template <class CONTAINER>
-auto LSMTable<CONTAINER>::getCountEstimated() const -> count_type{
-	count_type result = 0;
+size_t LSMTable<CONTAINER>::getCountEstimated() const{
+	size_t result = 0;
 
 	for(const auto &table : _container)
 		result += table.getCount();
@@ -33,8 +33,8 @@ auto LSMTable<CONTAINER>::getCountEstimated() const -> count_type{
 }
 
 template <class CONTAINER>
-auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
-	count_type result = 0;
+size_t LSMTable<CONTAINER>::getCountReal() const{
+	size_t result = 0;
 
 	auto endIt = end();
 	for(auto it = begin(); it != endIt; ++it)

@@ -24,7 +24,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	count_type getCount(bool const = true) const noexcept{
+	size_t getCount(bool const = true) const noexcept{
 		return _dataCount;
 	}
 
@@ -56,12 +56,12 @@ public:
 private:
 	struct Node;
 
-	uint8_t		_height;
-	Node		**_heads;
-	Node		**_loc;
+	uint8_t	_height;
+	Node	**_heads;
+	Node	**_loc;
 
-	uint64_t	_dataCount;
-	size_t		_dataSize;
+	size_t	_dataCount;
+	size_t	_dataSize;
 
 private:
 	void _clear();

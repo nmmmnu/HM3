@@ -10,8 +10,6 @@ public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
 
-	typedef ListDefs::count_type count_type;
-
 	class Iterator;
 
 public:
@@ -35,15 +33,15 @@ public:
 
 	bool remove(const StringRef &key);
 
-	const Pair &getAt(count_type const index) const{
+	const Pair &getAt(size_t const index) const{
 		return index < getCount() ? _buffer[index] : ListDefs::zero;
 	}
 
-	int cmpAt(count_type const index, const StringRef &key) const{
+	int cmpAt(size_t const index, const StringRef &key) const{
 		return getAt(index).cmp(key);
 	}
 
-	count_type getCount(bool const = false) const{
+	size_t getCount(bool const = false) const{
 		return _dataCount;
 	}
 
@@ -51,7 +49,7 @@ public:
 		return _dataSize;
 	}
 
-	std::tuple<int, count_type> lookup(const StringRef &key) const{
+	std::tuple<int, size_t> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
 	}
 
@@ -95,7 +93,7 @@ template <class LOOKUP>
 class VectorList<LOOKUP>::Iterator : public IIterator<Iterator>{
 private:
 	friend class VectorList;
-	Iterator(const VectorList &list, count_type pos);
+	Iterator(const VectorList &list, size_t pos);
 
 public:
 	Iterator &operator++();
@@ -107,7 +105,7 @@ public:
 
 private:
 	const VectorList	&_list;
-	count_type		_pos;
+	size_t			_pos;
 };
 
 #endif

@@ -9,9 +9,6 @@
 
 template <class CONTAINER>
 class LSMTable : public IList<LSMTable<CONTAINER> >{
-private:
-	typedef ListDefs::count_type count_type;
-
 public:
 	LSMTable(const CONTAINER &container) : _container(container){}
 
@@ -27,7 +24,7 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	count_type getCount(bool const estimated = false) const{
+	size_t getCount(bool const estimated = false) const{
 		// TODO: difference_type missing...
 		// distance(begin(), end());
 		return estimated ? getCountEstimated() : getCountReal();
@@ -36,8 +33,8 @@ public:
 	size_t getSize() const;
 
 private:
-	count_type getCountEstimated() const;
-	count_type getCountReal() const;
+	size_t getCountEstimated() const;
+	size_t getCountReal() const;
 
 private:
 	const CONTAINER	&_container;

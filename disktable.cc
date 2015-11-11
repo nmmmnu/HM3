@@ -68,7 +68,7 @@ void DiskTable::close(){
 	_size = 0;
 }
 
-int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
+int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
 	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
 	// StringRef is not null terminated
 	return p->cmp(key.data(), key.size());
@@ -83,7 +83,7 @@ uint64_t DiskTable::_getCountFromDisk() const{
 	return be64toh(head->size);
 }
 
-const void *DiskTable::_getAtFromDisk(count_type const index) const{
+const void *DiskTable::_getAtFromDisk(size_t const index) const{
 	// index is check in parent
 
 	// TODO: check if we are inside the memory block.
@@ -97,7 +97,7 @@ const void *DiskTable::_getAtFromDisk(count_type const index) const{
 
 // ===================================
 
-DiskTable::Iterator::Iterator(const DiskTable &list, count_type const pos) :
+DiskTable::Iterator::Iterator(const DiskTable &list, size_t const pos) :
 			_list(list),
 			_pos(pos){}
 

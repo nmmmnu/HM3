@@ -10,8 +10,6 @@
 template <class LIST, size_t CAPACITY>
 class HashList : public IList<HashList<LIST, CAPACITY> >{
 public:
-	typedef ListDefs::count_type count_type;
-
 	typedef std::array<LIST, CAPACITY> container_type;
 
 public:
@@ -23,7 +21,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	count_type getCount(bool const estimated = false) const noexcept;
+	size_t getCount(bool const estimated = false) const noexcept;
 	size_t getSize() const noexcept;
 
 public:

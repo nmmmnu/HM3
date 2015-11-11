@@ -37,11 +37,6 @@ namespace DiskFile{
 	template <class LIST>
 	bool create(const LIST &list, const StringRef &filename);
 
-	constexpr
-	size_t sizeofHeader(){
-		return offsetof(DiskTableHeader, data);
-	}
-
 	template <class LIST>
 	static bool writeListToFile(const LIST &list, std::ofstream &file);
 }; // namespace DiskFile

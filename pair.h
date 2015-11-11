@@ -28,18 +28,39 @@ public:
 
 	Pair(const void *blob);
 
-	operator bool() const noexcept;
-//	operator const void *() const;
+	operator bool() const noexcept{
+		return valid();
+	}
 
 public:
-	const std::string &getKey() const noexcept;
-	const std::string &getVal() const noexcept;
+	const std::string &getKey() const noexcept{
+		return key;
+	}
+
+	const std::string &getVal() const noexcept{
+		return val;
+	}
+
 	int cmp(const StringRef &key) const noexcept;
-	int cmp(const char *key) const noexcept;
-	int cmp(const Pair &pair) const noexcept;
-	bool isTombstone() const noexcept;
+
+	int cmp(const char *key) const noexcept{
+		return cmp( StringRef{key} );
+	}
+
+	int cmp(const Pair &pair) const noexcept{
+		return cmp( pair.getKey() );
+	}
+
+	bool isTombstone() const noexcept{
+		return val.empty();
+	}
+
 	bool valid(bool tombstoneCheck = false) const noexcept;
-	bool valid(const Pair &pair, bool tombstoneCheck = false) const noexcept;
+
+	bool valid(const Pair &pair, bool tombstoneCheck = false) const noexcept{
+		return valid(tombstoneCheck);
+	}
+
 	size_t getSize() const noexcept;
 
 public:
@@ -66,24 +87,6 @@ inline void swap(Pair &a, Pair &b) noexcept{
 
 // ==============================
 
-inline Pair::operator bool() const noexcept{
-	return valid();
-}
-
-// ==============================
-
-inline const std::string &Pair::getKey() const noexcept{
-	return key;
-}
-
-inline const std::string &Pair::getVal() const noexcept{
-	return val;
-}
-
-inline bool Pair::isTombstone() const noexcept{
-	return val.empty();
-}
-
 inline int Pair::cmp(const StringRef &key2) const noexcept{
 	if (key2.empty())
 		return -1;
@@ -94,14 +97,6 @@ inline int Pair::cmp(const StringRef &key2) const noexcept{
 
 	//return key.compare(key2);
 	return - key2.compare(key);
-}
-
-inline int Pair::cmp(const char *key) const noexcept{
-	return cmp( StringRef{key} );
-}
-
-inline int Pair::cmp(const Pair &pair) const noexcept{
-	return cmp( pair.getKey() );
 }
 
 inline bool Pair::valid(bool tombstoneCheck) const noexcept{
@@ -119,10 +114,6 @@ inline bool Pair::valid(bool tombstoneCheck) const noexcept{
 
 	// finally all OK
 	return true;
-}
-
-inline bool Pair::valid(const Pair &pair, bool tombstoneCheck) const noexcept{
-	return valid(tombstoneCheck);
 }
 
 #endif

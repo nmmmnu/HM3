@@ -11,7 +11,7 @@ auto Linear::processing(const ARRAY &self, const StringRef &key) -> result_type{
 
 	int cmp = -1;
 
-	count_type i;
+	size_t i;
 	for(i = 0; i < count; ++i){
 		cmp = self.cmpAt(i, key);
 
@@ -43,13 +43,13 @@ auto Binary::processing(const ARRAY &self, const StringRef &key) -> result_type{
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
 	 */
 
-	count_type start = 0;
-	count_type end   = count;
+	size_t start = 0;
+	size_t end   = count;
 	int cmp = 0;
 
 	while (start < end){
-	//	count_type mid = start + ((end - start) /  2);
-		count_type mid = start + ((end - start) >> 1);
+	//	size_t mid = start + ((end - start) /  2);
+		size_t mid = start + ((end - start) >> 1);
 
 		cmp = self.cmpAt(mid, key);
 

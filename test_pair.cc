@@ -89,7 +89,7 @@ static void pair_test_raw(const char *module){
 	const Pair p = (const void *) raw_memory;
 	pair_test_raw_do(module, p, key, val);
 
-	raw_memory[20] = ~ raw_memory[20];
+	raw_memory[20] = (char) ~ raw_memory[20];
 
 	const Pair cp = (const void *) raw_memory;
 

@@ -22,18 +22,18 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	Pair getAt(count_type index) const;
+	Pair getAt(size_t index) const;
 
-	int cmpAt(count_type index, const StringRef &key) const;
+	int cmpAt(size_t index, const StringRef &key) const;
 
-	count_type getCount() const{
+	size_t getCount() const{
 		return _dataCount;
 	}
 
 	size_t getSize() const;
 
 	template <class LOOKUP = IArraySearch::Binary>
-	std::tuple<int, count_type> lookup(const StringRef &key) const{
+	std::tuple<int, size_t> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
 	}
 
@@ -52,7 +52,7 @@ private:
 private:
 	uint64_t _getCountFromDisk() const;
 
-	const void *_getAtFromDisk(count_type index) const;
+	const void *_getAtFromDisk(size_t index) const;
 };
 
 // ===================================
@@ -60,7 +60,7 @@ private:
 class DiskTable::Iterator : public IIterator<Iterator>{
 private:
 	friend class DiskTable;
-	Iterator(const DiskTable &list, count_type const pos);
+	Iterator(const DiskTable &list, size_t const pos);
 
 public:
 	Iterator &operator++();
@@ -72,7 +72,7 @@ public:
 
 private:
 	const DiskTable	&_list;
-	count_type	_pos;
+	size_t		_pos;
 
 private:
 	/* !!! */ mutable
@@ -82,7 +82,7 @@ private:
 
 // ==============================
 
-inline Pair DiskTable::getAt(count_type index) const{
+inline Pair DiskTable::getAt(size_t const index) const{
 	return index < getCount() ? _getAtFromDisk(index) : nullptr;
 }
 
