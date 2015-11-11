@@ -28,7 +28,7 @@ bool DiskTable::open(const StringRef &filename){
 
 	off_t size2 = lseek(fd, 0, SEEK_END);
 
-	uint64_t size = size2 <= 0 ? 0 : size2;
+	size_t size = size2 <= 0 ? 0 : (size_t) size2;
 
 	if (size == 0 && size < DiskFile::sizeofHeader()){
 		::close(fd);
@@ -47,7 +47,7 @@ bool DiskTable::open(const StringRef &filename){
 	_mem = mem;
 
 	// memoize count instead to read it from the disk each time
-	_dataCount = _getCountFromDisk();
+	_dataCount = (size_t) _getCountFromDisk();
 
 	if (size < DiskFile::sizeofHeader() + _dataCount * sizeof(uint64_t)){
 		close();

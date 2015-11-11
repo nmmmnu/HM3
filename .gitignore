@@ -9,6 +9,8 @@ test_stl
 test_glob
 test_dir
 
+*.exe
+
 a.out
 
 *.o

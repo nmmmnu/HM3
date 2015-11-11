@@ -121,7 +121,7 @@ void VectorList<LOOKUP>::_clear(bool const alsoFree){
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftL(uint64_t const index){
+bool VectorList<LOOKUP>::_shiftL(size_t const index){
 	// this is the most slow operation of them all
 	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * ELEMENT_SIZE);
 
@@ -131,7 +131,7 @@ bool VectorList<LOOKUP>::_shiftL(uint64_t const index){
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftR(uint64_t const index){
+bool VectorList<LOOKUP>::_shiftR(size_t const index){
 	if (! _resize(1))
 		return false;
 
@@ -148,7 +148,7 @@ bool VectorList<LOOKUP>::_resize(int const delta){
 		return true;
 	}
 
-	uint64_t const new_dataCount = _dataCount + SGN(delta);
+	size_t const new_dataCount = _dataCount + SGN(delta);
 
 	if (new_dataCount == 0){
 		_clear(true);

@@ -1,6 +1,7 @@
 #include "myglob.h"
 
 #include <iostream>
+#include <cstdio>
 
 static void print_usage(const char *name){
 	printf("Usage:\n");

@@ -43,11 +43,11 @@ public:
 
 private:
 	const void	*_mem		= nullptr;
-	uint64_t	_size		= 0;
+	size_t	_size		= 0;
 
 	int		_fd;
 
-	uint64_t	_dataCount	= 0;
+	size_t	_dataCount	= 0;
 
 private:
 	uint64_t _getCountFromDisk() const;

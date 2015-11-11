@@ -1,6 +1,7 @@
 #include "pair.h"
 
 #include <stdexcept>
+#include <cstdio>
 
 #include "pairpod.h"
 
@@ -69,7 +70,7 @@ bool Pair::fwrite(std::ostream & os) const{
 	p.created	= htobe64(created);
 	p.expires	= htobe32(expires);
 	p.vallen	= htobe32((uint32_t)val.size());
-	p.keylen	= htobe16(key.size());
+	p.keylen	= htobe16((uint16_t)key.size());
 
 	Checksum<NMEA0183ChecksumCalculator> chk;
 

@@ -25,7 +25,7 @@ private:
 	Pair		*_buffer;
 	size_t		_bufferReserved;
 
-	uint64_t	_dataCount;
+	size_t		_dataCount;
 	size_t		_dataSize;
 
 public:
@@ -78,8 +78,8 @@ public:
 private:
 	void _clear(bool alsoFree = false);
 
-	bool _shiftL(uint64_t index);
-	bool _shiftR(uint64_t index);
+	bool _shiftL(size_t index);
+	bool _shiftR(size_t index);
 
 	bool _resize(int delta);
 
