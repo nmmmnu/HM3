@@ -13,9 +13,7 @@ CONTAINER &load(CONTAINER &vector, unsigned const count, const STR_ARRAY argv){
 	vector.reserve(count);
 
 	for (unsigned i = 0; i < count; ++i){
-		const char *filename = argv[i];
-
-	//	printf("%5d %s\n", i, count, filename);
+		const auto &filename = DiskFile::filenameStrip( argv[i] );
 
                 DiskTable dt;
                 dt.open(filename);

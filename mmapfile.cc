@@ -4,6 +4,14 @@
 #include <fcntl.h>	// open
 #include <unistd.h>	// close
 
+MMAPFile::MMAPFile(MMAPFile &&other) :
+		_mem(	std::move(other._mem)),
+		_size(	std::move(other._size)),
+		_fd(	std::move(other._fd)){
+	other._mem = nullptr;
+	other._size = 0;
+}		
+
 bool MMAPFile::open(const StringRef &filename){
 	close();
 

@@ -51,6 +51,10 @@ namespace DiskFile{
 		return filename + DOT_DATA;
 	}
 
+	inline StringRef filenameStrip(const StringRef &filename){
+		return StringRef(filename.data(), filename.size() - strlen(DOT_META) );
+	}
+
 	template <class LIST>
 	bool create(const LIST &list, const std::string &filename){
 		return create(list,

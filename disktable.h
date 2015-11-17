@@ -13,6 +13,7 @@ public:
 public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other) = default;
+		
 	~DiskTable(){
 		close();
 	}
@@ -22,7 +23,7 @@ public:
 		_mmapIndx.open(DiskFile::filenameIndx(filename));
 		_mmapData.open(DiskFile::filenameData(filename));
 
-		_dataCount = _getCountFromDisk();
+		_dataCount = (size_t) _getCountFromDisk();
 
 		return true;
 	}

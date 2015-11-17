@@ -19,12 +19,10 @@ CONTAINER &loadFromDirectory(CONTAINER &vector, const StringRef &path){
 
 	auto it_rend = files.rend();
 	for (auto it = files.rbegin(); it != it_rend; ++it){
-		const auto &filename = *it;
-
-		const StringRef s(filename.data(), filename.size() - 5);
+		const auto &filename = DiskFile::filenameStrip(*it);
 
                 DiskTable dt;
-                dt.open(s);
+                dt.open(filename);
                 vector.push_back( std::move(dt) );
 	}
 

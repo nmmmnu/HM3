@@ -119,9 +119,9 @@ static int op_write(LIST &list, const StringRef &filename, const std::string &fi
 
 	printf("Write start...\n");
 	DiskFile::create(list,
-			DiskFile::filenameMeta(filename),
-			DiskFile::filenameIndx(filename),
-			DiskFile::filenameData(filename));
+			DiskFile::filenameMeta(filename2),
+			DiskFile::filenameIndx(filename2),
+			DiskFile::filenameData(filename2));
 	printf("Write done...\n");
 	getchar();
 

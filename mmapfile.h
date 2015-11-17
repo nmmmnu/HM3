@@ -6,6 +6,7 @@
 class MMAPFile{
 public:
 	MMAPFile() = default;
+	MMAPFile(MMAPFile &&other);
 
 	~MMAPFile(){
 		close();
