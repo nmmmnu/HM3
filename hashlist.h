@@ -17,7 +17,7 @@ public:
 	static size_t DEFAULT_SIZE = 1024;
 
 public:
-	HashList(size_t const size = DEFAULT_SIZE) :
+	explicit HashList(size_t const size = DEFAULT_SIZE) :
 				_container(size){}
 
 public:

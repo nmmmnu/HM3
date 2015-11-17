@@ -48,7 +48,7 @@ test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o disktable.o
+test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o disktable.o mmapfile.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_dir: test_dir.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o myglob.o disktable.o

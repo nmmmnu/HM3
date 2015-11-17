@@ -1,59 +1,48 @@
-namespace DiskFile{
-
-constexpr
-static size_t sizeofHeader(){
-	return offsetof(DiskTableHeader, data);
-}
-
-}; // namespace DiskFile
 
 template <class LIST>
-bool DiskFile::create(const LIST &list, const StringRef &filename){
-	std::ofstream file(filename, std::ios::out | std::ios::binary);
+bool DiskFile::create(const LIST &list,
+			const StringRef &filename_meta,
+			const StringRef &filename_indx,
+			const StringRef &filename_data){
 
-	if (! file)
-		return false;
+	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
+	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
+	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
 
-	return writeListToFile(list, file);
+	return writeListToFile(list, fileMeta, fileIndx, fileData);
 }
 
 template <class LIST>
-bool DiskFile::writeListToFile(const LIST &list, std::ofstream &file){
+bool DiskFile::writeListToFile(const LIST &list,
+			std::ofstream &file_meta,
+			std::ofstream &file_indx,
+			std::ofstream &file_data){
 	uint64_t be;
 
-	auto const datacount = list.getCount();
+	size_t current = 0;
+	size_t datacount = 0;
 
-	size_t const headerSize = DiskFile::sizeofHeader();
-	size_t const tableSize  = sizeof(uint64_t) * datacount;
+	for(const auto &pair : list){
+		// write the index
+		be = htobe64(current);
+		file_indx.write( (const char *) & be, sizeof(uint64_t));
 
-	/* preallocating the file do not really speed up the fwrite process.
-	posix_fallocate(fileno(F), 0, total_size);
-	*/
+		// write the data
+		pair.fwrite(file_data);
 
-	size_t current = headerSize + tableSize;
+		current += pair.getSize();
+		++datacount;
+
+	//	pair.print();
+	}
+
+	// now we miraculasly have the datacount.
 
 	// write table header
 	DiskTableHeader header;
 	header.size = htobe64(datacount);
-	memset(header.padding, 0, DISK_TABLE_PADDING);
 
-	file.write( (const char *) & header, sizeofHeader());
-
-	// traverse and write the table.
-	for(auto pair : list){
-		be = htobe64(current);
-		file.write( (const char *) & be, sizeof(uint64_t));
-		current += pair.getSize();
-
-	//	pair.print();
-	}
-
-	// traverse and write the data.
-	for(auto pair : list){
-		pair.fwrite(file);
-
-	//	pair.print();
-	}
+	file_meta.write( (const char *) & header, sizeof(DiskTableHeader));
 
 	return true;
 }

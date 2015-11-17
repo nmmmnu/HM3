@@ -111,14 +111,18 @@ static int op_filesearch(const StringRef &filename, const StringRef &key){
 
 
 template <class LIST>
-static int op_write(LIST &list, const StringRef &filename, const StringRef &filename2){
+static int op_write(LIST &list, const StringRef &filename, const std::string &filename2){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
 	getchar();
 
 	printf("Write start...\n");
-	DiskFile::create(list, filename2);
+	DiskFile::create(list,
+			DiskTable::filenameMeta(filename),
+			DiskTable::filenameIndx(filename),
+			DiskTable::filenameData(filename)
+	);
 	printf("Write done...\n");
 	getchar();
 
