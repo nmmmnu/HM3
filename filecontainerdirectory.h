@@ -21,8 +21,10 @@ CONTAINER &loadFromDirectory(CONTAINER &vector, const StringRef &path){
 	for (auto it = files.rbegin(); it != it_rend; ++it){
 		const auto &filename = *it;
 
+		const StringRef s(filename.data(), filename.size() - 5);
+
                 DiskTable dt;
-                dt.open(filename);
+                dt.open(s);
                 vector.push_back( std::move(dt) );
 	}
 

@@ -3,7 +3,6 @@
 
 #include "stringref.h"
 
-#include <cstddef>	// ofsetof
 #include <cstdint>
 
 #include <iostream>
@@ -24,6 +23,10 @@ struct DiskTableHeader{
 // ==============================
 
 namespace DiskFile{
+	constexpr static const char *DOT_META = ".meta";
+	constexpr static const char *DOT_INDX = ".indx";
+	constexpr static const char *DOT_DATA = ".data";
+
 	template <class LIST>
 	bool create(const LIST &list,
 		const StringRef &filename_head,
@@ -35,6 +38,27 @@ namespace DiskFile{
 		std::ofstream &file_head,
 		std::ofstream &file_index,
 		std::ofstream &file_data);
+
+	inline std::string filenameMeta(const std::string &filename){
+		return filename + DOT_META;
+	}
+
+	inline std::string filenameIndx(const std::string &filename){
+		return filename + DOT_INDX;
+	}
+
+	inline std::string filenameData(const std::string &filename){
+		return filename + DOT_DATA;
+	}
+
+	template <class LIST>
+	bool create(const LIST &list, const std::string &filename){
+		return create(list,
+				filenameMeta(filename),
+				filenameIndx(filename),
+				filenameData(filename));
+	}
+
 }; // namespace DiskFile
 
 // ==============================

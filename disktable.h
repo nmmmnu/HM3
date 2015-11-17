@@ -3,16 +3,12 @@
 
 #include "iarraysearch.h"
 #include "iiterator.h"
+#include "diskfile.h"
 #include "mmapfile.h"
 
 class DiskTable : public IList<DiskTable>{
 public:
 	class Iterator;
-
-public:
-	constexpr static const char *DOT_META = ".meta";
-	constexpr static const char *DOT_INDX = ".indx";
-	constexpr static const char *DOT_DATA = ".data";
 
 public:
 	DiskTable() = default;
@@ -22,9 +18,9 @@ public:
 	}
 
 	bool open(const std::string &filename){
-		_fileMeta.open(filenameMeta(filename));
-		_fileIndx.open(filenameIndx(filename));
-		_fileData.open(filenameData(filename));
+		_mmapMeta.open(DiskFile::filenameMeta(filename));
+		_mmapIndx.open(DiskFile::filenameIndx(filename));
+		_mmapData.open(DiskFile::filenameData(filename));
 
 		_dataCount = _getCountFromDisk();
 
@@ -32,9 +28,9 @@ public:
 	}
 
 	void close(){
-		_fileMeta.close();
-		_fileIndx.close();
-		_fileData.close();
+		_mmapMeta.close();
+		_mmapIndx.close();
+		_mmapData.close();
 	}
 
 public:
@@ -56,26 +52,13 @@ public:
 	}
 
 public:
-	static std::string filenameMeta(const std::string &filename){
-		return filename + DOT_META;
-	}
-
-	static std::string filenameIndx(const std::string &filename){
-		return filename + DOT_INDX;
-	}
-
-	static std::string filenameData(const std::string &filename){
-		return filename + DOT_DATA;
-	}
-
-public:
 	Iterator begin() const;
 	Iterator end() const;
 
 private:
-	MMAPFile	_fileMeta;
-	MMAPFile	_fileIndx;
-	MMAPFile	_fileData;
+	MMAPFile	_mmapMeta;
+	MMAPFile	_mmapIndx;
+	MMAPFile	_mmapData;
 
 	size_t		_dataCount	= 0;
 

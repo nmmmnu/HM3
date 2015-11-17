@@ -1,7 +1,5 @@
 #include "disktable.h"
 
-#include "diskfile.h"
-
 #include "pairpod.h"
 
 #include <endian.h>	// htobe16
@@ -13,11 +11,11 @@ int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
 }
 
 size_t DiskTable::getSize() const{
-	return _fileData.size();
+	return _mmapData.size();
 }
 
 uint64_t DiskTable::_getCountFromDisk() const{
-	const DiskTableHeader *head = (const DiskTableHeader *) _fileMeta.mem();
+	const DiskTableHeader *head = (const DiskTableHeader *) _mmapMeta.mem();
 	return be64toh(head->size);
 }
 
@@ -26,10 +24,11 @@ const void *DiskTable::_getAtFromDisk(size_t const index) const{
 
 	// TODO: check if we are inside the memory block.
 
-	const uint64_t *mem_index = (const uint64_t *) _fileIndx.mem();
+	const uint64_t *mem_index = (const uint64_t *) _mmapIndx.mem();
+
 	const uint64_t ptr = be64toh( mem_index[index] );
 
-	const char *mem = (const char *) _fileData.mem();
+	const char *mem = (const char *) _mmapData.mem();
 	return & mem[ptr];
 }
 
