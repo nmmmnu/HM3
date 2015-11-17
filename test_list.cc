@@ -234,17 +234,17 @@ int main(int argc, char **argv){
 
 	// =========================
 
-	HashList<VectorList<>, 1024> hl_vl;
+	HashList<VectorList<> > hl_vl;
 		list_test("HashList@Vector", hl_vl);
 
 	// =========================
 
-	HashList<LinkList, 1024> hl_ll;
+	HashList<LinkList> hl_ll;
 		list_test("HashList@LinkList", hl_ll);
 
 	// =========================
 
-	HashList<SkipList, 1024> hl_sl;
+	HashList<SkipList> hl_sl;
 		list_test("HashList@SkipList", hl_sl);
 }
 

@@ -5,15 +5,20 @@
 
 #include "multitableiterator.h"
 
-#include <array>
+#include <vector>
 
-template <class LIST, size_t CAPACITY>
-class HashList : public IList<HashList<LIST, CAPACITY> >{
+template <class LIST>
+class HashList : public IList<HashList<LIST> >{
 public:
-	typedef std::array<LIST, CAPACITY> container_type;
+	typedef std::vector<LIST> container_type;
 
 public:
-	HashList() = default;
+	constexpr
+	static size_t DEFAULT_SIZE = 1024;
+
+public:
+	HashList(size_t const size = DEFAULT_SIZE) :
+				_container(size){}
 
 public:
 	bool removeAll();
@@ -48,7 +53,7 @@ private:
 		and overal result will be low quality code.
 		*/
 
-		return _calcHash(key.data()) % CAPACITY + 1;
+		return _calcHash(key.data()) % _container.size() + 1;
 	}
 
 private:

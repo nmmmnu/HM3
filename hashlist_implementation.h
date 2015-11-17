@@ -1,14 +1,14 @@
 
-template <class LIST, size_t CAPACITY>
-bool HashList<LIST,CAPACITY>::removeAll(){
+template <class LIST>
+bool HashList<LIST>::removeAll(){
 	for(LIST &list : _container)
 		list.removeAll();
 
 	return true;
 }
 
-template <class LIST, size_t CAPACITY>
-const Pair &HashList<LIST,CAPACITY>::get(const StringRef &key) const{
+template <class LIST>
+const Pair &HashList<LIST>::get(const StringRef &key) const{
 	const auto index = _getBucketForKey(key);
 
 	if (index == 0)
@@ -17,8 +17,8 @@ const Pair &HashList<LIST,CAPACITY>::get(const StringRef &key) const{
 	return _container[index - 1].get(key);
 }
 
-template <class LIST, size_t CAPACITY>
-bool HashList<LIST,CAPACITY>::remove(const StringRef &key){
+template <class LIST>
+bool HashList<LIST>::remove(const StringRef &key){
 	const auto index = _getBucketForKey(key);
 
 	if (index == 0)
@@ -27,8 +27,8 @@ bool HashList<LIST,CAPACITY>::remove(const StringRef &key){
 	return _container[index - 1].remove(key);
 }
 
-template <class LIST, size_t CAPACITY>
-size_t HashList<LIST,CAPACITY>::getCount(bool const estimated) const noexcept{
+template <class LIST>
+size_t HashList<LIST>::getCount(bool const estimated) const noexcept{
 	size_t result = 0;
 
 	for(const LIST &list : _container)
@@ -37,8 +37,8 @@ size_t HashList<LIST,CAPACITY>::getCount(bool const estimated) const noexcept{
 	return result;
 }
 
-template <class LIST, size_t CAPACITY>
-size_t HashList<LIST,CAPACITY>::getSize() const noexcept{
+template <class LIST>
+size_t HashList<LIST>::getSize() const noexcept{
 	size_t result = 0;
 
 	for(const LIST &list : _container)
@@ -47,8 +47,8 @@ size_t HashList<LIST,CAPACITY>::getSize() const noexcept{
 	return result;
 }
 
-template <class LIST, size_t CAPACITY>
-bool HashList<LIST,CAPACITY>::put(const Pair &pair){
+template <class LIST>
+bool HashList<LIST>::put(const Pair &pair){
 	const StringRef &key = pair.getKey();
 
 	const auto index = _getBucketForKey(key);
@@ -59,8 +59,8 @@ bool HashList<LIST,CAPACITY>::put(const Pair &pair){
 	return _container[index - 1].put(pair);
 }
 
-template <class LIST, size_t CAPACITY>
-bool HashList<LIST,CAPACITY>::put(Pair &&pair){
+template <class LIST>
+bool HashList<LIST>::put(Pair &&pair){
 	const StringRef &key = pair.getKey();
 
 	const auto index = _getBucketForKey(key);
@@ -74,8 +74,8 @@ bool HashList<LIST,CAPACITY>::put(Pair &&pair){
 // ===================================
 
 // DJB Hash function from CDB
-template <class LIST, size_t CAPACITY>
-unsigned long HashList<LIST,CAPACITY>::_calcHash(const char *str){
+template <class LIST>
+unsigned long HashList<LIST>::_calcHash(const char *str){
 	// mysterious DJB const
 	unsigned long hash = 5381;
 

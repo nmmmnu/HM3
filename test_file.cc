@@ -10,6 +10,8 @@
 #include "linklist.h"
 #include "skiplist.h"
 
+#include "hashlist.h"
+
 #include "disktable.h"
 
 #define PROCESS_STEP	1000 * 10
@@ -27,8 +29,10 @@ static void printUsage(const char *cmd){
 	printf("Classes are:\n");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");
+	printf("\t%c - %s\n", 'w', "HashList@VectorList bin search");
 	printf("\t%c - %s\n", 'l', "LinkList");
 	printf("\t%c - %s\n", 's', "SkipList");
+	printf("\t%c - %s\n", 'z', "HashList@SkipList");
 	printf("\n");
 }
 
@@ -181,8 +185,20 @@ static int op_search_v(char const what, const StringRef &filename, const StringR
 			return op_search(list, filename, key);
 		}
 
+	case 'w': {
+			HashList<VectorList<IArraySearch::Binary> > list(8192);
+
+			return op_search(list, filename, key);
+		}
+
 	case 'l': {
 			LinkList list;
+
+			return op_search(list, filename, key);
+		}
+
+	case 'z': {
+			HashList<SkipList> list(8192);
 
 			return op_search(list, filename, key);
 		}
