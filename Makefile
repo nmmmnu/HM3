@@ -1,12 +1,12 @@
 MYCC	= clang
 MYCC	= g++
 
-CC_OPT	= -g #-O9
+CXX_OPT	= -g #-O9
 
-CC	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
+CXX	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
 		-D_FILE_OFFSET_BITS=64	\
 		-MMD -MP		\
-		$(CC_OPT)		\
+		$(CXX_OPT)		\
 		-c
 
 LINK	= $(MYCC) -o
@@ -65,7 +65,7 @@ db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o diskta
 
 
 %.o: %.cc
-	$(CC) $<
+	$(CXX) $<
 
 -include $(SRC:%.cc=%.d)
 

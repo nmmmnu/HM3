@@ -13,7 +13,7 @@ public:
 public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other) = default;
-		
+
 	~DiskTable(){
 		close();
 	}
@@ -45,7 +45,9 @@ public:
 		return _dataCount;
 	}
 
-	size_t getSize() const;
+	size_t getSize() const{
+		return _mmapData.size();
+	}
 
 	template <class LOOKUP = IArraySearch::Binary>
 	std::tuple<int, size_t> lookup(const StringRef &key) const{
@@ -53,7 +55,7 @@ public:
 	}
 
 public:
-	Iterator begin() const;
+	Iterator begin(bool useFastForward = true) const;
 	Iterator end() const;
 
 private:
@@ -67,6 +69,8 @@ private:
 	uint64_t _getCountFromDisk() const;
 
 	const void *_getAtFromDisk(size_t index) const;
+
+	const void *_getNextFromDisk(const void *pod, size_t podSize = 0) const;
 };
 
 // ===================================
@@ -74,7 +78,7 @@ private:
 class DiskTable::Iterator : public IIterator<Iterator>{
 private:
 	friend class DiskTable;
-	Iterator(const DiskTable &list, size_t const pos);
+	Iterator(const DiskTable &list, size_t pos, bool useFastForward);
 
 public:
 	Iterator &operator++();
@@ -87,10 +91,17 @@ public:
 private:
 	const DiskTable	&_list;
 	size_t		_pos;
+	bool		_useFastForward;
 
 private:
 	/* !!! */ mutable
-	Pair		tmp_pairPlaceholderDeref;
+	size_t		tmp_pos = 0;
+
+	/* !!! */ mutable
+	const void	*tmp_pod = nullptr;
+
+	/* !!! */ mutable
+	Pair		tmp_pair;
 
 };
 
