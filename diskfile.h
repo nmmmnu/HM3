@@ -35,13 +35,15 @@ namespace DiskFile{
 	bool create(const LIST &list,
 		const StringRef &filename_head,
 		const StringRef &filename_index,
-		const StringRef &filename_data);
+		const StringRef &filename_data,
+		bool keep = false);
 
 	template <class LIST>
 	static bool writeListToFile(const LIST &list,
 		std::ofstream &file_head,
 		std::ofstream &file_index,
-		std::ofstream &file_data);
+		std::ofstream &file_data,
+		bool keep);
 
 	inline std::string filenameMeta(const std::string &filename){
 		return filename + DOT_META;
@@ -60,11 +62,12 @@ namespace DiskFile{
 	}
 
 	template <class LIST>
-	bool create(const LIST &list, const std::string &filename){
+	bool create(const LIST &list, const std::string &filename, bool keep = false){
 		return create(list,
 				filenameMeta(filename),
 				filenameIndx(filename),
-				filenameData(filename));
+				filenameData(filename),
+				keep);
 	}
 
 }; // namespace DiskFile
