@@ -20,7 +20,7 @@ SRC	= $(wildcard *.cc)
 
 
 TARGETS	=	\
-		db_merge	\
+		db_file db_merge	\
 		\
 		test_stringref	\
 		test_glob	\
@@ -58,6 +58,9 @@ test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_glob: test_glob.o myglob.o
+	$(LINK) $@ $^		$(LIBS)
+
+db_file: db_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o mmapfile.o
 	$(LINK) $@ $^		$(LIBS)
 
 db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o disktable.o mmapfile.o

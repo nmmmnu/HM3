@@ -21,6 +21,9 @@ public:
 	}
 
 	const void *safeAccess(size_t const offset) const{
+		if (_mem == nullptr)
+			return nullptr;
+
 		const char *memc = (const char *) _mem;
 
 		if (_size < offset)
