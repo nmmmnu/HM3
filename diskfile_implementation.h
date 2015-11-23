@@ -40,7 +40,8 @@ bool DiskFile::writeListToFile(const LIST &list,
 
 	// write table header
 	DiskTableHeader header;
-	header.size = htobe64(datacount);
+	header.size   = htobe64(datacount);
+	header.sorted = DiskFile::SORTED;
 
 	file_meta.write( (const char *) & header, sizeof(DiskTableHeader));
 

@@ -64,6 +64,11 @@ public:
 	size_t getSize() const noexcept;
 
 public:
+	static int cmpZero(){
+		return +1;
+	}
+
+public:
 	bool fwrite(std::ostream & os) const;
 
 	void print() const noexcept;
@@ -93,7 +98,7 @@ inline int Pair::cmp(const StringRef &key2) const noexcept{
 
 	// std::string.compare gives 0 if internal string is nullptr
 	if (key.empty())
-		return +1;
+		return cmpZero();
 
 	//return key.compare(key2);
 	return - key2.compare(key);

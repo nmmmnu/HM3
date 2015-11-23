@@ -18,21 +18,10 @@ public:
 		close();
 	}
 
-	bool open(const std::string &filename){
-		_mmapMeta.open(DiskFile::filenameMeta(filename));
-		_mmapIndx.open(DiskFile::filenameIndx(filename));
-		_mmapData.open(DiskFile::filenameData(filename));
+	bool open(const std::string &filename);
+	void close();
 
-		_dataCount = (size_t) _getCountFromDisk();
-
-		return true;
-	}
-
-	void close(){
-		_mmapMeta.close();
-		_mmapIndx.close();
-		_mmapData.close();
-	}
+	void print() const;
 
 public:
 	Pair get(const StringRef &key) const;
@@ -55,7 +44,7 @@ public:
 	}
 
 public:
-	Iterator begin(bool useFastForward = true) const;
+	Iterator begin() const;
 	Iterator end() const;
 
 private:
@@ -63,14 +52,19 @@ private:
 	MMAPFile	_mmapIndx;
 	MMAPFile	_mmapData;
 
-	size_t		_dataCount	= 0;
+	uint8_t		_dataVersion;
+	size_t		_dataCount;
+	bool		_dataSorted;
 
 private:
-	uint64_t _getCountFromDisk() const;
+	size_t _getCountFromDisk() const;
+	bool   _getSortedFromDisk() const;
 
 	const void *_getAtFromDisk(size_t index) const;
 
-	const void *_getNextFromDisk(const void *pod, size_t podSize = 0) const;
+	const void *_getNextFromDisk(const void *pod, size_t size = 0) const;
+
+	uint8_t _getVersionFromDisk() const;
 };
 
 // ===================================

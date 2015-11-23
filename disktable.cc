@@ -4,39 +4,103 @@
 
 #include <endian.h>	// htobe16
 
+bool DiskTable::open(const std::string &filename){
+	_mmapMeta.open(DiskFile::filenameMeta(filename));
+	_mmapIndx.open(DiskFile::filenameIndx(filename));
+	_mmapData.open(DiskFile::filenameData(filename));
+
+	_dataCount   = _getCountFromDisk();
+	_dataSorted  = _getSortedFromDisk();
+	_dataVersion = _getVersionFromDisk();
+
+	if (! _dataVersion){
+		close();
+
+		return false;
+	}
+
+	return true;
+}
+
+void DiskTable::close(){
+	_mmapMeta.close();
+	_mmapIndx.close();
+	_mmapData.close();
+}
+
+void DiskTable::print() const{
+	printf("%-10s: %u\n",	"Version",	_dataVersion);
+	printf("%-10s: %zu\n",	"Records",	_dataCount);
+	printf("%-10s: %s\n",	"Sorted",	_dataSorted ? "Yes" : "No");
+}
+
 int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
 	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
 	// StringRef is not null terminated
-	return p->cmp(key.data(), key.size());
+	return p ? p->cmp(key.data(), key.size()) : PairPOD::cmpZero();
 }
 
-uint64_t DiskTable::_getCountFromDisk() const{
-	const DiskTableHeader *head = (const DiskTableHeader *) _mmapMeta.mem();
-	return be64toh(head->size);
+size_t DiskTable::_getCountFromDisk() const{
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, size) );
+
+	return size ? (size_t) be64toh(*size) : 0;
+}
+
+bool DiskTable::_getSortedFromDisk() const{
+	const uint8_t *sorted = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, sorted) );
+
+	//printf("%u\n", *sorted);
+
+	if (sorted){
+		switch(*sorted){
+		case DiskFile::NOT_SORTED:	return false;
+		case DiskFile::SORTED:		return true;
+		}
+	}
+
+	return false;
+}
+
+uint8_t DiskTable::_getVersionFromDisk() const{
+	const uint8_t *version = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, version) );
+
+	if (version){
+		const char *logo = (const char *) _mmapMeta.mem();
+
+		if (strncmp(logo, DISK_TABLE_LOGO, 4) != 0)
+			return 0;
+
+		return *version;
+	}
+
+	return 0;
 }
 
 const void *DiskTable::_getAtFromDisk(size_t const index) const{
-	// index is checked in the parent
+	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( index * sizeof(uint64_t) );
 
-	// TODO: check if we are inside the memory block.
+	if (ptr_be){
+		size_t const offset = (size_t) be64toh( *ptr_be );
 
-	const uint64_t *mem_index = (const uint64_t *) _mmapIndx.mem();
-
-	const uint64_t ptr = be64toh( mem_index[index] );
-
-	const char *mem = (const char *) _mmapData.mem();
-	return & mem[ptr];
-}
-
-const void *DiskTable::_getNextFromDisk(const void *pod, size_t podSize) const{
-	const char *mem = (const char *) pod;
-
-	if (podSize == 0){
-		const PairPOD *p = (const PairPOD *) pod;
-		podSize = p->getSize();
+		const void *pod = _mmapData.safeAccess( offset );
+		return pod; // invalid pod is nullptr anyway
 	}
 
-	return & mem[podSize];
+	return nullptr;
+}
+
+const void *DiskTable::_getNextFromDisk(const void *pod, size_t size) const{
+	if (size == 0){
+		const PairPOD *p = (const PairPOD *) pod;
+		size = p->getSize();
+	}
+
+	const char *podc = (const char *) pod;
+
+	//printf("%p %p\n", podc, podc);
+
+	const void *podNext = _mmapData.safeAccess( podc + size );
+	return podNext; // invalid pod is nullptr anyway
 }
 
 // ===================================
@@ -82,8 +146,8 @@ bool DiskTable::Iterator::operator==(const Iterator &other) const{
 
 // ===================================
 
-auto DiskTable::begin(bool const useFastForward) const -> Iterator{
-	return Iterator(*this, 0, useFastForward);
+auto DiskTable::begin() const -> Iterator{
+	return Iterator(*this, 0, _dataSorted);
 }
 
 auto DiskTable::end() const -> Iterator{

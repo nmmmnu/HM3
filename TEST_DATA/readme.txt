@@ -7,5 +7,5 @@ Prior the test you need to generate data files
 
 Then you can do tests such:
 
-./test_dir l TEST_DATA/data.'*'.bin -
+./test_dir l TEST_DATA.BIN/data.'*'.bin -
 

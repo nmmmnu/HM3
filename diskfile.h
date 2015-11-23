@@ -15,14 +15,18 @@
 #define DISK_TABLE_LOGO		DISK_TABLE_TITLE DISK_TABLE_VERSION
 
 struct DiskTableHeader{
-	const char	logo[8] = DISK_TABLE_LOGO;		// 8
-	const uint8_t	version = DISK_TABLE_VERSION_INT;	// 1
+	const char	logo[8]	= DISK_TABLE_LOGO;		// 8
+	const uint8_t	version	= DISK_TABLE_VERSION_INT;	// 1
 	uint64_t	size;					// 8
+	uint8_t		sorted;					// 1
 } __attribute__((__packed__));
 
 // ==============================
 
 namespace DiskFile{
+	constexpr static uint8_t NOT_SORTED	= 0;
+	constexpr static uint8_t SORTED		= 1;
+
 	constexpr static const char *DOT_META = ".meta";
 	constexpr static const char *DOT_INDX = ".indx";
 	constexpr static const char *DOT_DATA = ".data";

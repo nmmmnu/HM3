@@ -84,6 +84,7 @@ static void listSearch(LIST &list, const StringRef &key){
 static int op_list(const StringRef &filename, const StringRef &key = StringRef(), size_t count = 100){
 	DiskTable list;
 	list.open(filename);
+	list.print();
 
 	for(const Pair &p : list ){
 		p.print();
@@ -99,10 +100,9 @@ static int op_list(const StringRef &filename, const StringRef &key = StringRef()
 
 static int op_filesearch(const StringRef &filename, const StringRef &key){
 	DiskTable list;
-
 	list.open(filename);
+	list.print();
 
-//	for(auto i = 0; i < 10000; ++i)
 	listSearch(list, key);
 
 	return 0;

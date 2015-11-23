@@ -36,6 +36,11 @@ public:
 
 	size_t getSize() const noexcept;
 
+public:
+	static int cmpZero(){
+		return +1;
+	}
+
 private:
 	size_t  _sizeofBuffer() const noexcept;
 

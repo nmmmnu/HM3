@@ -20,6 +20,25 @@ public:
 		return _mem;
 	}
 
+	const void *safeAccess(size_t const offset) const{
+		const char *memc = (const char *) _mem;
+
+		if (_size < offset)
+			return nullptr;
+
+		return & memc[offset];
+	}
+
+	const void *safeAccess(const void *ptr) const{
+		const char *ptrc = (const char *)  ptr;
+		const char *memc = (const char *) _mem;
+
+		if (ptrc < memc)
+			return nullptr;
+
+		return safeAccess(ptrc - memc);
+	}
+
 	size_t size() const{
 		return _size;
 	}
