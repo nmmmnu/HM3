@@ -19,7 +19,7 @@ CONTAINER &loadFromDirectory(CONTAINER &vector, const StringRef &path){
 
 	auto it_rend = files.rend();
 	for (auto it = files.rbegin(); it != it_rend; ++it){
-		const auto &filename = DiskFile::filenameStrip(*it);
+		const auto &filename = *it;
 
                 DiskTable dt;
                 dt.open(filename);

@@ -4,13 +4,13 @@ bool DiskFile::create(const LIST &list,
 			const StringRef &filename_meta,
 			const StringRef &filename_indx,
 			const StringRef &filename_data,
-			bool const keep){
+			bool const keepInvalid){
 
 	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
 	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
 	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
 
-	return writeListToFile(list, fileMeta, fileIndx, fileData, keep);
+	return writeListToFile(list, fileMeta, fileIndx, fileData, keepInvalid);
 }
 
 template <class LIST>
@@ -18,14 +18,14 @@ bool DiskFile::writeListToFile(const LIST &list,
 			std::ofstream &file_meta,
 			std::ofstream &file_indx,
 			std::ofstream &file_data,
-			bool const keep){
+			bool const keepInvalid){
 	uint64_t be;
 
 	size_t current = 0;
 	size_t datacount = 0;
 
 	for(const auto &pair : list){
-		if (keep == false && pair.valid() == false)
+		if (keepInvalid == false && pair.valid() == false)
 			continue;
 
 		// write the index
@@ -46,7 +46,7 @@ bool DiskFile::writeListToFile(const LIST &list,
 	// write table header
 	DiskTableHeader header;
 	header.size   = htobe64(datacount);
-	header.sorted = DiskFile::SORTED;
+	header.sorted = SORTED;
 
 	file_meta.write( (const char *) & header, sizeof(DiskTableHeader));
 

@@ -11,8 +11,8 @@ static void printUsage(const char *cmd){
 	printf("\t%s l [file.dat] -     - load file.dat, then list using iterator\n",			cmd);
 	printf("\t%s L [file.dat] [key] - load file.dat, then list using iterator with start\n",	cmd);
 
-	printf("\t\tFiles must be written with .meta extention\n");
-	printf("\t\tExample 'file.bin.*.meta' instead of 'file.bin.0001.meta'\n");
+	printf("\t\tFiles must be written without extention\n");
+	printf("\t\tExample 'file.*.bin' instead of 'file.0001.bin.data'\n");
 
 	printf("\n");
 }

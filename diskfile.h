@@ -23,54 +23,43 @@ struct DiskTableHeader{
 
 // ==============================
 
-namespace DiskFile{
+class DiskFile{
+public:
 	constexpr static uint8_t NOT_SORTED	= 0;
 	constexpr static uint8_t SORTED		= 1;
 
-	constexpr static const char *DOT_META = ".meta";
 	constexpr static const char *DOT_INDX = ".indx";
 	constexpr static const char *DOT_DATA = ".data";
 
+public:
 	template <class LIST>
-	bool create(const LIST &list,
-		const StringRef &filename_head,
-		const StringRef &filename_index,
-		const StringRef &filename_data,
-		bool keep = false);
+	static bool create(const LIST &list,
+				const StringRef &filename_meta, const StringRef &filename_index, const StringRef &filename_data,
+				bool keepInvalid);
+
+	template <class LIST>
+	static  bool create(const LIST &list, const std::string &filename, bool keepInvalid = true){
+		return create(list,
+				filename,
+				filenameIndx(filename),
+				filenameData(filename),
+				keepInvalid);
+	}
 
 	template <class LIST>
 	static bool writeListToFile(const LIST &list,
-		std::ofstream &file_head,
-		std::ofstream &file_index,
-		std::ofstream &file_data,
-		bool keep);
-
-	inline std::string filenameMeta(const std::string &filename){
-		return filename + DOT_META;
-	}
-
-	inline std::string filenameIndx(const std::string &filename){
+				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
+				bool keepInvalid);
+	
+public:
+	static std::string filenameIndx(const std::string &filename){
 		return filename + DOT_INDX;
 	}
 
-	inline std::string filenameData(const std::string &filename){
+	static std::string filenameData(const std::string &filename){
 		return filename + DOT_DATA;
 	}
-
-	inline StringRef filenameStrip(const StringRef &filename){
-		return StringRef(filename.data(), filename.size() - strlen(DOT_META) );
-	}
-
-	template <class LIST>
-	bool create(const LIST &list, const std::string &filename, bool keep = false){
-		return create(list,
-				filenameMeta(filename),
-				filenameIndx(filename),
-				filenameData(filename),
-				keep);
-	}
-
-}; // namespace DiskFile
+};
 
 // ==============================
 

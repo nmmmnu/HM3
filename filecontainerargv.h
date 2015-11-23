@@ -13,7 +13,7 @@ CONTAINER &load(CONTAINER &vector, unsigned const count, const STR_ARRAY argv){
 	vector.reserve(count);
 
 	for (unsigned i = 0; i < count; ++i){
-		const auto &filename = DiskFile::filenameStrip( argv[i] );
+		const StringRef &filename = argv[i];
 
                 DiskTable dt;
                 dt.open(filename);

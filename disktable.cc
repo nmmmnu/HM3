@@ -5,7 +5,7 @@
 #include <endian.h>	// htobe16
 
 bool DiskTable::open(const std::string &filename){
-	_mmapMeta.open(DiskFile::filenameMeta(filename));
+	_mmapMeta.open(filename);
 	_mmapIndx.open(DiskFile::filenameIndx(filename));
 	_mmapData.open(DiskFile::filenameData(filename));
 

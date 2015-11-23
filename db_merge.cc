@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 	const int  pathc	= argc - 3;
 
 	if (fileExists(output)){
-		printf("File %s exists\n", output);
+		printf("File %s exists. Please remove it and try again.\n", output);
 		return 2;
 	}
 
