@@ -104,6 +104,8 @@ static void pair_test_null(const char *module){
 	p.print();
 
 	PRINTF_TEST("null bool",	p == false			);
+	PRINTF_TEST("null isNULL",	p.isNULL()			);
+	PRINTF_TEST("null isTombstone",	p.isTombstone()			);
 	PRINTF_TEST("null key",		p.getKey().empty()		);
 	PRINTF_TEST("null val",		p.getVal().empty()		);
 	PRINTF_TEST("null cmp",		p.cmp("bla") == 1		);
@@ -119,8 +121,10 @@ static void pair_test(const char *module){
 
 	const Pair t = Pair::tombstone(key);
 
-	PRINTF_TEST("null bull ok",	p == true			);
+	PRINTF_TEST("null bool ok",	p == true			);
 	PRINTF_TEST("tombstone",	t.isTombstone()			);
+
+	PRINTF_TEST("isNULL",		! p.isNULL()			);
 
 	PRINTF_TEST("key",		p.getKey() == key		);
 	PRINTF_TEST("val",		p.getVal() == val		);
