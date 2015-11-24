@@ -25,6 +25,8 @@ private:
 
 	vector_type	_cur;
 	vector_type	_end;
+
+	bool		_internalError = false;
 };
 
 #include "multitableiterator_implementation.h"

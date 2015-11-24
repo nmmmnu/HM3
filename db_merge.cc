@@ -7,8 +7,9 @@
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
-	printf("\t%s m output_file [file1] [file2] [file...] - merge files, keep non valid\n", 		name);
-	printf("\t%s M output_file [file1] [file2] [file...] - merge files, remove non valid\n", 	name);
+	printf("\t%s - output_file [file1] [file2] [file...] - merge files, keep   non valid, keep   tombstones\n", 	name);
+	printf("\t%s v output_file [file1] [file2] [file...] - merge files, remove non valid, keep   tombstones\n", 	name);
+	printf("\t%s t output_file [file1] [file2] [file...] - merge files, remove non valid, remove tombstones\n", 	name);
 	printf("\t\tDo not forget you need at least two files\n");
 }
 
@@ -22,7 +23,20 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	const bool keep		= argv[1][0] == 'm' ? true : false;
+	bool keepInvalid	= true;
+	bool keepTombstones	= true;
+
+	switch(argv[1][0]){
+	case 'v':
+		keepInvalid	= false;
+		keepTombstones	= true;
+		break;
+
+	case 't':
+		keepInvalid	= false;
+		keepTombstones	= false;
+		break;
+	}
 
 	const char *output	= argv[2];
 
@@ -41,7 +55,7 @@ int main(int argc, char **argv){
 
 	LSMTable<MyDTVector> mtlist(container);
 
-	DiskFile::create(mtlist, output, keep);
+	DiskFile::create(mtlist, output, keepInvalid, keepTombstones);
 }
 
 

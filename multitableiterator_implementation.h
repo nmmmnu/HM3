@@ -18,6 +18,8 @@ MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator
 	const Pair &p = operator*();
 
 	if (!p){
+		// notice, there is no increment here !!!
+		_internalError = true;
 		return *this;
 	}
 
@@ -78,11 +80,15 @@ bool MultiTableIterator<CONTAINER_LIST>::operator==(const MultiTableIterator<CON
 	if (&_lists != &other._lists)
 		return false;
 
+	if (_internalError)
+		return true;
+
 	auto size = _lists.size();
 
-	for(size_type i = 0; i < size; ++i)
+	for(size_type i = 0; i < size; ++i){
 		if (_cur[i] != other._cur[i])
 			return false;
+	}
 
 	return true;
 }

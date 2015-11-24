@@ -35,22 +35,22 @@ public:
 	template <class LIST>
 	static bool create(const LIST &list,
 				const StringRef &filename_meta, const StringRef &filename_index, const StringRef &filename_data,
-				bool keepInvalid);
+				bool keepInvalid, bool keepTombstones);
 
 	template <class LIST>
-	static  bool create(const LIST &list, const std::string &filename, bool keepInvalid = true){
+	static  bool create(const LIST &list, const std::string &filename, bool keepInvalid = true, bool keepTombstones = true){
 		return create(list,
 				filename,
 				filenameIndx(filename),
 				filenameData(filename),
-				keepInvalid);
+				keepInvalid, keepTombstones);
 	}
 
 	template <class LIST>
 	static bool writeListToFile(const LIST &list,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
-				bool keepInvalid);
-	
+				bool keepInvalid, bool keepTombstones);
+
 public:
 	static std::string filenameIndx(const std::string &filename){
 		return filename + DOT_INDX;

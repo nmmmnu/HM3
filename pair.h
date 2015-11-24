@@ -51,6 +51,10 @@ public:
 		return cmp( pair.getKey() );
 	}
 
+	bool isNULL()const noexcept{
+		return key.empty();
+	}
+
 	bool isTombstone() const noexcept{
 		return val.empty();
 	}
@@ -106,11 +110,11 @@ inline int Pair::cmp(const StringRef &key2) const noexcept{
 
 inline bool Pair::valid(bool tombstoneCheck) const noexcept{
 	// check key size
-	if (key.empty())
+	if (isNULL())
 		return false;
 
 	// check val size
-	if (tombstoneCheck && val.empty())
+	if (tombstoneCheck && isTombstone())
 		return false;
 
 	// check expires
