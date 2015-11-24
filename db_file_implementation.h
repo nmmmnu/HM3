@@ -17,7 +17,7 @@ template <class LIST>
 static int op_filesearch(const LIST &list, const StringRef &key){
 	const Pair pair = list.get(key);
 
-	if (! pair){
+	if ( ! pair ){
 		printf("Key '%s' not found...\n", key.data());
 		return 1;
 	}

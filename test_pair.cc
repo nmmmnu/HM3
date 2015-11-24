@@ -99,7 +99,7 @@ static void pair_test_raw(const char *module){
 
 
 static void pair_test_null(const char *module){
-	const Pair p = nullptr;
+	const Pair p{};
 
 	p.print();
 
@@ -119,7 +119,8 @@ static void pair_test(const char *module){
 
 	const Pair t = Pair::tombstone(key);
 
-	PRINTF_TEST("null bull ok",	p == true			);
+	PRINTF_TEST("null bool",	p == true			);
+	PRINTF_TEST("null bool tomb",	p == true			);
 	PRINTF_TEST("tombstone",	t.isTombstone()			);
 
 	PRINTF_TEST("key",		p.getKey() == key		);

@@ -17,7 +17,7 @@ MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator
 
 	const Pair &p = operator*();
 
-	if (!p){
+	if ( ! p ){
 		// notice, there is no increment here !!!
 		_internalError = true;
 		return *this;
@@ -57,7 +57,7 @@ const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
 		const Pair &pair = *(_cur[i]);
 
 		// skip if is null
-		if (! pair)
+		if ( ! pair )
 			continue;
 
 		// initialize

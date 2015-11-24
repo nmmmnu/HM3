@@ -27,7 +27,7 @@ bool DiskFile::writeListToFile(const LIST &list,
 	bool const tombstoneCheck = ! keepTombstones;
 
 	for(const auto &pair : list){
-		if (pair.isNULL())
+		if (! pair )
 			continue;
 
 		if (keepInvalid == false && pair.valid(tombstoneCheck) == false)

@@ -91,7 +91,7 @@ bool Pair::fwrite(std::ostream & os) const{
 }
 
 void Pair::print() const noexcept{
-	if (*this == false){
+	if ( isNULL() ){
 		printf("--- Pair is empty ---\n");
 		return;
 	}

@@ -29,7 +29,7 @@ public:
 	Pair(const void *blob);
 
 	operator bool() const noexcept{
-		return valid();
+		return ! key.empty();
 	}
 
 public:

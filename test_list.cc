@@ -133,10 +133,10 @@ static void list_test(const char *module, LIST &list){
 	// TEST GET
 
 	p = list.get("3 city");
-	PRINTF_TEST("get",		p && p.getVal() == "Sofia"		);
+	PRINTF_TEST("get",		p.getVal() == "Sofia"			);
 
 //	p = list["3 city"];
-//	PRINTF_TEST("get[]",		p && p.getVal() == "Sofia"		);
+//	PRINTF_TEST("get[]",		p.getVal() == "Sofia"			);
 
 	p = list.get("nonexistent");
 	PRINTF_TEST("get non existent",	! p					);
@@ -151,7 +151,7 @@ static void list_test(const char *module, LIST &list){
 	list.put( Pair(key_overwr, "original") );
 	list.put( Pair(key_overwr, val_overwr) );
 	p = list.get(key_overwr);
-	PRINTF_TEST("overwrite",	p && p.getVal() == val_overwr		);
+	PRINTF_TEST("overwrite",	p.getVal() == val_overwr		);
 
 
 
@@ -173,7 +173,7 @@ static void list_test(const char *module, LIST &list){
 
 	p = list.get("3 city");
 
-	PRINTF_TEST("remove",		p && p.getVal() == "Sofia"		);
+	PRINTF_TEST("remove",		p.getVal() == "Sofia"			);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
 	PRINTF_TEST("remove sizeof",	list.getSize() == p.getSize()		);
 
