@@ -35,13 +35,13 @@ void DiskTable::close(){
 }
 
 void DiskTable::print() const{
-	printf("%-12s: %u\n",	"Version",	_dataVersion);
-	printf("%-12s: %zu\n",	"Records",	_dataCount);
-	printf("%-12s: %s\n",	"Sorted",	_dataSorted ? "Yes" : "No");
+	printf("%-14s: %u\n",	"Version",	_dataVersion);
+	printf("%-14s: %zu\n",	"Records",	_dataCount);
+	printf("%-14s: %s\n",	"Sorted",	_dataSorted ? "Yes" : "No");
 
-	printf("%-12s: %zu\n",	"Tombstones",	_tombstones);
-	printf("%-12s: %s\n",	"Created::MIN",	MyTime::toString(_createdMin));
-	printf("%-12s: %s\n",	"Created::MAX",	MyTime::toString(_createdMax));
+	printf("%-14s: %zu\n",	"Tombstones",	_tombstones);
+	printf("%-14s: %s\n",	"Created::MIN",	MyTime::toString(_createdMin));
+	printf("%-14s: %s\n",	"Created::MAX",	MyTime::toString(_createdMax));
 }
 
 int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
@@ -51,38 +51,38 @@ int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
 }
 
 size_t DiskTable::_getCountFromDisk() const{
-	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, size) );
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, size) );
 
 	return size ? (size_t) be64toh(*size) : 0;
 }
 
 size_t DiskTable::_getTombstonesFromDisk() const{
-	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, tombstones) );
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, tombstones) );
 
 	return size ? (size_t) be64toh(*size) : 0;
 }
 
 size_t DiskTable::_getMINCreatedFromDisk() const{
-	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, createdMin) );
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, createdMin) );
 
 	return size ? (size_t) be64toh(*size) : 0;
 }
 
 size_t DiskTable::_getMAXCreatedFromDisk() const{
-	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, createdMax) );
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, createdMax) );
 
 	return size ? (size_t) be64toh(*size) : 0;
 }
 
 bool DiskTable::_getSortedFromDisk() const{
-	const uint8_t *sorted = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, sorted) );
+	const uint8_t *sorted = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, sorted) );
 
 	//printf("%u\n", *sorted);
 
 	if (sorted){
 		switch(*sorted){
-		case DiskFile::NOT_SORTED:	return false;
-		case DiskFile::SORTED:		return true;
+		case DiskFileHeader::HEADER_NOT_SORTED:	return false;
+		case DiskFileHeader::HEADER_SORTED:		return true;
 		}
 	}
 
@@ -90,12 +90,12 @@ bool DiskTable::_getSortedFromDisk() const{
 }
 
 uint8_t DiskTable::_getVersionFromDisk() const{
-	const uint8_t *version = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, version) );
+	const uint8_t *version = (const uint8_t *) _mmapMeta.safeAccess( offsetof(DiskFileHeader::POD, version) );
 
 	if (version){
 		const char *logo = (const char *) _mmapMeta.mem();
 
-		if (strncmp(logo, DISK_TABLE_LOGO, 4) != 0)
+		if (strncmp(logo, DiskFileHeader::TITLE, 4) != 0)
 			return 0;
 
 		return *version;

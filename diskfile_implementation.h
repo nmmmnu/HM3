@@ -1,10 +1,8 @@
+#include <fstream>
 
 template <class LIST>
-bool DiskFile::create(const LIST &list,
-			const StringRef &filename_meta,
-			const StringRef &filename_indx,
-			const StringRef &filename_data,
-			bool const keepInvalid, bool const keepTombstones){
+bool DiskFile::createFromList(const LIST &list,
+			bool const keepInvalid, bool const keepTombstones) const{
 
 	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
 	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
@@ -18,14 +16,15 @@ bool DiskFile::writeListToFile(const LIST &list,
 			std::ofstream &file_meta,
 			std::ofstream &file_indx,
 			std::ofstream &file_data,
-			bool const keepInvalid, bool const keepTombstones){
+			bool const keepInvalid, bool const keepTombstones) const{
 	uint64_t be;
 
 	size_t current = 0;
+
 	size_t datacount = 0;
 	size_t tombstones = 0;
-	size_t createdMin = 0;
-	size_t createdMax = 0;
+	uint64_t createdMin = 0;
+	uint64_t createdMax = 0;
 
 	bool first_created = true;
 
@@ -74,14 +73,9 @@ bool DiskFile::writeListToFile(const LIST &list,
 	// now we miraculasly have the datacount.
 
 	// write table header
-	DiskTableHeader header;
-	header.size		= htobe64(datacount);
-	header.sorted		= SORTED;
-	header.tombstones	= htobe64(tombstones);
-	header.createdMin	= htobe64(createdMin);
-	header.createdMax	= htobe64(createdMax);
+	auto header = DiskFileHeader::create(datacount, tombstones, createdMin, createdMax);
 
-	file_meta.write( (const char *) & header, sizeof(DiskTableHeader));
+	file_meta.write( (const char *) & header, sizeof(header));
 
 	return true;
 }

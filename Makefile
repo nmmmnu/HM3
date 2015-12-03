@@ -47,7 +47,7 @@ test_pair: test_pair.o pair.o nmea0183checksumcalculator.o mytime.o
 test_list: test_list.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o disktable.o mmapfile.o
+test_file: test_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o vectorlist.o linklist.o skiplist.o disktable.o mmapfile.o diskfile.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_stl: test_stl.o pair.o nmea0183checksumcalculator.o mytime.o
@@ -62,7 +62,7 @@ db_file: db_file.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktabl
 db_lsm: db_lsm.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o mmapfile.o myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o disktable.o mmapfile.o
+db_merge: db_merge.o pair.o nmea0183checksumcalculator.o mytime.o ilist.o disktable.o mmapfile.o diskfile.o
 	$(LINK) $@ $^		$(LIBS)
 
 

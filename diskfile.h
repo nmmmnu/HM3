@@ -6,53 +6,58 @@
 #include <cstdint>
 
 #include <iostream>
-#include <fstream>
 
-#define DISK_TABLE_TITLE	"ZUSE"
-#define DISK_TABLE_VERSION	"002"
-#define DISK_TABLE_VERSION_INT	2
+// ==============================
 
-#define DISK_TABLE_LOGO		DISK_TABLE_TITLE DISK_TABLE_VERSION
+class DiskFileHeader{
+public:
+	constexpr static const size_t	TITLE_SIZE	= 8;
+	constexpr static const char	*TITLE		= "ZUSE" "003"; // \0 at the end
+	constexpr static const uint8_t	VERSION		= 3;
 
-struct DiskTableHeader{
-	const char	logo[8]	= DISK_TABLE_LOGO;		// 8
-	const uint8_t	version	= DISK_TABLE_VERSION_INT;	// 1
-	uint64_t	size;					// 8
-	uint8_t		sorted;					// 1
-	uint64_t	tombstones;				// 8
-	uint64_t	createdMin;				// 8
-	uint64_t	createdMax;				// 8
-} __attribute__((__packed__));
+	constexpr static const uint8_t	HEADER_NOT_SORTED	= 0;
+	constexpr static const uint8_t	HEADER_SORTED		= 1;
+
+public:
+	struct PODBase{
+		char		logo[TITLE_SIZE];	// 8
+		uint8_t		version;	// 1
+		uint64_t	size;		// 8
+	} __attribute__((__packed__));
+
+	struct POD{
+		char		logo[8];	// 8
+		uint8_t		version;	// 1
+		uint64_t	size;		// 8
+		// base ends here
+		uint64_t	created;	// 8
+		uint8_t		sorted;		// 1
+		uint64_t	tombstones;	// 8
+		uint64_t	createdMin;	// 8
+		uint64_t	createdMax;	// 8
+	} __attribute__((__packed__));
+
+public:
+	static POD create(size_t const datacount, size_t const tombstones,
+				uint64_t const createdMin, uint64_t const createdMax );
+
+};
 
 // ==============================
 
 class DiskFile{
 public:
-	constexpr static uint8_t NOT_SORTED	= 0;
-	constexpr static uint8_t SORTED		= 1;
-
 	constexpr static const char *DOT_INDX = ".indx";
 	constexpr static const char *DOT_DATA = ".data";
 
 public:
-	template <class LIST>
-	static bool create(const LIST &list,
-				const StringRef &filename_meta, const StringRef &filename_index, const StringRef &filename_data,
-				bool keepInvalid, bool keepTombstones);
+	DiskFile(const StringRef &filename_meta, const StringRef &filename_indx, const StringRef &filename_data) :
+			filename_meta(filename_meta),
+			filename_indx(filename_indx),
+			filename_data(filename_data){}
 
-	template <class LIST>
-	static  bool create(const LIST &list, const std::string &filename, bool keepInvalid = true, bool keepTombstones = true){
-		return create(list,
-				filename,
-				filenameIndx(filename),
-				filenameData(filename),
-				keepInvalid, keepTombstones);
-	}
-
-	template <class LIST>
-	static bool writeListToFile(const LIST &list,
-				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
-				bool keepInvalid, bool keepTombstones);
+	DiskFile(const std::string &filename) :
+			DiskFile(filename, filenameIndx(filename), filenameData(filename)){}
 
 public:
 	static std::string filenameIndx(const std::string &filename){
@@ -62,6 +67,21 @@ public:
 	static std::string filenameData(const std::string &filename){
 		return filename + DOT_DATA;
 	}
+
+public:
+	template <class LIST>
+	bool createFromList(const LIST &list,
+				bool keepInvalid, bool keepTombstones) const;
+
+	template <class LIST>
+	bool writeListToFile(const LIST &list,
+				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
+				bool keepInvalid, bool keepTombstones) const;
+
+private:
+	std::string filename_meta;
+	std::string filename_indx;
+	std::string filename_data;
 };
 
 // ==============================

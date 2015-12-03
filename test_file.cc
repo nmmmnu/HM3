@@ -86,7 +86,8 @@ static int op_write(LIST &list, const StringRef &filename, const std::string &fi
 	getchar();
 
 	printf("Write start...\n");
-	DiskFile::create(list, filename2);
+	DiskFile df = DiskFile(filename2);
+	df.createFromList(list, true, true);
 	printf("Write done...\n");
 	getchar();
 

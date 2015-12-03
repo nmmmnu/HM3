@@ -59,7 +59,9 @@ int main(int argc, char **argv){
 
 	LSMTable<MyDTVector> mtlist(container);
 
-	DiskFile::create(mtlist, output, keepInvalid, keepTombstones);
+	DiskFile df = DiskFile(output);
+
+	df.createFromList(mtlist, keepInvalid, keepTombstones);
 }
 
 
