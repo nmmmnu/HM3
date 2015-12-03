@@ -2,6 +2,8 @@
 
 #include "pairpod.h"
 
+#include "mytime.h"
+
 #include <endian.h>	// htobe16
 
 bool DiskTable::open(const std::string &filename){
@@ -9,9 +11,13 @@ bool DiskTable::open(const std::string &filename){
 	_mmapIndx.open(DiskFile::filenameIndx(filename));
 	_mmapData.open(DiskFile::filenameData(filename));
 
-	_dataCount   = _getCountFromDisk();
-	_dataSorted  = _getSortedFromDisk();
-	_dataVersion = _getVersionFromDisk();
+	_dataCount	= _getCountFromDisk();
+	_dataSorted	= _getSortedFromDisk();
+	_dataVersion	= _getVersionFromDisk();
+
+	_tombstones	= _getTombstonesFromDisk();
+	_createdMin	= _getMINCreatedFromDisk();
+	_createdMax	= _getMAXCreatedFromDisk();
 
 	if (! _dataVersion){
 		close();
@@ -29,9 +35,13 @@ void DiskTable::close(){
 }
 
 void DiskTable::print() const{
-	printf("%-10s: %u\n",	"Version",	_dataVersion);
-	printf("%-10s: %zu\n",	"Records",	_dataCount);
-	printf("%-10s: %s\n",	"Sorted",	_dataSorted ? "Yes" : "No");
+	printf("%-12s: %u\n",	"Version",	_dataVersion);
+	printf("%-12s: %zu\n",	"Records",	_dataCount);
+	printf("%-12s: %s\n",	"Sorted",	_dataSorted ? "Yes" : "No");
+
+	printf("%-12s: %zu\n",	"Tombstones",	_tombstones);
+	printf("%-12s: %s\n",	"Created::MIN",	MyTime::toString(_createdMin));
+	printf("%-12s: %s\n",	"Created::MAX",	MyTime::toString(_createdMax));
 }
 
 int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
@@ -42,6 +52,24 @@ int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
 
 size_t DiskTable::_getCountFromDisk() const{
 	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, size) );
+
+	return size ? (size_t) be64toh(*size) : 0;
+}
+
+size_t DiskTable::_getTombstonesFromDisk() const{
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, tombstones) );
+
+	return size ? (size_t) be64toh(*size) : 0;
+}
+
+size_t DiskTable::_getMINCreatedFromDisk() const{
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, createdMin) );
+
+	return size ? (size_t) be64toh(*size) : 0;
+}
+
+size_t DiskTable::_getMAXCreatedFromDisk() const{
+	const uint64_t *size = (const uint64_t *) _mmapMeta.safeAccess( offsetof(DiskTableHeader, createdMax) );
 
 	return size ? (size_t) be64toh(*size) : 0;
 }

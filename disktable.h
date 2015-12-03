@@ -56,9 +56,17 @@ private:
 	size_t		_dataCount;
 	bool		_dataSorted;
 
+	size_t		_tombstones;
+	size_t		_createdMin;
+	size_t		_createdMax;
+
 private:
 	size_t _getCountFromDisk() const;
 	bool   _getSortedFromDisk() const;
+
+	size_t _getTombstonesFromDisk() const;
+	size_t _getMINCreatedFromDisk() const;
+	size_t _getMAXCreatedFromDisk() const;
 
 	const void *_getAtFromDisk(size_t index) const;
 

@@ -6,11 +6,15 @@
 #include <unistd.h>	// access
 
 static void printUsage(const char *name){
+	const char *txt =
+		"\t%s %c output_file [file1] [file2] [fileN...]"
+		"- merge files, %-6s non valid, %-6s tombstones\n";
+
 	printf("Usage:\n");
-	printf("\t%s - output_file [file1] [file2] [file...] - merge files, keep   non valid, keep   tombstones\n", 	name);
-	printf("\t%s v output_file [file1] [file2] [file...] - merge files, remove non valid, keep   tombstones\n", 	name);
-	printf("\t%s t output_file [file1] [file2] [file...] - merge files, remove non valid, remove tombstones\n", 	name);
-	printf("\t\tDo not forget you need at least two files\n");
+	printf(txt, 	name, '-', "keep",   "keep");
+	printf(txt, 	name, 'v', "remove", "keep");
+	printf(txt, 	name, 't', "remove", "remove");
+	printf("\t\tDo not forget you need at least two output files\n");
 }
 
 inline bool fileExists(const StringRef& name) {

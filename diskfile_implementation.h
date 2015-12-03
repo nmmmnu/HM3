@@ -23,6 +23,11 @@ bool DiskFile::writeListToFile(const LIST &list,
 
 	size_t current = 0;
 	size_t datacount = 0;
+	size_t tombstones = 0;
+	size_t createdMin = 0;
+	size_t createdMax = 0;
+
+	bool first_created = true;
 
 	bool const tombstoneCheck = ! keepTombstones;
 
@@ -32,6 +37,26 @@ bool DiskFile::writeListToFile(const LIST &list,
 
 		if (keepInvalid == false && pair.valid(tombstoneCheck) == false)
 			continue;
+
+		if (pair.isTombstone())
+			++tombstones;
+
+		if (first_created){
+			uint64_t created = pair.getCreated();
+
+			createdMin = created;
+			createdMax = created;
+
+			first_created = false;
+		}else{
+			uint64_t created = pair.getCreated();
+
+			if (created < createdMin)
+				createdMin = created;
+
+			if (created > createdMax)
+				createdMax = created;
+		}
 
 		// write the index
 		be = htobe64(current);
@@ -50,8 +75,11 @@ bool DiskFile::writeListToFile(const LIST &list,
 
 	// write table header
 	DiskTableHeader header;
-	header.size   = htobe64(datacount);
-	header.sorted = SORTED;
+	header.size		= htobe64(datacount);
+	header.sorted		= SORTED;
+	header.tombstones	= htobe64(tombstones);
+	header.createdMin	= htobe64(createdMin);
+	header.createdMax	= htobe64(createdMax);
 
 	file_meta.write( (const char *) & header, sizeof(DiskTableHeader));
 

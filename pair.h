@@ -41,6 +41,10 @@ public:
 		return val;
 	}
 
+	uint64_t getCreated() const noexcept{
+		return created;
+	}
+
 	int cmp(const StringRef &key) const noexcept;
 
 	int cmp(const char *key) const noexcept{

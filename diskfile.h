@@ -19,6 +19,9 @@ struct DiskTableHeader{
 	const uint8_t	version	= DISK_TABLE_VERSION_INT;	// 1
 	uint64_t	size;					// 8
 	uint8_t		sorted;					// 1
+	uint64_t	tombstones;				// 8
+	uint64_t	createdMin;				// 8
+	uint64_t	createdMax;				// 8
 } __attribute__((__packed__));
 
 // ==============================

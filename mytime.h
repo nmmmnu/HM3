@@ -22,6 +22,7 @@ public:
 	constexpr static uint64_t combine(uint32_t sec, uint32_t usec = 0) noexcept;
 
 	constexpr static uint32_t uncombine(uint64_t timestamp) noexcept;
+	constexpr static uint32_t uncombine2(uint64_t timestamp) noexcept;
 
 private:
 	static char buffer[STRING_SIZE];
@@ -40,6 +41,10 @@ constexpr inline uint64_t MyTime::combine(uint32_t const sec, uint32_t const use
 
 constexpr inline uint32_t MyTime::uncombine(uint64_t const timestamp) noexcept{
 	return (uint32_t) (timestamp >> 32);
+};
+
+constexpr inline uint32_t MyTime::uncombine2(uint64_t const timestamp) noexcept{
+	return (uint32_t) (timestamp & 0xFFffFFff);
 };
 
 #endif
