@@ -1,3 +1,5 @@
+#include "diskfileheader.h"
+
 #include <fstream>
 
 template <class LIST>
@@ -73,10 +75,7 @@ bool DiskFile::writeListToFile(const LIST &list,
 	// now we miraculasly have the datacount.
 
 	// write table header
-	auto header = DiskFileHeader::create(datacount, tombstones, createdMin, createdMax);
-
-	file_meta.write( (const char *) & header, sizeof(header));
-
-	return true;
+	DiskFileHeader head{datacount, true, tombstones, createdMin, createdMax};
+	return head.writeToFile(file_meta);
 }
 

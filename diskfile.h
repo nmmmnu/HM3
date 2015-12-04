@@ -9,42 +9,6 @@
 
 // ==============================
 
-class DiskFileHeader{
-public:
-	constexpr static const size_t	TITLE_SIZE	= 8;
-	constexpr static const char	*TITLE		= "ZUSE" "003"; // \0 at the end
-	constexpr static const uint8_t	VERSION		= 3;
-
-	constexpr static const uint8_t	HEADER_NOT_SORTED	= 0;
-	constexpr static const uint8_t	HEADER_SORTED		= 1;
-
-public:
-	struct PODBase{
-		char		logo[TITLE_SIZE];	// 8
-		uint8_t		version;	// 1
-		uint64_t	size;		// 8
-	} __attribute__((__packed__));
-
-	struct POD{
-		char		logo[8];	// 8
-		uint8_t		version;	// 1
-		uint64_t	size;		// 8
-		// base ends here
-		uint64_t	created;	// 8
-		uint8_t		sorted;		// 1
-		uint64_t	tombstones;	// 8
-		uint64_t	createdMin;	// 8
-		uint64_t	createdMax;	// 8
-	} __attribute__((__packed__));
-
-public:
-	static POD create(size_t const datacount, size_t const tombstones,
-				uint64_t const createdMin, uint64_t const createdMax );
-
-};
-
-// ==============================
-
 class DiskFile{
 public:
 	constexpr static const char *DOT_INDX = ".indx";
@@ -73,6 +37,7 @@ public:
 	bool createFromList(const LIST &list,
 				bool keepInvalid, bool keepTombstones) const;
 
+private:
 	template <class LIST>
 	bool writeListToFile(const LIST &list,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,

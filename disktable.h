@@ -21,7 +21,13 @@ public:
 	bool open(const std::string &filename);
 	void close();
 
-	void print() const;
+	operator bool(){
+		return true;
+	}
+
+	void print() const{
+		_header.print();
+	}
 
 public:
 	Pair get(const StringRef &key) const;
@@ -31,7 +37,7 @@ public:
 	int cmpAt(size_t index, const StringRef &key) const;
 
 	size_t getCount() const{
-		return _dataCount;
+		return _header.getCount();
 	}
 
 	size_t getSize() const{
@@ -48,26 +54,11 @@ public:
 	Iterator end() const;
 
 private:
-	MMAPFile	_mmapMeta;
+	DiskFileHeader	_header;
 	MMAPFile	_mmapIndx;
 	MMAPFile	_mmapData;
 
-	uint8_t		_dataVersion;
-	size_t		_dataCount;
-	bool		_dataSorted;
-
-	size_t		_tombstones;
-	size_t		_createdMin;
-	size_t		_createdMax;
-
 private:
-	size_t _getCountFromDisk() const;
-	bool   _getSortedFromDisk() const;
-
-	size_t _getTombstonesFromDisk() const;
-	size_t _getMINCreatedFromDisk() const;
-	size_t _getMAXCreatedFromDisk() const;
-
 	const void *_getAtFromDisk(size_t index) const;
 
 	const void *_getNextFromDisk(const void *pod, size_t size = 0) const;
