@@ -16,6 +16,10 @@ public:
 
 	void close();
 
+	operator bool(){
+		return _mem == nullptr;
+	}
+
 	const void *mem() const{
 		return _mem;
 	}

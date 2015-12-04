@@ -10,7 +10,7 @@ MMAPFile::MMAPFile(MMAPFile &&other) :
 		_fd(	std::move(other._fd)){
 	other._mem = nullptr;
 	other._size = 0;
-}		
+}
 
 bool MMAPFile::open(const StringRef &filename){
 	close();
@@ -44,7 +44,7 @@ bool MMAPFile::open(const StringRef &filename){
 }
 
 void MMAPFile::close(){
-	if (_mem == nullptr || _size == 0)
+	if (_mem == nullptr)
 		return;
 
 	munmap((void *) _mem, _size);

@@ -22,7 +22,7 @@ public:
 	void close();
 
 	operator bool(){
-		return true;
+		return _header;
 	}
 
 	void print() const{
