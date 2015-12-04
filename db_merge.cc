@@ -14,7 +14,7 @@ static void printUsage(const char *name){
 	printf(txt, 	name, '-', "keep",   "keep");
 	printf(txt, 	name, 'v', "remove", "keep");
 	printf(txt, 	name, 't', "remove", "remove");
-	printf("\t\tDo not forget you need at least two output files\n");
+	printf("\t\tDo not forget you usually need two output files\n");
 }
 
 inline bool fileExists(const StringRef& name) {
@@ -22,7 +22,7 @@ inline bool fileExists(const StringRef& name) {
 }
 
 int main(int argc, char **argv){
-	if (argc <= 1 + 1 + 2){
+	if (argc <= 1 + 1 + 1){
 		printUsage(argv[0]);
 		return 1;
 	}
