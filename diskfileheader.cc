@@ -3,9 +3,11 @@
 
 #include <fstream>
 
-DiskFileHeader::DiskFileHeader(size_t const count,
+#include <inttypes.h>	// PRIu64
+
+DiskFileHeader::DiskFileHeader(uint64_t const count,
 					bool const sorted,
-					size_t const tombstones, uint64_t const createdMin, uint64_t const createdMax):
+					uint64_t const tombstones, uint64_t const createdMin, uint64_t const createdMax):
 				_version(VERSION),
 				_count(count),
 				_created(MyTime::now()),
@@ -94,12 +96,12 @@ void DiskFileHeader::_clear(){
 }
 
 void DiskFileHeader::print() const{
-	printf("%-14s: %u\n",	"Version",	_version);
-	printf("%-14s: %zu\n",	"Records",	_count);
-	printf("%-14s: %s\n",	"Created",	_created ? MyTime::toString(_created) : "n/a");
-	printf("%-14s: %s\n",	"Sorted",	_sorted ? "Yes" : "No");
+	printf("%-14s: %u\n",		"Version",	_version);
+	printf("%-14s: %" PRIu64 "\n",	"Records",	_count);
+	printf("%-14s: %s\n",		"Created",	_created ? MyTime::toString(_created) : "n/a");
+	printf("%-14s: %s\n",		"Sorted",	_sorted ? "Yes" : "No");
 
-	printf("%-14s: %zu\n",	"Tombstones",	_tombstones);
-	printf("%-14s: %s\n",	"Created::MIN",	_createdMin ? MyTime::toString(_createdMin) : "n/a");
-	printf("%-14s: %s\n",	"Created::MAX",	_createdMax ? MyTime::toString(_createdMax) : "n/a");
+	printf("%-14s: %" PRIu64 "\n",	"Tombstones",	_tombstones);
+	printf("%-14s: %s\n",		"Created::MIN",	_createdMin ? MyTime::toString(_createdMin) : "n/a");
+	printf("%-14s: %s\n",		"Created::MAX",	_createdMax ? MyTime::toString(_createdMax) : "n/a");
 }

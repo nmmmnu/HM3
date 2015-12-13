@@ -12,6 +12,8 @@ public:
 
 	class Iterator;
 
+	using count_type = typename VectorList::count_type;
+
 public:
 	explicit VectorList(size_t reallocSize = 0);
 	VectorList(VectorList &&other);
@@ -25,7 +27,7 @@ private:
 	Pair		*_buffer;
 	size_t		_bufferReserved;
 
-	size_t		_dataCount;
+	count_type	_dataCount;
 	size_t		_dataSize;
 
 public:
@@ -33,15 +35,15 @@ public:
 
 	bool remove(const StringRef &key);
 
-	const Pair &getAt(size_t const index) const{
+	const Pair &getAt(count_type const index) const{
 		return index < getCount() ? _buffer[index] : ListDefs::zero;
 	}
 
-	int cmpAt(size_t const index, const StringRef &key) const{
+	int cmpAt(count_type const index, const StringRef &key) const{
 		return getAt(index).cmp(key);
 	}
 
-	size_t getCount(bool const = false) const{
+	count_type getCount(bool const = false) const{
 		return _dataCount;
 	}
 
@@ -49,7 +51,7 @@ public:
 		return _dataSize;
 	}
 
-	std::tuple<int, size_t> lookup(const StringRef &key) const{
+	std::tuple<int, count_type> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
 	}
 
@@ -93,7 +95,7 @@ template <class LOOKUP>
 class VectorList<LOOKUP>::Iterator : public IIterator<Iterator>{
 private:
 	friend class VectorList;
-	Iterator(const VectorList &list, size_t pos);
+	Iterator(const VectorList &list, count_type pos);
 
 public:
 	Iterator &operator++();
@@ -105,7 +107,7 @@ public:
 
 private:
 	const VectorList	&_list;
-	size_t			_pos;
+	count_type		_pos;
 };
 
 #endif

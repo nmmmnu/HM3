@@ -118,7 +118,7 @@ static void list_test(const char *module, LIST &list){
 
 	const size_t size = list_populate(list);
 
-	const size_t count = 4;
+	const typename LIST::count_type count = 4;
 
 	PRINTF_TEST("print it",		true					);
 	list.print();

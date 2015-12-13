@@ -8,6 +8,8 @@
 // ==============================
 
 namespace ListDefs{
+	using count_type = uint64_t;
+
 	extern const Pair zero;
 };
 
@@ -20,6 +22,9 @@ protected:
 	static size_t PRINT_COUNT = 10;
 
 public:
+	using count_type = ListDefs::count_type;
+
+public:
 	void print(size_t count = PRINT_COUNT) const;
 
 	bool isEmpty() const{
@@ -27,7 +32,7 @@ public:
 	}
 
 public:
-	size_t getCount(bool const estimated = false) const{
+	count_type getCount(bool const estimated = false) const{
 		return static_cast<const T*>(this)->getCount(estimated);
 	}
 };

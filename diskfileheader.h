@@ -38,7 +38,7 @@ public:
 public:
 	DiskFileHeader() = default;
 
-	DiskFileHeader(size_t count, bool sorted = false, size_t tombstones = 0, uint64_t createdMin = 0, uint64_t createdMax = 0);
+	DiskFileHeader(uint64_t count, bool sorted = false, uint64_t tombstones = 0, uint64_t createdMin = 0, uint64_t createdMax = 0);
 
 	bool open(const StringRef &filename);
 	bool open(std::ifstream &file);
@@ -56,7 +56,7 @@ public:
 		return _version;
 	}
 
-	size_t getCount() const{
+	uint64_t getCount() const{
 		return _count;
 	}
 
@@ -71,11 +71,11 @@ private:
 
 private:
 	uint8_t		_version	= 0;
-	size_t		_count		= 0;
+	uint64_t	_count		= 0;
 
 	uint64_t	_created	= 0;
 	bool		_sorted		= false;
-	size_t		_tombstones	= 0;
+	uint64_t	_tombstones	= 0;
 	uint64_t	_createdMin	= 0;
 	uint64_t	_createdMax	= 0;
 };

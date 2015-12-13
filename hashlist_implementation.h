@@ -28,11 +28,13 @@ bool HashList<LIST>::remove(const StringRef &key){
 }
 
 template <class LIST>
-size_t HashList<LIST>::getCount(bool const estimated) const noexcept{
-	size_t result = 0;
+auto HashList<LIST>::getCount(bool const estimated) const noexcept -> count_type{
+	count_type result = 0;
 
-	for(const LIST &list : _container)
-		result += list.getCount(estimated);
+	for(const LIST &list : _container){
+		// a + b is int
+		result = (count_type) (result + list.getCount(estimated));
+	}
 
 	return result;
 }

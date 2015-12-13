@@ -23,7 +23,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	size_t getCount(bool const = true) const{
+	count_type getCount(bool const = true) const{
 		return _dataCount;
 	}
 
@@ -51,10 +51,10 @@ private:
 private:
 	struct Node;
 
-	Node	*_head;
+	Node		*_head;
 
-	size_t	_dataCount;
-	size_t	_dataSize;
+	count_type	_dataCount;
+	size_t		_dataSize;
 
 private:
 	void _clear();

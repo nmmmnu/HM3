@@ -23,13 +23,13 @@ void DiskTable::close(){
 	_mmapData.close();
 }
 
-int DiskTable::cmpAt(size_t const index, const StringRef &key) const{
+int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
 	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
 	// StringRef is not null terminated
 	return p ? p->cmp(key.data(), key.size()) : PairPOD::cmpZero();
 }
 
-const void *DiskTable::_getAtFromDisk(size_t const index) const{
+const void *DiskTable::_getAtFromDisk(count_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( index * sizeof(uint64_t) );
 
 	if (ptr_be){
@@ -58,7 +58,7 @@ const void *DiskTable::_getNextFromDisk(const void *pod, size_t size) const{
 
 // ===================================
 
-DiskTable::Iterator::Iterator(const DiskTable &list, size_t const pos, bool const useFastForward) :
+DiskTable::Iterator::Iterator(const DiskTable &list, count_type const pos, bool const useFastForward) :
 			_list(list),
 			_pos(pos),
 			_useFastForward(useFastForward){}

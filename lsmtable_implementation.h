@@ -12,7 +12,7 @@ Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
 
 template <class CONTAINER>
 size_t LSMTable<CONTAINER>::getSize() const{
-	size_t result = 0;
+	count_type result = 0;
 
 	for(const auto &table : _container)
 		result += table.getSize();
@@ -23,8 +23,8 @@ size_t LSMTable<CONTAINER>::getSize() const{
 // ===================================
 
 template <class CONTAINER>
-size_t LSMTable<CONTAINER>::getCountEstimated() const{
-	size_t result = 0;
+auto LSMTable<CONTAINER>::getCountEstimated() const -> count_type{
+	count_type result = 0;
 
 	for(const auto &table : _container)
 		result += table.getCount();
@@ -33,8 +33,8 @@ size_t LSMTable<CONTAINER>::getCountEstimated() const{
 }
 
 template <class CONTAINER>
-size_t LSMTable<CONTAINER>::getCountReal() const{
-	size_t result = 0;
+auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
+	count_type result = 0;
 
 	auto endIt = end();
 	for(auto it = begin(); it != endIt; ++it)

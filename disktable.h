@@ -32,12 +32,12 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	Pair getAt(size_t index) const;
+	Pair getAt(count_type index) const;
 
-	int cmpAt(size_t index, const StringRef &key) const;
+	int cmpAt(count_type index, const StringRef &key) const;
 
-	size_t getCount() const{
-		return _header.getCount();
+	count_type getCount() const{
+		return (count_type) _header.getCount();
 	}
 
 	size_t getSize() const{
@@ -45,7 +45,7 @@ public:
 	}
 
 	template <class LOOKUP = IArraySearch::Binary>
-	std::tuple<int, size_t> lookup(const StringRef &key) const{
+	std::tuple<int, count_type> lookup(const StringRef &key) const{
 		return LOOKUP::processing(*this, key);
 	}
 
@@ -59,7 +59,7 @@ private:
 	MMAPFile	_mmapData;
 
 private:
-	const void *_getAtFromDisk(size_t index) const;
+	const void *_getAtFromDisk(count_type index) const;
 
 	const void *_getNextFromDisk(const void *pod, size_t size = 0) const;
 
@@ -71,7 +71,7 @@ private:
 class DiskTable::Iterator : public IIterator<Iterator>{
 private:
 	friend class DiskTable;
-	Iterator(const DiskTable &list, size_t pos, bool useFastForward);
+	Iterator(const DiskTable &list, count_type pos, bool useFastForward);
 
 public:
 	Iterator &operator++();
@@ -83,12 +83,12 @@ public:
 
 private:
 	const DiskTable	&_list;
-	size_t		_pos;
+	count_type	_pos;
 	bool		_useFastForward;
 
 private:
 	/* !!! */ mutable
-	size_t		tmp_pos = 0;
+	count_type	tmp_pos = 0;
 
 	/* !!! */ mutable
 	const void	*tmp_pod = nullptr;
@@ -100,7 +100,7 @@ private:
 
 // ==============================
 
-inline Pair DiskTable::getAt(size_t const index) const{
+inline Pair DiskTable::getAt(count_type const index) const{
 	return index < getCount() ? _getAtFromDisk(index) : nullptr;
 }
 

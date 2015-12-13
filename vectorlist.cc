@@ -34,7 +34,7 @@ VectorList<LOOKUP>::VectorList(VectorList &&other):
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::removeAll(){
-	for(size_t i = 0; i < _dataCount; ++i)
+	for(count_type i = 0; i < _dataCount; ++i)
 		_buffer[i].~Pair();
 
 	_clear(true);
@@ -148,7 +148,12 @@ bool VectorList<LOOKUP>::_resize(int const delta){
 		return true;
 	}
 
-	size_t const new_dataCount = _dataCount + SGN(delta);
+	if (_dataCount == 0 && delta < 0){
+		// must be an error
+		return true;
+	}
+
+	count_type const new_dataCount = (count_type) (_dataCount + SGN(delta));
 
 	if (new_dataCount == 0){
 		_clear(true);
@@ -189,7 +194,7 @@ size_t VectorList<LOOKUP>::__calcNewSize(size_t const size, size_t const realloc
 // ===================================
 
 template <class LOOKUP>
-VectorList<LOOKUP>::Iterator::Iterator(const VectorList &list, size_t const pos) :
+VectorList<LOOKUP>::Iterator::Iterator(const VectorList &list, count_type const pos) :
 			_list(list),
 			_pos(pos){}
 

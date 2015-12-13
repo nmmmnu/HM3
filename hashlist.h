@@ -12,6 +12,8 @@ class HashList : public IList<HashList<LIST> >{
 public:
 	using container_type = std::vector<LIST>;
 
+	using count_type = typename HashList::count_type;
+
 public:
 	constexpr
 	static size_t DEFAULT_SIZE = 1024;
@@ -26,7 +28,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	size_t getCount(bool const estimated = false) const noexcept;
+	count_type getCount(bool const estimated = false) const noexcept;
 	size_t getSize() const noexcept;
 
 public:
