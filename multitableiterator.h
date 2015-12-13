@@ -8,8 +8,8 @@
 template <class CONTAINER_LIST>
 class MultiTableIterator : public IIterator<MultiTableIterator<CONTAINER_LIST> >{
 private:
-	typedef std::vector<typename CONTAINER_LIST::value_type::Iterator> vector_type;
-	typedef typename vector_type::size_type size_type;
+	using vector_type = std::vector<typename CONTAINER_LIST::value_type::Iterator>;
+	using size_type   = typename vector_type::size_type;
 
 public:
 	MultiTableIterator(const CONTAINER_LIST &lists, bool endIt = false);

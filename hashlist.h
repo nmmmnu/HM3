@@ -10,7 +10,7 @@
 template <class LIST>
 class HashList : public IList<HashList<LIST> >{
 public:
-	typedef std::vector<LIST> container_type;
+	using container_type = std::vector<LIST>;
 
 public:
 	constexpr

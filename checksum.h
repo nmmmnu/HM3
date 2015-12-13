@@ -8,7 +8,7 @@
 template<class T>
 class Checksum{
 public:
-	typedef typename T::result_type result_type;
+	using result_type = typename T::result_type;
 
 public:
 	Checksum() = default;

@@ -6,7 +6,7 @@
 #include <tuple>
 
 namespace IArraySearch{
-	typedef std::tuple<int, size_t> result_type;
+	using result_type = std::tuple<int, size_t>;
 
 	struct Linear{
 		template <class ARRAY>

@@ -8,8 +8,6 @@
 // ==============================
 
 namespace ListDefs{
-	//typedef uint64_t count_type;
-
 	extern const Pair zero;
 };
 

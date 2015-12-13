@@ -5,7 +5,7 @@
 #include <cstdint>
 
 struct NMEA0183ChecksumCalculator{
-	typedef uint8_t result_type;
+	using result_type = uint8_t;
 
 	result_type operator()(const void *data2, size_t len, result_type start = 0) const noexcept;
 };

@@ -31,7 +31,7 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	typedef std::vector<DiskTable> MyDTVector;
+	using MyDTVector = std::vector<DiskTable>;
 
 	MyDTVector container;
 

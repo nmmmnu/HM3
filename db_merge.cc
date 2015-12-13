@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	typedef std::vector<DiskTable> MyDTVector;
+	using MyDTVector = std::vector<DiskTable>;
 
 	MyDTVector container;
 	FileListContainer::load(container, pathc, path);
