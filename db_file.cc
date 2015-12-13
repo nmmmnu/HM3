@@ -33,7 +33,7 @@ int main(int argc, char **argv){
 
 	DiskTable list;
 	list.open(filename);
-	list.print();
+	list.printHeader();
 
 	// =======================
 

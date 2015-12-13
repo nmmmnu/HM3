@@ -45,7 +45,7 @@ void IList<T>::print(size_t count) const{
 
 	for(const Pair &p : *self){
 		p.print();
-		if (++count == 0)
+		if (--count == 0)
 			return;
 	}
 }

@@ -25,7 +25,7 @@ public:
 		return _header;
 	}
 
-	void print() const{
+	void printHeader() const{
 		_header.print();
 	}
 

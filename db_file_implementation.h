@@ -2,13 +2,8 @@
 //#define _DB_FILE_IMPLEMENTATION_H
 
 template <class LIST>
-static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t count = 100){
-	for(const Pair &p : list ){
-		p.print();
-
-		if (--count == 0)
-			break;
-	}
+static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t const count = 100){
+	list.print(count);
 
 	return 0;
 }
