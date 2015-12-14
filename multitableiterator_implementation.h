@@ -72,7 +72,7 @@ const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
 		}
 	}
 
-	return resultRef ? *resultRef : ListDefs::zero;
+	return resultRef ? *resultRef : Pair::zero();
 }
 
 template <class CONTAINER_LIST>

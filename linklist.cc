@@ -101,11 +101,11 @@ const Pair &LinkList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
 	if (node == nullptr)
-		return ListDefs::zero;
+		return Pair::zero();
 
 	const Pair & data = node->data;
 
-	return data.cmp(key) == 0 ? data : ListDefs::zero;
+	return data.cmp(key) == 0 ? data : Pair::zero();
 }
 
 bool LinkList::remove(const StringRef &key){
@@ -180,7 +180,7 @@ LinkList::Iterator &LinkList::Iterator::operator++(){
 }
 
 const Pair &LinkList::Iterator::operator*() const{
-	return _node ? _node->data : ListDefs::zero;
+	return _node ? _node->data : Pair::zero();
 }
 
 bool LinkList::Iterator::operator==(const Iterator &other) const{

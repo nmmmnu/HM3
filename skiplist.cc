@@ -163,7 +163,7 @@ template bool SkipList::_putT(const Pair &newdata);
 const Pair &SkipList::get(const StringRef &key) const{
 	const Node *node = _locate(key);
 
-	return node ? node->data : ListDefs::zero;
+	return node ? node->data : Pair::zero();
 }
 
 bool SkipList::remove(const StringRef &key){
@@ -306,7 +306,7 @@ SkipList::Iterator &SkipList::Iterator::operator++(){
 }
 
 const Pair &SkipList::Iterator::operator*() const{
-	return _node ? _node->data : ListDefs::zero;
+	return _node ? _node->data : Pair::zero();
 }
 
 bool SkipList::Iterator::operator==(const Iterator &other) const{

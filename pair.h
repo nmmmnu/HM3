@@ -76,6 +76,10 @@ public:
 		return +1;
 	}
 
+	static const Pair &zero(){
+		return _zero;
+	}
+
 public:
 	bool fwrite(std::ostream & os) const;
 
@@ -88,6 +92,9 @@ private:
 	uint32_t	expires;
 	std::string	key;
 	std::string	val;
+
+private:
+	static Pair _zero;
 
 private:
 	static uint64_t __getCreateTime(uint32_t created) noexcept;

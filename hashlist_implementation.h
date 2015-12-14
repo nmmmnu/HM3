@@ -12,7 +12,7 @@ const Pair &HashList<LIST>::get(const StringRef &key) const{
 	const auto index = _getBucketForKey(key);
 
 	if (index == 0)
-		return ListDefs::zero;
+		return Pair::zero();
 
 	return _container[index - 1].get(key);
 }

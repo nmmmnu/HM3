@@ -7,6 +7,10 @@
 
 // ==============================
 
+Pair Pair::_zero = {};
+
+// ==============================
+
 Pair::Pair(const StringRef &key2, const StringRef &val2, uint32_t const expires, uint32_t const created):
 		created(__getCreateTime(created)),
 		expires(expires),

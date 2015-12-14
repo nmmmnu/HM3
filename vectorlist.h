@@ -36,7 +36,7 @@ public:
 	bool remove(const StringRef &key);
 
 	const Pair &getAt(count_type const index) const{
-		return index < getCount() ? _buffer[index] : ListDefs::zero;
+		return index < getCount() ? _buffer[index] : Pair::zero();
 	}
 
 	int cmpAt(count_type const index, const StringRef &key) const{
@@ -57,7 +57,7 @@ public:
 
 	const Pair &get(const StringRef &key) const{
 		const auto &l = lookup(key);
-		return std::get<0>(l) ? ListDefs::zero : getAt( std::get<1>(l) );
+		return std::get<0>(l) ? Pair::zero() : getAt( std::get<1>(l) );
 	}
 
 public:

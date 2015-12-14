@@ -9,8 +9,6 @@
 
 namespace ListDefs{
 	using count_type = uint64_t;
-
-	extern const Pair zero;
 };
 
 // ==============================
