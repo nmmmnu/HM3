@@ -24,7 +24,7 @@ public:
 	} __attribute__((__packed__));
 
 	struct POD{
-		char		logo[8];	// 8
+		char		logo[TITLE_SIZE];	// 8
 		uint8_t		version;	// 1
 		uint64_t	size;		// 8
 		// base ends here

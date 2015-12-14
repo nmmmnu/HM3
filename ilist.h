@@ -35,6 +35,12 @@ public:
 	count_type getCount(bool const estimated = false) const{
 		return static_cast<const T*>(this)->getCount(estimated);
 	}
+
+public:
+	template <class ...ARGS>
+	bool emplace(ARGS ...args){
+		return static_cast<T*>(this)->put( Pair{ args... } );
+	}
 };
 
 // ==============================

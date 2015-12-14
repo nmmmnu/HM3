@@ -15,17 +15,17 @@
 
 
 static void skiplist_lanes_test(SkipList &list){
-	list.put(Pair("name",		"Niki"		));
-	list.put(Pair("city",		"Sofia"		));
-	list.put(Pair("state",		"na"		));
-	list.put(Pair("zip",		"1000"		));
-	list.put(Pair("country",	"BG"		));
-	list.put(Pair("phone",		"+358 888 1000"	));
-	list.put(Pair("fax",		"+358 888 2000"	));
-	list.put(Pair("email",		"user@aol.com"	));
-	list.put(Pair("laptop",		"Dell"		));
-	list.put(Pair("os",		"Archlinux"	));
-	list.put(Pair("mouse",		"Logitech"	));
+	list.emplace("name",		"Niki"		);
+	list.emplace("city",		"Sofia"		);
+	list.emplace("state",		"na"		);
+	list.emplace("zip",		"1000"		);
+	list.emplace("country",		"BG"		);
+	list.emplace("phone",		"+358 888 1000"	);
+	list.emplace("fax",		"+358 888 2000"	);
+	list.emplace("email",		"user@aol.com"	);
+	list.emplace("laptop",		"Dell"		);
+	list.emplace("os",		"Archlinux"	);
+	list.emplace("mouse",		"Logitech"	);
 
 	list.printLanes();
 
