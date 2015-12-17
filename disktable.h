@@ -14,9 +14,9 @@ public:
 	DiskTable() = default;
 	DiskTable(DiskTable &&other) = default;
 
-	~DiskTable(){
-		close();
-	}
+	// no need d-tor,
+	// MMAPFile-s will be closed automaticly
+	//~DiskTable(){ close(); }
 
 	bool open(const std::string &filename);
 	void close();

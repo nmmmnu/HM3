@@ -3,12 +3,12 @@
 #include <memory>
 
 struct LinkList::Node{
-	Pair		data;
-	LinkList::Node	*next = nullptr;
+	Pair	data;
+	Node	*next = nullptr;
 
 public:
-	Node(const Pair & data) : data(data){}
-	Node(Pair && data) : data(std::move(data)){}
+	template<class UPAIR>
+	Node(UPAIR &&data) : data(std::forward<UPAIR>(data)){}
 };
 
 LinkList::LinkList(){

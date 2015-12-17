@@ -19,12 +19,12 @@ Uncommend DEBUG_PRINT_LANES for visualisation.
 */
 
 struct SkipList::Node{
-	Pair		data;
-	SkipList::Node	*next[1];	// system dependent, dynamic, at least 1
+	Pair	data;
+	Node	*next[1];	// system dependent, dynamic, at least 1
 
 public:
-	Node(const Pair & data) : data(data){}
-	Node(Pair && data) : data(std::move(data)){}
+	template<class UPAIR>
+	Node(UPAIR &&data) : data(std::forward<UPAIR>(data)){}
 
 public:
 	static void *operator new(size_t size, uint8_t const height, bool const nothrow = false) {
