@@ -8,7 +8,7 @@
 // ==============================
 
 namespace ListDefs{
-	using count_type = uint64_t;
+	using count_type = size_t;
 };
 
 // ==============================
