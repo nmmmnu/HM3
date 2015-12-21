@@ -17,16 +17,16 @@ inline T SGN(const T a){
 
 
 template <class LOOKUP>
-VectorList<LOOKUP>::VectorList(size_t const reallocSize) :
-		_reallocSize( reallocSize ? reallocSize : REALLOC_SIZE ) {
+VectorList<LOOKUP>::VectorList(count_type const reallocCount) :
+		_reallocCount( reallocCount ? reallocCount : 1 ) {
 	_clear();
 }
 
 template <class LOOKUP>
 VectorList<LOOKUP>::VectorList(VectorList &&other):
-		_reallocSize	(std::move(other._reallocSize		)),
+		_reallocCount	(std::move(other._reallocCount		)),
 		_buffer		(std::move(other._buffer		)),
-		_bufferReserved	(std::move(other._bufferReserved	)),
+		_reservedCount	(std::move(other._reservedCount		)),
 		_dataCount	(std::move(other._dataCount		)),
 		_dataSize	(std::move(other._dataSize		)){
 	other._clear();
@@ -114,16 +114,20 @@ void VectorList<LOOKUP>::_clear(bool const alsoFree){
 	if (alsoFree && _buffer)
 		xfree(_buffer);
 
-	_dataCount = 0;
-	_dataSize = 0;
-	_bufferReserved = 0;
+	_dataCount     = 0;
+	_dataSize      = 0;
+	_reservedCount = 0;
 	_buffer = nullptr;
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftL(size_t const index){
+bool VectorList<LOOKUP>::_shiftL(count_type const index){
 	// this is the most slow operation of them all
-	memmove(& _buffer[index], & _buffer[index + 1], (_dataCount - index - 1) * ELEMENT_SIZE);
+	memmove(
+		& _buffer[index],
+		& _buffer[index + 1],
+		(_dataCount - index - 1) * ELEMENT_SIZE
+	);
 
 	_resize(-1);
 
@@ -131,12 +135,16 @@ bool VectorList<LOOKUP>::_shiftL(size_t const index){
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftR(size_t const index){
+bool VectorList<LOOKUP>::_shiftR(count_type const index){
 	if (! _resize(1))
 		return false;
 
 	// this is the most slow operation of them all
-	memmove(& _buffer[index + 1], & _buffer[index], (_dataCount - index - 1) * ELEMENT_SIZE);
+	memmove(
+		& _buffer[index + 1],
+		& _buffer[index],
+		(_dataCount - index - 1) * ELEMENT_SIZE
+	);
 
 	return true;
 }
@@ -160,35 +168,35 @@ bool VectorList<LOOKUP>::_resize(int const delta){
 		return true;
 	}
 
-	size_t const new_bufferReserved = __calcNewSize(new_dataCount, _reallocSize);
+	count_type const new_reservedCount = _calcNewCount(new_dataCount);
 
-	if (_bufferReserved == new_bufferReserved){
+	if (_reservedCount == new_reservedCount){
 		// already resized, done :)
 		_dataCount = new_dataCount;
 
 		return true;
 	}
 
-	Pair *new_buffer = (Pair *) xrealloc(_buffer, new_bufferReserved * ELEMENT_SIZE);
+	Pair *new_buffer = (Pair *) xrealloc(_buffer, new_reservedCount * ELEMENT_SIZE);
 
 	if (new_buffer == nullptr)
 		return false;
 
 	_dataCount	= new_dataCount;
-	_bufferReserved	= new_bufferReserved;
+	_reservedCount	= new_reservedCount;
 	_buffer		= new_buffer;
 
 	return true;
 }
 
 template <class LOOKUP>
-size_t VectorList<LOOKUP>::__calcNewSize(size_t const size, size_t const reallocSize){
-	size_t newsize = size / reallocSize;
+auto VectorList<LOOKUP>::_calcNewCount(count_type const count) -> count_type{
+	count_type newsize = count / _reallocCount;
 
-	if (size % reallocSize)
+	if (count % _reallocCount)
 		++newsize;
 
-	return newsize * reallocSize;
+	return newsize * _reallocCount;
 }
 
 // ===================================

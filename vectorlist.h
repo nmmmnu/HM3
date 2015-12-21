@@ -7,26 +7,25 @@
 template <class LOOKUP=IArraySearch::Binary>
 class VectorList : public IMutableList<VectorList<LOOKUP> >{
 public:
-	static const size_t ELEMENT_SIZE = sizeof(Pair);
-	static const size_t REALLOC_SIZE = 16;
+	using count_type = typename VectorList::count_type;
+
+	static constexpr size_t     ELEMENT_SIZE  = sizeof(Pair);
+	static constexpr count_type REALLOC_COUNT = 16;
 
 	class Iterator;
 
-	using count_type = typename VectorList::count_type;
-
 public:
-	explicit VectorList(size_t reallocSize = 0);
+	explicit VectorList(count_type reallocCount = REALLOC_COUNT);
 	VectorList(VectorList &&other);
 	~VectorList(){
 		removeAll();
 	}
 
 private:
-	size_t		_reallocSize;
+	count_type	_reallocCount;
 
 	Pair		*_buffer;
-	size_t		_bufferReserved;
-
+	count_type	_reservedCount;
 	count_type	_dataCount;
 	size_t		_dataSize;
 
@@ -72,13 +71,12 @@ public:
 private:
 	void _clear(bool alsoFree = false);
 
-	bool _shiftL(size_t index);
-	bool _shiftR(size_t index);
+	bool _shiftL(count_type index);
+	bool _shiftR(count_type index);
 
 	bool _resize(int delta);
 
-private:
-	static size_t __calcNewSize(size_t size, size_t reallocSize);
+	count_type _calcNewCount(count_type size);
 };
 
 // ===================================

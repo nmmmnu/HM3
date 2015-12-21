@@ -217,8 +217,11 @@ static void list_test(const char *module, LIST &list){
 }
 
 int main(int argc, char **argv){
-	VectorList<> vl;
-		list_test("Vector", vl);
+	VectorList<IArraySearch::Binary> vlb;
+		list_test("Vector<B>", vlb);
+
+	VectorList<IArraySearch::Linear> vll;
+		list_test("Vector<L>", vll);
 
 	// =========================
 
