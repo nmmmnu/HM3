@@ -27,7 +27,7 @@ public:
 	Node(UPAIR &&data) : data(std::forward<UPAIR>(data)){}
 
 public:
-	static void *operator new(size_t size, uint8_t const height, bool const nothrow = false) {
+	static void *operator new(size_t size, height_type const height, bool const nothrow = false) {
 		size += (height - 1) * sizeof(Node *);
 
 		if (nothrow)
@@ -37,11 +37,12 @@ public:
 	}
 };
 
-SkipList::SkipList(uint8_t height){
+SkipList::SkipList(height_type height){
 	if (height == 0 || height > MAX_HEIGHT)
 		height = DEFAULT_HEIGHT;
 
 	_height = height;
+	// LEAK POSSIBLE!!!
 	_heads = new Node*[height];
 	_loc   = new Node*[height];
 
@@ -114,7 +115,8 @@ bool SkipList::_putT(UPAIR&& newdata){
 
 	// create new node
 
-	uint8_t height = _getRandomHeight();
+	size_t const size = newdata.getSize();
+	height_type const height = _getRandomHeight();
 
 	Node *newnode = new(height, true) Node(std::forward<UPAIR>(newdata));
 
@@ -128,7 +130,7 @@ bool SkipList::_putT(UPAIR&& newdata){
 
 	// place new node where it belongs
 
-	for(uint8_t i = 0; i < height; ++i){
+	for(height_type i = 0; i < height; ++i){
 		if (_loc[i]){
 			// we are at the middle
 			Node *node = _loc[i];
@@ -143,7 +145,7 @@ bool SkipList::_putT(UPAIR&& newdata){
 
 #ifdef DEBUG_PRINT_LANES
 	printf("%3u Lanes-> ", height);
-	for(uint8_t i = 0; i < height; ++i)
+	for(height_type i = 0; i < height; ++i)
 		printf("%p ", newnode->next[i]);
 	printf("\n");
 #endif
@@ -151,7 +153,7 @@ bool SkipList::_putT(UPAIR&& newdata){
 	/* SEE REMARK ABOUT NEXT[] SIZE AT THE TOP */
 	// newnode->next[i] = NULL;
 
-	_dataSize += newdata.getSize();
+	_dataSize += size;
 	++_dataCount;
 
 	return true;
@@ -172,7 +174,7 @@ bool SkipList::remove(const StringRef &key){
 	if (node == nullptr)
 		return true;
 
-	for(uint8_t i = 0; i < _height; ++i){
+	for(height_type i = 0; i < _height; ++i){
 		Node *prev = (Node *) _loc[i];
 
 		if (prev){
@@ -199,14 +201,13 @@ bool SkipList::remove(const StringRef &key){
 // ==============================
 
 void SkipList::printLanes() const{
-	uint8_t i;
-	for(i = _height; i > 0; --i){
+	for(height_type i = _height; i > 0; --i){
 		printf("Lane # %5u :\n", i - 1);
-		printLane((uint8_t) (i - 1));
+		printLane((height_type) (i - 1));
 	}
 }
 
-void SkipList::printLane(uint8_t const lane) const{
+void SkipList::printLane(height_type const lane) const{
 	uint64_t i = 0;
 	const Node *node;
 	for(node = _heads[lane]; node; node = node->next[lane]){
@@ -247,7 +248,7 @@ const SkipList::Node *SkipList::_locate(const StringRef &key, bool const complet
 	const Node *node = nullptr;
 	const Node *prev = nullptr;
 
-	uint8_t height = _height;
+	height_type height = _height;
 	while(height){
 		node = prev ? prev : _heads[height - 1];
 
@@ -274,7 +275,7 @@ const SkipList::Node *SkipList::_locate(const StringRef &key, bool const complet
 	return cmp ? nullptr : node;
 };
 
-uint8_t SkipList::_getRandomHeight(){
+auto SkipList::_getRandomHeight() -> height_type{
 	// This gives slightly better performance,
 	// than divide by 3 or multply by 0.33
 	auto part = __rand.max() >> 1;
@@ -282,7 +283,7 @@ uint8_t SkipList::_getRandomHeight(){
 	// We execute rand() inside the loop,
 	// but performance is fast enought.
 
-	uint8_t h = 1;
+	height_type h = 1;
 	while(h < _height && __rand() > part)
 		h++;
 

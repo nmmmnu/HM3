@@ -6,15 +6,18 @@
 
 #include <random>
 
-class SkipList : public IList<SkipList>{
+class SkipList : public IMutableList<SkipList>{
 public:
-	static const uint8_t MAX_HEIGHT		= 64;
-	static const uint8_t DEFAULT_HEIGHT	= 32;
+	using height_type = uint8_t;
+
+public:
+	static const height_type MAX_HEIGHT		= 64;
+	static const height_type DEFAULT_HEIGHT	= 32;
 
 	class Iterator;
 
 public:
-	explicit SkipList(uint8_t height = DEFAULT_HEIGHT);
+	explicit SkipList(height_type height = DEFAULT_HEIGHT);
 	SkipList(SkipList &&other);
 	~SkipList();
 
@@ -33,30 +36,22 @@ public:
 	}
 
 public:
-	bool put(const Pair &pair){
-		return _putT(pair);
-	}
-
-	bool put(Pair &&pair){
-		return _putT(std::move(pair));
-	}
-
-public:
 	Iterator begin() const;
 	Iterator end() const;
 
-private:
+public:
+	// needs to be public because of CRPT
 	template <class UPAIR>
 	bool _putT(UPAIR &&data);
 
 public:
 	void printLanes() const;
-	void printLane(uint8_t lane) const;
+	void printLane(height_type lane) const;
 
 private:
 	struct		Node;
 
-	uint8_t		_height;
+	height_type	_height;
 	Node		**_heads;
 	Node		**_loc;
 
@@ -68,7 +63,7 @@ private:
 
 	const Node *_locate(const StringRef &key, bool complete_evaluation = false) const;
 
-	uint8_t _getRandomHeight();
+	height_type _getRandomHeight();
 
 private:
 	static std::mt19937 __rand;

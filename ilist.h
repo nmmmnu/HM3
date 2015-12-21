@@ -33,11 +33,24 @@ public:
 	count_type getCount(bool const estimated = false) const{
 		return static_cast<const T*>(this)->getCount(estimated);
 	}
+};
 
+template <class T>
+class IMutableList : public IList<T>{
 public:
+public:
+	bool put(const Pair &pair){
+		return static_cast<T*>(this)->_putT(pair);
+	}
+
+	bool put(Pair &&pair){
+		return static_cast<T*>(this)->_putT(std::move(pair));
+	}
+
 	template <class ...ARGS>
 	bool emplace(ARGS ...args){
-		return static_cast<T*>(this)->put( Pair{ args... } );
+		Pair p{ std::forward<ARGS>(args)... };
+		return put(std::move(p));
 	}
 };
 

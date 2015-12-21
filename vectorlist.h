@@ -5,7 +5,7 @@
 #include "iiterator.h"
 
 template <class LOOKUP=IArraySearch::Binary>
-class VectorList : public IList<VectorList<LOOKUP> >{
+class VectorList : public IMutableList<VectorList<LOOKUP> >{
 public:
 	static const size_t ELEMENT_SIZE = sizeof(Pair);
 	static const size_t REALLOC_SIZE = 16;
@@ -61,15 +61,7 @@ public:
 	}
 
 public:
-	bool put(const Pair &pair){
-		return _putT(pair);
-	}
-
-	bool put(Pair &&pair){
-		return _putT(std::move(pair));
-	}
-
-private:
+	// needs to be public because of CRPT
 	template <class UPAIR>
 	bool _putT(UPAIR &&data);
 

@@ -72,6 +72,8 @@ bool LinkList::_putT(UPAIR&& newdata){
 		prev = node;
 	}
 
+	size_t const size = newdata.getSize();
+
 	Node *newnode = new(std::nothrow) Node(std::forward<UPAIR>(newdata));
 	if (newnode == nullptr){
 		// newdata will be magically destroyed.
@@ -88,7 +90,7 @@ bool LinkList::_putT(UPAIR&& newdata){
 		_head = newnode;
 	}
 
-	_dataSize += newdata.getSize();
+	_dataSize += size;
 	_dataCount++;
 
 	return true;

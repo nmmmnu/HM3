@@ -36,8 +36,9 @@ static void skiplist_lanes_test(SkipList &list){
 
 template <class LIST>
 inline static size_t list_add(LIST &list, Pair &&p){
-	list.put(p);
-	return p.getSize();
+	const size_t size = p.getSize();
+	list.put(std::move(p));
+	return size;
 }
 
 template <class LIST>
@@ -216,7 +217,6 @@ static void list_test(const char *module, LIST &list){
 }
 
 int main(int argc, char **argv){
-
 	VectorList<> vl;
 		list_test("Vector", vl);
 
@@ -232,6 +232,7 @@ int main(int argc, char **argv){
 		if (0)
 			skiplist_lanes_test(sl);
 
+/*
 	// =========================
 
 	HashList<VectorList<> > hl_vl;
@@ -246,6 +247,7 @@ int main(int argc, char **argv){
 
 	HashList<SkipList> hl_sl;
 		list_test("HashList@SkipList", hl_sl);
+*/
 }
 
 

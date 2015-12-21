@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-class LinkList : public IList<LinkList>{
+class LinkList : public IMutableList<LinkList>{
 public:
 	class Iterator;
 
@@ -32,19 +32,11 @@ public:
 	}
 
 public:
-	bool put(const Pair &pair){
-		return _putT(pair);
-	}
-
-	bool put(Pair &&pair){
-		return _putT(std::move(pair));
-	}
-
-public:
 	Iterator begin() const;
 	Iterator end() const;
 
-private:
+public:
+	// needs to be public because of CRPT
 	template <class UPAIR>
 	bool _putT(UPAIR &&data);
 
