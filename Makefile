@@ -40,7 +40,7 @@ clean:
 test_stringref: test_stringref.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_pair: test_pair.o	pair.o nmea0183checksumcalculator.o mytime.o
+test_pair: test_pair.o	pair.o pairblob.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_list: test_list.o	pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o

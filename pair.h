@@ -1,49 +1,49 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
-#include <string>
-#include <ostream>
-#include <utility>	// swap
-
 #include "stringref.h"
 
 #include "mytime.h"
 #include "stringref.h"
 
+#include <string>
+#include <ostream>
+//#include <utility>	// swap
+
 // ==============================
 
+class PairBlob;
+
 class Pair{
-public:
-	static const uint16_t MAX_KEY_SIZE = 0xffff;
-	static const uint32_t MAX_VAL_SIZE = 0xffffffff;
+private:
+	constexpr static int CMP_ZERO = +1;
 
 public:
 	Pair() = default;
-
 	Pair(const StringRef &key, const StringRef &val, uint32_t expires = 0, uint32_t created = 0);
+	Pair(const void *blob);
 
 	static Pair tombstone(const StringRef &key){
 		return Pair(key, StringRef{} );
 	}
 
-	Pair(const void *blob);
+	Pair(const Pair &other);
+	Pair &operator=(const Pair &other);
+
+	Pair(Pair &&other) noexcept;
+	Pair &operator=(Pair &&other) noexcept;
+
+	~Pair();
 
 	operator bool() const noexcept{
-		return ! key.empty();
+		return pimpl != nullptr;
 	}
 
 public:
-	const std::string &getKey() const noexcept{
-		return key;
-	}
+	StringRef getKey() const noexcept;
+	StringRef getVal() const noexcept;
 
-	const std::string &getVal() const noexcept{
-		return val;
-	}
-
-	uint64_t getCreated() const noexcept{
-		return created;
-	}
+	uint64_t getCreated() const noexcept;
 
 	int cmp(const StringRef &key) const noexcept;
 
@@ -55,13 +55,7 @@ public:
 		return cmp( pair.getKey() );
 	}
 
-	bool isNULL()const noexcept{
-		return key.empty();
-	}
-
-	bool isTombstone() const noexcept{
-		return val.empty();
-	}
+	bool isTombstone() const noexcept;
 
 	bool valid(bool tombstoneCheck = false) const noexcept;
 
@@ -72,10 +66,6 @@ public:
 	size_t getSize() const noexcept;
 
 public:
-	static int cmpZero(){
-		return +1;
-	}
-
 	static const Pair &zero(){
 		return _zero;
 	}
@@ -85,55 +75,11 @@ public:
 
 	void print() const noexcept;
 
-	void swap(Pair &other) noexcept;
+private:
+	PairBlob	*pimpl = nullptr;
 
 private:
-	uint64_t	created;
-	uint32_t	expires;
-	std::string	key;
-	std::string	val;
-
-private:
-	static Pair _zero;
-
-private:
-	static uint64_t __getCreateTime(uint32_t created) noexcept;
-
+	static Pair	_zero;
 };
-
-inline void swap(Pair &a, Pair &b) noexcept{
-	a.swap(b);
-}
-
-// ==============================
-
-inline int Pair::cmp(const StringRef &key2) const noexcept{
-	if (key2.empty())
-		return -1;
-
-	// std::string.compare gives 0 if internal string is nullptr
-	if (key.empty())
-		return cmpZero();
-
-	//return key.compare(key2);
-	return - key2.compare(key);
-}
-
-inline bool Pair::valid(bool tombstoneCheck) const noexcept{
-	// check key size
-	if (isNULL())
-		return false;
-
-	// check val size
-	if (tombstoneCheck && isTombstone())
-		return false;
-
-	// check expires
-	if (expires && MyTime::expired(created, expires) )
-		return false;
-
-	// finally all OK
-	return true;
-}
 
 #endif

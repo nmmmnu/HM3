@@ -1,9 +1,7 @@
 #include "pair.h"
+#include "pairblob.h"
 
 #include <stdexcept>
-#include <cstdio>
-
-#include "pairpod.h"
 
 // ==============================
 
@@ -11,19 +9,18 @@ Pair Pair::_zero = {};
 
 // ==============================
 
-Pair::Pair(const StringRef &key2, const StringRef &val2, uint32_t const expires, uint32_t const created):
-		created(__getCreateTime(created)),
-		expires(expires),
-		key(key2),
-		val(val2)
-{
+Pair::Pair(const StringRef &key, const StringRef &val, uint32_t const expires, uint32_t const created){
 	if (key.empty()){
 		std::logic_error exception("Key is zero size");
 		throw exception;
 	}
 
-	if (key.size() > MAX_KEY_SIZE || val.size() > MAX_VAL_SIZE){
-		std::logic_error exception("Key or value size too big");
+	pimpl = PairBlob::create(	key.data(), key.size(),
+					val.data(), val.size(),
+					expires, created);
+
+	if (pimpl == nullptr){
+		std::logic_error exception("Problem creating PairBlob");
 		throw exception;
 	}
 }
@@ -32,90 +29,116 @@ Pair::Pair(const void *blob2){
 	if (blob2 == nullptr)
 		return;
 
-	PairPOD *blob = (PairPOD *) blob2;
+	pimpl = PairBlob::clone( (PairBlob *) blob2 );
 
-	if (blob->valid() == false)
-		return;
+	if (pimpl == nullptr){
+		std::logic_error exception("Problem creating PairBlob");
+		throw exception;
+	}
+}
 
-	const auto keylen = be16toh(blob->keylen);
+Pair::Pair(const Pair &other){
+	pimpl = PairBlob::clone( other.pimpl );
 
-	if (keylen == 0 || keylen > MAX_KEY_SIZE)
-		return;
+	if (pimpl == nullptr){
+		std::logic_error exception("Problem creating PairBlob");
+		throw exception;
+	}
+}
 
-	const auto vallen = be32toh(blob->vallen);
+Pair &Pair::operator=(const Pair &other){
+	pimpl = PairBlob::clone( other.pimpl );
 
-	if (vallen > MAX_VAL_SIZE)
-		return;
+	if (pimpl == nullptr){
+		std::logic_error exception("Problem creating PairBlob");
+		throw exception;
+	}
 
-	created = be64toh(blob->created);
-	expires = be32toh(blob->expires);
+	return *this;
+}
 
-	key = std::string(blob->getKey(), keylen);
+Pair::Pair(Pair &&other) noexcept{
+	pimpl = other.pimpl;
+	other.pimpl = nullptr;
+}
 
-	if (vallen > 0)
-		val = std::string(blob->getVal(), vallen);
+Pair &Pair::operator=(Pair &&other) noexcept{
+	pimpl = other.pimpl;
+	other.pimpl = nullptr;
+
+	return *this;
+}
+
+Pair::~Pair(){
+	PairBlob::destroy(pimpl);
 }
 
 // ==============================
 
-void Pair::swap(Pair &other) noexcept{
-	using std::swap;
+StringRef Pair::getKey() const noexcept{
+	if (pimpl == nullptr)
+		return StringRef();
 
-	swap(created, other.created);
-	swap(expires, other.expires);
-
-	key.swap(other.key);
-	val.swap(other.val);
+	return StringRef(pimpl->getKey(), pimpl->getKeyLen());
 }
 
-bool Pair::fwrite(std::ostream & os) const{
-	PairPOD p;
+StringRef Pair::getVal() const noexcept{
+	if (pimpl == nullptr)
+		return StringRef();
 
-	p.created	= htobe64(created);
-	p.expires	= htobe32(expires);
-	p.vallen	= htobe32((uint32_t)val.size());
-	p.keylen	= htobe16((uint16_t)key.size());
+	return StringRef(pimpl->getVal(), pimpl->getValLen());
+}
 
-	Checksum<NMEA0183ChecksumCalculator> chk;
+uint64_t Pair::getCreated() const noexcept{
+	if (pimpl == nullptr)
+		return 0;
 
-	chk.add(key.data(), key.size());
-	chk.add("\0", 1);
-	chk.add(val.data(), val.size());
-	chk.add("\0", 1);
+	return pimpl->getCreated();
+}
 
-	p.checksum	= chk.get();
+int Pair::cmp(const StringRef &key) const noexcept{
+	if (pimpl == nullptr)
+		return CMP_ZERO;
 
-	os.write((const char *) & p, p.__sizeofBase() );
-	os.write(key.data(), key.size());
-	os.write("\0", 1);
-	os.write(val.data(), val.size());
-	os.write("\0", 1);
+	return pimpl->cmp(key.data(), key.size());
+}
 
-	return true;
+bool Pair::isTombstone() const noexcept{
+	if (pimpl == nullptr)
+		return true;
+
+	return pimpl->isTombstone();
+}
+
+bool Pair::valid(bool const tombstoneCheck) const noexcept{
+	if (pimpl == nullptr)
+		return false;
+
+	return pimpl->valid(tombstoneCheck);
+}
+
+size_t Pair::getSize() const noexcept{
+	if (pimpl == nullptr)
+		return 0;
+
+	return pimpl->getSize();
 }
 
 void Pair::print() const noexcept{
-	if ( isNULL() ){
+	if (pimpl == nullptr){
 		printf("--- Pair is empty ---\n");
 		return;
 	}
 
-	static const char *format = "%-20s | %-20s | %-*s | %8u\n";
-
-	printf(format,
-		getKey().data(), getVal().data(),
-		MyTime::STRING_SIZE, MyTime::toString(created),
-		expires
-	);
+	pimpl->print();
 }
 
-size_t Pair::getSize() const noexcept{
-	return PairPOD::__sizeofBase() + key.size() + 1 + val.size() + 1;
-}
+bool Pair::fwrite(std::ostream & os) const{
+	if (pimpl == nullptr)
+		return false;
 
-// ==============================
+	os.write((const char *) & pimpl, getSize() );
 
-uint64_t Pair::__getCreateTime(uint32_t const created) noexcept{
-	return created ? MyTime::combine(created) : MyTime::now();
+	return true;
 }
 
