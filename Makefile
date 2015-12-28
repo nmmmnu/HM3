@@ -43,7 +43,7 @@ test_stringref: test_stringref.o
 test_pair: test_pair.o	pair.o pairblob.o nmea0183checksumcalculator.o mytime.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_list: test_list.o	pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o
+test_list: test_list.o	pair.o pairblob.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
 test_file: test_file.o	pair.o nmea0183checksumcalculator.o mytime.o vectorlist.o linklist.o skiplist.o disktable.o mmapfile.o diskfileheader.o

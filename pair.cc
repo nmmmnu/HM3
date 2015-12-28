@@ -38,6 +38,9 @@ Pair::Pair(const void *blob2){
 }
 
 Pair::Pair(const Pair &other){
+	if (!other)
+		return;
+
 	pimpl = PairBlob::clone( other.pimpl );
 
 	if (pimpl == nullptr){
@@ -47,12 +50,9 @@ Pair::Pair(const Pair &other){
 }
 
 Pair &Pair::operator=(const Pair &other){
-	pimpl = PairBlob::clone( other.pimpl );
+	Pair pair = Pair(other);
 
-	if (pimpl == nullptr){
-		std::logic_error exception("Problem creating PairBlob");
-		throw exception;
-	}
+	swap(pair);
 
 	return *this;
 }
@@ -63,8 +63,9 @@ Pair::Pair(Pair &&other) noexcept{
 }
 
 Pair &Pair::operator=(Pair &&other) noexcept{
-	pimpl = other.pimpl;
-	other.pimpl = nullptr;
+	Pair pair = Pair(std::move(other));
+
+	swap(pair);
 
 	return *this;
 }

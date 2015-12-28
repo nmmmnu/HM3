@@ -75,11 +75,21 @@ public:
 
 	void print() const noexcept;
 
+	void swap(Pair &other){
+		std::swap(pimpl, other.pimpl);
+	}
+
 private:
 	PairBlob	*pimpl = nullptr;
 
 private:
 	static Pair	_zero;
 };
+
+// ==============================
+
+inline void swap(Pair &p1, Pair &p2){
+	p1.swap(p2);
+}
 
 #endif
