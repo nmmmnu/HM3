@@ -9,44 +9,56 @@ Pair Pair::_zero = {};
 
 // ==============================
 
+Pair::~Pair() = default;
+Pair::Pair(Pair &&other) = default;
+Pair &Pair::operator=(Pair &&other) = default;
+
+// ==============================
+
 Pair::Pair(const StringRef &key, const StringRef &val, uint32_t const expires, uint32_t const created){
 	if (key.empty()){
 		std::logic_error exception("Key is zero size");
 		throw exception;
 	}
 
-	pimpl = PairBlob::create(	key.data(), key.size(),
+	auto *p = PairBlob::create(	key.data(), key.size(),
 					val.data(), val.size(),
 					expires, created);
 
-	if (pimpl == nullptr){
+	if (p == nullptr){
 		std::logic_error exception("Problem creating PairBlob");
 		throw exception;
 	}
+
+	pimpl.reset(p);
 }
 
 Pair::Pair(const void *blob2){
 	if (blob2 == nullptr)
 		return;
 
-	pimpl = PairBlob::clone( (PairBlob *) blob2 );
+	auto *p = PairBlob::clone( (PairBlob *) blob2 );
 
-	if (pimpl == nullptr){
+	if (p == nullptr){
 		std::logic_error exception("Problem creating PairBlob");
 		throw exception;
 	}
+
+	pimpl.reset(p);
 }
 
 Pair::Pair(const Pair &other){
 	if (!other)
 		return;
 
-	pimpl = PairBlob::clone( other.pimpl );
+	auto *p = PairBlob::clone( other.pimpl.get() );
 
-	if (pimpl == nullptr){
+	if (p == nullptr){
 		std::logic_error exception("Problem creating PairBlob");
 		throw exception;
 	}
+
+	pimpl.reset(p);
 }
 
 Pair &Pair::operator=(const Pair &other){
@@ -55,23 +67,6 @@ Pair &Pair::operator=(const Pair &other){
 	swap(pair);
 
 	return *this;
-}
-
-Pair::Pair(Pair &&other) noexcept{
-	pimpl = other.pimpl;
-	other.pimpl = nullptr;
-}
-
-Pair &Pair::operator=(Pair &&other) noexcept{
-	Pair pair = Pair(std::move(other));
-
-	swap(pair);
-
-	return *this;
-}
-
-Pair::~Pair(){
-	PairBlob::destroy(pimpl);
 }
 
 // ==============================

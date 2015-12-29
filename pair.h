@@ -8,7 +8,7 @@
 
 #include <string>
 #include <ostream>
-//#include <utility>	// swap
+#include <memory>
 
 // ==============================
 
@@ -30,10 +30,10 @@ public:
 	Pair(const Pair &other);
 	Pair &operator=(const Pair &other);
 
-	Pair(Pair &&other) noexcept;
-	Pair &operator=(Pair &&other) noexcept;
+	Pair(Pair &&other); /* = default */
+	Pair &operator=(Pair &&other); /* = default */
 
-	~Pair();
+	~Pair(); /* = default */
 
 	operator bool() const noexcept{
 		return pimpl != nullptr;
@@ -80,10 +80,10 @@ public:
 	}
 
 private:
-	PairBlob	*pimpl = nullptr;
+	std::unique_ptr<PairBlob>	pimpl;
 
 private:
-	static Pair	_zero;
+	static Pair			_zero;
 };
 
 // ==============================

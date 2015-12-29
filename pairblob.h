@@ -20,16 +20,19 @@ struct PairBlob{
 	// ==============================
 
 public:
-	friend class Pair;
-
 	static constexpr uint16_t MAX_KEY_SIZE = 0xffff;
 	static constexpr uint32_t MAX_VAL_SIZE = 0xffffffff;
 
 	// ==============================
 
+
 private:
-	static PairBlob *create(const char *key, size_t keylen, const char *val, size_t vallen, uint32_t expires = 0, uint32_t created = 0) noexcept;
-	static void destroy(PairBlob *pair) noexcept;
+	static void *operator new(size_t, size_t size, bool nothrow);
+
+public:
+	static PairBlob *create(	const char *key, size_t keylen,
+					const char *val, size_t vallen,
+					uint32_t expires = 0, uint32_t created = 0) noexcept;
 
 	static PairBlob *clone(const PairBlob *src);
 

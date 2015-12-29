@@ -3,15 +3,18 @@
 #include "mytime.h"
 #include "nmea0183checksumcalculator.h"
 
-#include <cstdlib>	// malloc, free
 #include <cstdio>
 
 
 
-#define xmalloc(s) malloc(s)
-#define xfree(p)   free(p)
+void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
+	if (nothrow)
+		return ::operator new(size, std::nothrow);
 
+	return ::operator new(size);
+}
 
+// ==============================
 
 PairBlob *PairBlob::create(	const char *key, size_t const keylen,
 				const char *val, size_t const vallen,
@@ -22,7 +25,9 @@ PairBlob *PairBlob::create(	const char *key, size_t const keylen,
 	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
 		return nullptr;
 
-	PairBlob *pair = (PairBlob *) xmalloc(__sizeofBase() + keylen + 1 + vallen + 1);
+	size_t const size = __sizeofBase() + keylen + 1 + vallen + 1;
+
+	PairBlob *pair = new(size, true) PairBlob;
 
 	if (pair == nullptr)
 		return nullptr;
@@ -48,7 +53,7 @@ PairBlob *PairBlob::create(	const char *key, size_t const keylen,
 PairBlob *PairBlob::clone(const PairBlob *src){
 	size_t const size = src->getSize();
 
-	PairBlob *pair = (PairBlob *) xmalloc(size);
+	PairBlob *pair = new(size, true) PairBlob;
 
 	if (pair == nullptr)
 		return nullptr;
@@ -56,10 +61,6 @@ PairBlob *PairBlob::clone(const PairBlob *src){
 	memcpy(pair, src, size);
 
 	return pair;
-}
-
-void PairBlob::destroy(PairBlob *pair) noexcept{
-	xfree(pair);
 }
 
 // ==============================

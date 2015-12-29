@@ -18,18 +18,22 @@ struct pcomp{
 	}
 };
 
-static void listLoad(std::set<Pair,pcomp> &list, const StringRef &filename, bool tombstones = true);
+using MySet = std::set<Pair,pcomp>;
 
-static int op_search(std::set<Pair,pcomp> &list, const char *filename, const char *key){
+static void listLoad(MySet &list, const StringRef &filename, bool tombstones = true);
+
+static int op_search(MySet &list, const char *filename, const char *key){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
 	getchar();
 
-//	printf("Search start...\n");
-//	listSearch(list, key);
-//	printf("Search done...\n");
-//	getchar();
+#if 0
+	printf("Search start...\n");
+	listSearch(list, key);
+	printf("Search done...\n");
+	getchar();
+#endif
 
 	return 0;
 }
@@ -43,7 +47,7 @@ int main(int argc, char **argv){
 	const char *filename	= argv[1];
 	const char *key		= argv[2];
 
-	std::set<Pair,pcomp> list;
+	MySet list;
 
 	op_search(list, filename, key);
 
@@ -56,7 +60,7 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(std::set<Pair,pcomp> &list, const StringRef &filename, bool const tombstones){ 
+static void listLoad(MySet &list, const StringRef &filename, bool const tombstones){
 	static const char *trim_ch = " \t\n";
 
 	const std::string empty;
@@ -65,7 +69,7 @@ static void listLoad(std::set<Pair,pcomp> &list, const StringRef &filename, bool
 	f.open(filename);
 
 	unsigned int i = 0;
-	
+
 	for(std::string line; getline(f, line);){
 		// trim
 		line.erase(line.find_last_not_of(trim_ch) + 1);
