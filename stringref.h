@@ -63,6 +63,11 @@ public:
 		return size();
 	}
 
+public:
+	static int compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+		return __compare(s1, size1, s2, size2);
+	}
+
 private:
 	size_t		_size	= 0;
 	const char	*_data	= "";

@@ -59,9 +59,9 @@ private:
 	MMAPFile	_mmapData;
 
 private:
-	const void *_getAtFromDisk(count_type index) const;
+	const PairBlob *_getAtFromDisk(count_type index) const;
 
-	const void *_getNextFromDisk(const void *pod, size_t size = 0) const;
+	const PairBlob *_getNextFromDisk(const PairBlob *blob, size_t size = 0) const;
 
 	uint8_t _getVersionFromDisk() const;
 };
@@ -91,7 +91,7 @@ private:
 	count_type	tmp_pos = 0;
 
 	/* !!! */ mutable
-	const void	*tmp_pod = nullptr;
+	const PairBlob	*tmp_pod = nullptr;
 
 	/* !!! */ mutable
 	Pair		tmp_pair;

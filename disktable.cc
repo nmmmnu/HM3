@@ -1,8 +1,6 @@
 #include "disktable.h"
 
-#include "pairpod.h"
-
-#include "mytime.h"
+#include "pairblob.h"
 
 #include <endian.h>	// htobe16
 
@@ -24,36 +22,32 @@ void DiskTable::close(){
 }
 
 int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
-	const PairPOD *p = (const PairPOD *) _getAtFromDisk(index);
+	const PairBlob *p = _getAtFromDisk(index);
 	// StringRef is not null terminated
-	return p ? p->cmp(key.data(), key.size()) : PairPOD::cmpZero();
+	return p ? p->cmp(key.data(), key.size()) : Pair::CMP_ZERO;
 }
 
-const void *DiskTable::_getAtFromDisk(count_type const index) const{
+const PairBlob *DiskTable::_getAtFromDisk(count_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( index * sizeof(uint64_t) );
 
 	if (ptr_be){
 		size_t const offset = (size_t) be64toh( *ptr_be );
 
-		const void *pod = _mmapData.safeAccess( offset );
-		return pod; // invalid pod is nullptr anyway
+		const PairBlob *blob = (const PairBlob *) _mmapData.safeAccess( offset );
+		return blob; // invalid blob is nullptr anyway
 	}
 
 	return nullptr;
 }
 
-const void *DiskTable::_getNextFromDisk(const void *pod, size_t size) const{
-	if (size == 0){
-		const PairPOD *p = (const PairPOD *) pod;
-		size = p->getSize();
-	}
+const PairBlob *DiskTable::_getNextFromDisk(const PairBlob *blob, size_t size) const{
+	if (size == 0)
+		size = blob->getSize();
 
-	const char *podc = (const char *) pod;
+	const char *blobc = (const char *) blob;
 
-	//printf("%p %p\n", podc, podc);
-
-	const void *podNext = _mmapData.safeAccess( podc + size );
-	return podNext; // invalid pod is nullptr anyway
+	const PairBlob *blobNext = (const PairBlob *) _mmapData.safeAccess( blobc + size );
+	return blobNext; // invalid blob is nullptr anyway
 }
 
 // ===================================

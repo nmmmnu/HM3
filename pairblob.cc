@@ -5,6 +5,8 @@
 
 #include <cstdio>
 
+#include <stdexcept>
+
 
 
 void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
@@ -16,21 +18,27 @@ void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
 
 // ==============================
 
-PairBlob *PairBlob::create(	const char *key, size_t const keylen,
+std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen,
 				const char *val, size_t const vallen,
-				uint32_t const expires, uint32_t const created) noexcept{
-	if (key == nullptr || keylen == 0)
-		return nullptr;
+				uint32_t const expires, uint32_t const created){
+	if (key == nullptr || keylen == 0){
+		std::logic_error exception("Key is zero size");
+		throw exception;
+	}
 
-	if (keylen > MAX_KEY_SIZE || vallen > MAX_VAL_SIZE)
-		return nullptr;
+	if (keylen > MAX_KEY_SIZE){
+		std::logic_error exception("Key is very long");
+		throw exception;
+	}
+
+	if (vallen > MAX_VAL_SIZE){
+		std::logic_error exception("Value is very long");
+		throw exception;
+	}
 
 	size_t const size = __sizeofBase() + keylen + 1 + vallen + 1;
 
-	PairBlob *pair = new(size, true) PairBlob;
-
-	if (pair == nullptr)
-		return nullptr;
+	std::unique_ptr<PairBlob>  pair{ new(size, false) PairBlob };
 
 	pair->created	= htobe64(__getCreateTime(created));
 	pair->expires	= htobe32(expires);
@@ -50,15 +58,12 @@ PairBlob *PairBlob::create(	const char *key, size_t const keylen,
 	return pair;
 }
 
-PairBlob *PairBlob::clone(const PairBlob *src){
+std::unique_ptr<PairBlob> PairBlob::create(const PairBlob *src){
 	size_t const size = src->getSize();
 
-	PairBlob *pair = new(size, true) PairBlob;
+	std::unique_ptr<PairBlob> pair{ new(size, false) PairBlob };
 
-	if (pair == nullptr)
-		return nullptr;
-
-	memcpy(pair, src, size);
+	memcpy(pair.get(), src, size);
 
 	return pair;
 }
@@ -66,9 +71,9 @@ PairBlob *PairBlob::clone(const PairBlob *src){
 // ==============================
 
 bool PairBlob::valid(bool const tombstoneCheck) const noexcept{
-	// check key size
-	if (keylen == 0)
-		return false;
+	// check key size, keylen can not be 0
+	// if (keylen == 0)
+	//	return false;
 
 	if (tombstoneCheck && vallen == 0)
 		return false;
@@ -96,21 +101,6 @@ void PairBlob::print() const noexcept{
 }
 
 // ==============================
-
-int PairBlob::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
-	// Lazy based on LLVM::StringRef
-	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
-
-	// check prefix
-	if ( int res = memcmp(s1, s2, std::min(size1, size2 ) ) )
-		return res < 0 ? -1 : +1;
-
-	// prefixes match, so we only need to check the lengths.
-	if (size1 == size2)
-		return 0;
-
-	return size1 < size2 ? -1 : +1;
-}
 
 uint64_t PairBlob::__getCreateTime(uint32_t const created) noexcept{
 	return created ? MyTime::combine(created) : MyTime::now();

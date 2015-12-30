@@ -15,10 +15,6 @@
 
 
 
-using PairPOD = PairBlob;
-
-
-
 static void pair_test_raw(const char *module		= "raw pair"	);
 static void pair_test_null(const char *module		= "null pair"	);
 static void pair_test(const char *module		= "pair"	);
@@ -58,7 +54,7 @@ static void pair_test_raw_do(const char *module, const Pair & p, const StringRef
 	p2.print();
 }
 
-static void pairpod_test(const char *module, const PairPOD & p, const StringRef &key, const StringRef &val){
+static void pair_blob_test(const char *module, const PairBlob & p, const StringRef &key, const StringRef &val){
 	PRINTF_TEST("valid",		p.valid()			);
 
 	PRINTF_TEST("key",		key == p.getKey()		);
@@ -88,15 +84,15 @@ static void pair_test_raw(const char *module){
 		'P', 'e', 't', 'e', 'r', '\0'	// val
 	};
 
-	auto pp = (const PairPOD *) raw_memory;
-	pairpod_test("pod pair", *pp, key, val);
+	auto pp = (const PairBlob *) raw_memory;
+	pair_blob_test("pair::blob", *pp, key, val);
 
-	const Pair p = (const void *) raw_memory;
+	const Pair p = (const PairBlob *) raw_memory;
 	pair_test_raw_do(module, p, key, val);
 
 	raw_memory[20] = (char) ~ raw_memory[20];
 
-	const Pair cp = (const void *) raw_memory;
+	const Pair cp = (const PairBlob *) raw_memory;
 
 	PRINTF_TEST("valid corrupted",	! cp.valid()			);
 }

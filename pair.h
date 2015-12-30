@@ -15,13 +15,16 @@
 class PairBlob;
 
 class Pair{
+public:
+	static constexpr int CMP_ZERO = +1;
+
 private:
-	constexpr static int CMP_ZERO = +1;
+	using Blob = PairBlob;
 
 public:
 	Pair() = default;
 	Pair(const StringRef &key, const StringRef &val, uint32_t expires = 0, uint32_t created = 0);
-	Pair(const void *blob);
+	Pair(const Blob *blob);
 
 	static Pair tombstone(const StringRef &key){
 		return Pair(key, StringRef{} );
@@ -45,10 +48,11 @@ public:
 
 	uint64_t getCreated() const noexcept;
 
-	int cmp(const StringRef &key) const noexcept;
+	int cmp(const char *key, size_t size) const noexcept;
+	int cmp(const char *key) const noexcept;
 
-	int cmp(const char *key) const noexcept{
-		return cmp( StringRef{key} );
+	int cmp(const StringRef &key) const noexcept{
+		return cmp(key.data(), key.size());
 	}
 
 	int cmp(const Pair &pair) const noexcept{
@@ -66,11 +70,6 @@ public:
 	size_t getSize() const noexcept;
 
 public:
-	static const Pair &zero(){
-		return _zero;
-	}
-
-public:
 	bool fwrite(std::ostream & os) const;
 
 	void print() const noexcept;
@@ -79,11 +78,16 @@ public:
 		std::swap(pimpl, other.pimpl);
 	}
 
-private:
-	std::unique_ptr<PairBlob>	pimpl;
+public:
+	static const Pair &zero(){
+		return __zero;
+	}
 
 private:
-	static Pair			_zero;
+	std::unique_ptr<Blob>	pimpl;
+
+private:
+	static Pair		__zero;
 };
 
 // ==============================

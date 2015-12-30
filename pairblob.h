@@ -7,7 +7,9 @@
 
 #include <endian.h>
 
-class Pair;
+#include <memory>
+
+#include "stringref.h"
 
 struct PairBlob{
 	uint64_t	created;	// 8
@@ -19,22 +21,23 @@ struct PairBlob{
 
 	// ==============================
 
-public:
+private:
 	static constexpr uint16_t MAX_KEY_SIZE = 0xffff;
 	static constexpr uint32_t MAX_VAL_SIZE = 0xffffffff;
 
-	// ==============================
-
+	static constexpr int      CMP_NULLKEY  = -1;
 
 private:
+	PairBlob() = default;
+
 	static void *operator new(size_t, size_t size, bool nothrow);
 
 public:
-	static PairBlob *create(	const char *key, size_t keylen,
-					const char *val, size_t vallen,
-					uint32_t expires = 0, uint32_t created = 0) noexcept;
+	static std::unique_ptr<PairBlob> create(	const char *key, size_t keylen,
+							const char *val, size_t vallen,
+							uint32_t expires, uint32_t created);
 
-	static PairBlob *clone(const PairBlob *src);
+	static std::unique_ptr<PairBlob> create(	const PairBlob *src);
 
 public:
 	const char *getKey() const noexcept{
@@ -66,11 +69,15 @@ public:
 	}
 
 	int cmp(const char *key, size_t const size) const noexcept{
-		return key == nullptr || size == 0 ? -1 : __compare(getKey(), getKeyLen(), key, size);
+		return key == nullptr || size == 0 ? CMP_NULLKEY : StringRef::compare(getKey(), getKeyLen(), key, size);
+	}
+
+	int cmp(const StringRef &key) const noexcept{
+		return cmp(key.data(), key.size());
 	}
 
 	int cmp(const char *key) const noexcept{
-		return cmp(key, strlen(key));
+		return cmp(key, key ? strlen(key) : 0);
 	}
 
 	bool valid(bool tombstoneCheck = false) const noexcept;
@@ -99,7 +106,6 @@ private:
 
 	// ==============================
 
-	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 	static uint64_t __getCreateTime(uint32_t created) noexcept;
 	static uint8_t __calcChecksum(const char *buffer, size_t size) noexcept;
 

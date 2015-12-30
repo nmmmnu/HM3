@@ -1,11 +1,9 @@
 #include "pair.h"
 #include "pairblob.h"
 
-#include <stdexcept>
-
 // ==============================
 
-Pair Pair::_zero = {};
+Pair Pair::__zero = {};
 
 // ==============================
 
@@ -16,49 +14,20 @@ Pair &Pair::operator=(Pair &&other) = default;
 // ==============================
 
 Pair::Pair(const StringRef &key, const StringRef &val, uint32_t const expires, uint32_t const created){
-	if (key.empty()){
-		std::logic_error exception("Key is zero size");
-		throw exception;
-	}
-
-	auto *p = PairBlob::create(	key.data(), key.size(),
-					val.data(), val.size(),
-					expires, created);
-
-	if (p == nullptr){
-		std::logic_error exception("Problem creating PairBlob");
-		throw exception;
-	}
-
-	pimpl.reset(p);
+	pimpl = Blob::create(	key.data(), key.size(),
+				val.data(), val.size(),
+				expires, created);
 }
 
-Pair::Pair(const void *blob2){
-	if (blob2 == nullptr)
+Pair::Pair(const Blob *blob){
+	if (blob == nullptr)
 		return;
 
-	auto *p = PairBlob::clone( (PairBlob *) blob2 );
-
-	if (p == nullptr){
-		std::logic_error exception("Problem creating PairBlob");
-		throw exception;
-	}
-
-	pimpl.reset(p);
+	pimpl = Blob::create(blob);
 }
 
-Pair::Pair(const Pair &other){
-	if (!other)
-		return;
-
-	auto *p = PairBlob::clone( other.pimpl.get() );
-
-	if (p == nullptr){
-		std::logic_error exception("Problem creating PairBlob");
-		throw exception;
-	}
-
-	pimpl.reset(p);
+Pair::Pair(const Pair &other) :
+	Pair(other.pimpl.get()){
 }
 
 Pair &Pair::operator=(const Pair &other){
@@ -72,52 +41,51 @@ Pair &Pair::operator=(const Pair &other){
 // ==============================
 
 StringRef Pair::getKey() const noexcept{
-	if (pimpl == nullptr)
-		return StringRef();
-
-	return StringRef(pimpl->getKey(), pimpl->getKeyLen());
+	return pimpl ?
+		StringRef(pimpl->getKey(), pimpl->getKeyLen()) :
+		StringRef();
 }
 
 StringRef Pair::getVal() const noexcept{
-	if (pimpl == nullptr)
-		return StringRef();
-
-	return StringRef(pimpl->getVal(), pimpl->getValLen());
+	return pimpl ?
+		StringRef(pimpl->getVal(), pimpl->getValLen()) :
+		StringRef();
 }
 
 uint64_t Pair::getCreated() const noexcept{
-	if (pimpl == nullptr)
-		return 0;
-
-	return pimpl->getCreated();
+	return pimpl ?
+		pimpl->getCreated() :
+		0;
 }
 
-int Pair::cmp(const StringRef &key) const noexcept{
-	if (pimpl == nullptr)
-		return CMP_ZERO;
+int Pair::cmp(const char *key, size_t const size) const noexcept{
+	return pimpl ?
+		pimpl->cmp(key, size) :
+		CMP_ZERO;
+}
 
-	return pimpl->cmp(key.data(), key.size());
+int Pair::cmp(const char *key) const noexcept{
+	return pimpl ?
+		pimpl->cmp(key) :
+		CMP_ZERO;
 }
 
 bool Pair::isTombstone() const noexcept{
-	if (pimpl == nullptr)
-		return true;
-
-	return pimpl->isTombstone();
+	return pimpl ?
+		pimpl->isTombstone() :
+		true;
 }
 
 bool Pair::valid(bool const tombstoneCheck) const noexcept{
-	if (pimpl == nullptr)
-		return false;
-
-	return pimpl->valid(tombstoneCheck);
+	return pimpl ?
+		pimpl->valid(tombstoneCheck) :
+		false;
 }
 
 size_t Pair::getSize() const noexcept{
-	if (pimpl == nullptr)
-		return 0;
-
-	return pimpl->getSize();
+	return pimpl ?
+		pimpl->getSize() :
+		0;
 }
 
 void Pair::print() const noexcept{
