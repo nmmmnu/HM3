@@ -27,6 +27,13 @@ int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
 	return p ? p->cmp(key.data(), key.size()) : Pair::CMP_ZERO;
 }
 
+const PairBlob *DiskTable::_validateFromDisk(const PairBlob *blob) const{
+	if (! _validate)
+		return blob;
+
+	return blob->validChecksum() ? blob : nullptr;
+}
+
 const PairBlob *DiskTable::_getAtFromDisk(count_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( index * sizeof(uint64_t) );
 
@@ -34,7 +41,7 @@ const PairBlob *DiskTable::_getAtFromDisk(count_type const index) const{
 		size_t const offset = (size_t) be64toh( *ptr_be );
 
 		const PairBlob *blob = (const PairBlob *) _mmapData.safeAccess( offset );
-		return blob; // invalid blob is nullptr anyway
+		return _validateFromDisk(blob);
 	}
 
 	return nullptr;
@@ -47,7 +54,7 @@ const PairBlob *DiskTable::_getNextFromDisk(const PairBlob *blob, size_t size) c
 	const char *blobc = (const char *) blob;
 
 	const PairBlob *blobNext = (const PairBlob *) _mmapData.safeAccess( blobc + size );
-	return blobNext; // invalid blob is nullptr anyway
+	return _validateFromDisk(blobNext);
 }
 
 // ===================================

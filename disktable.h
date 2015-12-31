@@ -11,7 +11,8 @@ public:
 	class Iterator;
 
 public:
-	DiskTable() = default;
+	DiskTable(bool validate = true) : _validate(validate){}
+
 	DiskTable(DiskTable &&other) = default;
 
 	// no need d-tor,
@@ -58,7 +59,11 @@ private:
 	MMAPFile	_mmapIndx;
 	MMAPFile	_mmapData;
 
+	bool		_validate;
+
 private:
+	const PairBlob *_validateFromDisk(const PairBlob *blob) const;
+
 	const PairBlob *_getAtFromDisk(count_type index) const;
 
 	const PairBlob *_getNextFromDisk(const PairBlob *blob, size_t size = 0) const;

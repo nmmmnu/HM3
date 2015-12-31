@@ -98,6 +98,10 @@ public:
 		return __calcChecksum(buffer, _sizeofBuffer());
 	}
 
+	uint8_t validChecksum() const noexcept{
+		return calcChecksum() == checksum;
+	}
+
 	// ==============================
 
 	void print() const noexcept;
