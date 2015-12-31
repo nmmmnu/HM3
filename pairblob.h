@@ -39,6 +39,10 @@ public:
 
 	static std::unique_ptr<PairBlob> create(	const PairBlob *src);
 
+	static std::unique_ptr<PairBlob> create(	const std::unique_ptr<PairBlob> &src){
+		return create(src.get());
+	}
+
 public:
 	const char *getKey() const noexcept{
 		return buffer;
@@ -69,15 +73,19 @@ public:
 	}
 
 	int cmp(const char *key, size_t const size) const noexcept{
-		return key == nullptr || size == 0 ? CMP_NULLKEY : StringRef::compare(getKey(), getKeyLen(), key, size);
+		return StringRef::fastEmptyChar(key, size) ?
+			CMP_NULLKEY :
+			StringRef::compare(getKey(), getKeyLen(), key, size);
+	}
+
+	int cmp(const char *key) const noexcept{
+		return StringRef::fastEmptyChar(key) ?
+			CMP_NULLKEY :
+			StringRef::compare(getKey(), getKeyLen(), key, strlen(key) );
 	}
 
 	int cmp(const StringRef &key) const noexcept{
 		return cmp(key.data(), key.size());
-	}
-
-	int cmp(const char *key) const noexcept{
-		return cmp(key, key ? strlen(key) : 0);
 	}
 
 	bool valid(bool tombstoneCheck = false) const noexcept;
@@ -108,7 +116,6 @@ private:
 
 	static uint64_t __getCreateTime(uint32_t created) noexcept;
 	static uint8_t __calcChecksum(const char *buffer, size_t size) noexcept;
-
 } __attribute__((__packed__));
 
 #endif

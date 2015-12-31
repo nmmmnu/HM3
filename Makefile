@@ -30,6 +30,7 @@ TARGETS	=	\
 		test_file
 
 PAIR_OBJ = pair.o pairblob.o nmea0183checksumcalculator.o mytime.o
+DISKTABLE_OBJ = disktable.o mmapfile.o diskfileheader.o
 
 all: $(TARGETS)
 
@@ -47,7 +48,7 @@ test_pair: test_pair.o	$(PAIR_OBJ)
 test_list: test_list.o	$(PAIR_OBJ) vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o	$(PAIR_OBJ) vectorlist.o linklist.o skiplist.o disktable.o mmapfile.o diskfileheader.o
+test_file: test_file.o	$(PAIR_OBJ) vectorlist.o linklist.o skiplist.o $(DISKTABLE_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
 test_stl: test_stl.o	$(PAIR_OBJ)
@@ -56,13 +57,13 @@ test_stl: test_stl.o	$(PAIR_OBJ)
 test_glob: test_glob.o myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-db_file: db_file.o	$(PAIR_OBJ) disktable.o mmapfile.o diskfileheader.o
+db_file: db_file.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
-db_lsm: db_lsm.o	$(PAIR_OBJ) disktable.o mmapfile.o diskfileheader.o myglob.o
+db_lsm: db_lsm.o	$(PAIR_OBJ) $(DISKTABLE_OBJ) myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-db_merge: db_merge.o	$(PAIR_OBJ) disktable.o mmapfile.o diskfileheader.o
+db_merge: db_merge.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
 

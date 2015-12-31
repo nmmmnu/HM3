@@ -68,6 +68,14 @@ public:
 		return __compare(s1, size1, s2, size2);
 	}
 
+	static bool fastEmptyChar(const char* s){
+		return s == nullptr ? true : s[0] == 0;
+	}
+
+	static bool fastEmptyChar(const char* s, size_t const size){
+		return s == nullptr ? true : size == 0;
+	}
+
 private:
 	size_t		_size	= 0;
 	const char	*_data	= "";
