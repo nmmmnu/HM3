@@ -1,3 +1,4 @@
+#include "stlvectorlist.h"
 #include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
@@ -217,6 +218,14 @@ static void list_test(const char *module, LIST &list){
 }
 
 int main(int argc, char **argv){
+	STLVectorList<IArraySearch::Binary> svlb;
+		list_test("Vector<B>", svlb);
+
+	STLVectorList<IArraySearch::Linear> svll;
+		list_test("Vector<L>", svll);
+
+	// =========================
+
 	VectorList<IArraySearch::Binary> vlb;
 		list_test("Vector<B>", vlb);
 
@@ -235,9 +244,8 @@ int main(int argc, char **argv){
 		if (0)
 			skiplist_lanes_test(sl);
 
-/*
 	// =========================
-
+/*
 	HashList<VectorList<> > hl_vl;
 		list_test("HashList@Vector", hl_vl);
 

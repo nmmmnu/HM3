@@ -6,6 +6,7 @@
 
 #include "diskfile.h"
 
+#include "stlvectorlist.h"
 #include "vectorlist.h"
 #include "linklist.h"
 #include "skiplist.h"
@@ -24,6 +25,8 @@ static void printUsage(const char *cmd){
 	printf("\t%s s [class] [file.txt] [key]      - load file.txt, then search for the key\n",		cmd);
 	printf("\t%s w [class] [file.txt] [file.dat] - load file.txt, then create file.dat\n",			cmd);
 	printf("Classes are:\n");
+	printf("\t%c - %s\n", 'T', "std::VectorList bin search");
+	printf("\t%c - %s\n", 't', "std::VectorList linear search");
 	printf("\t%c - %s\n", 'V', "VectorList bin search");
 	printf("\t%c - %s\n", 'v', "VectorList linear search");
 	printf("\t%c - %s\n", 'w', "HashList@VectorList bin search");
@@ -63,7 +66,7 @@ static void listLoad(LIST &list, const StringRef &filename, bool const tombstone
 }
 
 template <class LIST>
-static void listSearch(LIST &list, const StringRef &key){
+static void listSearch(const LIST &list, const StringRef &key){
 	const Pair pair = list.get(key);
 
 	if (! pair){
@@ -79,7 +82,7 @@ static void listSearch(LIST &list, const StringRef &key){
 
 
 template <class LIST>
-static int op_write(LIST &list, const StringRef &filename, const std::string &filename2){
+static int op_write(LIST &&list, const StringRef &filename, const std::string &filename2){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -96,37 +99,20 @@ static int op_write(LIST &list, const StringRef &filename, const std::string &fi
 
 static int op_write_v(char const what, const StringRef &filename, const StringRef &filename2){
 	switch(what){
-	case 'v': {
-			VectorList<IArraySearch::Linear> list;
+	case 'v':
+	case 'V':	return op_write(VectorList<>{},	filename, filename2);
 
-			return op_write(list, filename, filename2);
-		}
-
-	case 'V': {
-			VectorList<IArraySearch::Binary> list;
-
-			return op_write(list, filename, filename2);
-		}
-
-	case 'l': {
-			LinkList list;
-
-			return op_write(list, filename, filename2);
-		}
+	case 'l':	return op_write(LinkList{},	filename, filename2);
 
 	default:
-	case 's': {
-			SkipList list;
-
-			return op_write(list, filename, filename2);
-		}
+	case 's':	return op_write(SkipList{},	filename, filename2);
 	}
 }
 
 
 
 template <class LIST>
-static int op_search(LIST &list, const StringRef &filename, const StringRef &key){
+static int op_search(LIST &&list, const StringRef &filename, const StringRef &key){
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");
@@ -141,43 +127,23 @@ static int op_search(LIST &list, const StringRef &filename, const StringRef &key
 }
 
 static int op_search_v(char const what, const StringRef &filename, const StringRef &key){
+	constexpr auto buckets = 8192;
+
 	switch(what){
-	case 'v': {
-			VectorList<IArraySearch::Linear> list;
 
-			return op_search(list, filename, key);
-		}
+	case 't':	return op_search(STLVectorList<IArraySearch::Linear>{},			filename, key);
+	case 'T':	return op_search(STLVectorList<IArraySearch::Binary>{},			filename, key);
 
-	case 'V': {
-			VectorList<IArraySearch::Binary> list;
+	case 'v':	return op_search(VectorList<IArraySearch::Linear>{},			filename, key);
+	case 'V':	return op_search(VectorList<IArraySearch::Binary>{},			filename, key);
+	case 'w':	return op_search(HashList<VectorList<IArraySearch::Binary> >{buckets},	filename, key);
 
-			return op_search(list, filename, key);
-		}
-
-	case 'w': {
-			HashList<VectorList<IArraySearch::Binary> > list(8192);
-
-			return op_search(list, filename, key);
-		}
-
-	case 'l': {
-			LinkList list;
-
-			return op_search(list, filename, key);
-		}
-
-	case 'z': {
-			HashList<SkipList> list(8192);
-
-			return op_search(list, filename, key);
-		}
+	case 'l':	return op_search(LinkList{},						filename, key);
 
 	default:
-	case 's': {
-			SkipList list;
+	case 's':	return op_search(SkipList{},						filename, key);
+	case 'z':	return op_search(HashList<SkipList>{buckets},				filename, key);
 
-			return op_search(list, filename, key);
-		}
 	}
 }
 

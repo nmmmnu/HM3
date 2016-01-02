@@ -2,8 +2,8 @@
 
 template <class CONTAINER>
 Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
-	for(const DiskTable &dt : _container){
-		if (Pair pair = dt.get(key))
+	for(const auto &table : _container){
+		if (Pair pair = table.get(key))
 			return pair;
 	}
 

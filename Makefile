@@ -1,7 +1,9 @@
 MYCC	= clang
 MYCC	= g++
 
-CXX_OPT	= -g #-O9
+CXX_OPT	= -g
+CXX_OPT	= -O9
+CXX_OPT	=
 
 CXX	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
 		-D_FILE_OFFSET_BITS=64	\
@@ -45,10 +47,10 @@ test_stringref: test_stringref.o
 test_pair: test_pair.o	$(PAIR_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
-test_list: test_list.o	$(PAIR_OBJ) vectorlist.o linklist.o skiplist.o
+test_list: test_list.o	$(PAIR_OBJ) stlvectorlist.o vectorlist.o linklist.o skiplist.o
 	$(LINK) $@ $^		$(LIBS)
 
-test_file: test_file.o	$(PAIR_OBJ) vectorlist.o linklist.o skiplist.o $(DISKTABLE_OBJ)
+test_file: test_file.o	$(PAIR_OBJ) stlvectorlist.o vectorlist.o linklist.o skiplist.o $(DISKTABLE_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
 test_stl: test_stl.o	$(PAIR_OBJ)

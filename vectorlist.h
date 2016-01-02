@@ -2,44 +2,40 @@
 #define _VECTOR_LIST_H
 
 #include "iarraysearch.h"
-
-#include <vector>
+#include "iiterator.h"
 
 template <class LOOKUP=IArraySearch::Binary>
 class VectorList : public IMutableList<VectorList<LOOKUP> >{
 public:
-	using vector_type = std::vector<Pair>;
+	using count_type = typename VectorList::count_type;
 
-	using count_type  = vector_type::size_type;
-	using Iterator    = vector_type::const_iterator;
+	static constexpr size_t     ELEMENT_SIZE  = sizeof(Pair);
+	static constexpr count_type REALLOC_COUNT = 16;
+
+	class Iterator;
 
 public:
-	VectorList() = default;
-
-	// we allow to move
-	VectorList(VectorList &&other) = default;
-	VectorList &operator =(VectorList &&other) = default;
-
-	// but we do not allow copy
-	VectorList(const VectorList &other) = delete;
-	VectorList &operator =(const VectorList &other) = delete;
+	explicit VectorList(count_type reallocCount = REALLOC_COUNT);
+	VectorList(VectorList &&other);
+	~VectorList(){
+		removeAll();
+	}
 
 private:
-	vector_type	_container;
-	size_t		_dataSize = 0;
+	count_type	_reallocCount;
+
+	Pair		*_buffer;
+	count_type	_reservedCount;
+	count_type	_dataCount;
+	size_t		_dataSize;
 
 public:
-	bool removeAll(){
-		_container.clear();
-		_dataSize = 0;
-
-		return true;
-	}
+	bool removeAll();
 
 	bool remove(const StringRef &key);
 
 	const Pair &getAt(count_type const index) const{
-		return index < getCount() ? _container[index] : Pair::zero();
+		return index < getCount() ? _buffer[index] : Pair::zero();
 	}
 
 	int cmpAt(count_type const index, const StringRef &key) const{
@@ -47,7 +43,7 @@ public:
 	}
 
 	count_type getCount(bool const = false) const{
-		return _container.size();
+		return _dataCount;
 	}
 
 	size_t getSize() const{
@@ -69,13 +65,39 @@ public:
 	bool _putT(UPAIR &&data);
 
 public:
-	Iterator begin() const{
-		return _container.cbegin();
-	}
+	Iterator begin() const;
+	Iterator end() const;
 
-	Iterator end() const{
-		return _container.cend();
-	}
+private:
+	void _clear(bool alsoFree = false);
+
+	bool _shiftL(count_type index);
+	bool _shiftR(count_type index);
+
+	bool _resize(int delta);
+
+	count_type _calcNewCount(count_type size);
+};
+
+// ===================================
+
+template <class LOOKUP>
+class VectorList<LOOKUP>::Iterator : public IIterator<Iterator>{
+private:
+	friend class VectorList;
+	Iterator(const VectorList &list, count_type pos);
+
+public:
+	Iterator &operator++();
+	Iterator &operator--();
+
+	const Pair &operator*() const;
+
+	bool operator==(const Iterator &other) const;
+
+private:
+	const VectorList	&_list;
+	count_type		_pos;
 };
 
 #endif
