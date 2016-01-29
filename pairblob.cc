@@ -9,6 +9,10 @@
 
 
 
+using ChecksumCalculator = NMEA0183ChecksumCalculator;
+
+
+
 void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
 	if (nothrow)
 		return ::operator new(size, std::nothrow);

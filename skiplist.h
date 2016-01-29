@@ -17,7 +17,8 @@ public:
 	class Iterator;
 
 public:
-	explicit SkipList(height_type height = DEFAULT_HEIGHT);
+	explicit
+	SkipList(height_type height = DEFAULT_HEIGHT);
 	SkipList(SkipList &&other);
 	~SkipList();
 

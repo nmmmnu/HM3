@@ -8,7 +8,11 @@
 
 #include <utility>	// std::move
 
-//#include "nmea0183checksumcalculator.h"
+
+
+using ChecksumCalculator = NMEA0183ChecksumCalculator;
+
+
 
 #define PRINTF_TEST(test, result) \
 	printf("%-15s Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
@@ -69,7 +73,7 @@ static void pair_test_raw(const char *module){
 	const char *key = "name";
 	const char *val = "Peter";
 
-	Checksum<NMEA0183ChecksumCalculator> chk;
+	Checksum<ChecksumCalculator> chk;
 
 	char checksum = (char) chk.calc("name\0Peter\0", 11);
 

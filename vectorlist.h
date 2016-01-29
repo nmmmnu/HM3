@@ -15,7 +15,8 @@ public:
 	class Iterator;
 
 public:
-	explicit VectorList(count_type reallocCount = REALLOC_COUNT);
+	explicit
+	VectorList(count_type reallocCount = REALLOC_COUNT);
 	VectorList(VectorList &&other);
 	~VectorList(){
 		removeAll();

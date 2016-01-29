@@ -219,10 +219,10 @@ static void list_test(const char *module, LIST &list){
 
 int main(int argc, char **argv){
 	STLVectorList<IArraySearch::Binary> svlb;
-		list_test("Vector<B>", svlb);
+		list_test("STLVector<B>", svlb);
 
 	STLVectorList<IArraySearch::Linear> svll;
-		list_test("Vector<L>", svll);
+		list_test("STLVector<L>", svll);
 
 	// =========================
 
