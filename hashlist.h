@@ -8,7 +8,7 @@
 #include <vector>
 
 template <class LIST>
-class HashList : public IList<HashList<LIST> >{
+class HashList : public IMutableList<HashList<LIST> >{
 public:
 	using container_type = std::vector<LIST>;
 
@@ -33,8 +33,9 @@ public:
 	size_t getSize() const noexcept;
 
 public:
-	bool put(const Pair &pair);
-	bool put(Pair &&pair);
+	// needs to be public because of CRPT
+	template <class UPAIR>
+	bool _putT(UPAIR &&data);
 
 public:
 	MultiTableIterator<container_type> begin() const{

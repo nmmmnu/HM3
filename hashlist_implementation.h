@@ -50,27 +50,16 @@ size_t HashList<LIST>::getSize() const noexcept{
 }
 
 template <class LIST>
-bool HashList<LIST>::put(const Pair &pair){
-	const StringRef &key = pair.getKey();
-
-	if (key.empty())
+template <class UPAIR>
+bool HashList<LIST>::_putT(UPAIR &&pair){
+	if (pair == false)
 		return true;
 
-	const auto index = _getBucketForKey(key);
-
-	return _container[index].put(pair);
-}
-
-template <class LIST>
-bool HashList<LIST>::put(Pair &&pair){
 	const StringRef &key = pair.getKey();
 
-	if (key.empty())
-		return false;
-
 	const auto index = _getBucketForKey(key);
 
-	return _container[index].put(std::move(pair));
+	return _container[index].put(std::forward<UPAIR>(pair));
 }
 
 // ===================================
