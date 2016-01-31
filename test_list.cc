@@ -113,7 +113,13 @@ static void iterator_test(const char *module, LIST &list){
 template <class LIST>
 static void list_test(const char *module, LIST &list){
 	Pair p = nullptr;
+	StringRef nullstr = nullptr;
 
+
+	PRINTF_TEST("put null",		list.put(p)				);
+
+	PRINTF_TEST("get null",		list.get(nullstr).getKey().empty()	);
+	PRINTF_TEST("remove null",	list.remove(nullstr)			);
 
 
 	// TEST GENERAL
@@ -255,10 +261,10 @@ int main(int argc, char **argv){
 		list_test("HashList@LinkList", hl_ll);
 
 	// =========================
-
+*/
 	HashList<SkipList> hl_sl;
 		list_test("HashList@SkipList", hl_sl);
-*/
+
 }
 
 

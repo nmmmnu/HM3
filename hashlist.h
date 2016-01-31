@@ -20,8 +20,8 @@ public:
 
 public:
 	explicit
-	HashList(size_t const size = DEFAULT_SIZE) :
-				_container(size){}
+	HashList(size_t const size = 0) :
+				_container(size ? size : DEFAULT_SIZE){}
 
 public:
 	bool removeAll();
@@ -48,7 +48,7 @@ public:
 private:
 	static unsigned long _calcHash(const char *str);
 
-	size_t _getBucketForKey(const StringRef &key) const{
+	count_type _getBucketForKey(const StringRef &key) const{
 		/*
 		Instead of modulo, this can be done with bit AND.
 		Doing so, really increase the speed a bit,
@@ -56,7 +56,7 @@ private:
 		and overal result will be low quality code.
 		*/
 
-		return _calcHash(key.data()) % _container.size() + 1;
+		return _calcHash(key.data()) % _container.size();
 	}
 
 private:

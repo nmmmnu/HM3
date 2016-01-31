@@ -9,22 +9,22 @@ bool HashList<LIST>::removeAll(){
 
 template <class LIST>
 const Pair &HashList<LIST>::get(const StringRef &key) const{
-	const auto index = _getBucketForKey(key);
-
-	if (index == 0)
+	if (key.empty())
 		return Pair::zero();
 
-	return _container[index - 1].get(key);
+	const auto index = _getBucketForKey(key);
+
+	return _container[index].get(key);
 }
 
 template <class LIST>
 bool HashList<LIST>::remove(const StringRef &key){
+	if (key.empty())
+		return true;
+
 	const auto index = _getBucketForKey(key);
 
-	if (index == 0)
-		return false;
-
-	return _container[index - 1].remove(key);
+	return _container[index].remove(key);
 }
 
 template <class LIST>
@@ -53,24 +53,24 @@ template <class LIST>
 bool HashList<LIST>::put(const Pair &pair){
 	const StringRef &key = pair.getKey();
 
+	if (key.empty())
+		return true;
+
 	const auto index = _getBucketForKey(key);
 
-	if (index == 0)
-		return false;
-
-	return _container[index - 1].put(pair);
+	return _container[index].put(pair);
 }
 
 template <class LIST>
 bool HashList<LIST>::put(Pair &&pair){
 	const StringRef &key = pair.getKey();
 
-	const auto index = _getBucketForKey(key);
-
-	if (index == 0)
+	if (key.empty())
 		return false;
 
-	return _container[index - 1].put(std::move(pair));
+	const auto index = _getBucketForKey(key);
+
+	return _container[index].put(std::move(pair));
 }
 
 // ===================================
@@ -89,3 +89,4 @@ unsigned long HashList<LIST>::_calcHash(const char *str){
 
 	return hash;
 }
+

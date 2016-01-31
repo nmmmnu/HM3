@@ -90,6 +90,9 @@ template <class UPAIR>
 bool SkipList::_putT(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
+	if (key.empty())
+		return true;
+
 	Node *node = (Node *) _locate(key);
 
 	if (node){
@@ -163,12 +166,18 @@ template bool SkipList::_putT(Pair &&newdata);
 template bool SkipList::_putT(const Pair &newdata);
 
 const Pair &SkipList::get(const StringRef &key) const{
+	if (key.empty())
+		return Pair::zero();
+
 	const Node *node = _locate(key);
 
 	return node ? node->data : Pair::zero();
 }
 
 bool SkipList::remove(const StringRef &key){
+	if (key.empty())
+		return true;
+
 	const Node *node = _locate(key, true);
 
 	if (node == nullptr)
