@@ -97,11 +97,11 @@ void DiskFileHeader::_clear(){
 
 void DiskFileHeader::print() const{
 	printf("%-14s: %u\n",		"Version",	_version);
-	printf("%-14s: %zu\n",	"Records",	_count); // PRIu64
+	printf("%-14s: %" PRIu64 "\n",	"Records",	_count); // PRIu64
 	printf("%-14s: %s\n",		"Created",	_created ? MyTime::toString(_created) : "n/a");
 	printf("%-14s: %s\n",		"Sorted",	_sorted ? "Yes" : "No");
 
-	printf("%-14s: %zu\n",	"Tombstones",	_tombstones); // PRIu64
+	printf("%-14s: %" PRIu64 "\n",	"Tombstones",	_tombstones); // PRIu64
 	printf("%-14s: %s\n",		"Created::MIN",	_createdMin ? MyTime::toString(_createdMin) : "n/a");
 	printf("%-14s: %s\n",		"Created::MAX",	_createdMax ? MyTime::toString(_createdMax) : "n/a");
 }
