@@ -2,43 +2,43 @@
 
 #include "mytime.h"
 
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
-std::string IDGeneratorTS::next(){
+void IDGeneratorTS::_format(std::ostream &buff, uint32_t value) const{
+	if (_hex){
+		buff	<< std::setfill ('0') << std::setw (8) << std::hex;
+	}else{
+		buff	<< std::setfill ('0') << std::setw (10);
+	}
+
+	buff << value;
+}
+
+std::string IDGeneratorTS::operator()() const{
 	std::ostringstream buff;
 
-	buff	<< std::setfill ('0') << std::setw (10)
-		<< MyTime::uncombine(MyTime::now())
-		<< "."
-		<< std::setfill ('0') << std::setw (10)
-		<< MyTime::uncombine2(MyTime::now());
-	
+	auto now = MyTime::now();
+
+	_format(buff, MyTime::uncombine(now));
+
+	buff << ".";
+
+	_format(buff, MyTime::uncombine2(now));
+
 	return buff.str();
 }
 
-std::string IDGeneratorTSHex::next(){
+std::string IDGeneratorDate::operator()() const{
 	std::ostringstream buff;
 
-	buff	<< std::setfill ('0') << std::setw (8) << std::hex
-		<< MyTime::uncombine(MyTime::now())
-		<< "."
-		<< std::setfill ('0') << std::setw (8) << std::hex
-		<< MyTime::uncombine2(MyTime::now());
-	
-	return buff.str();
-}
-
-std::string IDGeneratorDate::next(){	
-	std::ostringstream buff;
-	
-	const char *FORMAT = MyTime::DATA_FORMAT_NUMBER;
+	static const char *FORMAT = MyTime::DATA_FORMAT_NUMBER;
 
 	buff	<< MyTime::toString(MyTime::now(), FORMAT)
 		<< "."
-		<< std::setfill ('0') << std::setw (10)	// << std::hex
+		<< std::setfill ('0') << std::setw (10)
 		<< MyTime::uncombine2(MyTime::now());
-	
+
 
 	return buff.str();
 }

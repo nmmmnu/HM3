@@ -2,23 +2,27 @@
 #define _ID_GENERATOR_H
 
 #include <string>
+#include <ostream>
+#include <cstdint>
 
 class IDGeneratorTS{
 public:
-	std::string next();
+	IDGeneratorTS(bool hex = true) : _hex(hex){};
 
+	std::string operator()() const;
+
+private:
+	void _format(std::ostream &buff, uint32_t value) const;
+
+private:
+	bool _hex;
 };
 
-class IDGeneratorTSHex{
-public:
-	std::string next();
 
-};
 
 class IDGeneratorDate{
 public:
-	std::string next();
-
+	std::string operator()() const;
 };
 
 #endif

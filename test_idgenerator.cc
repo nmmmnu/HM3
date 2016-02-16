@@ -4,20 +4,20 @@
 #include <iomanip>
 
 template <class T>
-void test(const char *title, unsigned count = 10){
-	T id;
-	std::cout	<< title
+void test(T id, const char *name, unsigned count = 10){
+	std::cout	<< name
 			<< std::endl;
+
 	for(unsigned i = 0; i < count; ++i)
 		std::cout	<< std::setw (3) << i
 				<< " => "
-				<< id.next() 
+				<< id()
 				<< std::endl;
 }
 
 int main(){
-	test<IDGeneratorTS>("IDGeneratorTS");
-	test<IDGeneratorTSHex>("IDGeneratorTSHex");
-	test<IDGeneratorDate>("IDGeneratorDate");
+	test( IDGeneratorTS{ true },	"IDGeneratorTS@Hex"	);
+	test( IDGeneratorTS{ false },	"IDGeneratorTS@Dec"	);
+	test( IDGeneratorDate{},	"IDGeneratorDate"	);
 }
 
