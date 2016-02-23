@@ -7,21 +7,24 @@
 
 #include <iterator>
 
-template <class CONTAINER>
-class LSMTable : public IList<LSMTable<CONTAINER> >{
+template <class LSMC>
+class LSMTable : public IList<LSMTable<LSMC> >{
 public:
-	using count_type = typename LSMTable::count_type;
+	using container_type	= typename LSMC::container_type;
 
 public:
-	LSMTable(const CONTAINER &container) : _container(container){}
+	using count_type	= typename LSMTable::count_type;
 
 public:
-	MultiTableIterator<CONTAINER> begin() const{
-		return MultiTableIterator<CONTAINER>(_container);
+	LSMTable(LSMC &lsmc) : _lsmc(lsmc){}
+
+public:
+	MultiTableIterator<container_type> begin() const{
+		return MultiTableIterator<container_type>(_lsmc.get());
 	}
 
-	MultiTableIterator<CONTAINER> end() const{
-		return MultiTableIterator<CONTAINER>(_container, true);
+	MultiTableIterator<container_type> end() const{
+		return MultiTableIterator<container_type>(_lsmc.get(), true);
 	}
 
 public:
@@ -40,7 +43,7 @@ private:
 	count_type getCountReal() const;
 
 private:
-	const CONTAINER	&_container;
+	LSMC	&_lsmc;
 };
 
 // ===================================

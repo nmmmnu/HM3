@@ -67,10 +67,10 @@ test_file: test_file.o	$(PAIR_OBJ) stlvectorlist.o vectorlist.o linklist.o skipl
 db_file: db_file.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK) $@ $^		$(LIBS)
 
-db_lsm: db_lsm.o	$(PAIR_OBJ) $(DISKTABLE_OBJ) myglob.o
+db_lsm: db_lsm.o	$(PAIR_OBJ) $(DISKTABLE_OBJ) directorylsmcontainer.o myglob.o
 	$(LINK) $@ $^		$(LIBS)
 
-db_merge: db_merge.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
+db_merge: db_merge.o	$(PAIR_OBJ) $(DISKTABLE_OBJ) arglsmcontainer.o
 	$(LINK) $@ $^		$(LIBS)
 
 

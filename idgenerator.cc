@@ -7,9 +7,9 @@
 
 void IDGeneratorTS::_format(std::ostream &buff, uint32_t value) const{
 	if (_hex){
-		buff	<< std::setfill ('0') << std::setw (8) << std::hex;
+		buff	<< std::setfill('0') << std::setw(8) << std::hex;
 	}else{
-		buff	<< std::setfill ('0') << std::setw (10);
+		buff	<< std::setfill('0') << std::setw(10);
 	}
 
 	buff << value;
@@ -36,7 +36,7 @@ std::string IDGeneratorDate::operator()() const{
 
 	buff	<< MyTime::toString(MyTime::now(), FORMAT)
 		<< "."
-		<< std::setfill ('0') << std::setw (10)
+		<< std::setfill('0') << std::setw(10)
 		<< MyTime::uncombine2(MyTime::now());
 
 

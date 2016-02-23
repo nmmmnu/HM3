@@ -1,8 +1,6 @@
 #include "lsmtable.h"
-#include "filecontainerargv.h"
-#include "diskfile.h"
+#include "arglsmcontainer.h"
 
-#include <vector>
 #include <unistd.h>	// access
 
 static void printUsage(const char *name){
@@ -52,12 +50,9 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	using MyDTVector = std::vector<DiskTable>;
+	ArgLSMContainer lsmc(pathc, path);
 
-	MyDTVector container;
-	FileListContainer::load(container, pathc, path);
-
-	LSMTable<MyDTVector> mtlist(container);
+	LSMTable<ArgLSMContainer> mtlist(lsmc);
 
 	DiskFile df = DiskFile(output);
 

@@ -1,8 +1,8 @@
 #include "disktable.h"
 
-template <class CONTAINER>
-Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
-	for(const auto &table : _container){
+template <class LSMC>
+Pair LSMTable<LSMC>::get(const StringRef &key) const{
+	for(const auto &table : _lsmc.get() ){
 		if (Pair pair = table.get(key))
 			return pair;
 	}
@@ -10,11 +10,11 @@ Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
 	return nullptr;
 }
 
-template <class CONTAINER>
-size_t LSMTable<CONTAINER>::getSize() const{
+template <class LSMC>
+size_t LSMTable<LSMC>::getSize() const{
 	count_type result = 0;
 
-	for(const auto &table : _container)
+	for(const auto &table : _lsmc.get() )
 		result += table.getSize();
 
 	return result;
@@ -22,18 +22,18 @@ size_t LSMTable<CONTAINER>::getSize() const{
 
 // ===================================
 
-template <class CONTAINER>
-auto LSMTable<CONTAINER>::getCountEstimated() const -> count_type{
+template <class LSMC>
+auto LSMTable<LSMC>::getCountEstimated() const -> count_type{
 	count_type result = 0;
 
-	for(const auto &table : _container)
+	for(const auto &table : _lsmc.get() )
 		result += table.getCount();
 
 	return result;
 }
 
-template <class CONTAINER>
-auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
+template <class LSMC>
+auto LSMTable<LSMC>::getCountReal() const -> count_type{
 	count_type result = 0;
 
 	auto endIt = end();
@@ -42,3 +42,5 @@ auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
 
 	return result;
 }
+
+

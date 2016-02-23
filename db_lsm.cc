@@ -1,7 +1,7 @@
 #include <cstdio>	// printf
 
 #include "lsmtable.h"
-#include "filecontainerdirectory.h"
+#include "directorylsmcontainer.h"
 
 #include "db_file_implementation.h"
 
@@ -12,7 +12,7 @@ static void printUsage(const char *cmd){
 	printf("\t%s L [file.dat] [key] - load file.dat, then list using iterator with start\n",	cmd);
 
 	printf("\t\tFiles must be written without extention\n");
-	printf("\t\tExample 'file.*.bin' instead of 'file.0001.bin.data'\n");
+	printf("\t\tExample 'file.*.bin' instead of 'file.0001.bin'\n");
 
 	printf("\n");
 }
@@ -31,13 +31,9 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	using MyDTVector = std::vector<DiskTable>;
+	DirectoryLSMContainer lsmc(path);
 
-	MyDTVector container;
-
-	FileListContainer::loadFromDirectory(container, path);
-
-	LSMTable<MyDTVector> mt(container);
+	LSMTable<DirectoryLSMContainer> mt(lsmc);
 
 	// =======================
 
