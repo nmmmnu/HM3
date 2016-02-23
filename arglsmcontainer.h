@@ -16,7 +16,7 @@ public:
 	}
 
 private:
-	static container_type _load(int const argc, const char **argv);
+	static container_type _load(int argc, const char **argv);
 
 private:
 	container_type _vector;

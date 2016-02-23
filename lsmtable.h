@@ -16,7 +16,7 @@ public:
 	using count_type	= typename LSMTable::count_type;
 
 public:
-	LSMTable(LSMC &lsmc) : _lsmc(lsmc){}
+	LSMTable(LSMC &&lsmc) : _lsmc(std::move(lsmc)){}
 
 public:
 	MultiTableIterator<container_type> begin() const{
@@ -43,7 +43,7 @@ private:
 	count_type getCountReal() const;
 
 private:
-	LSMC	&_lsmc;
+	LSMC	_lsmc;
 };
 
 // ===================================

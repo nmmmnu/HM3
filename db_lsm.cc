@@ -3,7 +3,7 @@
 #include "lsmtable.h"
 #include "directorylsmcontainer.h"
 
-#include "db_print_implementation.h"
+#include "db_ops_implementation.h"
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
@@ -31,16 +31,14 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	DirectoryLSMContainer lsmc(path);
-
-	LSMTable<DirectoryLSMContainer> mt(lsmc);
+	LSMTable<DirectoryLSMContainer> mtlist( DirectoryLSMContainer{ path } );
 
 	// =======================
 
 	switch(op[0]){
-	case 'r':	return op_filesearch(mt, key);
-	case 'L':	return op_list(mt, key);
-	case 'l':	return op_list(mt);
+	case 'r':	return op_filesearch(mtlist, key);
+	case 'L':	return op_list(mtlist, key);
+	case 'l':	return op_list(mtlist);
 	}
 
 	printUsage(argv[0]);

@@ -1,5 +1,3 @@
-//#ifndef _DB_FILE_IMPLEMENTATION_H
-//#define _DB_FILE_IMPLEMENTATION_H
 
 template <class LIST>
 static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t const count = 100){
@@ -22,4 +20,3 @@ static int op_filesearch(const LIST &list, const StringRef &key){
 	return 0;
 }
 
-//#endif

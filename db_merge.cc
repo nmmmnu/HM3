@@ -50,13 +50,10 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	ArgLSMContainer lsmc(pathc, path);
-
-	LSMTable<ArgLSMContainer> mtlist(lsmc);
+	LSMTable<ArgLSMContainer> mtlist( ArgLSMContainer{ pathc, path } );
 
 	DiskFile df = DiskFile(output);
 
 	df.createFromList(mtlist, keepInvalid, keepTombstones);
 }
-
 

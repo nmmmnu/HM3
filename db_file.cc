@@ -3,7 +3,7 @@
 #include "disktable.h"
 
 
-#include "db_print_implementation.h"
+#include "db_ops_implementation.h"
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
