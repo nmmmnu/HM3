@@ -15,8 +15,7 @@ public:
 		refresh();
 	}
 
-public:
-	container_type &get(){
+	const container_type &operator*() const{
 		return _vector;
 	}
 

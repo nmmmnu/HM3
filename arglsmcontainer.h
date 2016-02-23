@@ -11,17 +11,12 @@ public:
 	ArgLSMContainer(int const argc, const char **argv) :
 				_vector(_load(argc, argv)){}
 
-public:
-	container_type &get(){
+	const container_type &operator*() const{
 		return _vector;
 	}
 
-	bool refresh(){
-		return false;
-	}
-
 private:
-	container_type _load(int const argc, const char **argv);
+	static container_type _load(int const argc, const char **argv);
 
 private:
 	container_type _vector;

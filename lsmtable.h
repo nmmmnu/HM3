@@ -20,11 +20,11 @@ public:
 
 public:
 	MultiTableIterator<container_type> begin() const{
-		return MultiTableIterator<container_type>(_lsmc.get());
+		return MultiTableIterator<container_type>(*_lsmc);
 	}
 
 	MultiTableIterator<container_type> end() const{
-		return MultiTableIterator<container_type>(_lsmc.get(), true);
+		return MultiTableIterator<container_type>(*_lsmc, true);
 	}
 
 public:
