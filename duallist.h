@@ -5,26 +5,24 @@
 
 #include <utility>	// std::forward
 
-template <class MEMLIST, class TABLE>
-class DualList : public IMutableList<DualList<MEMLIST,TABLE> >{
-public:
-//	using count_type = typename DualList::count_type;
-	using Iterator = typename MEMLIST::Iterator;
-
+template <class LIST1, class TABLE2>
+class DualList : public IMutableList<DualList<LIST1,TABLE2> >{
 public:
 	constexpr static size_t MAX_SIZE = 128 * 1024 * 1024;
+	
+	using Iterator = typename LIST1::Iterator;
 
 private:
-	MEMLIST	_memlist;
-	TABLE	_table;
+	LIST1	_memlist;
+	TABLE2	_table;
 	size_t	_maxSize;
 
 public:
-	template<class UMEMLIST, class UTABLE>
+	template<class ULIST1, class UTABLE2>
 	explicit
-	DualList(UMEMLIST &&memlist, UTABLE &&table, size_t const maxSize = MAX_SIZE) :
-					_memlist(std::forward<UMEMLIST>(memlist)),
-					_table(std::forward<UTABLE>(table)),
+	DualList(ULIST1 &&memlist, UTABLE2 &&table, size_t const maxSize = MAX_SIZE) :
+					_memlist(std::forward<ULIST1 >(memlist)),
+					_table  (std::forward<UTABLE2>(table)),
 					_maxSize(maxSize){
 	}
 
@@ -35,11 +33,11 @@ public:
 	}
 
 public:
-	MEMLIST &getMemList(){
+	LIST1 &getMemList(){
 		return _memlist;
 	}
 
-	TABLE &getTable(){
+	TABLE2 &getTable(){
 		return _table;
 	}
 

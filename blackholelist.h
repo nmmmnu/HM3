@@ -2,11 +2,11 @@
 #define _BLACK_HOLE_LIST_LIST_H
 
 #include "ilist.h"
-#include "iiterator.h"
+#include "emptyiterator.h"
 
 class BlackHoleList : public IMutableList<BlackHoleList>{
 public:
-	class Iterator;
+	using Iterator = EmptyIterator<BlackHoleList>;
 
 public:
 	BlackHoleList() = default;
@@ -37,57 +37,22 @@ public:
 		return 0;
 	}
 
-public:
-	Iterator begin() const;
+public:	
+	Iterator begin() const{
+		return Iterator(this);
+	}
 
-	Iterator end() const;
+	Iterator end() const{
+		return Iterator(this);
+	}
 
 public:
 	// needs to be public because of CRPT
-	template <class UPAIR>
-	bool _putT(UPAIR &&) const {
+	// no need to be templated as well
+	bool _putT(...) const {
 		return true;
 	}
 
 };
-
-// ==============================
-
-class BlackHoleList::Iterator : public IIterator<Iterator>{
-private:
-	friend class BlackHoleList;
-
-	constexpr
-	Iterator(const BlackHoleList *list) : _list(list){
-	}
-
-public:
-	Iterator &operator++(){
-		return *this;
-	}
-
-	constexpr
-	const Pair &operator*() const{
-		return Pair::zero();
-	}
-
-	constexpr
-	bool operator==(const Iterator &other) const{
-		return _list == other._list;
-	}
-
-private:
-	const BlackHoleList	*_list;
-};
-
-// ==============================
-
-inline auto BlackHoleList::begin() const -> Iterator{
-	return end();
-}
-
-inline auto BlackHoleList::end() const -> Iterator{
-	return Iterator(this);
-}
 
 #endif
