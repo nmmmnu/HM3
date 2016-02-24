@@ -202,7 +202,7 @@ auto VectorList<LOOKUP>::_calcNewCount(count_type const count) -> count_type{
 // ===================================
 
 template <class LOOKUP>
-VectorList<LOOKUP>::Iterator::Iterator(const VectorList &list, count_type const pos) :
+VectorList<LOOKUP>::Iterator::Iterator(const VectorList *list, count_type const pos) :
 			_list(list),
 			_pos(pos){}
 
@@ -220,24 +220,24 @@ auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
 
 template <class LOOKUP>
 const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
-	return _list.getAt(_pos);
+	return _list->getAt(_pos);
 }
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::Iterator::operator==(const Iterator &other) const{
-	return &_list == &other._list && _pos == other._pos;
+	return _list == other._list && _pos == other._pos;
 }
 
 // ===================================
 
 template <class LOOKUP>
 auto VectorList<LOOKUP>::begin() const -> Iterator{
-	return Iterator(*this, 0);
+	return Iterator(this, 0);
 }
 
 template <class LOOKUP>
 auto VectorList<LOOKUP>::end() const -> Iterator{
-	return Iterator(*this, getCount());
+	return Iterator(this, getCount());
 }
 
 // ===================================

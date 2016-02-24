@@ -5,6 +5,8 @@
 
 #include "hashlist.h"
 
+#include "blackholelist.h"
+
 #include <utility>	// std::move
 
 #include <stdio.h>	// printf
@@ -223,6 +225,25 @@ static void list_test(const char *module, LIST &list){
 	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
+template <>
+void list_test(const char *module, BlackHoleList &list){
+	Pair p = nullptr;
+
+	list_populate(list);
+
+	PRINTF_TEST("print it",		true					);
+	list.print();
+
+	PRINTF_TEST("count",		list.getCount() == 0			);
+	PRINTF_TEST("count estim",	list.getCount(true) == 0		);
+	PRINTF_TEST("empty",		list.isEmpty()				);
+	PRINTF_TEST("sizeof",		list.getSize() == 0			);
+
+	PRINTF_TEST("put",		list.put( { "key", "val" } )		);
+	PRINTF_TEST("get",		! list.get("key")			);
+	PRINTF_TEST("remove",		list.remove("key")			);
+}
+
 int main(int argc, char **argv){
 	STLVectorList<IArraySearch::Binary> svlb;
 		list_test("STLVector<B>", svlb);
@@ -264,6 +285,10 @@ int main(int argc, char **argv){
 */
 	HashList<SkipList> hl_sl;
 		list_test("HashList@SkipList", hl_sl);
+
+	BlackHoleList bhl;
+		list_test("BlackHoleList", bhl);
+
 
 }
 

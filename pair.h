@@ -79,6 +79,7 @@ public:
 	}
 
 public:
+	constexpr
 	static const Pair &zero(){
 		return __zero;
 	}

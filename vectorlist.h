@@ -86,7 +86,7 @@ template <class LOOKUP>
 class VectorList<LOOKUP>::Iterator : public IIterator<Iterator>{
 private:
 	friend class VectorList;
-	Iterator(const VectorList &list, count_type pos);
+	Iterator(const VectorList *list, count_type pos);
 
 public:
 	Iterator &operator++();
@@ -97,7 +97,7 @@ public:
 	bool operator==(const Iterator &other) const;
 
 private:
-	const VectorList	&_list;
+	const VectorList	*_list;
 	count_type		_pos;
 };
 
