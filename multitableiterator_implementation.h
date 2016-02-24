@@ -1,38 +1,28 @@
 
-namespace MultiIteratorTraits{
-	template<class IT>
-	static bool incrementIfSame(IT &it, const IT &it_end, const Pair &model);
-
-	template<class IT>
-	static const Pair &dereference(const IT &it, const IT &it_end);
-};
-
-
-// ===================================
-
-
 template<class IT>
-bool MultiIteratorTraits::incrementIfSame(IT &it, const IT &it_end, const Pair &model){
-	if (it == it_end)
+bool MultiIteratorMatrix<IT>::incrementIfSame(const Pair &model){
+	if (cur == end)
 		return false;
 	
-	const Pair &pair = *it;
+	const Pair &pair = *cur;
 
-	// increase if is same
 	if (pair.cmp(model) != 0)
 		return false;
 	
-	++it;
+	// increase if is same
+
+	++cur;
+	
 	return true;
 }
 
 
 template<class IT>
-const Pair &MultiIteratorTraits::dereference(const IT &it, const IT &it_end){
-	if (it == it_end)
+const Pair &MultiIteratorMatrix<IT>::operator *() const{
+	if (cur == end)
 		return Pair::zero();
  
-	return *it;
+	return *cur;
 }
 
 
@@ -41,13 +31,13 @@ const Pair &MultiIteratorTraits::dereference(const IT &it, const IT &it_end){
 
 template <class TABLE1, class TABLE2>
 DualIterator<TABLE1, TABLE2>::DualIterator(const TABLE1 table1, const TABLE2 table2, bool const endIt) :
-					_it1(IteratorGroup1{
-						std::move(endIt ? table1.end() : table1.begin()),
-						std::move(table1.end())
+					_it1(IteratorMatrix1{
+						endIt ? table1.end() : table1.begin(),
+						table1.end()
 					}),
-					_it2(IteratorGroup1{
-						std::move(endIt ? table2.end() : table2.begin()),
-						std::move(table2.end())
+					_it2(IteratorMatrix2{
+						endIt ? table2.end() : table2.begin(),
+						table2.end()
 					}){
 }
 
@@ -61,16 +51,16 @@ DualIterator<TABLE1, TABLE2> &DualIterator<TABLE1, TABLE2>::operator++(){
 		return *this;
 	}
 
-	MultiIteratorTraits::incrementIfSame(_it1.cur, _it1.end, p);
-	MultiIteratorTraits::incrementIfSame(_it2.cur, _it2.end, p);
+	_it1.incrementIfSame(p);
+	_it2.incrementIfSame(p);
 
 	return *this;
 }
 
 template <class TABLE1, class TABLE2>
 const Pair &DualIterator<TABLE1, TABLE2>::operator*() const{
-	const Pair &pair1 = MultiIteratorTraits::dereference(_it1.cur, _it1.end);
-	const Pair &pair2 = MultiIteratorTraits::dereference(_it2.cur, _it2.end);
+	const Pair &pair1 = *_it1;
+	const Pair &pair2 = *_it2;
 
 	return pair1.cmp(pair2) < 0 ? pair1 : pair2; 
 }
@@ -93,9 +83,9 @@ MultiTableIterator<CONTAINER_LIST>::MultiTableIterator(const CONTAINER_LIST &lis
 	_it.reserve(list.size());
 
 	for(const auto &table : list)
-		_it.push_back(IteratorGroup{
-			std::move(endIt ? table.end() : table.begin()),
-			std::move(table.end())
+		_it.push_back(IteratorMatrix{
+			endIt ? table.end() : table.begin(),
+			table.end()
 		});
 }
 
@@ -111,7 +101,7 @@ MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator
 
 	// step 2: increase all duplicates
 	for(auto &iter : _it)
-		MultiIteratorTraits::incrementIfSame(iter.cur, iter.end, p);
+		iter.incrementIfSame(p);
 
 	return *this;
 }
@@ -123,7 +113,7 @@ const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
 
 	// step 1: find minimal in reverse order to find most recent.
 	for(auto &iter : _it){
-		const Pair &pair = MultiIteratorTraits::dereference(iter.cur, iter.end);
+		const Pair &pair = *iter;
 
 		// skip if is null
 		if ( ! pair )

@@ -6,16 +6,18 @@
 #include <vector>
 
 
-namespace MultiIteratorTraits{
-	template <class IT>
-	class IteratorGroup{
-	public:
-		IteratorGroup(IT cur, IT end) : cur(cur), end(end){}
-		
-	public:
-		IT cur, end;
-	};
+template <class IT>
+class MultiIteratorMatrix{
+public:
+	MultiIteratorMatrix(IT &&cur, IT &&end) : cur(cur), end(end){}
+	
+public:
+	bool incrementIfSame(const Pair &model);
+	const Pair &operator *() const;
 
+public:
+	IT cur;
+	IT end;
 };
 
 
@@ -28,8 +30,8 @@ private:
 	using Iterator1		= typename TABLE1::Iterator;
 	using Iterator2		= typename TABLE2::Iterator;
 
-	using IteratorGroup1	= typename MultiIteratorTraits::IteratorGroup<Iterator1>;
-	using IteratorGroup2	= typename MultiIteratorTraits::IteratorGroup<Iterator2>;
+	using IteratorMatrix1	= MultiIteratorMatrix<Iterator1>;
+	using IteratorMatrix2	= MultiIteratorMatrix<Iterator2>;
 
 public:
 	DualIterator(const TABLE1 table1, const TABLE2 table2, bool endIt = false);
@@ -41,8 +43,8 @@ public:
 	bool operator==(const DualIterator &other) const;
 
 private:
-	IteratorGroup1	_it1;
-	IteratorGroup2	_it2;
+	IteratorMatrix1	_it1;
+	IteratorMatrix2	_it2;
 	
 	bool	_internalError = false;
 };
@@ -55,8 +57,8 @@ template <class CONTAINER_LIST>
 class MultiTableIterator : public IIterator<MultiTableIterator<CONTAINER_LIST> >{
 private:
 	using Iterator		= typename CONTAINER_LIST::value_type::Iterator;
-	using IteratorGroup	= MultiIteratorTraits::IteratorGroup<Iterator>;
-	using vector_type	= std::vector<IteratorGroup>;
+	using IteratorMatrix	= MultiIteratorMatrix<Iterator>;
+	using vector_type	= std::vector<IteratorMatrix>;
 	
 	using size_type		= typename vector_type::size_type;
 
@@ -74,6 +76,10 @@ private:
 
 	bool		_internalError = false;
 };
+
+
+// ===================================
+
 
 #include "multitableiterator_implementation.h"
 
