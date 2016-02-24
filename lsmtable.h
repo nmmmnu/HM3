@@ -5,7 +5,7 @@
 
 #include "multitableiterator.h"
 
-#include <iterator>
+#include <utility>	// std::forward
 
 template <class LSMC>
 class LSMTable : public IList<LSMTable<LSMC> >{
@@ -16,7 +16,8 @@ public:
 	using count_type	= typename LSMTable::count_type;
 
 public:
-	LSMTable(LSMC &&lsmc) : _lsmc(std::move(lsmc)){}
+	template<class ULSMC>
+	LSMTable(ULSMC &&lsmc) : _lsmc(std::forward<ULSMC>(lsmc)){}
 
 public:
 	MultiTableIterator<container_type> begin() const{

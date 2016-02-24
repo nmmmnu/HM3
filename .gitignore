@@ -2,6 +2,8 @@ db_file
 db_lsm
 db_merge
 
+test_duallist
+
 test_stringref
 test_glob
 test_idgenerator

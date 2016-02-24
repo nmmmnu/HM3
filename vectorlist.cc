@@ -220,6 +220,7 @@ auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
 
 template <class LOOKUP>
 const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
+	// _list can not be NULL
 	return _list->getAt(_pos);
 }
 

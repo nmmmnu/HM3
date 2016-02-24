@@ -13,7 +13,7 @@ public:
 
 public:
 	constexpr
-	bool removeAll() noexcept{
+	bool removeAll() const noexcept{
 		return true;
 	}
 
@@ -23,7 +23,7 @@ public:
 	}
 
 	constexpr
-	bool remove(const StringRef &key) noexcept{
+	bool remove(const StringRef &key) const noexcept{
 		return true;
 	}
 
@@ -45,7 +45,7 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&){
+	bool _putT(UPAIR &&) const {
 		return true;
 	}
 
