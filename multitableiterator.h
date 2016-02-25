@@ -7,6 +7,9 @@
 
 class MultiTableIterator{
 private:
+	MultiTableIterator() = delete;
+
+private:
 	template <class IT>
 	class MatrixHelper{
 	public:
@@ -15,13 +18,13 @@ private:
 	public:
 		bool incrementIfSame(const Pair &model);
 		const Pair &operator *() const;
+		bool operator==(const MatrixHelper &other) const;
+		bool operator!=(const MatrixHelper &other) const;
 
 	public:
 		IT cur;
 		IT end;
 	};
-
-	MultiTableIterator() = delete;
 
 public:
 	template <class TABLE1, class TABLE2>

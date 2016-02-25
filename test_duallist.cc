@@ -14,8 +14,11 @@ int main(){
 	DualList<SkipList,DiskTable> dl(SkipList{}, DiskTable{}, max_size);
 
 	dl.getTable().open(FILENAME);
-	
-	dl.get("Plovdiv").print();
+
+	dl.emplace("Plovdiv", "new");
+
+	dl.print();
+
 /*
 	for(unsigned long i = 0; i < 1 * 1000 * 1000; ++i){
 		std::string key = "Item #";

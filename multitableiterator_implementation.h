@@ -26,6 +26,16 @@ const Pair &MultiTableIterator::MatrixHelper<IT>::operator *() const{
 	return *cur;
 }
 
+template<class IT>
+bool MultiTableIterator::MatrixHelper<IT>::operator==(const MatrixHelper &other) const{
+	return cur == other.cur && end == other.end;
+}
+
+template<class IT>
+bool MultiTableIterator::MatrixHelper<IT>::operator!=(const MatrixHelper &other) const{
+	return ! operator==(other);
+}
+
 
 // ===================================
 
@@ -63,6 +73,8 @@ const Pair &MultiTableIterator::Dual<TABLE1, TABLE2>::operator*() const{
 	const Pair &pair1 = *_it1;
 	const Pair &pair2 = *_it2;
 
+	// return smaller,
+	// if equal, first have precedence
 	return pair1.cmp(pair2) <= 0 ? pair1 : pair2;
 }
 
@@ -71,12 +83,11 @@ bool MultiTableIterator::Dual<TABLE1, TABLE2>::operator==(const Dual<TABLE1, TAB
 	if (_internalError)
 		return true;
 
-	return _it1.cur == other._it1.cur && _it2.cur == other._it2.cur;
+	return _it1 == other._it1 && _it2 == other._it2;
 }
 
 
 // ===================================
-
 
 
 template <class CONTAINER_LIST>
@@ -127,6 +138,7 @@ const Pair &MultiTableIterator::Collection<CONTAINER_LIST>::operator*() const{
 		}
 
 		// compare and swap pair if is smaller
+		// if equal last have precedence
 		if (pair.cmp(*resultRef) < 0){
 			resultRef = &pair;
 		}
@@ -144,7 +156,7 @@ bool MultiTableIterator::Collection<CONTAINER_LIST>::operator==(const Collection
 		return true;
 
 	for(size_type i = 0; i < _it.size(); ++i){
-		if (_it[i].cur != other._it[i].cur)
+		if (_it[i] != other._it[i])
 			return false;
 	}
 
