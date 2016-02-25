@@ -3,14 +3,16 @@
 
 #include "ilist.h"
 
+#include "multitableiterator.h"
+
 #include <utility>	// std::forward
 
 template <class LIST1, class TABLE2>
 class DualList : public IMutableList<DualList<LIST1,TABLE2> >{
 public:
 	constexpr static size_t MAX_SIZE = 128 * 1024 * 1024;
-	
-	using Iterator = typename LIST1::Iterator;
+
+	using Iterator = MultiTableIterator::Dual<LIST1, TABLE2>;
 
 private:
 	LIST1	_memlist;
@@ -63,12 +65,13 @@ public:
 
 public:
 	Iterator begin() const{
-		return _memlist.begin();
+		return Iterator(_memlist, _table);
 	}
 
 	Iterator end() const{
-		return _memlist.end();
+		return Iterator(_memlist, _table, true);
 	}
+
 };
 
 // ===================================

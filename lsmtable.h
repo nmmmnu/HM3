@@ -11,21 +11,20 @@ template <class LSMC>
 class LSMTable : public IList<LSMTable<LSMC> >{
 public:
 	using container_type	= typename LSMC::container_type;
-
-public:
 	using count_type	= typename LSMTable::count_type;
+	using Iterator		= MultiTableIterator::Collection<container_type>;
 
 public:
 	template<class ULSMC>
 	LSMTable(ULSMC &&lsmc) : _lsmc(std::forward<ULSMC>(lsmc)){}
 
 public:
-	MultiTableIterator<container_type> begin() const{
-		return MultiTableIterator<container_type>(*_lsmc);
+	Iterator begin() const{
+		return Iterator(*_lsmc);
 	}
 
-	MultiTableIterator<container_type> end() const{
-		return MultiTableIterator<container_type>(*_lsmc, true);
+	Iterator end() const{
+		return Iterator(*_lsmc, true);
 	}
 
 public:

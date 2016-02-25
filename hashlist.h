@@ -10,9 +10,9 @@
 template <class LIST>
 class HashList : public IMutableList<HashList<LIST> >{
 public:
-	using container_type = std::vector<LIST>;
-
-	using count_type = typename HashList::count_type;
+	using container_type	= std::vector<LIST>;
+	using count_type	= typename HashList::count_type;
+	using Iterator		= MultiTableIterator::Collection<container_type>;
 
 public:
 	constexpr
@@ -38,12 +38,12 @@ public:
 	bool _putT(UPAIR &&data);
 
 public:
-	MultiTableIterator<container_type> begin() const{
-		return MultiTableIterator<container_type>(_container);
+	Iterator begin() const{
+		return Iterator(_container);
 	}
 
-	MultiTableIterator<container_type> end() const{
-		return MultiTableIterator<container_type>(_container, true);
+	Iterator end() const{
+		return Iterator(_container, true);
 	}
 
 private:

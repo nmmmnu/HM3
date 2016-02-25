@@ -1,27 +1,28 @@
 
+
 template<class IT>
-bool MultiIteratorMatrix<IT>::incrementIfSame(const Pair &model){
+bool MultiTableIterator::MatrixHelper<IT>::incrementIfSame(const Pair &model){
 	if (cur == end)
 		return false;
-	
+
 	const Pair &pair = *cur;
 
 	if (pair.cmp(model) != 0)
 		return false;
-	
+
 	// increase if is same
 
 	++cur;
-	
+
 	return true;
 }
 
 
 template<class IT>
-const Pair &MultiIteratorMatrix<IT>::operator *() const{
+const Pair &MultiTableIterator::MatrixHelper<IT>::operator *() const{
 	if (cur == end)
 		return Pair::zero();
- 
+
 	return *cur;
 }
 
@@ -30,19 +31,19 @@ const Pair &MultiIteratorMatrix<IT>::operator *() const{
 
 
 template <class TABLE1, class TABLE2>
-DualIterator<TABLE1, TABLE2>::DualIterator(const TABLE1 table1, const TABLE2 table2, bool const endIt) :
-					_it1(IteratorMatrix1{
+MultiTableIterator::Dual<TABLE1, TABLE2>::Dual(const TABLE1 &table1, const TABLE2 &table2, bool const endIt) :
+					_it1({
 						endIt ? table1.end() : table1.begin(),
 						table1.end()
 					}),
-					_it2(IteratorMatrix2{
+					_it2({
 						endIt ? table2.end() : table2.begin(),
 						table2.end()
 					}){
 }
 
 template <class TABLE1, class TABLE2>
-DualIterator<TABLE1, TABLE2> &DualIterator<TABLE1, TABLE2>::operator++(){
+auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABLE2> &{
 	const Pair &p = operator*();
 
 	if ( ! p ){
@@ -58,19 +59,19 @@ DualIterator<TABLE1, TABLE2> &DualIterator<TABLE1, TABLE2>::operator++(){
 }
 
 template <class TABLE1, class TABLE2>
-const Pair &DualIterator<TABLE1, TABLE2>::operator*() const{
+const Pair &MultiTableIterator::Dual<TABLE1, TABLE2>::operator*() const{
 	const Pair &pair1 = *_it1;
 	const Pair &pair2 = *_it2;
 
-	return pair1.cmp(pair2) < 0 ? pair1 : pair2; 
+	return pair1.cmp(pair2) <= 0 ? pair1 : pair2;
 }
 
 template <class TABLE1, class TABLE2>
-bool DualIterator<TABLE1, TABLE2>::operator==(const DualIterator<TABLE1, TABLE2> &other) const{
+bool MultiTableIterator::Dual<TABLE1, TABLE2>::operator==(const Dual<TABLE1, TABLE2> &other) const{
 	if (_internalError)
 		return true;
-		
-	return _it1.cur == other._it1.cur;
+
+	return _it1.cur == other._it1.cur && _it2.cur == other._it2.cur;
 }
 
 
@@ -79,18 +80,18 @@ bool DualIterator<TABLE1, TABLE2>::operator==(const DualIterator<TABLE1, TABLE2>
 
 
 template <class CONTAINER_LIST>
-MultiTableIterator<CONTAINER_LIST>::MultiTableIterator(const CONTAINER_LIST &list, bool const endIt){
+MultiTableIterator::Collection<CONTAINER_LIST>::Collection(const CONTAINER_LIST &list, bool const endIt){
 	_it.reserve(list.size());
 
 	for(const auto &table : list)
-		_it.push_back(IteratorMatrix{
+		_it.push_back({
 			endIt ? table.end() : table.begin(),
 			table.end()
 		});
 }
 
 template <class CONTAINER_LIST>
-MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator++(){
+auto MultiTableIterator::Collection<CONTAINER_LIST>::operator++() -> Collection<CONTAINER_LIST> &{
 	const Pair &p = operator*();
 
 	if ( ! p ){
@@ -107,7 +108,7 @@ MultiTableIterator<CONTAINER_LIST> &MultiTableIterator<CONTAINER_LIST>::operator
 }
 
 template <class CONTAINER_LIST>
-const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
+const Pair &MultiTableIterator::Collection<CONTAINER_LIST>::operator*() const{
 	// const refference that can be binded several times :)
 	const Pair *resultRef = nullptr;
 
@@ -135,7 +136,7 @@ const Pair &MultiTableIterator<CONTAINER_LIST>::operator*() const{
 }
 
 template <class CONTAINER_LIST>
-bool MultiTableIterator<CONTAINER_LIST>::operator==(const MultiTableIterator<CONTAINER_LIST> &other) const{
+bool MultiTableIterator::Collection<CONTAINER_LIST>::operator==(const Collection<CONTAINER_LIST> &other) const{
 	if (_it.size() != other._it.size())
 		return false;
 
