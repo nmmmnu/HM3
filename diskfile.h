@@ -21,9 +21,13 @@ public:
 			filename_data(filename_data){}
 
 	DiskFile(const std::string &filename) :
-			DiskFile(filename, filenameIndx(filename), filenameData(filename)){}
+			DiskFile( filenameMeta(filename), filenameIndx(filename), filenameData(filename)){}
 
 public:
+	static std::string filenameMeta(const std::string &filename){
+		return filename;
+	}
+
 	static std::string filenameIndx(const std::string &filename){
 		return filename + DOT_INDX;
 	}

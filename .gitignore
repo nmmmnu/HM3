@@ -1,7 +1,7 @@
 db_file
 db_lsm
 db_merge
-db_lsmloadfile
+db_lsmload
 
 test_duallist
 

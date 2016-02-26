@@ -1,11 +1,13 @@
 #ifndef _FILE_LSM_CONTAINER_ARGV_H
 #define _FILE_LSM_CONTAINER_ARGV_H
 
-#include "lsmcontainer.h"
+#include <vector>
+
+#include "disktable.h"
 
 class ArgLSMContainer{
 public:
-	using container_type = LSMContainer::container_type;
+	using container_type	= std::vector<DiskTable>;
 
 public:
 	ArgLSMContainer(int const argc, const char **argv) :
@@ -13,6 +15,10 @@ public:
 
 	const container_type &operator*() const{
 		return _vector;
+	}
+
+	bool reload() const{
+		return false;
 	}
 
 private:

@@ -2,16 +2,16 @@
 #define _DIRECTORY_LSM_CONTAINER_H
 
 #include <string>
+#include <vector>
 
-#include "lsmcontainer.h"
+#include "disktable.h"
 
 class DirectoryLSMContainer{
 public:
-	using container_type	= LSMContainer::container_type;
+	using container_type	= std::vector<DiskTable>;
 
 public:
-	DirectoryLSMContainer(const StringRef &path) :
-				_path(path){
+	DirectoryLSMContainer(const StringRef &path) : _path(path){
 		refresh();
 	}
 

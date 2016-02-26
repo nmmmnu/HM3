@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-constexpr const char *FILENAME	= "TEST_DATA.BIN/data.001.bin";
+constexpr const char *FILENAME	= "TEST_DATA.BIN/data.001.db";
 constexpr const char *KEY	= "Sofia";
 
 constexpr size_t max_size	= 10 * 1024 * 1024;

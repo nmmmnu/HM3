@@ -20,11 +20,10 @@ private:
 	size_t	_maxSize;
 
 public:
-	template<class ULIST1, class UTABLE2>
 	explicit
-	DualList(ULIST1 &&memlist, UTABLE2 &&table, size_t const maxSize = MAX_SIZE) :
-					_memlist(std::forward<ULIST1 >(memlist)),
-					_table  (std::forward<UTABLE2>(table)),
+	DualList(LIST1 &&memlist, TABLE2 &&table, size_t const maxSize = MAX_SIZE) :
+					_memlist(std::move(memlist)),
+					_table  (std::move(table)),
 					_maxSize(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
 	}
 
@@ -58,7 +57,9 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool _putT(UPAIR &&data){
+		return _memlist.put( std::forward<UPAIR>(data) );
+	}
 
 public:
 	bool flush();
@@ -76,6 +77,15 @@ public:
 
 // ===================================
 
-#include "duallist_implementation.h"
+template <class LIST1, class TABLE2>
+Pair DualList<LIST1, TABLE2>::get(const StringRef &key) const{
+	const Pair &pair = _memlist.get(key);
+
+	if (pair)
+		return pair;
+
+	// lookup into immutable table
+	return _table.get(key);
+}
 
 #endif

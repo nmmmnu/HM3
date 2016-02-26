@@ -3,33 +3,45 @@
 
 #include <fstream>
 
-#include "duallist.h"
-
+#include "flushlist.h"
 #include "skiplist.h"
-#include "blackholelist.h"
 
+//#include "vectorlist.h"
+//#include "hashlist.h"
+
+#include "idgenerator.h"
+#include "diskfileflush.h"
+
+
+
+//using MemList		= HashList<VectorList<> >;
 using MemList		= SkipList;
-using Table		= BlackHoleList;
-
-using MyDualList	= DualList<SkipList,BlackHoleList>;
-
-constexpr size_t	MEMLIST_SIZE	= 10 * 1024 * 1024;
-
+using Flusher		= DiskFileFlush<IDGeneratorDate>;
+using MyList		= FlushList<MemList,Flusher>;
 using count_type	= MemList::count_type;
 
+
+constexpr size_t	MEMLIST_SIZE	= 100 * 1024 * 1024;
 constexpr count_type	PROCESS_STEP	= 1000 * 10;
+
 
 
 static void printUsage(const char *cmd);
 
 
-static MyDualList factory(const char * /*lsmglob*/, size_t const mem_size){
-	return MyDualList(
+
+static MyList factory(const char *lsm_path, size_t const mem_size){
+	return MyList(
 		MemList{},
-		Table{},
+		Flusher{
+			IDGeneratorDate{},
+			lsm_path
+		},
 		mem_size
 	);
 }
+
+
 
 template <class LIST>
 static int listLoad(LIST &list, const StringRef &filename){
@@ -55,12 +67,17 @@ static int listLoad(LIST &list, const StringRef &filename){
 		++i;
 
 		if (i % PROCESS_STEP == 0){
-			printf("Processed %10lu records, %10zu bytes...\n", i, list.getMemList().getSize() );
+			printf("Processed %10lu records, In memory %10lu records, %10zu bytes...\n",
+						i,
+						list.getList().getCount(),
+						list.getList().getSize() );
 		}
 	}
 
 	return 0;
 }
+
+
 
 int main(int argc, char **argv){
 	if (argc <= 2){
@@ -69,16 +86,18 @@ int main(int argc, char **argv){
 	}
 
 	const auto filename	= argv[1];
-	const auto lsmglob	= argv[2];
+	const auto lsm_path	= argv[2];
 
-	MyDualList dl = factory(lsmglob, MEMLIST_SIZE);
+	auto mylist = factory(lsm_path, MEMLIST_SIZE);
 
-	return listLoad(dl, filename);
+	return listLoad(mylist, filename);
 }
+
+
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
-	printf("\t%s [file.txt] [lsm.*.bin] - load file.txt, then create / add to lsm.*.bin\n",	cmd);
+	printf("\t%s [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/\n",	cmd);
 	printf("\n");
 }
 

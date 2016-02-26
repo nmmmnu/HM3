@@ -1,9 +1,9 @@
 MYCC	= clang
 MYCC	= g++
 
-CXX_OPT	= -g
+#CXX_OPT	= -g
 #CXX_OPT	= -O9
-#CXX_OPT	=
+CXX_OPT	=
 
 CXX	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
 		-D_FILE_OFFSET_BITS=64	\
@@ -76,7 +76,7 @@ db_merge: db_merge.o			$(PAIR_OBJ) $(DISKTABLE_OBJ) arglsmcontainer.o
 test_duallist: test_duallist.o		$(PAIR_OBJ) $(DISKTABLE_OBJ) skiplist.o
 	$(LINK) $@ $^			$(LIBS)
 
-db_lsmloadfile: db_lsmloadfile.o	$(PAIR_OBJ) $(DISKTABLE_OBJ) skiplist.o
+db_lsmload: db_lsmload.o		$(PAIR_OBJ) $(DISKTABLE_OBJ) skiplist.o idgenerator.o
 	$(LINK) $@ $^			$(LIBS)
 
 

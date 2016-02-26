@@ -1,0 +1,22 @@
+skiplist, no optim, 10M (duallist)
+
+real	1m30.419s
+user	1m29.727s
+sys	0m0.433s
+
+skiplist, no optim, 10M 
+real	1m30.106s
+user	1m29.477s
+sys	0m0.483s
+
+
+skiplist, o9, 10M
+real	0m36.471s
+user	0m35.943s
+sys	0m0.503s
+
+hashlist, o9, 10M
+real	0m44.172s
+user	0m43.677s
+sys	0m0.420s
+

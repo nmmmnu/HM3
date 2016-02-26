@@ -5,7 +5,7 @@
 #include <endian.h>	// htobe16
 
 bool DiskTable::open(const std::string &filename){
-	_header.open(filename);
+	_header.open(DiskFile::filenameMeta(filename));
 
 	if (_header == false)
 		return false;

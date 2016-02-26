@@ -12,6 +12,8 @@ static void printUsage(const char *name){
 	printf(txt, 	name, '-', "keep",   "keep");
 	printf(txt, 	name, 'v', "remove", "keep");
 	printf(txt, 	name, 't', "remove", "remove");
+	printf("\t\tFiles must be written with the extention.\n");
+	printf("\t\tExample 'file.db'\n");
 	printf("\t\tDo not forget you usually need two output files\n");
 }
 

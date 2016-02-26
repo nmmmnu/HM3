@@ -7,12 +7,12 @@
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
-	printf("\t%s r [file.dat] [key] - load file.dat, then search for the key\n",			cmd);
-	printf("\t%s l [file.dat] -     - load file.dat, then list using iterator\n",			cmd);
-	printf("\t%s L [file.dat] [key] - load file.dat, then list using iterator with start\n",	cmd);
+	printf("\t%s r [lsm_path] [key] - load lsm_path, then search for the key\n",			cmd);
+	printf("\t%s l [lsm_path] -     - load lsm_path, then list using iterator\n",			cmd);
+	printf("\t%s L [lsm_path] [key] - load lsm_path, then list using iterator with start\n",	cmd);
 
-	printf("\t\tFiles must be written without extention\n");
-	printf("\t\tExample 'file.*.bin' instead of 'file.0001.bin'\n");
+	printf("\t\tPath names must be written without extention\n");
+	printf("\t\tExample 'directory/file.*' instead of 'directory/file.*.db'\n");
 
 	printf("\n");
 }
