@@ -10,8 +10,9 @@
 template<class IDGENERATOR>
 class DiskFileFlush{
 public:
-	DiskFileFlush(IDGENERATOR &&idGenerator, const StringRef &path, const StringRef &ext):
-				_idGenerator(std::move(idGenerator)),
+	template<class UIDGENERATOR>
+	DiskFileFlush(UIDGENERATOR &&idGenerator, const StringRef &path, const StringRef &ext):
+				_idGenerator(std::forward<UIDGENERATOR>(idGenerator)),
 				_path(path),
 				_ext(ext){
 	}

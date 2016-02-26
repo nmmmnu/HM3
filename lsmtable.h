@@ -13,7 +13,7 @@ public:
 	using Iterator		= MultiTableIterator::Collection<container_type>;
 
 public:
-	LSMTable(LSMC &&lsmc) : _lsmc(std::move(lsmc)){}
+	LSMTable(const LSMC &lsmc) : _lsmc(lsmc){}
 
 public:
 	Iterator begin() const{
@@ -44,7 +44,7 @@ private:
 	count_type getCountReal() const;
 
 private:
-	LSMC	_lsmc;
+	const LSMC	&_lsmc;
 };
 
 // ===================================

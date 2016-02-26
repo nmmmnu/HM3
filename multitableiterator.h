@@ -16,13 +16,15 @@ private:
 		using Iterator		= typename TABLE::Iterator;
 		
 	public:
-		MatrixHelper(Iterator &&cur, Iterator &&end) : 
-						cur(cur), 
-						end(end){}
+		MatrixHelper(Iterator &&cur, Iterator &&end) :
+						cur(std::move(cur)), 
+						end(std::move(end)){}
 		
 		MatrixHelper(const TABLE &table, bool const endIt = false) : 
-						cur(endIt ? table.end() : table.begin()), 
-						end(table.end()){}
+						MatrixHelper(
+							endIt ? table.end() : table.begin(),
+							table.end()
+						){}
 
 	public:
 		bool incrementIfSame(const Pair &model);

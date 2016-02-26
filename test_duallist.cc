@@ -11,9 +11,11 @@ constexpr const char *KEY	= "Sofia";
 constexpr size_t max_size	= 10 * 1024 * 1024;
 
 int main(){
-	DualList<SkipList,DiskTable> dl(SkipList{}, DiskTable{}, max_size);
-
-	dl.getTable().open(FILENAME);
+	SkipList memlist{};
+	DiskTable disktable{};
+	disktable.open(FILENAME);
+	
+	DualList<SkipList,DiskTable> dl(memlist, disktable, max_size);
 
 	dl.emplace("Plovdiv", "new");
 

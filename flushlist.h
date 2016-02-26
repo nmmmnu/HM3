@@ -11,16 +11,11 @@ public:
 	using Iterator		= typename LIST::Iterator;
 	using count_type	= typename LIST::count_type;
 
-private:
-	LIST		_list;
-	FLUSH		_flusher;
-	size_t		_maxSize;
-
 public:
-	explicit
-	FlushList(LIST &&list, FLUSH &&flusher, size_t const maxSize = MAX_SIZE) :
-					_list(std::move(list)),
-					_flusher(std::move(flusher)),
+	template <class UFLUSH>
+	FlushList(LIST &list, UFLUSH &&flusher, size_t const maxSize = MAX_SIZE) :
+					_list(list),
+					_flusher(std::forward<UFLUSH>(flusher)),
 					_maxSize(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
 	}
 
@@ -30,7 +25,6 @@ public:
 		flush();
 	}
 
-public:
 	LIST &getList(){
 		return _list;
 	}
@@ -74,6 +68,11 @@ public:
 	Iterator end() const{
 		return _list.end();
 	}
+
+private:
+	LIST		&_list;
+	FLUSH		_flusher;
+	size_t		_maxSize;
 };
 
 

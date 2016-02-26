@@ -14,33 +14,15 @@ public:
 
 	using Iterator = MultiTableIterator::Dual<LIST1, TABLE2>;
 
-private:
-	LIST1	_memlist;
-	TABLE2	_table;
-	size_t	_maxSize;
-
 public:
 	explicit
-	DualList(LIST1 &&memlist, TABLE2 &&table, size_t const maxSize = MAX_SIZE) :
-					_memlist(std::move(memlist)),
-					_table  (std::move(table)),
+	DualList(LIST1 &memlist, const TABLE2 &table, size_t const maxSize = MAX_SIZE) :
+					_memlist(memlist),
+					_table  (table),
 					_maxSize(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
 	}
 
 	DualList(DualList &&other) = default;
-
-	~DualList(){
-		flush();
-	}
-
-public:
-	LIST1 &getMemList(){
-		return _memlist;
-	}
-
-	TABLE2 &getTable(){
-		return _table;
-	}
 
 public:
 	Pair get(const StringRef &key) const;
@@ -73,6 +55,10 @@ public:
 		return Iterator(_memlist, _table, true);
 	}
 
+private:
+	LIST1		&_memlist;
+	const TABLE2	&_table;
+	size_t		_maxSize;
 };
 
 // ===================================

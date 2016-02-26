@@ -30,20 +30,6 @@ static void printUsage(const char *cmd);
 
 
 
-static MyList factory(const char *lsm_path, const char *lsm_ext, size_t const mem_size){
-	return MyList(
-		MemList{},
-		Flusher{
-			IDGeneratorDate{},
-			lsm_path,
-			lsm_ext
-		},
-		mem_size
-	);
-}
-
-
-
 template <class LIST>
 static int listLoad(LIST &list, const StringRef &filename){
 	constexpr const char *trim_ch = " \t\n";
@@ -90,7 +76,17 @@ int main(int argc, char **argv){
 	const auto lsm_path	= argv[2];
 	const auto lsm_ext	= ".db";
 
-	auto mylist = factory(lsm_path, lsm_ext, MEMLIST_SIZE);
+	MemList memlist;
+
+	MyList mylist{
+		memlist,
+		Flusher{
+			IDGeneratorDate{},
+			lsm_path,
+			lsm_ext
+		},
+		MEMLIST_SIZE
+	};
 
 	return listLoad(mylist, filename);
 }
