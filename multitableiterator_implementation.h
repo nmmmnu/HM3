@@ -1,7 +1,7 @@
 
 
-template<class IT>
-bool MultiTableIterator::MatrixHelper<IT>::incrementIfSame(const Pair &model){
+template<class TABLE>
+bool MultiTableIterator::MatrixHelper<TABLE>::incrementIfSame(const Pair &model){
 	if (cur == end)
 		return false;
 
@@ -17,22 +17,21 @@ bool MultiTableIterator::MatrixHelper<IT>::incrementIfSame(const Pair &model){
 	return true;
 }
 
-
-template<class IT>
-const Pair &MultiTableIterator::MatrixHelper<IT>::operator *() const{
+template<class TABLE>
+const Pair &MultiTableIterator::MatrixHelper<TABLE>::operator *() const{
 	if (cur == end)
 		return Pair::zero();
 
 	return *cur;
 }
 
-template<class IT>
-bool MultiTableIterator::MatrixHelper<IT>::operator==(const MatrixHelper &other) const{
+template<class TABLE>
+bool MultiTableIterator::MatrixHelper<TABLE>::operator==(const MatrixHelper &other) const{
 	return cur == other.cur && end == other.end;
 }
 
-template<class IT>
-bool MultiTableIterator::MatrixHelper<IT>::operator!=(const MatrixHelper &other) const{
+template<class TABLE>
+bool MultiTableIterator::MatrixHelper<TABLE>::operator!=(const MatrixHelper &other) const{
 	return ! operator==(other);
 }
 
@@ -42,14 +41,8 @@ bool MultiTableIterator::MatrixHelper<IT>::operator!=(const MatrixHelper &other)
 
 template <class TABLE1, class TABLE2>
 MultiTableIterator::Dual<TABLE1, TABLE2>::Dual(const TABLE1 &table1, const TABLE2 &table2, bool const endIt) :
-					_it1({
-						endIt ? table1.end() : table1.begin(),
-						table1.end()
-					}),
-					_it2({
-						endIt ? table2.end() : table2.begin(),
-						table2.end()
-					}){
+					_it1({ table1, endIt }),
+					_it2({ table2, endIt }){
 }
 
 template <class TABLE1, class TABLE2>
@@ -95,10 +88,7 @@ MultiTableIterator::Collection<CONTAINER_LIST>::Collection(const CONTAINER_LIST 
 	_it.reserve(list.size());
 
 	for(const auto &table : list)
-		_it.push_back({
-			endIt ? table.end() : table.begin(),
-			table.end()
-		});
+		_it.push_back({ table, endIt });
 }
 
 template <class CONTAINER_LIST>

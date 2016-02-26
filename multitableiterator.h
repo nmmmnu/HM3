@@ -10,10 +10,19 @@ private:
 	MultiTableIterator() = delete;
 
 private:
-	template <class IT>
+	template <class TABLE>
 	class MatrixHelper{
+	private:
+		using Iterator		= typename TABLE::Iterator;
+		
 	public:
-		MatrixHelper(IT &&cur, IT &&end) : cur(cur), end(end){}
+		MatrixHelper(Iterator &&cur, Iterator &&end) : 
+						cur(cur), 
+						end(end){}
+		
+		MatrixHelper(const TABLE &table, bool const endIt = false) : 
+						cur(endIt ? table.end() : table.begin()), 
+						end(table.end()){}
 
 	public:
 		bool incrementIfSame(const Pair &model);
@@ -22,19 +31,16 @@ private:
 		bool operator!=(const MatrixHelper &other) const;
 
 	public:
-		IT cur;
-		IT end;
+		Iterator cur;
+		Iterator end;
 	};
 
 public:
 	template <class TABLE1, class TABLE2>
 	class Dual : public IIterator<MultiTableIterator::Dual<TABLE1, TABLE2> >{
 	private:
-		using Iterator1		= typename TABLE1::Iterator;
-		using Iterator2		= typename TABLE2::Iterator;
-
-		using Matrix1		= MatrixHelper<Iterator1>;
-		using Matrix2		= MatrixHelper<Iterator2>;
+		using Matrix1		= MatrixHelper<TABLE1>;
+		using Matrix2		= MatrixHelper<TABLE2>;
 
 	public:
 		Dual(const TABLE1 &table1, const TABLE2 &table2, bool endIt = false);
@@ -56,8 +62,8 @@ public:
 	template <class CONTAINER_LIST>
 	class Collection : public IIterator<MultiTableIterator::Collection<CONTAINER_LIST> >{
 	private:
-		using Iterator		= typename CONTAINER_LIST::value_type::Iterator;
-		using Matrix		= MatrixHelper<Iterator>;
+		using Table		= typename CONTAINER_LIST::value_type;
+		using Matrix		= MatrixHelper<Table>;
 		using vector_type	= std::vector<Matrix>;
 
 		using size_type		= typename vector_type::size_type;
