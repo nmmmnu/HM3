@@ -21,7 +21,7 @@ SRC	= $(wildcard *.cc)
 
 
 TARGETS	=	\
-		db_file db_lsm db_merge	\
+		db_file db_lsm db_merge	db_lsmload\
 		\
 		test_stringref		\
 		test_glob		\

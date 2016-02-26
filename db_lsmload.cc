@@ -21,7 +21,7 @@ using MyList		= FlushList<MemList,Flusher>;
 using count_type	= MemList::count_type;
 
 
-constexpr size_t	MEMLIST_SIZE	= 100 * 1024 * 1024;
+constexpr size_t	MEMLIST_SIZE	= 10 * 1024 * 1024;
 constexpr count_type	PROCESS_STEP	= 1000 * 10;
 
 
@@ -30,12 +30,13 @@ static void printUsage(const char *cmd);
 
 
 
-static MyList factory(const char *lsm_path, size_t const mem_size){
+static MyList factory(const char *lsm_path, const char *lsm_ext, size_t const mem_size){
 	return MyList(
 		MemList{},
 		Flusher{
 			IDGeneratorDate{},
-			lsm_path
+			lsm_path,
+			lsm_ext
 		},
 		mem_size
 	);
@@ -87,8 +88,9 @@ int main(int argc, char **argv){
 
 	const auto filename	= argv[1];
 	const auto lsm_path	= argv[2];
+	const auto lsm_ext	= ".db";
 
-	auto mylist = factory(lsm_path, MEMLIST_SIZE);
+	auto mylist = factory(lsm_path, lsm_ext, MEMLIST_SIZE);
 
 	return listLoad(mylist, filename);
 }

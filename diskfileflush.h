@@ -10,9 +10,10 @@
 template<class IDGENERATOR>
 class DiskFileFlush{
 public:
-	DiskFileFlush(IDGENERATOR &&idGenerator, const StringRef &path):
+	DiskFileFlush(IDGENERATOR &&idGenerator, const StringRef &path, const StringRef &ext):
 				_idGenerator(std::move(idGenerator)),
-				_path(path){
+				_path(path),
+				_ext(ext){
 	}
 
 	template<class LIST>
@@ -22,7 +23,7 @@ public:
 
 		printf("Flushing data to disk...\n");
 
-		const auto &filename = _path + _idGenerator();
+		const auto &filename = _path + _idGenerator() + _ext;
 
 		DiskFile df{ filename };
 		df.createFromList(list, true, true);
@@ -35,6 +36,7 @@ public:
 private:
 	IDGENERATOR	_idGenerator;
 	std::string	_path;
+	std::string	_ext;
 };
 
 // ==============================

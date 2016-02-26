@@ -26,12 +26,11 @@ a.out
 
 x.*
 
-test.bin
-test.bin.*
-
 data.*
 data/*
 _ot/*
+
+TEST_DATA.*
 
 callgrind.out.*
 
