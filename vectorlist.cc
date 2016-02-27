@@ -1,9 +1,9 @@
 #include "vectorlist.h"
 
-//#define xmalloc(s)	malloc(s)
-#define xfree(a)	free(a)
-#define xrealloc(a, s)	realloc(a, s)
+#define xfree(p)		free(p)
+#define xrealloc(p, size)	realloc(p, (size_t) size)
 
+#define xmemmove(d, s, size)	memmove(d, s, (size_t) size)
 
 
 template<typename T>
@@ -123,7 +123,7 @@ void VectorList<LOOKUP>::_clear(bool const alsoFree){
 template <class LOOKUP>
 bool VectorList<LOOKUP>::_shiftL(count_type const index){
 	// this is the most slow operation of them all
-	memmove(
+	xmemmove(
 		& _buffer[index],
 		& _buffer[index + 1],
 		(_dataCount - index - 1) * ELEMENT_SIZE
@@ -140,7 +140,7 @@ bool VectorList<LOOKUP>::_shiftR(count_type const index){
 		return false;
 
 	// this is the most slow operation of them all
-	memmove(
+	xmemmove(
 		& _buffer[index + 1],
 		& _buffer[index],
 		(_dataCount - index - 1) * ELEMENT_SIZE

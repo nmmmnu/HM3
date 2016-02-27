@@ -10,9 +10,9 @@
 template <class LIST>
 class HashList : public IMutableList<HashList<LIST> >{
 public:
-	using container_type	= std::vector<LIST>;
-	using count_type	= typename HashList::count_type;
-	using Iterator		= MultiTableIterator::Collection<container_type>;
+	using container_type		= std::vector<LIST>;
+	using count_type		= typename HashList::count_type;
+	using Iterator			= MultiTableIterator::Collection<container_type>;
 
 public:
 	constexpr
@@ -49,7 +49,7 @@ public:
 private:
 	static unsigned long _calcHash(const char *str);
 
-	count_type _getBucketForKey(const StringRef &key) const{
+	typename container_type::size_type _getBucketForKey(const StringRef &key) const{
 		/*
 		Instead of modulo, this can be done with bit AND.
 		Doing so, really increase the speed a bit,

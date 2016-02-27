@@ -30,6 +30,8 @@ private:
 	count_type	_dataCount;
 	size_t		_dataSize;
 
+	LOOKUP		_lookup;
+	
 public:
 	bool removeAll();
 
@@ -52,7 +54,7 @@ public:
 	}
 
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return LOOKUP::processing(*this, key);
+		return _lookup(*this, key);
 	}
 
 	const Pair &get(const StringRef &key) const{

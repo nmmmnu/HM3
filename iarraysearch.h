@@ -6,18 +6,15 @@
 #include <tuple>
 
 namespace IArraySearch{
-	using count_type = ListDefs::count_type;
-
-	using result_type = std::tuple<int, count_type>;
 
 	struct Linear{
 		template <class ARRAY>
-		static result_type processing(const ARRAY &array, const StringRef &key);
+		typename std::tuple<int, typename ARRAY::count_type>   operator()(const ARRAY &array, const StringRef &key) const;
 	};
 
 	struct Binary{
 		template <class ARRAY>
-		static result_type processing(const ARRAY &array, const StringRef &key);
+		typename std::tuple<int, typename ARRAY::count_type>   operator()(const ARRAY &array, const StringRef &key) const;
 	};
 };
 

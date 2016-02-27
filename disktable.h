@@ -7,6 +7,9 @@
 #include "mmapfile.h"
 
 class DiskTable : public IList<DiskTable>{
+private:
+	using ArrayLookup	= IArraySearch::Binary;
+	
 public:
 	class Iterator;
 
@@ -45,9 +48,8 @@ public:
 		return _mmapData.size();
 	}
 
-	template <class LOOKUP = IArraySearch::Binary>
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return LOOKUP::processing(*this, key);
+		return _lookup(*this, key);
 	}
 
 public:
@@ -60,6 +62,8 @@ private:
 	MMAPFile	_mmapData;
 
 	bool		_validate;
+
+	ArrayLookup	_lookup;
 
 private:
 	const PairBlob *_validateFromDisk(const PairBlob *blob) const;

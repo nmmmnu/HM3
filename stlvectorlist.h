@@ -5,7 +5,7 @@
 
 #include <vector>
 
-template <class LOOKUP=IArraySearch::Binary>
+template <class LOOKUP>
 class STLVectorList : public IMutableList<STLVectorList<LOOKUP> >{
 public:
 	using vector_type = std::vector<Pair>;
@@ -27,6 +27,8 @@ public:
 private:
 	vector_type	_container;
 	size_t		_dataSize = 0;
+
+	LOOKUP		_lookup;
 
 public:
 	bool removeAll(){
@@ -55,7 +57,7 @@ public:
 	}
 
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return LOOKUP::processing(*this, key);
+		return _lookup(*this, key);
 	}
 
 	const Pair &get(const StringRef &key) const{

@@ -1,7 +1,7 @@
 namespace IArraySearch{
 
 template <class ARRAY>
-auto Linear::processing(const ARRAY &self, const StringRef &key) -> result_type{
+typename std::tuple<int, typename ARRAY::count_type>   Linear::operator()(const ARRAY &self, const StringRef &key) const{
 	auto const count = self.getCount();
 
 	if (count == 0){
@@ -11,6 +11,7 @@ auto Linear::processing(const ARRAY &self, const StringRef &key) -> result_type{
 
 	int cmp = -1;
 
+	using count_type = typename ARRAY::count_type;
 	count_type i;
 	for(i = 0; i < count; ++i){
 		cmp = self.cmpAt(i, key);
@@ -30,7 +31,7 @@ auto Linear::processing(const ARRAY &self, const StringRef &key) -> result_type{
 }
 
 template <class ARRAY>
-auto Binary::processing(const ARRAY &self, const StringRef &key) -> result_type{
+typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const ARRAY &self, const StringRef &key) const{
 	auto const count = self.getCount();
 
 	if (count == 0){
@@ -43,6 +44,8 @@ auto Binary::processing(const ARRAY &self, const StringRef &key) -> result_type{
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
 	 */
 
+	using count_type = typename ARRAY::count_type;
+	
 	count_type start = 0;
 	count_type end   = count;
 	int cmp = 0;

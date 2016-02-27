@@ -35,7 +35,7 @@ const PairBlob *DiskTable::_validateFromDisk(const PairBlob *blob) const{
 }
 
 const PairBlob *DiskTable::_getAtFromDisk(count_type const index) const{
-	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( index * sizeof(uint64_t) );
+	const uint64_t *ptr_be = (const uint64_t *) _mmapIndx.safeAccess( (size_t) index * sizeof(uint64_t) );
 
 	if (ptr_be){
 		size_t const offset = (size_t) be64toh( *ptr_be );

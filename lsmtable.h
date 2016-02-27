@@ -5,23 +5,23 @@
 
 #include "multitableiterator.h"
 
-template <class LSMC>
-class LSMTable : public IList<LSMTable<LSMC> >{
+template <class LSMCONTAINER>
+class LSMTable : public IList<LSMTable<LSMCONTAINER> >{
 public:
-	using container_type	= typename LSMC::container_type;
+	using container_type	= typename LSMCONTAINER::container_type;
 	using count_type	= typename LSMTable::count_type;
 	using Iterator		= MultiTableIterator::Collection<container_type>;
 
 public:
-	LSMTable(const LSMC &lsmc) : _lsmc(lsmc){}
+	LSMTable(const LSMCONTAINER &container) : _container(container){}
 
 public:
 	Iterator begin() const{
-		return Iterator(*_lsmc);
+		return Iterator(*_container);
 	}
 
 	Iterator end() const{
-		return Iterator(*_lsmc, true);
+		return Iterator(*_container, true);
 	}
 
 public:
@@ -36,7 +36,7 @@ public:
 	size_t getSize() const;
 
 	bool reload(){
-		return _lsmc.reload();
+		return _container.reload();
 	}
 
 private:
@@ -44,7 +44,7 @@ private:
 	count_type getCountReal() const;
 
 private:
-	const LSMC	&_lsmc;
+	const LSMCONTAINER	&_container;
 };
 
 // ===================================
