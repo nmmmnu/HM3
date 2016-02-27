@@ -1,27 +1,26 @@
-#ifndef _MULTI_TABLE_H
-#define _MULTI_TABLE_H
+#ifndef _LSM_TABLE_H
+#define _LSM_TABLE_H
 
 #include "ilist.h"
 
 #include "multitableiterator.h"
 
-template <class LSMCONTAINER>
-class LSMTable : public IList<LSMTable<LSMCONTAINER> >{
+template <class CONTAINER>
+class LSMTable : public IList<LSMTable<CONTAINER> >{
 public:
-	using container_type	= typename LSMCONTAINER::container_type;
 	using count_type	= typename LSMTable::count_type;
-	using Iterator		= MultiTableIterator::Collection<container_type>;
+	using Iterator		= MultiTableIterator::Collection<CONTAINER>;
 
 public:
-	LSMTable(const LSMCONTAINER &container) : _container(container){}
+	LSMTable(const CONTAINER &container) : _container(container){}
 
 public:
 	Iterator begin() const{
-		return Iterator(*_container);
+		return Iterator(_container);
 	}
 
 	Iterator end() const{
-		return Iterator(*_container, true);
+		return Iterator(_container, true);
 	}
 
 public:
@@ -35,16 +34,12 @@ public:
 
 	size_t getSize() const;
 
-	bool reload(){
-		return _container.reload();
-	}
-
 private:
 	count_type getCountEstimated() const;
 	count_type getCountReal() const;
 
 private:
-	const LSMCONTAINER	&_container;
+	const CONTAINER	&_container;
 };
 
 // ===================================

@@ -31,7 +31,8 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	LSMTable<DirectoryLSMContainer> mtlist( DirectoryLSMContainer{ path } );
+	DirectoryLSMContainer dl{ path };
+	LSMTable<DirectoryLSMContainer::container_type> mtlist(*dl);
 
 	// =======================
 

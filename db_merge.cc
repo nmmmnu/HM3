@@ -52,7 +52,9 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	LSMTable<ArgLSMContainer> mtlist( ArgLSMContainer{ pathc, path } );
+	ArgLSMContainer al { pathc, path };
+
+	LSMTable<ArgLSMContainer::container_type> mtlist( *al );
 
 	DiskFile df = DiskFile(output);
 

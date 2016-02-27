@@ -1,5 +1,4 @@
 
-
 template<class TABLE>
 bool MultiTableIterator::MatrixHelper<TABLE>::incrementIfSame(const Pair &model){
 	if (cur == end)
@@ -83,16 +82,16 @@ bool MultiTableIterator::Dual<TABLE1, TABLE2>::operator==(const Dual<TABLE1, TAB
 // ===================================
 
 
-template <class CONTAINER_LIST>
-MultiTableIterator::Collection<CONTAINER_LIST>::Collection(const CONTAINER_LIST &list, bool const endIt){
+template <class CONTAINER>
+MultiTableIterator::Collection<CONTAINER>::Collection(const CONTAINER &list, bool const endIt){
 	_it.reserve(list.size());
 
 	for(const auto &table : list)
 		_it.push_back({ table, endIt });
 }
 
-template <class CONTAINER_LIST>
-auto MultiTableIterator::Collection<CONTAINER_LIST>::operator++() -> Collection<CONTAINER_LIST> &{
+template <class CONTAINER>
+auto MultiTableIterator::Collection<CONTAINER>::operator++() -> Collection<CONTAINER> &{
 	const Pair &p = operator*();
 
 	if ( ! p ){
@@ -108,8 +107,8 @@ auto MultiTableIterator::Collection<CONTAINER_LIST>::operator++() -> Collection<
 	return *this;
 }
 
-template <class CONTAINER_LIST>
-const Pair &MultiTableIterator::Collection<CONTAINER_LIST>::operator*() const{
+template <class CONTAINER>
+const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 	// const refference that can be binded several times :)
 	const Pair *resultRef = nullptr;
 
@@ -137,8 +136,8 @@ const Pair &MultiTableIterator::Collection<CONTAINER_LIST>::operator*() const{
 	return resultRef ? *resultRef : Pair::zero();
 }
 
-template <class CONTAINER_LIST>
-bool MultiTableIterator::Collection<CONTAINER_LIST>::operator==(const Collection<CONTAINER_LIST> &other) const{
+template <class CONTAINER>
+bool MultiTableIterator::Collection<CONTAINER>::operator==(const Collection<CONTAINER> &other) const{
 	if (_it.size() != other._it.size())
 		return false;
 

@@ -14,13 +14,13 @@ private:
 	class MatrixHelper{
 	private:
 		using Iterator		= typename TABLE::Iterator;
-		
+
 	public:
 		MatrixHelper(Iterator &&cur, Iterator &&end) :
-						cur(std::move(cur)), 
+						cur(std::move(cur)),
 						end(std::move(end)){}
-		
-		MatrixHelper(const TABLE &table, bool const endIt = false) : 
+
+		MatrixHelper(const TABLE &table, bool const endIt = false) :
 						MatrixHelper(
 							endIt ? table.end() : table.begin(),
 							table.end()
@@ -39,7 +39,7 @@ private:
 
 public:
 	template <class TABLE1, class TABLE2>
-	class Dual : public IIterator<MultiTableIterator::Dual<TABLE1, TABLE2> >{
+	class Dual : public IIterator<Dual<TABLE1, TABLE2> >{
 	private:
 		using Matrix1		= MatrixHelper<TABLE1>;
 		using Matrix2		= MatrixHelper<TABLE2>;
@@ -61,17 +61,17 @@ public:
 	};
 
 public:
-	template <class CONTAINER_LIST>
-	class Collection : public IIterator<MultiTableIterator::Collection<CONTAINER_LIST> >{
+	template <class CONTAINER>
+	class Collection : public IIterator<Collection<CONTAINER> >{
 	private:
-		using Table		= typename CONTAINER_LIST::value_type;
+		using Table		= typename CONTAINER::value_type;
 		using Matrix		= MatrixHelper<Table>;
 		using vector_type	= std::vector<Matrix>;
 
 		using size_type		= typename vector_type::size_type;
 
 	public:
-		Collection(const CONTAINER_LIST &list, bool endIt = false);
+		Collection(const CONTAINER &list, bool endIt = false);
 
 		Collection &operator++();
 
