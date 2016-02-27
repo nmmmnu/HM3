@@ -1,14 +1,14 @@
 
-template <class LIST>
-bool HashList<LIST>::removeAll(){
-	for(LIST &list : _container)
+template <class CONTAINER>
+bool HashList<CONTAINER>::removeAll(){
+	for(auto &list : _container)
 		list.removeAll();
 
 	return true;
 }
 
-template <class LIST>
-const Pair &HashList<LIST>::get(const StringRef &key) const{
+template <class CONTAINER>
+const Pair &HashList<CONTAINER>::get(const StringRef &key) const{
 	if (key.empty())
 		return Pair::zero();
 
@@ -17,8 +17,8 @@ const Pair &HashList<LIST>::get(const StringRef &key) const{
 	return _container[index].get(key);
 }
 
-template <class LIST>
-bool HashList<LIST>::remove(const StringRef &key){
+template <class CONTAINER>
+bool HashList<CONTAINER>::remove(const StringRef &key){
 	if (key.empty())
 		return true;
 
@@ -27,11 +27,11 @@ bool HashList<LIST>::remove(const StringRef &key){
 	return _container[index].remove(key);
 }
 
-template <class LIST>
-auto HashList<LIST>::getCount(bool const estimated) const noexcept -> count_type{
+template <class CONTAINER>
+auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> count_type{
 	count_type result = 0;
 
-	for(const LIST &list : _container){
+	for(const auto &list : _container){
 		// a + b is int
 		result = (count_type) (result + list.getCount(estimated));
 	}
@@ -39,19 +39,19 @@ auto HashList<LIST>::getCount(bool const estimated) const noexcept -> count_type
 	return result;
 }
 
-template <class LIST>
-size_t HashList<LIST>::getSize() const noexcept{
+template <class CONTAINER>
+size_t HashList<CONTAINER>::getSize() const noexcept{
 	size_t result = 0;
 
-	for(const LIST &list : _container)
+	for(const auto &list : _container)
 		result += list.getSize();
 
 	return result;
 }
 
-template <class LIST>
+template <class CONTAINER>
 template <class UPAIR>
-bool HashList<LIST>::_putT(UPAIR &&pair){
+bool HashList<CONTAINER>::_putT(UPAIR &&pair){
 	if (pair == false)
 		return true;
 
@@ -65,8 +65,8 @@ bool HashList<LIST>::_putT(UPAIR &&pair){
 // ===================================
 
 // DJB Hash function from CDB
-template <class LIST>
-unsigned long HashList<LIST>::_calcHash(const char *str){
+template <class CONTAINER>
+unsigned long HashList<CONTAINER>::_calcHash(const char *str){
 	// mysterious DJB const
 	unsigned long hash = 5381;
 

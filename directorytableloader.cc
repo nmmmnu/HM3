@@ -1,8 +1,8 @@
-#include "directorylsmcontainer.h"
+#include "directorytableloader.h"
 
 #include "myglob.h"
 
-bool DirectoryLSMContainer::refresh(){
+bool DirectoryTableLoader::refresh(){
 	_vector.clear();
 
 	MyGlob gl;

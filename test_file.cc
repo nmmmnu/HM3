@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <fstream>
+#include <vector>
 
 #include "diskfile.h"
 
@@ -136,13 +137,13 @@ static int op_search_v(char const what, const StringRef &filename, const StringR
 
 	case 'v':	return op_search(VectorList<IArraySearch::Linear>{},			filename, key);
 	case 'V':	return op_search(VectorList<IArraySearch::Binary>{},			filename, key);
-	case 'w':	return op_search(HashList<VectorList<IArraySearch::Binary> >{buckets},	filename, key);
+	case 'w':	return op_search(HashList<std::vector<VectorList<> > >{buckets},	filename, key);
 
 	case 'l':	return op_search(LinkList{},						filename, key);
 
 	default:
 	case 's':	return op_search(SkipList{},						filename, key);
-	case 'z':	return op_search(HashList<SkipList>{buckets},				filename, key);
+	case 'z':	return op_search(HashList<std::vector<SkipList> >{buckets},		filename, key);
 
 	}
 }

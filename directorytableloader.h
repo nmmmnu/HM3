@@ -6,12 +6,12 @@
 
 #include "disktable.h"
 
-class DirectoryLSMContainer{
+class DirectoryTableLoader{
 public:
 	using container_type	= std::vector<DiskTable>;
 
 public:
-	DirectoryLSMContainer(const StringRef &path) : _path(path){
+	DirectoryTableLoader(const StringRef &path) : _path(path){
 		refresh();
 	}
 

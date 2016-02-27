@@ -7,10 +7,11 @@
 
 #include "blackholelist.h"
 
-#include <utility>	// std::move
+//#include <utility>	// std::move
 
-#include <stdio.h>	// printf
-#include <string.h>	// strcmp
+#include <cstdio>	// printf
+#include <cstring>	// strcmp
+#include <vector>
 
 #define PRINTF_TEST(test, result) \
 	printf("%-20s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
@@ -283,7 +284,7 @@ int main(int argc, char **argv){
 
 	// =========================
 */
-	HashList<SkipList> hl_sl;
+	HashList<std::vector<SkipList> > hl_sl;
 		list_test("HashList@SkipList", hl_sl);
 
 	// =========================

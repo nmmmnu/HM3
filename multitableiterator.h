@@ -82,7 +82,10 @@ public:
 	private:
 		vector_type	_it;
 
-		bool		_internalError = false;
+		bool		_internalError	= false;
+
+		/* !!! */ mutable
+		const Pair	*tmp_pair	= nullptr;
 	};
 };
 

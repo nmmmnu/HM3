@@ -5,18 +5,16 @@
 
 #include "multitableiterator.h"
 
-#include <vector>
-
-template <class LIST>
-class HashList : public IMutableList<HashList<LIST> >{
+template <class CONTAINER>
+class HashList : public IMutableList<HashList<CONTAINER> >{
 public:
-	using container_type		= std::vector<LIST>;
-	using count_type		= typename HashList::count_type;
-	using Iterator			= MultiTableIterator::Collection<container_type>;
+	using List		= typename CONTAINER::value_type;
+	using count_type	= typename List::count_type;
+	using Iterator		= MultiTableIterator::Collection<CONTAINER>;
 
 public:
 	constexpr
-	static size_t DEFAULT_SIZE = 1024;
+	static size_t DEFAULT_SIZE = 64;
 
 public:
 	explicit
@@ -49,7 +47,7 @@ public:
 private:
 	static unsigned long _calcHash(const char *str);
 
-	typename container_type::size_type _getBucketForKey(const StringRef &key) const{
+	typename CONTAINER::size_type _getBucketForKey(const StringRef &key) const{
 		/*
 		Instead of modulo, this can be done with bit AND.
 		Doing so, really increase the speed a bit,
@@ -61,7 +59,7 @@ private:
 	}
 
 private:
-	container_type	_container;
+	CONTAINER	_container;
 };
 
 // ===================================

@@ -1,6 +1,6 @@
-#include "arglsmcontainer.h"
+#include "argtableloader.h"
 
-auto ArgLSMContainer::_load(int const argc, const char **argv) -> container_type{
+auto ArgTableLoader::_load(int const argc, const char **argv) -> container_type{
 	container_type vector;
 
 	if (argc < 0)

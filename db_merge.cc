@@ -1,5 +1,5 @@
 #include "lsmtable.h"
-#include "arglsmcontainer.h"
+#include "argtableloader.h"
 
 #include <unistd.h>	// access
 
@@ -52,9 +52,9 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	ArgLSMContainer al { pathc, path };
+	ArgTableLoader al { pathc, path };
 
-	LSMTable<ArgLSMContainer::container_type> mtlist( *al );
+	LSMTable<ArgTableLoader::container_type> mtlist( *al );
 
 	DiskFile df = DiskFile(output);
 

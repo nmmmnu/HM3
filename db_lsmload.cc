@@ -7,16 +7,17 @@
 #include "flushlist.h"
 #include "skiplist.h"
 
+#include <vector>
 //#include "vectorlist.h"
-//#include "hashlist.h"
+#include "hashlist.h"
 
 #include "idgenerator.h"
 #include "diskfileflush.h"
 
 
 
-//using MemList		= HashList<VectorList<> >;
-using MemList		= SkipList;
+using MemList		= HashList<std::vector<SkipList> >;
+//using MemList		= SkipList;
 using Flusher		= DiskFileFlush<IDGeneratorDate>;
 using MyList		= FlushList<MemList,Flusher>;
 using count_type	= MemList::count_type;
@@ -77,7 +78,7 @@ int main(int argc, char **argv){
 	const auto lsm_path	= argv[2];
 	const auto lsm_ext	= ".db";
 
-	MemList memlist;
+	MemList memlist{ 32 };
 
 	MyList mylist{
 		memlist,

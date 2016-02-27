@@ -1,7 +1,7 @@
 #include <cstdio>	// printf
 
 #include "lsmtable.h"
-#include "directorylsmcontainer.h"
+#include "directorytableloader.h"
 
 #include "db_ops_implementation.h"
 
@@ -31,8 +31,8 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	DirectoryLSMContainer dl{ path };
-	LSMTable<DirectoryLSMContainer::container_type> mtlist(*dl);
+	DirectoryTableLoader dl{ path };
+	LSMTable<DirectoryTableLoader::container_type> mtlist(*dl);
 
 	// =======================
 

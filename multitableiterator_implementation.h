@@ -102,18 +102,19 @@ auto MultiTableIterator::Collection<CONTAINER>::operator++() -> Collection<CONTA
 
 	// step 2: increase all duplicates
 	for(auto &iter : _it)
-		iter.incrementIfSame(p);
+		if (iter.incrementIfSame(p))
+			tmp_pair = nullptr;
 
 	return *this;
 }
 
 template <class CONTAINER>
 const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
-	// const refference that can be binded several times :)
-	const Pair *resultRef = nullptr;
+	if (tmp_pair)
+		return *tmp_pair;
 
 	// step 1: find minimal in reverse order to find most recent.
-	for(auto &iter : _it){
+	for(const auto &iter : _it){
 		const Pair &pair = *iter;
 
 		// skip if is null
@@ -121,19 +122,19 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 			continue;
 
 		// initialize
-		if (resultRef == nullptr){
-			resultRef = &pair;
+		if (tmp_pair == nullptr){
+			tmp_pair = &pair;
 			continue;
 		}
 
 		// compare and swap pair if is smaller
 		// if equal last have precedence
-		if (pair.cmp(*resultRef) < 0){
-			resultRef = &pair;
+		if (pair.cmp(*tmp_pair) < 0){
+			tmp_pair = &pair;
 		}
 	}
 
-	return resultRef ? *resultRef : Pair::zero();
+	return tmp_pair ? *tmp_pair : Pair::zero();
 }
 
 template <class CONTAINER>
