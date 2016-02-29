@@ -226,7 +226,6 @@ static void list_test(const char *module, LIST &list){
 	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
-template <>
 void list_test(const char *module, BlackHoleList &list){
 	Pair p = nullptr;
 

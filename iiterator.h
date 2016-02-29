@@ -18,5 +18,7 @@ public:
 	}
 };
 
+using EmptyIterator = const Pair *;
+
 #endif
 

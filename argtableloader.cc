@@ -1,21 +1,21 @@
 #include "argtableloader.h"
 
-auto ArgTableLoader::_load(int const argc, const char **argv) -> container_type{
-	container_type vector;
+bool ArgTableLoader::_refresh(){
+	_vector.clear();
 
-	if (argc < 0)
-		return vector;
+	if (_argc < 0)
+		return true;
 
-	vector.reserve(argc);
+	_vector.reserve(_argc);
 
-	for (int i = 0; i < argc; ++i){
-		const char *filename = argv[i];
+	for (int i = 0; i < _argc; ++i){
+		const char *filename = _argv[i];
 
 		DiskTable dt;
 		dt.open(filename);
-		vector.push_back( std::move(dt) );
+		_vector.push_back( std::move(dt) );
 	}
 
-	return vector;
+	return true;
 }
 

@@ -57,7 +57,7 @@ public:
 
 public:
 	bool flush(){
-		return _flusher(_list, true, true);
+		return _flusher << _list;
 	}
 
 public:

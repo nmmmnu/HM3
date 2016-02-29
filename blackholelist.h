@@ -2,11 +2,11 @@
 #define _BLACK_HOLE_LIST_LIST_H
 
 #include "ilist.h"
-#include "emptyiterator.h"
+#include "iiterator.h"
 
 class BlackHoleList : public IMutableList<BlackHoleList>{
 public:
-	using Iterator = EmptyIterator<BlackHoleList>;
+	using Iterator = EmptyIterator;
 
 public:
 	BlackHoleList() = default;
@@ -37,13 +37,13 @@ public:
 		return 0;
 	}
 
-public:	
+public:
 	Iterator begin() const{
-		return Iterator(this);
+		return nullptr;
 	}
 
 	Iterator end() const{
-		return Iterator(this);
+		return nullptr;
 	}
 
 public:
