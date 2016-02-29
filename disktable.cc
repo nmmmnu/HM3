@@ -28,6 +28,9 @@ int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
 }
 
 const PairBlob *DiskTable::_validateFromDisk(const PairBlob *blob) const{
+	if (blob == nullptr)
+		return nullptr;
+		
 	if (! _validate)
 		return blob;
 
