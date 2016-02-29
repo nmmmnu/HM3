@@ -6,6 +6,9 @@
 #include <ostream>
 
 class StringRef{
+private:
+	constexpr static bool COMPARE_MICRO_OPTIMIZATIONS = true;
+
 public:
 	StringRef() = default;
 
@@ -64,9 +67,7 @@ public:
 	}
 
 public:
-	static int compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
-		return __compare(s1, size1, s2, size2);
-	}
+	static int compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept;
 
 	static bool fastEmptyChar(const char* s){
 		return s == nullptr ? true : s[0] == 0;
@@ -116,19 +117,55 @@ inline bool StringRef::empty() const noexcept{
 
 // ==================================
 
+inline int StringRef::compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	if (COMPARE_MICRO_OPTIMIZATIONS){
+		if (s1 == s2 && size1 == size2)
+			return 0;
+	}
+
+	return __compare(s1, size1, s2, size2);
+}
+
+// ==================================
+
 inline int StringRef::compare(const char *data, size_t const size) const noexcept{
+	if (COMPARE_MICRO_OPTIMIZATIONS){
+		if (_data == data && _size == size)
+			return 0;
+	}
+
 	return __compare(_data, _size, data, size);
 }
 
 inline int StringRef::compare(const char *data) const noexcept{
+	if (COMPARE_MICRO_OPTIMIZATIONS){
+		if (_data == data){
+			size_t const size = __strlen(data);
+			if (_size == size)
+				return 0;
+
+			return compare(data, size);
+		}
+	}
+
 	return compare(data, __strlen(data) );
 }
 
 inline int StringRef::compare(const std::string &s) const noexcept{
+	if (COMPARE_MICRO_OPTIMIZATIONS){
+		if (_data == s.data() && _size == s.size())
+			return 0;
+	}
+
 	return compare(s.data(), s.size() );
 }
 
 inline int StringRef::compare(const StringRef &sr) const noexcept{
+	if (COMPARE_MICRO_OPTIMIZATIONS){
+		if (_data == sr.data() && _size == sr.size())
+			return 0;
+	}
+
 	return compare(sr.data(), sr.size() );
 }
 
