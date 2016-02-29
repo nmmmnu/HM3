@@ -39,11 +39,17 @@ public:
 public:
 	template <class LIST>
 	bool createFromList(const LIST &list,
+				bool keepInvalid, bool keepTombstones) const{
+		return createFromIterator(list.begin(), list.end(), keepInvalid, keepTombstones);
+	}
+
+	template <class ITERATOR>
+	bool createFromIterator(const ITERATOR &begin, const ITERATOR &end,
 				bool keepInvalid, bool keepTombstones) const;
 
 private:
-	template <class LIST>
-	bool writeListToFile(const LIST &list,
+	template <class ITERATOR>
+	bool _writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
 				bool keepInvalid, bool keepTombstones) const;
 

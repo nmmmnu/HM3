@@ -14,6 +14,7 @@
 #include "idgenerator.h"
 #include "diskfileflush.h"
 
+#include "db_helper_implementation.h"
 
 
 //using MemList		= HashList<std::vector<SkipList> >;
@@ -29,8 +30,6 @@ constexpr count_type	PROCESS_STEP	= 1000 * 10;
 
 
 static void printUsage(const char *cmd);
-
-static std::pair<StringRef, StringRef> explode(const std::string &line);
 
 
 
@@ -50,7 +49,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 		const StringRef &key = kvp.first;
 		const StringRef &val = kvp.second;
 
-		printf("%s(del)%s(end\n", key.c_str(), val.c_str());
+		//printf("%s(del)%s(end\n", key.c_str(), val.c_str());
 
 		if (! key.empty())
 			list.put( { key, val } );
@@ -101,35 +100,5 @@ static void printUsage(const char *cmd){
 	printf("Usage:\n");
 	printf("\t%s [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/\n",	cmd);
 	printf("\n");
-}
-
-/*
-static std::string &trim(std::string &line){
-	constexpr const char *trim_ch = " \t\r\n";
-
-	line.erase(line.find_last_not_of(trim_ch) + 1);
-
-	return line;
-}
-*/
-
-std::pair<StringRef, StringRef> explode(const std::string &line){
-	constexpr const char *delimiters	= "\t";
-	constexpr const char *trim_ch		= "\t\r\n ";
-
-	size_t const tr = line.find_last_not_of(trim_ch) + 1;
-	size_t const ix = line.find_first_of(delimiters);
-
-	if (ix >=  tr){ // std::string::npos
-		return std::make_pair(
-			StringRef( line.c_str() ),
-			StringRef()
-		);
-	}
-
-	return std::make_pair(
-			StringRef( &line.c_str()[0     ], ix - 1),
-			StringRef( &line.c_str()[ix + 1]        )
-	);
 }
 

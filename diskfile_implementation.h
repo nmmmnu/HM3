@@ -2,19 +2,20 @@
 
 #include <fstream>
 
-template <class LIST>
-bool DiskFile::createFromList(const LIST &list,
-			bool const keepInvalid, bool const keepTombstones) const{
 
+template <class ITERATOR>
+bool DiskFile::createFromIterator(const ITERATOR &begin, const ITERATOR &end,
+			bool keepInvalid, bool keepTombstones) const{
 	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
 	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
 	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
 
-	return writeListToFile(list, fileMeta, fileIndx, fileData, keepInvalid, keepTombstones);
+	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData, keepInvalid, keepTombstones);
 }
 
-template <class LIST>
-bool DiskFile::writeListToFile(const LIST &list,
+
+template <class ITERATOR>
+bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 			std::ofstream &file_meta,
 			std::ofstream &file_indx,
 			std::ofstream &file_data,
@@ -32,7 +33,9 @@ bool DiskFile::writeListToFile(const LIST &list,
 
 	bool const tombstoneCheck = ! keepTombstones;
 
-	for(const auto &pair : list){
+	for(ITERATOR it = begin; it != end; ++it){
+		const auto &pair = *it;
+
 		if (! pair )
 			continue;
 

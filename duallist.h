@@ -10,8 +10,6 @@
 template <class LIST1, class TABLE2>
 class DualList : public IMutableList<DualList<LIST1,TABLE2> >{
 public:
-	constexpr static size_t MAX_SIZE = 1 * 1024 * 1024;
-
 	using Iterator = MultiTableIterator::Dual<LIST1, TABLE2>;
 
 public:
@@ -44,9 +42,6 @@ public:
 	}
 
 public:
-	bool flush();
-
-public:
 	Iterator begin() const{
 		return Iterator(_memlist, _table);
 	}
@@ -58,7 +53,6 @@ public:
 private:
 	LIST1		&_memlist;
 	const TABLE2	&_table;
-	size_t		_maxSize;
 };
 
 // ===================================
