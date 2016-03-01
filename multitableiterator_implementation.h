@@ -169,8 +169,7 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 
 		int const cmp = pair.cmp(*tmp_pair);
 
-		// compare and swap pair if is smaller
-		// if equal first have precedence
+		// if is smaller, swap
 		if (cmp < 0){
 			_tmp_pairUpdate(i, &pair);
 

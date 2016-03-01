@@ -5,12 +5,12 @@
 
 template <class ITERATOR>
 bool DiskFile::createFromIterator(const ITERATOR &begin, const ITERATOR &end,
-			bool keepInvalid, bool keepTombstones) const{
+			bool keepTombstones) const{
 	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
 	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
 	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
 
-	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData, keepInvalid, keepTombstones);
+	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData, keepTombstones);
 }
 
 
@@ -19,7 +19,7 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 			std::ofstream &file_meta,
 			std::ofstream &file_indx,
 			std::ofstream &file_data,
-			bool const keepInvalid, bool const keepTombstones) const{
+			bool const keepTombstones) const{
 	uint64_t be;
 
 	size_t current = 0;
@@ -31,19 +31,18 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 
 	bool first_created = true;
 
-	bool const tombstoneCheck = ! keepTombstones;
-
 	for(ITERATOR it = begin; it != end; ++it){
 		const auto &pair = *it;
 
 		if (! pair )
 			continue;
 
-		if (keepInvalid == false && pair.valid(tombstoneCheck) == false)
-			continue;
+		if (pair.isTombstone()){
+			if (keepTombstones == false)
+					continue;
 
-		if (pair.isTombstone())
 			++tombstones;
+		}
 
 		if (first_created){
 			uint64_t const created = pair.getCreated();

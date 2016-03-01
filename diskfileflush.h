@@ -13,14 +13,12 @@ private:
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
-			bool const keepInvalid,
 			bool const keepTombstones,
 			TABLELOADER *loader
 		):
 				_idGenerator(std::forward<UIDGENERATOR>(idGenerator)),
 				_path(path),
 				_ext(ext),
-				_keepInvalid(keepInvalid),
 				_keepTombstones(keepTombstones),
 				_loader(loader){}
 
@@ -30,14 +28,12 @@ public:
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
-			bool const keepInvalid = true,
 			bool const keepTombstones = true
 		):
 				DiskFileFlush(
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
-						keepInvalid,
 						keepTombstones,
 						nullptr
 				){}
@@ -48,14 +44,12 @@ public:
 			const StringRef &path,
 			const StringRef &ext,
 			TABLELOADER &loader,
-			bool const keepInvalid = true,
-			bool const keepTombstones = true
+			bool const keepTombstones
 		):
 				DiskFileFlush(
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
-						keepInvalid,
 						keepTombstones,
 						&loader
 				){}
@@ -65,7 +59,6 @@ public:
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
-			bool const keepInvalid,
 			bool const keepTombstones,
 			TABLELOADER &loader
 		):
@@ -73,7 +66,6 @@ public:
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
-						keepInvalid,
 						keepTombstones,
 						&loader
 				){}
@@ -89,7 +81,7 @@ public:
 		const auto &filename = _path + _idGenerator() + _ext;
 
 		DiskFile df{ filename };
-		df.createFromList(list, _keepInvalid, _keepTombstones);
+		df.createFromList(list, _keepTombstones);
 
 		list.removeAll();
 
@@ -115,7 +107,6 @@ private:
 	IDGENERATOR	_idGenerator;
 	std::string	_path;
 	std::string	_ext;
-	bool		_keepInvalid;
 	bool		_keepTombstones;
 	TABLELOADER	*_loader;
 };

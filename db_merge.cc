@@ -8,12 +8,11 @@
 static void printUsage(const char *name){
 	const char *txt =
 		"\t%s %c output_file [file1] [file2] [fileN...]"
-		"- merge files, %-6s non valid, %-6s tombstones\n";
+		"- merge files, %-6s tombstones\n";
 
 	printf("Usage:\n");
-	printf(txt, 	name, '-', "keep",   "keep");
-	printf(txt, 	name, 'v', "remove", "keep");
-	printf(txt, 	name, 't', "remove", "remove");
+	printf(txt, 	name, '-', "keep");
+	printf(txt, 	name, 't', "remove");
 	printf("\t\tFiles must be written with the extention.\n");
 	printf("\t\tExample 'file.db'\n");
 	printf("\t\tDo not forget you usually need two output files\n");
@@ -24,10 +23,10 @@ inline bool fileExists(const StringRef& name) {
 }
 
 template <class TABLE>
-int merge(const TABLE &table, const char *output, bool const keepInvalid, bool const keepTombstones){
+int merge(const TABLE &table, const char *output, bool const keepTombstones){
 	DiskFile df = DiskFile(output);
 
-	df.createFromList(table, keepInvalid, keepTombstones);
+	df.createFromList(table, keepTombstones);
 
 	return 0;
 }
@@ -38,21 +37,7 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	bool keepInvalid	= true;
-	bool keepTombstones	= true;
-
-	switch(argv[1][0]){
-	case 'v':
-		keepInvalid	= false;
-		keepTombstones	= true;
-		break;
-
-	case 't':
-		keepInvalid	= false;
-		keepTombstones	= false;
-		break;
-	}
-
+	bool keepTombstones	= argv[1][0] == 't' ? false : true;
 	const char *output	= argv[2];
 
 	const char **path	= (const char **) &argv[3];
@@ -72,7 +57,7 @@ int main(int argc, char **argv){
 		printf("Merging (cleanup) single table...\n");
 		printf("\t%s\n", filename);
 
-		return merge(table, output, keepInvalid, keepTombstones);
+		return merge(table, output, keepTombstones);
 
 	}else if (pathc == 2){
 		const char *filename1 = path[0];
@@ -91,7 +76,7 @@ int main(int argc, char **argv){
 		printf("\t%s\n", filename1);
 		printf("\t%s\n", filename2);
 
-		return merge(table, output, keepInvalid, keepTombstones);
+		return merge(table, output, keepTombstones);
 
 	}else{
 		ArgTableLoader al { pathc, path };
@@ -100,7 +85,7 @@ int main(int argc, char **argv){
 
 		printf("Merging multiple tables...\n");
 
-		return merge(table, output, keepInvalid, keepTombstones);
+		return merge(table, output, keepTombstones);
 	}
 }
 
