@@ -27,8 +27,9 @@ private:
 						){}
 
 	public:
-		bool incrementIfSame(const Pair &model);
+		bool _incrementIfSame(const Pair &model);
 		const Pair &operator *() const;
+		void operator ++();
 		bool operator==(const MatrixHelper &other) const;
 		bool operator!=(const MatrixHelper &other) const;
 
@@ -80,12 +81,18 @@ public:
 		bool operator==(const Collection &other) const;
 
 	private:
+		void _tmp_pairUpdate(size_type index, const Pair *pair = nullptr) const;
+
+	private:
 		vector_type	_it;
 
 		bool		_internalError	= false;
 
 		/* !!! */ mutable
-		const Pair	*tmp_pair	= nullptr;
+		const Pair		*tmp_pair	= nullptr;
+
+		/* !!! */ mutable
+		std::vector<size_type>	tmp_index;
 	};
 };
 

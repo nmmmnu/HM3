@@ -2,6 +2,8 @@
 
 template <class CONTAINER>
 Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
+	// CONTAINER is responsible for ordering the tables,
+	// in correct (probably reverse) order.
 	for(const auto &table : _container ){
 		if (Pair pair = table.get(key))
 			return pair;

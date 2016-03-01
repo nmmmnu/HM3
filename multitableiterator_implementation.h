@@ -1,6 +1,6 @@
 
 template<class TABLE>
-bool MultiTableIterator::MatrixHelper<TABLE>::incrementIfSame(const Pair &model){
+bool MultiTableIterator::MatrixHelper<TABLE>::_incrementIfSame(const Pair &model){
 	if (cur == end)
 		return false;
 
@@ -25,6 +25,12 @@ const Pair &MultiTableIterator::MatrixHelper<TABLE>::operator *() const{
 }
 
 template<class TABLE>
+void MultiTableIterator::MatrixHelper<TABLE>::operator ++(){
+	++cur;
+}
+
+
+template<class TABLE>
 bool MultiTableIterator::MatrixHelper<TABLE>::operator==(const MatrixHelper &other) const{
 	return cur == other.cur && end == other.end;
 }
@@ -44,6 +50,8 @@ MultiTableIterator::Dual<TABLE1, TABLE2>::Dual(const TABLE1 &table1, const TABLE
 					_it2({ table2, endIt }){
 }
 
+#if 0
+// straight forward solution 3 comparisons
 template <class TABLE1, class TABLE2>
 auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABLE2> &{
 	const Pair &p = operator*();
@@ -56,6 +64,24 @@ auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABL
 
 	_it1.incrementIfSame(p);
 	_it2.incrementIfSame(p);
+
+	return *this;
+}
+#endif
+
+// faster solution with 1 comparison.
+template <class TABLE1, class TABLE2>
+auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABLE2> &{
+	const Pair &pair1 = *_it1;
+	const Pair &pair2 = *_it2;
+
+	const auto cmp = pair1.cmp(pair2);
+
+	if (cmp <= 0)
+		++_it1;
+
+	if (cmp >= 0)
+		++_it2;
 
 	return *this;
 }
@@ -86,13 +112,18 @@ template <class CONTAINER>
 MultiTableIterator::Collection<CONTAINER>::Collection(const CONTAINER &list, bool const endIt){
 	_it.reserve(list.size());
 
+	// CONTAINER is responsible for ordering the tables,
+	// in correct (probably reverse) order.
 	for(const auto &table : list)
 		_it.push_back({ table, endIt });
+
+	tmp_index.reserve(list.size());
 }
 
 template <class CONTAINER>
 auto MultiTableIterator::Collection<CONTAINER>::operator++() -> Collection<CONTAINER> &{
-	const Pair &p = operator*();
+	// get cached...
+	const Pair &p = tmp_pair ? *tmp_pair : operator*();
 
 	if ( ! p ){
 		// notice, there is no increment here !!!
@@ -100,10 +131,11 @@ auto MultiTableIterator::Collection<CONTAINER>::operator++() -> Collection<CONTA
 		return *this;
 	}
 
-	// step 2: increase all duplicates
-	for(auto &iter : _it)
-		if (iter.incrementIfSame(p))
-			tmp_pair = nullptr;
+	// step 2: increase all duplicates from the index
+	for(const auto index : tmp_index)
+		++_it[index];
+
+	tmp_pair = nullptr;
 
 	return *this;
 }
@@ -113,9 +145,12 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 	if (tmp_pair)
 		return *tmp_pair;
 
-	// step 1: find minimal in reverse order to find most recent.
-	for(const auto &iter : _it){
-		const Pair &pair = *iter;
+	// CONTAINER is responsible for ordering the tables,
+	// in correct (probably reverse) order.
+
+	// step 1: find first minimal add other minimals into index
+	for(size_type i = 0; i < _it.size(); ++i){
+		const Pair &pair = *_it[i];
 
 		// skip if is null
 		if ( ! pair )
@@ -123,15 +158,24 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 
 		// initialize
 		if (tmp_pair == nullptr){
-			tmp_pair = &pair;
+			_tmp_pairUpdate(i, &pair);
+
 			continue;
 		}
 
+		int const cmp = pair.cmp(*tmp_pair);
+
 		// compare and swap pair if is smaller
-		// if equal last have precedence
-		if (pair.cmp(*tmp_pair) < 0){
-			tmp_pair = &pair;
+		// if equal first have precedence
+		if (cmp < 0){
+			_tmp_pairUpdate(i, &pair);
+
+			continue;
 		}
+
+		if (cmp == 0)
+			_tmp_pairUpdate(i);
+
 	}
 
 	return tmp_pair ? *tmp_pair : Pair::zero();
@@ -142,7 +186,7 @@ bool MultiTableIterator::Collection<CONTAINER>::operator==(const Collection<CONT
 	if (_it.size() != other._it.size())
 		return false;
 
-	if (_internalError)
+	if (_internalError || other._internalError)
 		return true;
 
 	for(size_type i = 0; i < _it.size(); ++i){
@@ -153,3 +197,21 @@ bool MultiTableIterator::Collection<CONTAINER>::operator==(const Collection<CONT
 	return true;
 }
 
+template <class CONTAINER>
+void MultiTableIterator::Collection<CONTAINER>::_tmp_pairUpdate(size_type const index, const Pair *pair) const{
+	if (pair){
+		tmp_pair = pair;
+		tmp_index.clear();
+	}
+
+	tmp_index.push_back(index);
+}
+
+
+
+#if 0
+	// step 2: increase all duplicates
+	for(auto &iter : _it)
+		if (iter._incrementIfSame(p))
+			tmp_pair = nullptr;
+#endif

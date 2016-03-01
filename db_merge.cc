@@ -69,7 +69,7 @@ int main(int argc, char **argv){
 		DiskTable table;
 		table.open(filename);
 
-		printf("Merging (cleanup) single file...\n");
+		printf("Merging (cleanup) single table...\n");
 		printf("\t%s\n", filename);
 
 		return merge(table, output, keepInvalid, keepTombstones);
@@ -84,9 +84,10 @@ int main(int argc, char **argv){
 		DiskTable table2;
 		table2.open(filename2);
 
-		DualTable<DiskTable, DiskTable> table(table1, table2);
+		// table 2 have precedence
+		DualTable<DiskTable, DiskTable> table(table2, table1);
 
-		printf("Merging two files...\n");
+		printf("Merging two tables...\n");
 		printf("\t%s\n", filename1);
 		printf("\t%s\n", filename2);
 
@@ -97,7 +98,7 @@ int main(int argc, char **argv){
 
 		LSMTable<ArgTableLoader::container_type> table( *al );
 
-		printf("Merging multiple files...\n");
+		printf("Merging multiple tables...\n");
 
 		return merge(table, output, keepInvalid, keepTombstones);
 	}
