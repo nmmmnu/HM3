@@ -1,4 +1,4 @@
-
+#if 0
 template<class TABLE>
 bool MultiTableIterator::MatrixHelper<TABLE>::_incrementIfSame(const Pair &model){
 	if (cur == end)
@@ -15,6 +15,7 @@ bool MultiTableIterator::MatrixHelper<TABLE>::_incrementIfSame(const Pair &model
 
 	return true;
 }
+#endif
 
 template<class TABLE>
 const Pair &MultiTableIterator::MatrixHelper<TABLE>::operator *() const{
@@ -91,9 +92,15 @@ const Pair &MultiTableIterator::Dual<TABLE1, TABLE2>::operator*() const{
 	const Pair &pair1 = *_it1;
 	const Pair &pair2 = *_it2;
 
-	// return smaller,
-	// if equal, first have precedence
-	return pair1.cmp(pair2) <= 0 ? pair1 : pair2;
+	int const cmp = pair1.cmp(pair2);
+
+	if (cmp == 0){
+		// return newer
+		return pair1.cmpTime(pair2) > 0 ? pair1 : pair2;
+	}
+
+	// return smaller
+	return  cmp < 0 ? pair1 : pair2;
 }
 
 template <class TABLE1, class TABLE2>
@@ -145,9 +152,6 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 	if (tmp_pair)
 		return *tmp_pair;
 
-	// CONTAINER is responsible for ordering the tables,
-	// in correct (probably reverse) order.
-
 	// step 1: find first minimal add other minimals into index
 	for(size_type i = 0; i < _it.size(); ++i){
 		const Pair &pair = *_it[i];
@@ -173,9 +177,13 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 			continue;
 		}
 
-		if (cmp == 0)
+		if (cmp == 0){
 			_tmp_pairUpdate(i);
 
+			// if newer, swap
+			if ( pair.cmpTime(*tmp_pair) > 0 )
+				tmp_pair = &pair;
+		}
 	}
 
 	return tmp_pair ? *tmp_pair : Pair::zero();

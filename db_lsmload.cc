@@ -7,9 +7,11 @@
 #include "flushlist.h"
 #include "skiplist.h"
 
-//#include <vector>
-//#include "vectorlist.h"
-//#include "hashlist.h"
+/*
+#include <vector>
+#include "vectorlist.h"
+#include "hashlist.h"
+*/
 
 #include "idgenerator.h"
 #include "diskfileflush.h"
@@ -79,7 +81,7 @@ int main(int argc, char **argv){
 	const auto lsm_path	= argv[2];
 	const auto lsm_ext	= ".db";
 
-	MemList memlist{ 32 };
+	MemList memlist;
 
 	MyList mylist{
 		memlist,

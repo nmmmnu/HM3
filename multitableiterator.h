@@ -27,7 +27,6 @@ private:
 						){}
 
 	public:
-		bool _incrementIfSame(const Pair &model);
 		const Pair &operator *() const;
 		void operator ++();
 		bool operator==(const MatrixHelper &other) const;

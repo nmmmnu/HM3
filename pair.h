@@ -59,6 +59,8 @@ public:
 		return cmp( pair.getKey() );
 	}
 
+	int cmpTime(const Pair &pair) const noexcept;
+
 	bool isTombstone() const noexcept;
 
 	bool valid(bool tombstoneCheck = false) const noexcept;

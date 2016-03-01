@@ -46,14 +46,14 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 			++tombstones;
 
 		if (first_created){
-			uint64_t created = pair.getCreated();
+			uint64_t const created = pair.getCreated();
 
 			createdMin = created;
 			createdMax = created;
 
 			first_created = false;
 		}else{
-			uint64_t created = pair.getCreated();
+			uint64_t const created = pair.getCreated();
 
 			if (created < createdMin)
 				createdMin = created;

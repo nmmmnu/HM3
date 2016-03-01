@@ -70,6 +70,17 @@ int Pair::cmp(const char *key) const noexcept{
 		CMP_ZERO;
 }
 
+int Pair::cmpTime(const Pair &pair) const noexcept{
+	// Compare time
+	auto const c1 = getCreated();
+	auto const c2 = pair.getCreated();
+
+	if (c1 == c2)
+		return 0;
+
+	return c1 > c2 ? +1 : -1;
+}
+
 bool Pair::isTombstone() const noexcept{
 	return pimpl ?
 		pimpl->isTombstone() :

@@ -13,6 +13,8 @@ bool DirectoryTableLoader::refresh(){
 
 	_vector.reserve(files.size());
 
+	// order in the iterator, does not matter
+	// but order in get, still very important
 	auto it_rend = files.rend();
 	for (auto it = files.rbegin(); it != it_rend; ++it){
 		const auto &filename = *it;
