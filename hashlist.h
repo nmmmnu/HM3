@@ -21,6 +21,9 @@ public:
 	HashList(size_t const size = 0) :
 				_container(size ? size : DEFAULT_SIZE){}
 
+	HashList(CONTAINER &&container) :
+				_container(std::move(container)){}
+
 public:
 	bool removeAll();
 

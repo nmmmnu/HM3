@@ -85,6 +85,7 @@ private:
 	static size_t __strlen(const char *s) noexcept;
 	static const char *__strptr(const char *s) noexcept;
 
+	static int __memcmp( const void *s1, const void *s2, size_t const n) noexcept;
 	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 
 	static size_t __std_min(size_t const a, size_t const b) noexcept;
@@ -217,12 +218,17 @@ inline bool StringRef::operator !=(char const c) const noexcept{
 
 // ==================================
 
+inline int StringRef::__memcmp(const void *s1, const void *s2, size_t const n) noexcept{
+//	return __builtin_memcmp(s1, s2, n);
+	return memcmp(s1, s2, n);
+}
+
 inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
 	// check prefix
-	if ( int res = memcmp(s1, s2, __std_min(size1, size2 ) ) )
+	if ( int res = __memcmp(s1, s2, __std_min(size1, size2 ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
