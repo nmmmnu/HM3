@@ -18,6 +18,7 @@
 
 #define PROCESS_STEP	1000 * 10
 
+using Pair = hm3::Pair;
 
 
 
@@ -101,12 +102,12 @@ static int op_write(LIST &&list, const StringRef &filename, const std::string &f
 static int op_write_v(char const what, const StringRef &filename, const StringRef &filename2){
 	switch(what){
 	case 'v':
-	case 'V':	return op_write(VectorList<>{},	filename, filename2);
+	case 'V':	return op_write(hm3::VectorList<>{},	filename, filename2);
 
-	case 'l':	return op_write(LinkList{},	filename, filename2);
+	case 'l':	return op_write(hm3::LinkList{},	filename, filename2);
 
 	default:
-	case 's':	return op_write(SkipList{},	filename, filename2);
+	case 's':	return op_write(hm3::SkipList{},	filename, filename2);
 	}
 }
 
@@ -130,20 +131,22 @@ static int op_search(LIST &&list, const StringRef &filename, const StringRef &ke
 static int op_search_v(char const what, const StringRef &filename, const StringRef &key){
 	constexpr auto buckets = 8192;
 
+	namespace arraysearch = hm3::arraysearch;
+
 	switch(what){
 
-	case 't':	return op_search(STLVectorList<IArraySearch::Linear>{},			filename, key);
-	case 'T':	return op_search(STLVectorList<IArraySearch::Binary>{},			filename, key);
+	case 't':	return op_search(hm3::STLVectorList<arraysearch::Linear>{},			filename, key);
+	case 'T':	return op_search(hm3::STLVectorList<arraysearch::Binary>{},			filename, key);
 
-	case 'v':	return op_search(VectorList<IArraySearch::Linear>{},			filename, key);
-	case 'V':	return op_search(VectorList<IArraySearch::Binary>{},			filename, key);
-	case 'w':	return op_search(HashList<std::vector<VectorList<> > >{buckets},	filename, key);
+	case 'v':	return op_search(hm3::VectorList<arraysearch::Linear>{},			filename, key);
+	case 'V':	return op_search(hm3::VectorList<arraysearch::Binary>{},			filename, key);
+	case 'w':	return op_search(hm3::HashList<std::vector<hm3::VectorList<> > >{buckets},	filename, key);
 
-	case 'l':	return op_search(LinkList{},						filename, key);
+	case 'l':	return op_search(hm3::LinkList{},						filename, key);
 
 	default:
-	case 's':	return op_search(SkipList{},						filename, key);
-	case 'z':	return op_search(HashList<std::vector<SkipList> >{buckets},		filename, key);
+	case 's':	return op_search(hm3::SkipList{},						filename, key);
+	case 'z':	return op_search(hm3::HashList<std::vector<hm3::SkipList> >{buckets},		filename, key);
 
 	}
 }

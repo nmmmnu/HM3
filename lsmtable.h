@@ -5,6 +5,10 @@
 
 #include "multitableiterator.h"
 
+
+namespace hm3{
+
+
 template <class CONTAINER>
 class LSMTable : public IList<LSMTable<CONTAINER> >{
 public:
@@ -41,6 +45,9 @@ private:
 private:
 	const CONTAINER	&_container;
 };
+
+
+} //namespace
 
 // ===================================
 

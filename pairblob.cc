@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-
+namespace hm3{
 
 using ChecksumCalculator = NMEA0183ChecksumCalculator;
 
@@ -117,3 +117,5 @@ uint8_t PairBlob::__calcChecksum(const char *buffer, size_t const size) noexcept
 }
 
 
+
+} // namespace

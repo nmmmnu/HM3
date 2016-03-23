@@ -5,7 +5,9 @@
 
 #include <tuple>
 
-namespace IArraySearch{
+namespace hm3{
+
+namespace arraysearch{
 
 	struct Linear{
 		template <class ARRAY>
@@ -16,11 +18,13 @@ namespace IArraySearch{
 		template <class ARRAY>
 		typename std::tuple<int, typename ARRAY::count_type>   operator()(const ARRAY &array, const StringRef &key) const;
 	};
-};
+}
+
+} // namespace
 
 // ==============================
 
-#include "iarraysearch_implementation.h"
+#include "arraysearch_implementation.h"
 
 #endif
 

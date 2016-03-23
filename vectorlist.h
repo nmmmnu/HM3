@@ -1,10 +1,14 @@
 #ifndef _VECTOR_LIST_H
 #define _VECTOR_LIST_H
 
-#include "iarraysearch.h"
+#include "arraysearch.h"
 #include "iiterator.h"
 
-template <class LOOKUP=IArraySearch::Binary>
+
+namespace hm3{
+
+
+template <class LOOKUP=arraysearch::Binary>
 class VectorList : public IMutableList<VectorList<LOOKUP> >{
 public:
 	using count_type = typename VectorList::count_type;
@@ -31,7 +35,7 @@ private:
 	size_t		_dataSize;
 
 	LOOKUP		_lookup;
-	
+
 public:
 	bool removeAll();
 
@@ -102,5 +106,9 @@ private:
 	const VectorList	*_list;
 	count_type		_pos;
 };
+
+
+} // namespace
+
 
 #endif

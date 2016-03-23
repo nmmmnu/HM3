@@ -4,6 +4,10 @@
 #include "ilist.h"
 #include "iiterator.h"
 
+
+namespace hm3{
+
+
 class BlackHoleList : public IMutableList<BlackHoleList>{
 public:
 	using Iterator = EmptyIterator;
@@ -54,5 +58,9 @@ public:
 	}
 
 };
+
+
+} // namespace
+
 
 #endif

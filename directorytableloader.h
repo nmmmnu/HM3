@@ -6,6 +6,11 @@
 
 #include "disktable.h"
 
+
+namespace hm3{
+namespace tableloader{
+
+
 class DirectoryTableLoader{
 public:
 	using container_type	= std::vector<DiskTable>;
@@ -25,6 +30,11 @@ private:
 	std::string	_path;
 	container_type	_vector;
 };
+
+
+} // namespace tableloader
+} // namespace
+
 
 #endif
 

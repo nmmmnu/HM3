@@ -12,6 +12,8 @@
 
 // ==============================
 
+namespace hm3{
+
 class PairBlob;
 
 class Pair{
@@ -98,5 +100,7 @@ private:
 inline void swap(Pair &p1, Pair &p2){
 	p1.swap(p2);
 }
+
+} // namespace
 
 #endif

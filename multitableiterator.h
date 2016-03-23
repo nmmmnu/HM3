@@ -5,6 +5,10 @@
 
 #include <vector>
 
+
+namespace hm3{
+
+
 class MultiTableIterator{
 private:
 	MultiTableIterator() = delete;
@@ -96,8 +100,9 @@ public:
 };
 
 
-// ===================================
+} // namespace
 
+// ===================================
 
 #include "multitableiterator_implementation.h"
 

@@ -5,6 +5,10 @@
 #include <iomanip>
 #include <sstream>
 
+namespace hm3{
+namespace idgenerator{
+
+
 void IDGeneratorTS::_format(std::ostream &buff, uint32_t value) const{
 	if (_hex){
 		buff	<< std::setfill('0') << std::setw(8) << std::hex;
@@ -43,3 +47,6 @@ std::string IDGeneratorDate::operator()() const{
 	return buff.str();
 }
 
+
+} // namespace idgenerator
+} // namespace

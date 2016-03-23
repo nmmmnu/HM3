@@ -48,10 +48,14 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
+	using DiskTable = hm3::DiskTable;
+
 	if (pathc == 1){
 		const char *filename = path[0];
 
-		DiskTable table;
+		using MyMergeTable = DiskTable;
+
+		MyMergeTable table;
 		table.open(filename);
 
 		printf("Merging (cleanup) single table...\n");
@@ -69,8 +73,10 @@ int main(int argc, char **argv){
 		DiskTable table2;
 		table2.open(filename2);
 
+		using MyMergeTable = hm3::DualTable<DiskTable, DiskTable>;
+
 		// table 2 have precedence
-		DualTable<DiskTable, DiskTable> table(table2, table1);
+		MyMergeTable table(table2, table1);
 
 		printf("Merging two tables...\n");
 		printf("\t%s\n", filename1);
@@ -79,9 +85,13 @@ int main(int argc, char **argv){
 		return merge(table, output, keepTombstones);
 
 	}else{
+		using ArgTableLoader = hm3::tableloader::ArgTableLoader;
+
 		ArgTableLoader al { pathc, path };
 
-		LSMTable<ArgTableLoader::container_type> table( *al );
+		using MyMergeTable = hm3::LSMTable<ArgTableLoader::container_type>;
+
+		MyMergeTable table( *al );
 
 		printf("Merging multiple tables...\n");
 

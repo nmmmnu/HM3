@@ -4,6 +4,10 @@
 
 #include <endian.h>	// htobe16
 
+
+namespace hm3{
+
+
 bool DiskTable::open(const std::string &filename){
 	_header.open(DiskFile::filenameMeta(filename));
 
@@ -30,7 +34,7 @@ int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
 const PairBlob *DiskTable::_validateFromDisk(const PairBlob *blob) const{
 	if (blob == nullptr)
 		return nullptr;
-		
+
 	if (! _validate)
 		return blob;
 
@@ -110,4 +114,7 @@ auto DiskTable::begin() const -> Iterator{
 auto DiskTable::end() const -> Iterator{
 	return Iterator(*this, getCount(), false);
 }
+
+
+} // namespace
 

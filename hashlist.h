@@ -5,6 +5,10 @@
 
 #include "multitableiterator.h"
 
+
+namespace hm3{
+
+
 template <class CONTAINER>
 class HashList : public IMutableList<HashList<CONTAINER> >{
 public:
@@ -65,7 +69,9 @@ private:
 	CONTAINER	_container;
 };
 
-// ===================================
+
+} // namespace
+
 
 #include "hashlist_implementation.h"
 

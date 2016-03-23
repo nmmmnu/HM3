@@ -1,6 +1,10 @@
 #ifndef _IITERATOR_H
 #define _IITERATOR_H
 
+
+namespace hm3{
+
+
 template <class T>
 class IIterator{
 public:
@@ -19,6 +23,10 @@ public:
 };
 
 using EmptyIterator = const Pair *;
+
+
+} // namespace
+
 
 #endif
 

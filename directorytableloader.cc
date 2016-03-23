@@ -2,6 +2,11 @@
 
 #include "myglob.h"
 
+
+namespace hm3{
+namespace tableloader{
+
+
 bool DirectoryTableLoader::refresh(){
 	_vector.clear();
 
@@ -26,4 +31,8 @@ bool DirectoryTableLoader::refresh(){
 
 	return true;
 }
+
+
+} // namespace tableloader
+} // namespace
 

@@ -1,5 +1,10 @@
 #include "argtableloader.h"
 
+
+namespace hm3{
+namespace tableloader{
+
+
 bool ArgTableLoader::_refresh(){
 	_vector.clear();
 
@@ -18,4 +23,8 @@ bool ArgTableLoader::_refresh(){
 
 	return true;
 }
+
+
+} // namespace tableloader
+} // namespace
 

@@ -5,6 +5,11 @@
 
 #include "disktable.h"
 
+
+namespace hm3{
+namespace tableloader{
+
+
 class ArgTableLoader{
 public:
 	using container_type	= std::vector<DiskTable>;
@@ -29,6 +34,11 @@ private:
 
 	container_type	_vector;
 };
+
+
+} // namespace tableloader
+} // namespace
+
 
 #endif
 

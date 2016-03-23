@@ -1,9 +1,12 @@
 #include <cstdio>	// printf
 
 #include "lsmtable.h"
-#include "directorytableloader.h"
+
+using Pair	= hm3::Pair;
 
 #include "db_helper_implementation.h"
+
+#include "directorytableloader.h"
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");
@@ -31,8 +34,11 @@ int main(int argc, char **argv){
 
 	// =======================
 
+	using DirectoryTableLoader = hm3::tableloader::DirectoryTableLoader;
+	using MyLSMTable = hm3::LSMTable<DirectoryTableLoader::container_type>;
+
 	DirectoryTableLoader dl{ path };
-	LSMTable<DirectoryTableLoader::container_type> mtlist(*dl);
+	MyLSMTable mtlist(*dl);
 
 	// =======================
 

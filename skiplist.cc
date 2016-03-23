@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 
+
+namespace hm3{
+
+
 std::mt19937 SkipList::__rand{ (uint32_t) time(nullptr) };
 
 /*
@@ -332,4 +336,7 @@ SkipList::Iterator SkipList::begin() const{
 SkipList::Iterator SkipList::end() const{
 	return Iterator(nullptr);
 }
+
+
+} // namespace
 

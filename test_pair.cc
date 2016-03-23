@@ -2,6 +2,9 @@
 #include "pairblob.h"
 #include "nmea0183checksumcalculator.h"
 
+using Pair	= hm3::Pair;
+using PairBlob	= hm3::PairBlob;
+
 #include <stdio.h>	// printf
 #include <string.h>	// strcmp
 #include <unistd.h>	// sleep

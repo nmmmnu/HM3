@@ -1,3 +1,5 @@
+namespace hm3{
+
 
 template <class CONTAINER>
 bool HashList<CONTAINER>::removeAll(){
@@ -78,4 +80,8 @@ unsigned long HashList<CONTAINER>::_calcHash(const char *str){
 
 	return hash;
 }
+
+
+} // namespace
+
 

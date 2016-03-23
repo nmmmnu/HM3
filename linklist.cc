@@ -2,6 +2,9 @@
 
 #include <memory>
 
+namespace hm3{
+
+
 struct LinkList::Node{
 	Pair	data;
 	Node	*next = nullptr;
@@ -10,6 +13,10 @@ public:
 	template<class UPAIR>
 	Node(UPAIR &&data) : data(std::forward<UPAIR>(data)){}
 };
+
+
+// ==============================
+
 
 LinkList::LinkList(){
 	_clear();
@@ -198,5 +205,8 @@ LinkList::Iterator LinkList::begin() const{
 LinkList::Iterator LinkList::end() const{
 	return Iterator(nullptr);
 }
+
+
+} // namespace
 
 

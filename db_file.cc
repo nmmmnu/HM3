@@ -2,6 +2,8 @@
 
 #include "disktable.h"
 
+using Pair = hm3::Pair;
+
 #include "db_helper_implementation.h"
 
 static void printUsage(const char *cmd){
@@ -29,6 +31,8 @@ int main(int argc, char **argv){
 	const auto key		= argv[3];
 
 	// =======================
+
+	using DiskTable = hm3::DiskTable;
 
 	DiskTable list;
 	list.open(filename);

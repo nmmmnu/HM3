@@ -1,15 +1,19 @@
 #ifndef _DISK_TABLE_H
 #define _DISK_TABLE_H
 
-#include "iarraysearch.h"
+#include "arraysearch.h"
 #include "iiterator.h"
 #include "diskfile.h"
 #include "mmapfile.h"
 
+
+namespace hm3{
+
+
 class DiskTable : public IList<DiskTable>{
 private:
-	using ArrayLookup	= IArraySearch::Binary;
-	
+	using ArrayLookup	= arraysearch::Binary;
+
 public:
 	class Iterator;
 
@@ -117,5 +121,8 @@ inline Pair DiskTable::get(const StringRef &key) const{
 	const auto &l = lookup(key);
 	return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
 }
+
+
+} // namespace
 
 #endif

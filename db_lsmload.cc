@@ -7,6 +7,8 @@
 #include "flushlist.h"
 #include "skiplist.h"
 
+using Pair = hm3::Pair;
+
 /*
 #include <vector>
 #include "vectorlist.h"
@@ -20,9 +22,10 @@
 
 
 //using MemList		= HashList<std::vector<SkipList> >;
-using MemList		= SkipList;
-using Flusher		= DiskFileFlush<IDGeneratorDate>;
-using MyList		= FlushList<MemList,Flusher>;
+using MemList		= hm3::SkipList;
+using MyIDGenerator	= hm3::idgenerator::IDGeneratorDate;
+
+
 using count_type	= MemList::count_type;
 
 
@@ -30,9 +33,7 @@ constexpr size_t	MEMLIST_SIZE	= 10 * 1024 * 1024;
 constexpr count_type	PROCESS_STEP	= 1000 * 10;
 
 
-
 static void printUsage(const char *cmd);
-
 
 
 template <class LIST>
@@ -83,10 +84,13 @@ int main(int argc, char **argv){
 
 	MemList memlist;
 
+	using Flusher	= DiskFileFlush<MyIDGenerator>;
+	using MyList	= hm3::FlushList<MemList,Flusher>;
+
 	MyList mylist{
 		memlist,
 		Flusher{
-			IDGeneratorDate{},
+			MyIDGenerator{},
 			lsm_path,
 			lsm_ext
 		},

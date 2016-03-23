@@ -1,6 +1,8 @@
 #include "pair.h"
 #include "pairblob.h"
 
+namespace hm3{
+
 // ==============================
 
 Pair Pair::__zero = {};
@@ -116,4 +118,6 @@ bool Pair::fwrite(std::ostream & os) const{
 
 	return true;
 }
+
+} //namespace
 

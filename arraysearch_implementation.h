@@ -1,4 +1,6 @@
-namespace IArraySearch{
+namespace hm3{
+
+namespace arraysearch{
 
 template <class ARRAY>
 typename std::tuple<int, typename ARRAY::count_type>   Linear::operator()(const ARRAY &self, const StringRef &key) const{
@@ -45,7 +47,7 @@ typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const 
 	 */
 
 	using count_type = typename ARRAY::count_type;
-	
+
 	count_type start = 0;
 	count_type end   = count;
 	int cmp = 0;
@@ -76,4 +78,6 @@ typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const 
 }
 
 } // namespace IArraySearch
+
+} // namespace
 

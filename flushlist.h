@@ -3,6 +3,10 @@
 
 #include "ilist.h"
 
+
+namespace hm3{
+
+
 template <class LIST, class FLUSH>
 class FlushList : public IMutableList<FlushList<LIST, FLUSH> >{
 public:
@@ -91,5 +95,9 @@ bool FlushList<LIST, FLUSH>::_putT(UPAIR &&data){
 
 	return result;
 }
+
+
+} // namespace
+
 
 #endif

@@ -5,6 +5,10 @@
 #include <ostream>
 #include <cstdint>
 
+namespace hm3{
+namespace idgenerator{
+
+
 class IDGeneratorTS{
 public:
 	IDGeneratorTS(bool hex = true) : _hex(hex){};
@@ -19,11 +23,14 @@ private:
 };
 
 
-
 class IDGeneratorDate{
 public:
 	std::string operator()() const;
 };
+
+
+} // namespace idgenerator
+} // namespace
 
 #endif
 

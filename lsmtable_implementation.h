@@ -1,5 +1,9 @@
 #include "disktable.h"
 
+
+namespace hm3{
+
+
 template <class CONTAINER>
 Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
 	// CONTAINER is responsible for ordering the tables,
@@ -44,4 +48,7 @@ auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
 
 	return result;
 }
+
+
+} // namespace
 

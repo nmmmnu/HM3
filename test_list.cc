@@ -7,7 +7,7 @@
 
 #include "blackholelist.h"
 
-//#include <utility>	// std::move
+using Pair	= hm3::Pair;
 
 #include <cstdio>	// printf
 #include <cstring>	// strcmp
@@ -18,7 +18,7 @@
 
 
 
-static void skiplist_lanes_test(SkipList &list){
+static void skiplist_lanes_test(hm3::SkipList &list){
 	list.emplace("name",		"Niki"		);
 	list.emplace("city",		"Sofia"		);
 	list.emplace("state",		"na"		);
@@ -226,7 +226,7 @@ static void list_test(const char *module, LIST &list){
 	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
-void list_test(const char *module, BlackHoleList &list){
+void list_test(const char *module, hm3::BlackHoleList &list){
 	Pair p = nullptr;
 
 	list_populate(list);
@@ -245,50 +245,54 @@ void list_test(const char *module, BlackHoleList &list){
 }
 
 int main(int argc, char **argv){
-	STLVectorList<IArraySearch::Binary> svlb;
+	namespace arraysearch = hm3::arraysearch;
+
+	// =========================
+
+	hm3::STLVectorList<arraysearch::Binary> svlb;
 		list_test("STLVector<B>", svlb);
 
-	STLVectorList<IArraySearch::Linear> svll;
+	hm3::STLVectorList<arraysearch::Linear> svll;
 		list_test("STLVector<L>", svll);
 
 	// =========================
 
-	VectorList<IArraySearch::Binary> vlb;
+	hm3::VectorList<arraysearch::Binary> vlb;
 		list_test("Vector<B>", vlb);
 
-	VectorList<IArraySearch::Linear> vll;
+	hm3::VectorList<arraysearch::Linear> vll;
 		list_test("Vector<L>", vll);
 
 	// =========================
 
-	LinkList ll;
+	hm3::LinkList ll;
 		list_test("LinkList", ll);
 
 	// =========================
 
-	SkipList sl;
+	hm3::SkipList sl;
 		list_test("SkipList", sl);
 		if (0)
 			skiplist_lanes_test(sl);
 
 	// =========================
 /*
-	HashList<VectorList<> > hl_vl;
+	hm3::HashList<VectorList<> > hl_vl;
 		list_test("HashList@Vector", hl_vl);
 
 	// =========================
 
-	HashList<LinkList> hl_ll;
+	hm3::HashList<LinkList> hl_ll;
 		list_test("HashList@LinkList", hl_ll);
 
 	// =========================
 */
-	HashList<std::vector<SkipList> > hl_sl;
+	hm3::HashList<std::vector<hm3::SkipList> > hl_sl;
 		list_test("HashList@SkipList", hl_sl);
 
 	// =========================
 
-	BlackHoleList bhl;
+	hm3::BlackHoleList bhl;
 		list_test("BlackHoleList", bhl);
 
 

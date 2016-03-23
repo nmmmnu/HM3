@@ -8,6 +8,8 @@
 
 #include "pair.h"
 
+using Pair = hm3::Pair;
+
 #define PROCESS_STEP	1000 * 10
 
 static void printUsage(const char *cmd);

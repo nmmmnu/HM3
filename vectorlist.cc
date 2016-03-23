@@ -6,6 +6,8 @@
 #define xmemmove(d, s, size)	memmove(d, s, (size_t) size)
 
 
+namespace {
+
 template<typename T>
 inline T SGN(const T a){
 	if (a == 0)
@@ -14,6 +16,10 @@ inline T SGN(const T a){
 	return a > 0 ? 1 : -1;
 }
 
+}
+
+
+namespace hm3{
 
 
 template <class LOOKUP>
@@ -243,13 +249,16 @@ auto VectorList<LOOKUP>::end() const -> Iterator{
 
 // ===================================
 
-template class VectorList<IArraySearch::Linear>;
+template class VectorList<arraysearch::Linear>;
 
-template bool VectorList<IArraySearch::Linear>::_putT(Pair &&newdata);
-template bool VectorList<IArraySearch::Linear>::_putT(const Pair &newdata);
+template bool VectorList<arraysearch::Linear>::_putT(Pair &&newdata);
+template bool VectorList<arraysearch::Linear>::_putT(const Pair &newdata);
 
-template class VectorList<IArraySearch::Binary>;
+template class VectorList<arraysearch::Binary>;
 
-template bool VectorList<IArraySearch::Binary>::_putT(Pair &&newdata);
-template bool VectorList<IArraySearch::Binary>::_putT(const Pair &newdata);
+template bool VectorList<arraysearch::Binary>::_putT(Pair &&newdata);
+template bool VectorList<arraysearch::Binary>::_putT(const Pair &newdata);
+
+
+} // namespace
 

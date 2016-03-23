@@ -1,9 +1,13 @@
 #ifndef _STL_VECTOR_LIST_H
 #define _STL_VECTOR_LIST_H
 
-#include "iarraysearch.h"
+#include "arraysearch.h"
 
 #include <vector>
+
+
+namespace hm3{
+
 
 template <class LOOKUP>
 class STLVectorList : public IMutableList<STLVectorList<LOOKUP> >{
@@ -79,5 +83,9 @@ public:
 		return _container.cend();
 	}
 };
+
+
+} // namespace
+
 
 #endif

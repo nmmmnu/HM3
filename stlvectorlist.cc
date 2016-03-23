@@ -1,5 +1,9 @@
 #include "stlvectorlist.h"
 
+
+namespace hm3{
+
+
 template <class LOOKUP>
 template <class UPAIR>
 bool STLVectorList<LOOKUP>::_putT(UPAIR&& newdata){
@@ -73,13 +77,16 @@ bool STLVectorList<LOOKUP>::remove(const StringRef &key){
 
 // ===================================
 
-template class STLVectorList<IArraySearch::Linear>;
+template class STLVectorList<arraysearch::Linear>;
 
-template bool STLVectorList<IArraySearch::Linear>::_putT(Pair &&newdata);
-template bool STLVectorList<IArraySearch::Linear>::_putT(const Pair &newdata);
+template bool STLVectorList<arraysearch::Linear>::_putT(Pair &&newdata);
+template bool STLVectorList<arraysearch::Linear>::_putT(const Pair &newdata);
 
-template class STLVectorList<IArraySearch::Binary>;
+template class STLVectorList<arraysearch::Binary>;
 
-template bool STLVectorList<IArraySearch::Binary>::_putT(Pair &&newdata);
-template bool STLVectorList<IArraySearch::Binary>::_putT(const Pair &newdata);
+template bool STLVectorList<arraysearch::Binary>::_putT(Pair &&newdata);
+template bool STLVectorList<arraysearch::Binary>::_putT(const Pair &newdata);
+
+
+} // namespace
 

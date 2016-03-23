@@ -6,6 +6,10 @@
 
 #include <random>
 
+
+namespace hm3{
+
+
 class SkipList : public IMutableList<SkipList>{
 public:
 	using height_type = uint8_t;
@@ -85,5 +89,8 @@ public:
 private:
 	const Node	*_node;
 };
+
+
+} // namespace
 
 #endif

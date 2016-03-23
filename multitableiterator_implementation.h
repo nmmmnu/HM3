@@ -1,21 +1,6 @@
-#if 0
-template<class TABLE>
-bool MultiTableIterator::MatrixHelper<TABLE>::_incrementIfSame(const Pair &model){
-	if (cur == end)
-		return false;
+namespace hm3{
 
-	const Pair &pair = *cur;
 
-	if (pair.cmp(model) != 0)
-		return false;
-
-	// increase if is same
-
-	++cur;
-
-	return true;
-}
-#endif
 
 template<class TABLE>
 const Pair &MultiTableIterator::MatrixHelper<TABLE>::operator *() const{
@@ -215,10 +200,5 @@ void MultiTableIterator::Collection<CONTAINER>::_tmp_pairUpdate(size_type const 
 }
 
 
+} // namespace
 
-#if 0
-	// step 2: increase all duplicates
-	for(auto &iter : _it)
-		if (iter._incrementIfSame(p))
-			tmp_pair = nullptr;
-#endif

@@ -5,13 +5,9 @@
 
 #include "pair.h"
 
-// ==============================
 
-namespace ListDefs{
-	using count_type = uint64_t;
-};
+namespace hm3{
 
-// ==============================
 
 template <class T>
 class IList{
@@ -20,7 +16,7 @@ protected:
 	static size_t PRINT_COUNT = 10;
 
 public:
-	using count_type = ListDefs::count_type;
+	using count_type = uint64_t;
 
 public:
 	void print(size_t count = PRINT_COUNT) const{
@@ -70,6 +66,10 @@ private:
 		return static_cast<T*>(this);
 	}
 };
+
+
+
+} // namespace
 
 #endif
 

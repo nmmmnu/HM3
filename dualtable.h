@@ -5,6 +5,10 @@
 
 #include "multitableiterator.h"
 
+
+namespace hm3{
+
+
 template <class TABLE1, class TABLE2>
 class DualTable : public IList<DualTable<TABLE1,TABLE2> >{
 public:
@@ -55,5 +59,9 @@ Pair DualTable<TABLE1, TABLE2>::get(const StringRef &key) const{
 
 	return _table2.get(key);
 }
+
+
+} // namespace
+
 
 #endif

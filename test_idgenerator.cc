@@ -16,8 +16,10 @@ void test(T id, const char *name, unsigned count = 10){
 }
 
 int main(){
-	test( IDGeneratorTS{ true },	"IDGeneratorTS@Hex"	);
-	test( IDGeneratorTS{ false },	"IDGeneratorTS@Dec"	);
-	test( IDGeneratorDate{},	"IDGeneratorDate"	);
+	namespace idg = hm3::idgenerator;
+
+	test( idg::IDGeneratorTS{ true },	"IDGeneratorTS@Hex"	);
+	test( idg::IDGeneratorTS{ false },	"IDGeneratorTS@Dec"	);
+	test( idg::IDGeneratorDate{},		"IDGeneratorDate"	);
 }
 

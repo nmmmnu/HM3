@@ -11,6 +11,8 @@
 
 #include "stringref.h"
 
+namespace hm3{
+
 struct PairBlob{
 	uint64_t	created;	// 8
 	uint32_t	expires;	// 4, 136 years, not that bad.
@@ -121,6 +123,8 @@ private:
 	static uint64_t __getCreateTime(uint32_t created) noexcept;
 	static uint8_t __calcChecksum(const char *buffer, size_t size) noexcept;
 } __attribute__((__packed__));
+
+} // namespace
 
 #endif
 

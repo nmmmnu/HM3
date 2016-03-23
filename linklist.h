@@ -6,6 +6,10 @@
 
 #include <cstdint>
 
+
+namespace hm3{
+
+
 class LinkList : public IMutableList<LinkList>{
 public:
 	class Iterator;
@@ -70,5 +74,8 @@ public:
 private:
 	const Node	*_node;
 };
+
+
+}
 
 #endif
