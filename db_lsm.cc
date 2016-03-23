@@ -2,8 +2,6 @@
 
 #include "lsmtable.h"
 
-using Pair	= hm3::Pair;
-
 #include "db_helper_implementation.h"
 
 #include "directorytableloader.h"

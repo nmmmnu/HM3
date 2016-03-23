@@ -2,8 +2,6 @@
 
 #include "disktable.h"
 
-using Pair = hm3::Pair;
-
 #include "db_helper_implementation.h"
 
 static void printUsage(const char *cmd){

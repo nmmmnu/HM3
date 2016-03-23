@@ -1,3 +1,4 @@
+using Pair = hm3::Pair;
 
 template <class LIST>
 static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t const count = 100){

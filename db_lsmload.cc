@@ -7,8 +7,6 @@
 #include "flushlist.h"
 #include "skiplist.h"
 
-using Pair = hm3::Pair;
-
 /*
 #include <vector>
 #include "vectorlist.h"
