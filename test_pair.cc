@@ -1,5 +1,6 @@
 #include "pair.h"
 #include "pairblob.h"
+#include "checksum.h"
 #include "nmea0183checksumcalculator.h"
 
 using Pair	= hm3::Pair;
@@ -13,7 +14,7 @@ using PairBlob	= hm3::PairBlob;
 
 
 
-using ChecksumCalculator = NMEA0183ChecksumCalculator;
+using ChecksumCalculator = checksumcalculator::NMEA0183ChecksumCalculator;
 
 
 

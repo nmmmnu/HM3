@@ -1,6 +1,7 @@
 #include "pairblob.h"
 
 #include "mytime.h"
+#include "checksum.h"
 #include "nmea0183checksumcalculator.h"
 
 #include <cstdio>
@@ -9,7 +10,7 @@
 
 namespace hm3{
 
-using ChecksumCalculator = NMEA0183ChecksumCalculator;
+using ChecksumCalculator = checksumcalculator::NMEA0183ChecksumCalculator;
 
 
 
@@ -111,7 +112,7 @@ uint64_t PairBlob::__getCreateTime(uint32_t const created) noexcept{
 }
 
 uint8_t PairBlob::__calcChecksum(const char *buffer, size_t const size) noexcept{
-	Checksum<NMEA0183ChecksumCalculator> chk;
+	Checksum<ChecksumCalculator> chk;
 
 	return chk.calc(buffer, size);
 }

@@ -1,5 +1,7 @@
 #include "nmea0183checksumcalculator.h"
 
+namespace checksumcalculator{
+
 auto NMEA0183ChecksumCalculator::operator()(const void *data2, size_t const size, result_type const start) const noexcept -> result_type{
 	// NMEA 0183 like checksum
 	const uint8_t *data = (const uint8_t *) data2;
@@ -11,5 +13,7 @@ auto NMEA0183ChecksumCalculator::operator()(const void *data2, size_t const size
 
 	return sum;
 }
+
+} // namespace
 
 //template class Checksum<NMEA0183ChecksumCalculator>;
