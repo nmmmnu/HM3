@@ -5,11 +5,15 @@
 
 // ==============================
 
+namespace hm3{
+namespace flusher{
+
+
 template<class IDGENERATOR, class TABLELOADER = std::nullptr_t>
-class DiskFileFlush{
+class DiskFileFlusher{
 private:
 	template<class UIDGENERATOR>
-	DiskFileFlush(
+	DiskFileFlusher(
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
@@ -24,13 +28,13 @@ private:
 
 public:
 	template<class UIDGENERATOR>
-	DiskFileFlush(
+	DiskFileFlusher(
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
 			bool const keepTombstones = true
 		):
-				DiskFileFlush(
+				DiskFileFlusher(
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
@@ -39,14 +43,14 @@ public:
 				){}
 
 	template<class UIDGENERATOR>
-	DiskFileFlush(
+	DiskFileFlusher(
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
 			TABLELOADER &loader,
 			bool const keepTombstones
 		):
-				DiskFileFlush(
+				DiskFileFlusher(
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
@@ -55,14 +59,14 @@ public:
 				){}
 
 	template<class UIDGENERATOR>
-	DiskFileFlush(
+	DiskFileFlusher(
 			UIDGENERATOR &&idGenerator,
 			const StringRef &path,
 			const StringRef &ext,
 			bool const keepTombstones,
 			TABLELOADER &loader
 		):
-				DiskFileFlush(
+				DiskFileFlusher(
 						std::forward<UIDGENERATOR>(idGenerator),
 						path,
 						ext,
@@ -110,6 +114,9 @@ private:
 	bool		_keepTombstones;
 	TABLELOADER	*_loader;
 };
+
+} // namespace flusher
+} // namespace
 
 #endif
 

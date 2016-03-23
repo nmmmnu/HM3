@@ -16,7 +16,7 @@ using Pair = hm3::Pair;
 */
 
 #include "idgenerator.h"
-#include "diskfileflush.h"
+#include "diskfileflusher.h"
 
 #include "db_helper_implementation.h"
 
@@ -24,6 +24,7 @@ using Pair = hm3::Pair;
 //using MemList		= HashList<std::vector<SkipList> >;
 using MemList		= hm3::SkipList;
 using MyIDGenerator	= hm3::idgenerator::IDGeneratorDate;
+using Flusher		= hm3::flusher::DiskFileFlusher<MyIDGenerator>;
 
 
 using count_type	= MemList::count_type;
@@ -84,7 +85,6 @@ int main(int argc, char **argv){
 
 	MemList memlist;
 
-	using Flusher	= DiskFileFlush<MyIDGenerator>;
 	using MyList	= hm3::FlushList<MemList,Flusher>;
 
 	MyList mylist{
