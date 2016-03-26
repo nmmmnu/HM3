@@ -1,5 +1,5 @@
-#ifndef _VECTORlist__H
-#define _VECTORlist__H
+#ifndef _VECTORLIST_H
+#define _VECTORLIST_H
 
 #include "arraysearch.h"
 #include "iiterator.h"

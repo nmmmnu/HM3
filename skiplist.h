@@ -71,7 +71,7 @@ private:
 	height_type _getRandomHeight();
 
 private:
-	static std::mt19937 __rand;
+	static std::mt19937 rand_;
 };
 
 // ==============================

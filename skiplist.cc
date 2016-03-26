@@ -6,7 +6,7 @@
 namespace hm3{
 
 
-std::mt19937 SkipList::__rand{ (uint32_t) time(nullptr) };
+std::mt19937 SkipList::rand_{ (uint32_t) time(nullptr) };
 
 /*
 We do ***NOT*** store next[] array size,
@@ -291,13 +291,13 @@ const SkipList::Node *SkipList::locate_(const StringRef &key, bool const complet
 auto SkipList::_getRandomHeight() -> height_type{
 	// This gives slightly better performance,
 	// than divide by 3 or multply by 0.33
-	auto part = __rand.max() >> 1;
+	auto part = rand_.max() >> 1;
 
 	// We execute rand() inside the loop,
 	// but performance is fast enought.
 
 	height_type h = 1;
-	while(h < height_ && __rand() > part)
+	while(h < height_ && rand_() > part)
 		h++;
 
 	return h;
