@@ -44,7 +44,7 @@ public:
 	bool open(std::ifstream &file);
 
 	operator bool() const{
-		return _version;
+		return version_;
 	}
 
 	bool writeToFile(std::ofstream &file) const;
@@ -53,31 +53,31 @@ public:
 
 public:
 	uint8_t getVersion() const{
-		return _version;
+		return version_;
 	}
 
 	uint64_t getCount() const{
-		return _count;
+		return count_;
 	}
 
 	bool getSorted() const{
-		return _sorted;
+		return sorted_;
 	}
 
 private:
-	void _clear();
+	void clear_();
 
-	POD _createPOD() const;
+	POD createPOD_() const;
 
 private:
-	uint8_t		_version	= 0;
-	uint64_t	_count		= 0;
+	uint8_t		version_	= 0;
+	uint64_t	count_		= 0;
 
-	uint64_t	_created	= 0;
-	bool		_sorted		= false;
-	uint64_t	_tombstones	= 0;
-	uint64_t	_createdMin	= 0;
-	uint64_t	_createdMax	= 0;
+	uint64_t	created_	= 0;
+	bool		sorted_		= false;
+	uint64_t	tombstones_	= 0;
+	uint64_t	createdMin_	= 0;
+	uint64_t	createdMax_	= 0;
 };
 
 #endif

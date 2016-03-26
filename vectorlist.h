@@ -1,5 +1,5 @@
-#ifndef _VECTOR_LIST_H
-#define _VECTOR_LIST_H
+#ifndef _VECTORlist__H
+#define _VECTORlist__H
 
 #include "arraysearch.h"
 #include "iiterator.h"
@@ -27,14 +27,14 @@ public:
 	}
 
 private:
-	count_type	_reallocCount;
+	count_type	reallocCount_;
 
-	Pair		*_buffer;
-	count_type	_reservedCount;
-	count_type	_dataCount;
-	size_t		_dataSize;
+	Pair		*buffer_;
+	count_type	reservedCount_;
+	count_type	dataCount_;
+	size_t		dataSize_;
 
-	LOOKUP		_lookup;
+	LOOKUP		lookup_;
 
 public:
 	bool removeAll();
@@ -42,7 +42,7 @@ public:
 	bool remove(const StringRef &key);
 
 	const Pair &getAt(count_type const index) const{
-		return index < getCount() ? _buffer[index] : Pair::zero();
+		return index < getCount() ? buffer_[index] : Pair::zero();
 	}
 
 	int cmpAt(count_type const index, const StringRef &key) const{
@@ -50,15 +50,15 @@ public:
 	}
 
 	count_type getCount(bool const = false) const{
-		return _dataCount;
+		return dataCount_;
 	}
 
 	size_t getSize() const{
-		return _dataSize;
+		return dataSize_;
 	}
 
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return _lookup(*this, key);
+		return lookup_(*this, key);
 	}
 
 	const Pair &get(const StringRef &key) const{
@@ -69,19 +69,19 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 public:
 	Iterator begin() const;
 	Iterator end() const;
 
 private:
-	void _clear(bool alsoFree = false);
+	void clear_(bool alsoFree = false);
 
-	bool _shiftL(count_type index);
-	bool _shiftR(count_type index);
+	bool shiftL_(count_type index);
+	bool shiftR_(count_type index);
 
-	bool _resize(int delta);
+	bool resize_(int delta);
 
 	count_type _calcNewCount(count_type size);
 };
@@ -103,8 +103,8 @@ public:
 	bool operator==(const Iterator &other) const;
 
 private:
-	const VectorList	*_list;
-	count_type		_pos;
+	const VectorList	*list_;
+	count_type		pos_;
 };
 
 

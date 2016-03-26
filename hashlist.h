@@ -23,10 +23,10 @@ public:
 public:
 	explicit
 	HashList(size_t const size = 0) :
-				_container(size ? size : DEFAULT_SIZE){}
+				container_(size ? size : DEFAULT_SIZE){}
 
 	HashList(CONTAINER &&container) :
-				_container(std::move(container)){}
+				container_(std::move(container)){}
 
 public:
 	bool removeAll();
@@ -40,21 +40,21 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 public:
 	Iterator begin() const{
-		return Iterator(_container);
+		return Iterator(container_);
 	}
 
 	Iterator end() const{
-		return Iterator(_container, true);
+		return Iterator(container_, true);
 	}
 
 private:
-	static unsigned long _calcHash(const char *str);
+	static unsigned long calcHash_(const char *str);
 
-	typename CONTAINER::size_type _getBucketForKey(const StringRef &key) const{
+	typename CONTAINER::size_type getBucketForKey_(const StringRef &key) const{
 		/*
 		Instead of modulo, this can be done with bit AND.
 		Doing so, really increase the speed a bit,
@@ -62,18 +62,18 @@ private:
 		and overal result will be low quality code.
 		*/
 
-		return _calcHash(key.data()) % _container.size();
+		return calcHash_(key.data()) % container_.size();
 	}
 
 private:
-	CONTAINER	_container;
+	CONTAINER	container_;
 };
 
 
 } // namespace
 
 
-#include "hashlist_implementation.h"
+#include "hashlist_impl.h"
 
 #endif
 

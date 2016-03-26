@@ -16,23 +16,23 @@ public:
 
 public:
 	ArgTableLoader(int const argc, const char **argv) :
-				_argc(argc),
-				_argv(argv){
-		_refresh();
+				argc_(argc),
+				argv_(argv){
+		refresh_();
 	}
 
 	const container_type &operator*() const{
-		return _vector;
+		return container_;
 	}
 
 private:
-	bool _refresh();
+	bool refresh_();
 
 private:
-	int		_argc;
-	const char	**_argv;
+	int		argc_;
+	const char	**argv_;
 
-	container_type	_vector;
+	container_type	container_;
 };
 
 

@@ -6,7 +6,7 @@ namespace hm3{
 
 template <class LOOKUP>
 template <class UPAIR>
-bool STLVectorList<LOOKUP>::_putT(UPAIR&& newdata){
+bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto &l = lookup(key);
@@ -16,7 +16,7 @@ bool STLVectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
 
-		Pair & olddata = _container[index];
+		Pair & olddata = container_[index];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -24,7 +24,7 @@ bool STLVectorList<LOOKUP>::_putT(UPAIR&& newdata){
 			return false;
 		}
 
-		_dataSize = _dataSize
+		dataSize_ = dataSize_
 					- olddata.getSize()
 					+ newdata.getSize();
 
@@ -35,16 +35,16 @@ bool STLVectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	}
 
 	// key not exists
-	_dataSize += newdata.getSize();
+	dataSize_ += newdata.getSize();
 
 	try{
-		if (index == _container.size()){
+		if (index == container_.size()){
 			// push_back micro-optimization :)
-			_container.push_back(std::forward<UPAIR>(newdata));
+			container_.push_back(std::forward<UPAIR>(newdata));
 		}else{
 			// This is slow, might shiftR
-			auto ptr = _container.begin() + index;
-			_container.insert(ptr, std::forward<UPAIR>(newdata));
+			auto ptr = container_.begin() + index;
+			container_.insert(ptr, std::forward<UPAIR>(newdata));
 		}
 	}catch(...){
 		return false;
@@ -65,12 +65,12 @@ bool STLVectorList<LOOKUP>::remove(const StringRef &key){
 	}
 
 	// Fix size
-	Pair & data = _container[index];
-	_dataSize -= data.getSize();
+	Pair & data = container_[index];
+	dataSize_ -= data.getSize();
 
 	// This is slow, might shiftL
-	auto ptr = _container.begin() + index;
-	_container.erase(ptr);
+	auto ptr = container_.begin() + index;
+	container_.erase(ptr);
 
 	return true;
 }
@@ -79,13 +79,13 @@ bool STLVectorList<LOOKUP>::remove(const StringRef &key){
 
 template class STLVectorList<arraysearch::Linear>;
 
-template bool STLVectorList<arraysearch::Linear>::_putT(Pair &&newdata);
-template bool STLVectorList<arraysearch::Linear>::_putT(const Pair &newdata);
+template bool STLVectorList<arraysearch::Linear>::putT_(Pair &&newdata);
+template bool STLVectorList<arraysearch::Linear>::putT_(const Pair &newdata);
 
 template class STLVectorList<arraysearch::Binary>;
 
-template bool STLVectorList<arraysearch::Binary>::_putT(Pair &&newdata);
-template bool STLVectorList<arraysearch::Binary>::_putT(const Pair &newdata);
+template bool STLVectorList<arraysearch::Binary>::putT_(Pair &&newdata);
+template bool STLVectorList<arraysearch::Binary>::putT_(const Pair &newdata);
 
 
 } // namespace

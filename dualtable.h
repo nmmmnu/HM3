@@ -17,8 +17,8 @@ public:
 public:
 	explicit
 	DualTable(const TABLE1 &table1, const TABLE2 &table2) :
-					_table1(table1),
-					_table2(table2){
+					table1_(table1),
+					table2_(table2){
 	}
 
 //	DualTable(DualTable &&other) = default;
@@ -31,33 +31,33 @@ public:
 //	}
 
 	size_t getSize() const{
-		return _table1.getSize() + _table2.getSize();
+		return table1_.getSize() + table2_.getSize();
 	}
 
 public:
 	Iterator begin() const{
-		return Iterator(_table1, _table2);
+		return Iterator(table1_, table2_);
 	}
 
 	Iterator end() const{
-		return Iterator(_table1, _table2, true);
+		return Iterator(table1_, table2_, true);
 	}
 
 private:
-	const TABLE1	&_table1;
-	const TABLE2	&_table2;
+	const TABLE1	&table1_;
+	const TABLE2	&table2_;
 };
 
 // ===================================
 
 template <class TABLE1, class TABLE2>
 Pair DualTable<TABLE1, TABLE2>::get(const StringRef &key) const{
-	const Pair &pair = _table1.get(key);
+	const Pair &pair = table1_.get(key);
 
 	if (pair)
 		return pair;
 
-	return _table2.get(key);
+	return table2_.get(key);
 }
 
 

@@ -53,7 +53,7 @@ public:
 public:
 	// needs to be public because of CRPT
 	// no need to be templated as well
-	bool _putT(...) const {
+	bool putT_(...) const {
 		return true;
 	}
 

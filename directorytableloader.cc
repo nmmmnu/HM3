@@ -8,15 +8,15 @@ namespace tableloader{
 
 
 bool DirectoryTableLoader::refresh(){
-	_vector.clear();
+	container_.clear();
 
 	MyGlob gl;
-	if (gl.open(_path) == false)
+	if (gl.open(path_) == false)
 		return true;
 
 	const auto &files = gl.getData();
 
-	_vector.reserve(files.size());
+	container_.reserve(files.size());
 
 	// order in the iterator, does not matter
 	// but order in get, still very important
@@ -26,7 +26,7 @@ bool DirectoryTableLoader::refresh(){
 
                 DiskTable dt;
                 dt.open(filename);
-                _vector.push_back( std::move(dt) );
+                container_.push_back( std::move(dt) );
 	}
 
 	return true;

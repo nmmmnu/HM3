@@ -20,17 +20,17 @@ public:
 	void close() noexcept;
 
 	std::vector<StringRef> &getData() noexcept{
-		return _data;
+		return data_;
 	}
 
 private:
-	static bool __open(const char *path, glob_t &globresults) noexcept;
-	static bool __checkFile(const char *filename) noexcept;
+	static bool open_(const char *path, glob_t &globresults) noexcept;
+	static bool checkFile_(const char *filename) noexcept;
 
 private:
-	glob_t			_globresults;
-	bool			_isOpen		= false;
-	std::vector<StringRef>	_data;
+	glob_t			globresults_;
+	bool			isOpen_		= false;
+	std::vector<StringRef>	data_;
 };
 
 #endif

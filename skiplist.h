@@ -33,11 +33,11 @@ public:
 	bool remove(const StringRef &key);
 
 	count_type getCount(bool const = true) const noexcept{
-		return _dataCount;
+		return dataCount_;
 	}
 
 	size_t getSize() const noexcept{
-		return _dataSize;
+		return dataSize_;
 	}
 
 public:
@@ -47,7 +47,7 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 public:
 	void printLanes() const;
@@ -56,17 +56,17 @@ public:
 private:
 	struct		Node;
 
-	height_type	_height;
-	Node		**_heads;
-	Node		**_loc;
+	height_type	height_;
+	Node		**heads_;
+	Node		**loc_;
 
-	count_type	_dataCount;
-	size_t		_dataSize;
+	count_type	dataCount_;
+	size_t		dataSize_;
 
 private:
-	void _clear();
+	void clear_();
 
-	const Node *_locate(const StringRef &key, bool complete_evaluation = false) const;
+	const Node *locate_(const StringRef &key, bool complete_evaluation = false) const;
 
 	height_type _getRandomHeight();
 
@@ -87,7 +87,7 @@ public:
 	bool operator==(const Iterator &other) const;
 
 private:
-	const Node	*_node;
+	const Node	*node_;
 };
 
 

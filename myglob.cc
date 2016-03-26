@@ -3,25 +3,25 @@
 #include <sys/stat.h>	// stat
 
 bool MyGlob::open(const StringRef &path) noexcept{
-	if (_isOpen)
+	if (isOpen_)
 		close();
 
 
-	_data.clear();
+	data_.clear();
 
-	if (__open(path.data(), _globresults) == false)
+	if (open_(path.data(), globresults_) == false)
 		return false;
 
-	_isOpen = true;
+	isOpen_ = true;
 
 
 
 	size_t i;
-	for(i = 0; i < _globresults.gl_pathc; ++i){
-		const char *filename = _globresults.gl_pathv[i];
+	for(i = 0; i < globresults_.gl_pathc; ++i){
+		const char *filename = globresults_.gl_pathv[i];
 
-		if (__checkFile( filename ))
-			_data.push_back(filename);
+		if (checkFile_( filename ))
+			data_.push_back(filename);
 	}
 
 
@@ -29,7 +29,7 @@ bool MyGlob::open(const StringRef &path) noexcept{
 	return i > 0;
 }
 
-bool MyGlob::__open(const char *path, glob_t &globresults) noexcept{
+bool MyGlob::open_(const char *path, glob_t &globresults) noexcept{
 	int result = glob(path, 0, nullptr, & globresults);
 
 	if (result != 0)
@@ -42,16 +42,16 @@ bool MyGlob::__open(const char *path, glob_t &globresults) noexcept{
 }
 
 void MyGlob::close() noexcept{
-	if (_isOpen){
-		globfree(& _globresults);
+	if (isOpen_){
+		globfree(& globresults_);
 
-		_data.clear();
+		data_.clear();
 	}
 
-	_isOpen = false;
+	isOpen_ = false;
 }
 
-bool MyGlob::__checkFile(const char *filename) noexcept{
+bool MyGlob::checkFile_(const char *filename) noexcept{
 	struct stat s;
 	stat(filename, & s);
 

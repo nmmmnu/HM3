@@ -58,8 +58,8 @@ public:
 		bool operator==(const Dual &other) const;
 
 	private:
-		Matrix1	_it1;
-		Matrix2	_it2;
+		Matrix1	it1_;
+		Matrix2	it2_;
 
 		bool	_internalError = false;
 	};
@@ -87,7 +87,7 @@ public:
 		void _tmp_pairUpdate(size_type index, const Pair *pair = nullptr) const;
 
 	private:
-		vector_type	_it;
+		vector_type	it_;
 
 		bool		_internalError	= false;
 
@@ -104,7 +104,7 @@ public:
 
 // ===================================
 
-#include "multitableiterator_implementation.h"
+#include "multitableiterator_impl.h"
 
 #endif
 

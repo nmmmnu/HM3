@@ -18,7 +18,7 @@ public:
 	class Iterator;
 
 public:
-	DiskTable(bool validate = true) : _validate(validate){}
+	DiskTable(bool validate = true) : validate_(validate){}
 
 	DiskTable(DiskTable &&other) = default;
 
@@ -30,11 +30,11 @@ public:
 	void close();
 
 	operator bool(){
-		return _header;
+		return header_;
 	}
 
 	void printHeader() const{
-		_header.print();
+		header_.print();
 	}
 
 public:
@@ -45,15 +45,15 @@ public:
 	int cmpAt(count_type index, const StringRef &key) const;
 
 	count_type getCount() const{
-		return (count_type) _header.getCount();
+		return (count_type) header_.getCount();
 	}
 
 	size_t getSize() const{
-		return _mmapData.size();
+		return mmapData_.size();
 	}
 
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return _lookup(*this, key);
+		return lookup_(*this, key);
 	}
 
 public:
@@ -61,22 +61,22 @@ public:
 	Iterator end() const;
 
 private:
-	DiskFileHeader	_header;
-	MMAPFile	_mmapIndx;
-	MMAPFile	_mmapData;
+	const PairBlob *validateFromDisk_(const PairBlob *blob) const;
 
-	bool		_validate;
+	const PairBlob *getAtFromDisk_(count_type index) const;
 
-	ArrayLookup	_lookup;
+	const PairBlob *getNextFromDisk_(const PairBlob *blob, size_t size = 0) const;
+
+	uint8_t getVersionFromDisk_() const;
 
 private:
-	const PairBlob *_validateFromDisk(const PairBlob *blob) const;
+	DiskFileHeader	header_;
+	MMAPFile	mmapIndx_;
+	MMAPFile	mmapData_;
 
-	const PairBlob *_getAtFromDisk(count_type index) const;
+	bool		validate_;
 
-	const PairBlob *_getNextFromDisk(const PairBlob *blob, size_t size = 0) const;
-
-	uint8_t _getVersionFromDisk() const;
+	ArrayLookup	lookup_;
 };
 
 // ===================================
@@ -114,7 +114,7 @@ private:
 // ==============================
 
 inline Pair DiskTable::getAt(count_type const index) const{
-	return index < getCount() ? _getAtFromDisk(index) : nullptr;
+	return index < getCount() ? getAtFromDisk_(index) : nullptr;
 }
 
 inline Pair DiskTable::get(const StringRef &key) const{

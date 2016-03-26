@@ -48,11 +48,11 @@ template <class T>
 class IMutableList : public IList<T>{
 public:
 	bool put(const Pair &pair){
-		return self()->_putT(pair);
+		return self()->putT_(pair);
 	}
 
 	bool put(Pair &&pair){
-		return self()->_putT(std::move(pair));
+		return self()->putT_(std::move(pair));
 	}
 
 	template <class ...ARGS>

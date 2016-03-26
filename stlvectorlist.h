@@ -29,15 +29,15 @@ public:
 	STLVectorList &operator =(const STLVectorList &other) = delete;
 
 private:
-	vector_type	_container;
-	size_t		_dataSize = 0;
+	vector_type	container_;
+	size_t		dataSize_ = 0;
 
-	LOOKUP		_lookup;
+	LOOKUP		lookup_;
 
 public:
 	bool removeAll(){
-		_container.clear();
-		_dataSize = 0;
+		container_.clear();
+		dataSize_ = 0;
 
 		return true;
 	}
@@ -45,7 +45,7 @@ public:
 	bool remove(const StringRef &key);
 
 	const Pair &getAt(count_type const index) const{
-		return index < getCount() ? _container[index] : Pair::zero();
+		return index < getCount() ? container_[index] : Pair::zero();
 	}
 
 	int cmpAt(count_type const index, const StringRef &key) const{
@@ -53,15 +53,15 @@ public:
 	}
 
 	count_type getCount(bool const = false) const{
-		return _container.size();
+		return container_.size();
 	}
 
 	size_t getSize() const{
-		return _dataSize;
+		return dataSize_;
 	}
 
 	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return _lookup(*this, key);
+		return lookup_(*this, key);
 	}
 
 	const Pair &get(const StringRef &key) const{
@@ -72,15 +72,15 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 public:
 	Iterator begin() const{
-		return _container.cbegin();
+		return container_.cbegin();
 	}
 
 	Iterator end() const{
-		return _container.cend();
+		return container_.cend();
 	}
 };
 

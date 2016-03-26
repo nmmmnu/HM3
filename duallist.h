@@ -15,9 +15,9 @@ public:
 public:
 	explicit
 	DualList(LIST1 &memlist, const TABLE2 &table, size_t const maxSize = MAX_SIZE) :
-					_memlist(memlist),
-					_table  (table),
-					_maxSize(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
+					memlist_(memlist),
+					table_  (table),
+					maxSize_(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
 	}
 
 	DualList(DualList &&other) = default;
@@ -27,45 +27,45 @@ public:
 
 	bool remove(const StringRef &key){
 		// remove by inserting tombstone
-		return _putT( Pair::tombstone(key) );
+		return putT_( Pair::tombstone(key) );
 	}
 
 	size_t getSize() const{
-		return _memlist.getSize();
+		return memlist_.getSize();
 	}
 
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data){
-		return _memlist.put( std::forward<UPAIR>(data) );
+	bool putT_(UPAIR &&data){
+		return memlist_.put( std::forward<UPAIR>(data) );
 	}
 
 public:
 	Iterator begin() const{
-		return Iterator(_memlist, _table);
+		return Iterator(memlist_, table_);
 	}
 
 	Iterator end() const{
-		return Iterator(_memlist, _table, true);
+		return Iterator(memlist_, table_, true);
 	}
 
 private:
-	LIST1		&_memlist;
-	const TABLE2	&_table;
+	LIST1		&memlist_;
+	const TABLE2	&table_;
 };
 
 // ===================================
 
 template <class LIST1, class TABLE2>
 Pair DualList<LIST1, TABLE2>::get(const StringRef &key) const{
-	const Pair &pair = _memlist.get(key);
+	const Pair &pair = memlist_.get(key);
 
 	if (pair)
 		return pair;
 
 	// lookup into immutable table
-	return _table.get(key);
+	return table_.get(key);
 }
 
 #endif

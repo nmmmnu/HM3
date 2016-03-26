@@ -41,11 +41,11 @@ std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen
 		throw exception;
 	}
 
-	size_t const size = __sizeofBase() + keylen + 1 + vallen + 1;
+	size_t const size = sizeofBase_() + keylen + 1 + vallen + 1;
 
 	std::unique_ptr<PairBlob>  pair{ new(size, false) PairBlob };
 
-	pair->created	= htobe64(__getCreateTime(created));
+	pair->created	= htobe64(getCreateTime_(created));
 	pair->expires	= htobe32(expires);
 	pair->vallen	= htobe32((uint32_t) vallen);
 	pair->keylen	= htobe16((uint16_t) keylen);
@@ -107,11 +107,11 @@ void PairBlob::print() const noexcept{
 
 // ==============================
 
-uint64_t PairBlob::__getCreateTime(uint32_t const created) noexcept{
+uint64_t PairBlob::getCreateTime_(uint32_t const created) noexcept{
 	return created ? MyTime::combine(created) : MyTime::now();
 }
 
-uint8_t PairBlob::__calcChecksum(const char *buffer, size_t const size) noexcept{
+uint8_t PairBlob::calcChecksum_(const char *buffer, size_t const size) noexcept{
 	Checksum<ChecksumCalculator> chk;
 
 	return chk.calc(buffer, size);

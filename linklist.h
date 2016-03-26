@@ -28,11 +28,11 @@ public:
 	bool remove(const StringRef &key);
 
 	count_type getCount(bool const = true) const{
-		return _dataCount;
+		return dataCount_;
 	}
 
 	size_t getSize() const{
-		return _dataSize;
+		return dataSize_;
 	}
 
 public:
@@ -42,20 +42,20 @@ public:
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 private:
 	struct Node;
 
-	Node		*_head;
+	Node		*head_;
 
-	count_type	_dataCount;
-	size_t		_dataSize;
+	count_type	dataCount_;
+	size_t		dataSize_;
 
 private:
-	void _clear();
+	void clear_();
 
-	Node *_locate(const StringRef &key) const;
+	Node *locate_(const StringRef &key) const;
 };
 
 // ==============================
@@ -72,7 +72,7 @@ public:
 	bool operator==(const Iterator &other) const;
 
 private:
-	const Node	*_node;
+	const Node	*node_;
 };
 
 

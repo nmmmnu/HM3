@@ -17,28 +17,28 @@ public:
 	void close();
 
 	operator bool(){
-		return _mem == nullptr;
+		return mem_ == nullptr;
 	}
 
 	const void *mem() const{
-		return _mem;
+		return mem_;
 	}
 
 	const void *safeAccess(size_t const offset) const{
-		if (_mem == nullptr)
+		if (mem_ == nullptr)
 			return nullptr;
 
-		if (_size < offset)
+		if (size_ < offset)
 			return nullptr;
 
-		const char *memc = (const char *) _mem;
+		const char *memc = (const char *) mem_;
 
 		return & memc[offset];
 	}
 
 	const void *safeAccess(const void *ptr) const{
 		const char *ptrc = (const char *)  ptr;
-		const char *memc = (const char *) _mem;
+		const char *memc = (const char *) mem_;
 
 		if (ptrc < memc)
 			return nullptr;
@@ -47,14 +47,14 @@ public:
 	}
 
 	size_t size() const{
-		return _size;
+		return size_;
 	}
 
 private:
-	const void	*_mem		= nullptr;
-	size_t		_size		= 0;
+	const void	*mem_		= nullptr;
+	size_t		size_		= 0;
 
-	int		_fd;
+	int		fd_;
 };
 
 #endif

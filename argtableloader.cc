@@ -5,20 +5,20 @@ namespace hm3{
 namespace tableloader{
 
 
-bool ArgTableLoader::_refresh(){
-	_vector.clear();
+bool ArgTableLoader::refresh_(){
+	container_.clear();
 
-	if (_argc < 0)
+	if (argc_ < 0)
 		return true;
 
-	_vector.reserve(_argc);
+	container_.reserve(argc_);
 
-	for (int i = 0; i < _argc; ++i){
-		const char *filename = _argv[i];
+	for (int i = 0; i < argc_; ++i){
+		const char *filename = argv_[i];
 
 		DiskTable dt;
 		dt.open(filename);
-		_vector.push_back( std::move(dt) );
+		container_.push_back( std::move(dt) );
 	}
 
 	return true;

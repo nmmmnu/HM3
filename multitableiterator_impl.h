@@ -32,8 +32,8 @@ bool MultiTableIterator::MatrixHelper<TABLE>::operator!=(const MatrixHelper &oth
 
 template <class TABLE1, class TABLE2>
 MultiTableIterator::Dual<TABLE1, TABLE2>::Dual(const TABLE1 &table1, const TABLE2 &table2, bool const endIt) :
-					_it1({ table1, endIt }),
-					_it2({ table2, endIt }){
+					it1_({ table1, endIt }),
+					it2_({ table2, endIt }){
 }
 
 #if 0
@@ -48,8 +48,8 @@ auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABL
 		return *this;
 	}
 
-	_it1.incrementIfSame(p);
-	_it2.incrementIfSame(p);
+	it1_.incrementIfSame(p);
+	it2_.incrementIfSame(p);
 
 	return *this;
 }
@@ -58,24 +58,24 @@ auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABL
 // faster solution with 1 comparison.
 template <class TABLE1, class TABLE2>
 auto MultiTableIterator::Dual<TABLE1, TABLE2>::operator++() -> Dual<TABLE1, TABLE2> &{
-	const Pair &pair1 = *_it1;
-	const Pair &pair2 = *_it2;
+	const Pair &pair1 = *it1_;
+	const Pair &pair2 = *it2_;
 
 	const auto cmp = pair1.cmp(pair2);
 
 	if (cmp <= 0)
-		++_it1;
+		++it1_;
 
 	if (cmp >= 0)
-		++_it2;
+		++it2_;
 
 	return *this;
 }
 
 template <class TABLE1, class TABLE2>
 const Pair &MultiTableIterator::Dual<TABLE1, TABLE2>::operator*() const{
-	const Pair &pair1 = *_it1;
-	const Pair &pair2 = *_it2;
+	const Pair &pair1 = *it1_;
+	const Pair &pair2 = *it2_;
 
 	int const cmp = pair1.cmp(pair2);
 
@@ -93,7 +93,7 @@ bool MultiTableIterator::Dual<TABLE1, TABLE2>::operator==(const Dual<TABLE1, TAB
 	if (_internalError)
 		return true;
 
-	return _it1 == other._it1 && _it2 == other._it2;
+	return it1_ == other.it1_ && it2_ == other.it2_;
 }
 
 
@@ -102,12 +102,12 @@ bool MultiTableIterator::Dual<TABLE1, TABLE2>::operator==(const Dual<TABLE1, TAB
 
 template <class CONTAINER>
 MultiTableIterator::Collection<CONTAINER>::Collection(const CONTAINER &list, bool const endIt){
-	_it.reserve(list.size());
+	it_.reserve(list.size());
 
 	// CONTAINER is responsible for ordering the tables,
 	// in correct (probably reverse) order.
 	for(const auto &table : list)
-		_it.push_back({ table, endIt });
+		it_.push_back({ table, endIt });
 
 	tmp_index.reserve(list.size());
 }
@@ -125,7 +125,7 @@ auto MultiTableIterator::Collection<CONTAINER>::operator++() -> Collection<CONTA
 
 	// step 2: increase all duplicates from the index
 	for(const auto index : tmp_index)
-		++_it[index];
+		++it_[index];
 
 	tmp_pair = nullptr;
 
@@ -138,8 +138,8 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 		return *tmp_pair;
 
 	// step 1: find first minimal add other minimals into index
-	for(size_type i = 0; i < _it.size(); ++i){
-		const Pair &pair = *_it[i];
+	for(size_type i = 0; i < it_.size(); ++i){
+		const Pair &pair = *it_[i];
 
 		// skip if is null
 		if ( ! pair )
@@ -175,14 +175,14 @@ const Pair &MultiTableIterator::Collection<CONTAINER>::operator*() const{
 
 template <class CONTAINER>
 bool MultiTableIterator::Collection<CONTAINER>::operator==(const Collection<CONTAINER> &other) const{
-	if (_it.size() != other._it.size())
+	if (it_.size() != other.it_.size())
 		return false;
 
 	if (_internalError || other._internalError)
 		return true;
 
-	for(size_type i = 0; i < _it.size(); ++i){
-		if (_it[i] != other._it[i])
+	for(size_type i = 0; i < it_.size(); ++i){
+		if (it_[i] != other.it_[i])
 			return false;
 	}
 

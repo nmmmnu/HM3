@@ -2,7 +2,7 @@
 
 #include "lsmtable.h"
 
-#include "db_helper_implementation.h"
+#include "db_helper_impl.h"
 
 #include "directorytableloader.h"
 

@@ -21,7 +21,7 @@ private:
 			TABLELOADER *loader
 		):
 				_idGenerator(std::forward<UIDGENERATOR>(idGenerator)),
-				_path(path),
+				path_(path),
 				_ext(ext),
 				_keepTombstones(keepTombstones),
 				_loader(loader){}
@@ -82,7 +82,7 @@ public:
 
 		printf("Flushing data to disk...\n");
 
-		const auto &filename = _path + _idGenerator() + _ext;
+		const auto &filename = path_ + _idGenerator() + _ext;
 
 		DiskFile df{ filename };
 		df.createFromList(list, _keepTombstones);
@@ -109,7 +109,7 @@ private:
 
 private:
 	IDGENERATOR	_idGenerator;
-	std::string	_path;
+	std::string	path_;
 	std::string	_ext;
 	bool		_keepTombstones;
 	TABLELOADER	*_loader;

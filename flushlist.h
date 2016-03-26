@@ -18,9 +18,9 @@ public:
 public:
 	template <class UFLUSH>
 	FlushList(LIST &list, UFLUSH &&flusher, size_t const maxSize = MAX_SIZE) :
-					_list(list),
-					_flusher(std::forward<UFLUSH>(flusher)),
-					_maxSize(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
+					list_(list),
+					flusher_(std::forward<UFLUSH>(flusher)),
+					maxSize_(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
 	}
 
 	FlushList(FlushList &&other) = default;
@@ -30,53 +30,53 @@ public:
 	}
 
 	LIST &getList(){
-		return _list;
+		return list_;
 	}
 
 public:
 	bool removeAll(){
-		return _list.removeAll();
+		return list_.removeAll();
 	}
 
 	const Pair &get(const StringRef &key) const{
-		return _list.get(key);
+		return list_.get(key);
 	}
 
 	bool remove(const StringRef &key){
-		return _list.remove(key);
+		return list_.remove(key);
 	}
 
 	size_t getSize() const{
-		return _list.getSize();
+		return list_.getSize();
 	}
 
 	count_type getCount() const{
-		return _list.getCount();
+		return list_.getCount();
 	}
 
 public:
 	// needs to be public because of CRPT
 	template <class UPAIR>
-	bool _putT(UPAIR &&data);
+	bool putT_(UPAIR &&data);
 
 public:
 	bool flush(){
-		return _flusher << _list;
+		return flusher_ << list_;
 	}
 
 public:
 	Iterator begin() const{
-		return _list.begin();
+		return list_.begin();
 	}
 
 	Iterator end() const{
-		return _list.end();
+		return list_.end();
 	}
 
 private:
-	LIST		&_list;
-	FLUSH		_flusher;
-	size_t		_maxSize;
+	LIST		&list_;
+	FLUSH		flusher_;
+	size_t		maxSize_;
 };
 
 
@@ -87,10 +87,10 @@ private:
 
 template <class LIST, class FLUSH>
 template <class UPAIR>
-bool FlushList<LIST, FLUSH>::_putT(UPAIR &&data){
-	bool const result = _list.put( std::forward<UPAIR>(data) );
+bool FlushList<LIST, FLUSH>::putT_(UPAIR &&data){
+	bool const result = list_.put( std::forward<UPAIR>(data) );
 
-	if (_list.getSize() > _maxSize)
+	if (list_.getSize() > maxSize_)
 		flush();
 
 	return result;

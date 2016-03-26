@@ -19,18 +19,18 @@ public:
 
 
 LinkList::LinkList(){
-	_clear();
+	clear_();
 }
 
 LinkList::LinkList(LinkList &&other):
-		_head		(std::move(other._head		)),
-		_dataCount	(std::move(other._dataCount	)),
-		_dataSize	(std::move(other._dataSize	)){
-	other._clear();
+		head_		(std::move(other.head_		)),
+		dataCount_	(std::move(other.dataCount_	)),
+		dataSize_	(std::move(other.dataSize_	)){
+	other.clear_();
 }
 
 bool LinkList::removeAll(){
-	for(Node *node = _head; node; ){
+	for(Node *node = head_; node; ){
 		Node *copy = node;
 
 		node = node->next;
@@ -38,17 +38,17 @@ bool LinkList::removeAll(){
 		delete copy;
 	}
 
-	_clear();
+	clear_();
 
 	return true;
 }
 
 template <class UPAIR>
-bool LinkList::_putT(UPAIR&& newdata){
+bool LinkList::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	Node *prev = nullptr;
-	for(Node *node = _head; node; node = node->next){
+	for(Node *node = head_; node; node = node->next){
 		Pair & olddata = node->data;
 
 		const int cmp = olddata.cmp(key);
@@ -63,7 +63,7 @@ bool LinkList::_putT(UPAIR&& newdata){
 				return false;
 			}
 
-			_dataSize = _dataSize
+			dataSize_ = dataSize_
 					- olddata.getSize()
 					+ newdata.getSize();
 
@@ -93,21 +93,21 @@ bool LinkList::_putT(UPAIR&& newdata){
 		newnode->next = prev->next;
 		prev->next = newnode;
 	}else{
-		newnode->next = _head;
-		_head = newnode;
+		newnode->next = head_;
+		head_ = newnode;
 	}
 
-	_dataSize += size;
-	_dataCount++;
+	dataSize_ += size;
+	dataCount_++;
 
 	return true;
 }
 
-template bool LinkList::_putT(Pair &&newdata);
-template bool LinkList::_putT(const Pair &newdata);
+template bool LinkList::putT_(Pair &&newdata);
+template bool LinkList::putT_(const Pair &newdata);
 
 const Pair &LinkList::get(const StringRef &key) const{
-	const Node *node = _locate(key);
+	const Node *node = locate_(key);
 
 	if (node == nullptr)
 		return Pair::zero();
@@ -119,7 +119,7 @@ const Pair &LinkList::get(const StringRef &key) const{
 
 bool LinkList::remove(const StringRef &key){
 	Node *prev = nullptr;
-	for(Node *node = _head; node; node = node->next){
+	for(Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
 		const int cmp = data.cmp(key);
 
@@ -128,11 +128,11 @@ bool LinkList::remove(const StringRef &key){
 				prev->next = node->next;
 			}else{
 				// First node...
-				_head = node->next;
+				head_ = node->next;
 			}
 
-			_dataSize -= data.getSize();
-			_dataCount--;
+			dataSize_ -= data.getSize();
+			dataCount_--;
 
 			delete node;
 			return true;
@@ -149,14 +149,14 @@ bool LinkList::remove(const StringRef &key){
 
 // ==============================
 
-void LinkList::_clear(){
-	_dataCount = 0;
-	_dataSize = 0;
-	_head = nullptr;
+void LinkList::clear_(){
+	dataCount_ = 0;
+	dataSize_ = 0;
+	head_ = nullptr;
 }
 
-LinkList::Node *LinkList::_locate(const StringRef &key) const{
-	for(Node *node = _head; node; node = node->next){
+LinkList::Node *LinkList::locate_(const StringRef &key) const{
+	for(Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
 
 		const int cmp = data.cmp(key);
@@ -179,27 +179,27 @@ LinkList::Node *LinkList::_locate(const StringRef &key) const{
 
 
 LinkList::Iterator::Iterator(const Node *node) :
-		_node(node){}
+		node_(node){}
 
 LinkList::Iterator &LinkList::Iterator::operator++(){
-	if (_node)
-		_node = _node->next;
+	if (node_)
+		node_ = node_->next;
 
 	return *this;
 }
 
 const Pair &LinkList::Iterator::operator*() const{
-	return _node ? _node->data : Pair::zero();
+	return node_ ? node_->data : Pair::zero();
 }
 
 bool LinkList::Iterator::operator==(const Iterator &other) const{
-	return _node == other._node;
+	return node_ == other.node_;
 }
 
 // ==============================
 
 LinkList::Iterator LinkList::begin() const{
-	return Iterator(_head);
+	return Iterator(head_);
 }
 
 LinkList::Iterator LinkList::end() const{

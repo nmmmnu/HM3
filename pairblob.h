@@ -93,11 +93,11 @@ public:
 	bool valid(bool tombstoneCheck = false) const noexcept;
 
 	size_t getSize() const noexcept{
-		return __sizeofBase() + _sizeofBuffer();
+		return sizeofBase_() + sizeofBuffer_();
 	}
 
 	uint8_t calcChecksum() const noexcept{
-		return __calcChecksum(buffer, _sizeofBuffer());
+		return calcChecksum_(buffer, sizeofBuffer_());
 	}
 
 	uint8_t validChecksum() const noexcept{
@@ -109,20 +109,22 @@ public:
 	void print() const noexcept;
 
 private:
-	size_t _sizeofBuffer() const noexcept{
+	size_t sizeofBuffer_() const noexcept{
 		return getKeyLen() + 1 + getValLen() + 1;
 	}
 
 	constexpr
-	static size_t __sizeofBase() noexcept{
+	static size_t sizeofBase_() noexcept{
 		return offsetof(PairBlob, buffer);
 	}
 
 	// ==============================
 
-	static uint64_t __getCreateTime(uint32_t created) noexcept;
-	static uint8_t __calcChecksum(const char *buffer, size_t size) noexcept;
+	static uint64_t getCreateTime_(uint32_t created) noexcept;
+	static uint8_t calcChecksum_(const char *buffer, size_t size) noexcept;
 } __attribute__((__packed__));
+
+static_assert(std::is_pod<PairBlob>::value, "PairBlob must be POD type");
 
 } // namespace
 

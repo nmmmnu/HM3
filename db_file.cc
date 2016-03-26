@@ -2,7 +2,7 @@
 
 #include "disktable.h"
 
-#include "db_helper_implementation.h"
+#include "db_helper_impl.h"
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");

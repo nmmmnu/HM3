@@ -8,13 +8,13 @@
 DiskFileHeader::DiskFileHeader(uint64_t const count,
 					bool const sorted,
 					uint64_t const tombstones, uint64_t const createdMin, uint64_t const createdMax):
-				_version(VERSION),
-				_count(count),
-				_created(MyTime::now()),
-				_sorted(sorted),
-				_tombstones(tombstones),
-				_createdMin(createdMin),
-				_createdMax(createdMax){}
+				version_(VERSION),
+				count_(count),
+				created_(MyTime::now()),
+				sorted_(sorted),
+				tombstones_(tombstones),
+				createdMin_(createdMin),
+				createdMax_(createdMax){}
 
 bool DiskFileHeader::open(const StringRef &filename){
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
@@ -35,8 +35,8 @@ bool DiskFileHeader::open(std::ifstream &file_meta){
 	if (strncmp(pod.logo, TITLE, TITLE_LOGO_SIZE) != 0)
 		return false;
 
-	_version	= pod.version;
-	_count		= (size_t) be64toh(pod.size);
+	version_	= pod.version;
+	count_		= (size_t) be64toh(pod.size);
 
 	// read the rest, without rewind :-)
 	size_t additionalSize = sizeof(POD) - sizeof(PODBase);
@@ -44,23 +44,23 @@ bool DiskFileHeader::open(std::ifstream &file_meta){
 	file_meta.read( ((char *) &pod) + sizeof(PODBase), additionalSize);
 
 	if (! file_meta && file_meta.gcount() < (std::streamsize) additionalSize){
-		_clear();
+		clear_();
 		return true;
 	}
 
-	_created	= be64toh(pod.created);
+	created_	= be64toh(pod.created);
 
-	_sorted		= pod.sorted == HEADER_SORTED ? true : false;
+	sorted_		= pod.sorted == HEADER_SORTED ? true : false;
 
-	_tombstones	= (size_t) be64toh(pod.tombstones);
+	tombstones_	= (size_t) be64toh(pod.tombstones);
 
-	_createdMin	= be64toh(pod.createdMin);
-	_createdMax	= be64toh(pod.createdMax);
+	createdMin_	= be64toh(pod.createdMin);
+	createdMax_	= be64toh(pod.createdMax);
 
 	return true;
 }
 
-auto DiskFileHeader::_createPOD() const -> POD{
+auto DiskFileHeader::createPOD_() const -> POD{
 	POD pod;
 
 	memset(&pod, 0, sizeof(POD));
@@ -68,40 +68,40 @@ auto DiskFileHeader::_createPOD() const -> POD{
 	strcpy(pod.logo, TITLE);
 
 	pod.version	= VERSION;
-	pod.size	= htobe64(_count);
+	pod.size	= htobe64(count_);
 
-	pod.created	= htobe64(_created);
-	pod.sorted	= _sorted ? HEADER_SORTED : HEADER_NOT_SORTED;
-	pod.tombstones	= htobe64(_tombstones);
-	pod.createdMin	= htobe64(_createdMin);
-	pod.createdMax	= htobe64(_createdMax);
+	pod.created	= htobe64(created_);
+	pod.sorted	= sorted_ ? HEADER_SORTED : HEADER_NOT_SORTED;
+	pod.tombstones	= htobe64(tombstones_);
+	pod.createdMin	= htobe64(createdMin_);
+	pod.createdMax	= htobe64(createdMax_);
 
 	return pod;
 }
 
 bool DiskFileHeader::writeToFile(std::ofstream &file) const{
-	const POD pod = _createPOD();
+	const POD pod = createPOD_();
 
 	file.write( (const char *) & pod, sizeof(POD));
 
 	return true;
 }
 
-void DiskFileHeader::_clear(){
-	_created	= 0;
-	_sorted		= false;
-	_tombstones	= 0;
-	_createdMin	= 0;
-	_createdMax	= 0;
+void DiskFileHeader::clear_(){
+	created_	= 0;
+	sorted_		= false;
+	tombstones_	= 0;
+	createdMin_	= 0;
+	createdMax_	= 0;
 }
 
 void DiskFileHeader::print() const{
-	printf("%-14s: %u\n",		"Version",	_version);
-	printf("%-14s: %" PRIu64 "\n",	"Records",	_count); // PRIu64
-	printf("%-14s: %s\n",		"Created",	_created ? MyTime::toString(_created) : "n/a");
-	printf("%-14s: %s\n",		"Sorted",	_sorted ? "Yes" : "No");
+	printf("%-14s: %u\n",		"Version",	version_);
+	printf("%-14s: %" PRIu64 "\n",	"Records",	count_); // PRIu64
+	printf("%-14s: %s\n",		"Created",	created_ ? MyTime::toString(created_) : "n/a");
+	printf("%-14s: %s\n",		"Sorted",	sorted_ ? "Yes" : "No");
 
-	printf("%-14s: %" PRIu64 "\n",	"Tombstones",	_tombstones); // PRIu64
-	printf("%-14s: %s\n",		"Created::MIN",	_createdMin ? MyTime::toString(_createdMin) : "n/a");
-	printf("%-14s: %s\n",		"Created::MAX",	_createdMax ? MyTime::toString(_createdMax) : "n/a");
+	printf("%-14s: %" PRIu64 "\n",	"Tombstones",	tombstones_); // PRIu64
+	printf("%-14s: %s\n",		"Created::MIN",	createdMin_ ? MyTime::toString(createdMin_) : "n/a");
+	printf("%-14s: %s\n",		"Created::MAX",	createdMax_ ? MyTime::toString(createdMax_) : "n/a");
 }

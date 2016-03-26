@@ -3,7 +3,7 @@ namespace hm3{
 
 template <class CONTAINER>
 bool HashList<CONTAINER>::removeAll(){
-	for(auto &list : _container)
+	for(auto &list : container_)
 		list.removeAll();
 
 	return true;
@@ -14,9 +14,9 @@ const Pair &HashList<CONTAINER>::get(const StringRef &key) const{
 	if (key.empty())
 		return Pair::zero();
 
-	const auto index = _getBucketForKey(key);
+	const auto index = getBucketForKey_(key);
 
-	return _container[index].get(key);
+	return container_[index].get(key);
 }
 
 template <class CONTAINER>
@@ -24,16 +24,16 @@ bool HashList<CONTAINER>::remove(const StringRef &key){
 	if (key.empty())
 		return true;
 
-	const auto index = _getBucketForKey(key);
+	const auto index = getBucketForKey_(key);
 
-	return _container[index].remove(key);
+	return container_[index].remove(key);
 }
 
 template <class CONTAINER>
 auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> count_type{
 	count_type result = 0;
 
-	for(const auto &list : _container){
+	for(const auto &list : container_){
 		// a + b is int
 		result = (count_type) (result + list.getCount(estimated));
 	}
@@ -45,7 +45,7 @@ template <class CONTAINER>
 size_t HashList<CONTAINER>::getSize() const noexcept{
 	size_t result = 0;
 
-	for(const auto &list : _container)
+	for(const auto &list : container_)
 		result += list.getSize();
 
 	return result;
@@ -53,22 +53,22 @@ size_t HashList<CONTAINER>::getSize() const noexcept{
 
 template <class CONTAINER>
 template <class UPAIR>
-bool HashList<CONTAINER>::_putT(UPAIR &&pair){
+bool HashList<CONTAINER>::putT_(UPAIR &&pair){
 	if (pair == false)
 		return true;
 
 	const StringRef &key = pair.getKey();
 
-	const auto index = _getBucketForKey(key);
+	const auto index = getBucketForKey_(key);
 
-	return _container[index].put(std::forward<UPAIR>(pair));
+	return container_[index].put(std::forward<UPAIR>(pair));
 }
 
 // ===================================
 
 // DJB Hash function from CDB
 template <class CONTAINER>
-unsigned long HashList<CONTAINER>::_calcHash(const char *str){
+unsigned long HashList<CONTAINER>::calcHash_(const char *str){
 	// mysterious DJB const
 	unsigned long hash = 5381;
 

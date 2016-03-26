@@ -11,7 +11,7 @@ namespace idgenerator{
 
 class IDGeneratorTS{
 public:
-	IDGeneratorTS(bool hex = true) : _hex(hex){};
+	IDGeneratorTS(bool const hex = true) : _hex(hex){};
 
 	std::string operator()() const;
 

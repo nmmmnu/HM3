@@ -16,15 +16,15 @@ public:
 	using Iterator		= MultiTableIterator::Collection<CONTAINER>;
 
 public:
-	LSMTable(const CONTAINER &container) : _container(container){}
+	LSMTable(const CONTAINER &container) : container_(container){}
 
 public:
 	Iterator begin() const{
-		return Iterator(_container);
+		return Iterator(container_);
 	}
 
 	Iterator end() const{
-		return Iterator(_container, true);
+		return Iterator(container_, true);
 	}
 
 public:
@@ -43,7 +43,7 @@ private:
 	count_type getCountReal() const;
 
 private:
-	const CONTAINER	&_container;
+	const CONTAINER	&container_;
 };
 
 
@@ -51,7 +51,7 @@ private:
 
 // ===================================
 
-#include "lsmtable_implementation.h"
+#include "lsmtable_impl.h"
 
 #endif
 

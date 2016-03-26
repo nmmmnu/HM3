@@ -24,7 +24,7 @@ namespace arraysearch{
 
 // ==============================
 
-#include "arraysearch_implementation.h"
+#include "arraysearch_impl.h"
 
 #endif
 

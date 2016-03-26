@@ -14,29 +14,29 @@ public:
 	Checksum() = default;
 
 	template<class CALCULATOR>
-	Checksum(CALCULATOR &&calculator) : _calculator(std::forward(calculator)){}
+	Checksum(CALCULATOR &&calculator) : calculator_(std::forward(calculator)){}
 
 public:
 	result_type calc(const void *data, size_t size, result_type start = 0) const noexcept{
-		return _calculator(data, size, start);
+		return calculator_(data, size, start);
 	}
 
 	void clear() noexcept{
-		_psum = 0;
+		psum_ = 0;
 	}
 
 	result_type add(const void *data, size_t size) noexcept{
-		_psum = calc(data, size, _psum);
-		return _psum;
+		psum_ = calc(data, size, psum_);
+		return psum_;
 	}
 
 	result_type get() const noexcept{
-		return _psum;
+		return psum_;
 	}
 
 private:
-	T		_calculator;
-	result_type	_psum		= 0;
+	T		calculator_;
+	result_type	psum_		= 0;
 };
 
 #endif

@@ -9,7 +9,7 @@
 namespace {
 
 template<typename T>
-inline T SGN(const T a){
+inline T SGN(const T &a){
 	if (a == 0)
 		return 0;
 
@@ -24,33 +24,33 @@ namespace hm3{
 
 template <class LOOKUP>
 VectorList<LOOKUP>::VectorList(count_type const reallocCount) :
-		_reallocCount( reallocCount ? reallocCount : 1 ) {
-	_clear();
+		reallocCount_( reallocCount ? reallocCount : 1 ) {
+	clear_();
 }
 
 template <class LOOKUP>
 VectorList<LOOKUP>::VectorList(VectorList &&other):
-		_reallocCount	(std::move(other._reallocCount		)),
-		_buffer		(std::move(other._buffer		)),
-		_reservedCount	(std::move(other._reservedCount		)),
-		_dataCount	(std::move(other._dataCount		)),
-		_dataSize	(std::move(other._dataSize		)){
-	other._clear();
+		reallocCount_	(std::move(other.reallocCount_		)),
+		buffer_		(std::move(other.buffer_		)),
+		reservedCount_	(std::move(other.reservedCount_		)),
+		dataCount_	(std::move(other.dataCount_		)),
+		dataSize_	(std::move(other.dataSize_		)){
+	other.clear_();
 }
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::removeAll(){
-	for(count_type i = 0; i < _dataCount; ++i)
-		_buffer[i].~Pair();
+	for(count_type i = 0; i < dataCount_; ++i)
+		buffer_[i].~Pair();
 
-	_clear(true);
+	clear_(true);
 
 	return true;
 }
 
 template <class LOOKUP>
 template <class UPAIR>
-bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
+bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto &l = lookup(key);
@@ -60,7 +60,7 @@ bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	if (cmp == 0){
 		// key exists, overwrite, do not shift
 
-		Pair & olddata = _buffer[index];
+		Pair & olddata = buffer_[index];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -68,7 +68,7 @@ bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 			return false;
 		}
 
-		_dataSize = _dataSize
+		dataSize_ = dataSize_
 					- olddata.getSize()
 					+ newdata.getSize();
 
@@ -79,14 +79,14 @@ bool VectorList<LOOKUP>::_putT(UPAIR&& newdata){
 	}
 
 	// key not exists, shift, then add
-	if ( ! _shiftR(index) ){
+	if ( ! shiftR_(index) ){
 		return false;
 	}
 
-	_dataSize += newdata.getSize();
+	dataSize_ += newdata.getSize();
 
 	// placement new with copy constructor
-	void *placement = & _buffer[index];
+	void *placement = & buffer_[index];
 	new(placement) Pair(std::forward<UPAIR>(newdata));
 
 	return true;
@@ -104,11 +104,11 @@ bool VectorList<LOOKUP>::remove(const StringRef &key){
 	}
 
 	// proceed with remove
-	Pair & data = _buffer[index];
-	_dataSize -= data.getSize();
+	Pair & data = buffer_[index];
+	dataSize_ -= data.getSize();
 	data.~Pair();
 
-	_shiftL(index);
+	shiftL_(index);
 
 	return true;
 }
@@ -116,123 +116,123 @@ bool VectorList<LOOKUP>::remove(const StringRef &key){
 // ===================================
 
 template <class LOOKUP>
-void VectorList<LOOKUP>::_clear(bool const alsoFree){
-	if (alsoFree && _buffer)
-		xfree(_buffer);
+void VectorList<LOOKUP>::clear_(bool const alsoFree){
+	if (alsoFree && buffer_)
+		xfree(buffer_);
 
-	_dataCount     = 0;
-	_dataSize      = 0;
-	_reservedCount = 0;
-	_buffer = nullptr;
+	dataCount_	= 0;
+	dataSize_	= 0;
+	reservedCount_	= 0;
+	buffer_		= nullptr;
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftL(count_type const index){
+bool VectorList<LOOKUP>::shiftL_(count_type const index){
 	// this is the most slow operation of them all
 	xmemmove(
-		& _buffer[index],
-		& _buffer[index + 1],
-		(_dataCount - index - 1) * ELEMENT_SIZE
+		& buffer_[index],
+		& buffer_[index + 1],
+		(dataCount_ - index - 1) * ELEMENT_SIZE
 	);
 
-	_resize(-1);
+	resize_(-1);
 
 	return true;
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_shiftR(count_type const index){
-	if (! _resize(1))
+bool VectorList<LOOKUP>::shiftR_(count_type const index){
+	if (! resize_(1))
 		return false;
 
 	// this is the most slow operation of them all
 	xmemmove(
-		& _buffer[index + 1],
-		& _buffer[index],
-		(_dataCount - index - 1) * ELEMENT_SIZE
+		& buffer_[index + 1],
+		& buffer_[index],
+		(dataCount_ - index - 1) * ELEMENT_SIZE
 	);
 
 	return true;
 }
 
 template <class LOOKUP>
-bool VectorList<LOOKUP>::_resize(int const delta){
+bool VectorList<LOOKUP>::resize_(int const delta){
 	if (delta == 0){
 		// already resized, done :)
 		return true;
 	}
 
-	if (_dataCount == 0 && delta < 0){
+	if (dataCount_ == 0 && delta < 0){
 		// must be an error
 		return true;
 	}
 
-	count_type const new_dataCount = (count_type) (_dataCount + SGN(delta));
+	count_type const new_dataCount = (count_type) (dataCount_ + SGN(delta));
 
 	if (new_dataCount == 0){
-		_clear(true);
+		clear_(true);
 		return true;
 	}
 
 	count_type const new_reservedCount = _calcNewCount(new_dataCount);
 
-	if (_reservedCount == new_reservedCount){
+	if (reservedCount_ == new_reservedCount){
 		// already resized, done :)
-		_dataCount = new_dataCount;
+		dataCount_ = new_dataCount;
 
 		return true;
 	}
 
-	Pair *new_buffer = (Pair *) xrealloc(_buffer, new_reservedCount * ELEMENT_SIZE);
+	Pair *new_buffer = (Pair *) xrealloc(buffer_, new_reservedCount * ELEMENT_SIZE);
 
 	if (new_buffer == nullptr)
 		return false;
 
-	_dataCount	= new_dataCount;
-	_reservedCount	= new_reservedCount;
-	_buffer		= new_buffer;
+	dataCount_	= new_dataCount;
+	reservedCount_	= new_reservedCount;
+	buffer_		= new_buffer;
 
 	return true;
 }
 
 template <class LOOKUP>
 auto VectorList<LOOKUP>::_calcNewCount(count_type const count) -> count_type{
-	count_type newsize = count / _reallocCount;
+	count_type newsize = count / reallocCount_;
 
-	if (count % _reallocCount)
+	if (count % reallocCount_)
 		++newsize;
 
-	return newsize * _reallocCount;
+	return newsize * reallocCount_;
 }
 
 // ===================================
 
 template <class LOOKUP>
 VectorList<LOOKUP>::Iterator::Iterator(const VectorList *list, count_type const pos) :
-			_list(list),
-			_pos(pos){}
+			list_(list),
+			pos_(pos){}
 
 template <class LOOKUP>
 auto VectorList<LOOKUP>::Iterator::operator++() -> Iterator &{
-	++_pos;
+	++pos_;
 	return *this;
 }
 
 template <class LOOKUP>
 auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
-	--_pos;
+	--pos_;
 	return *this;
 }
 
 template <class LOOKUP>
 const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
-	// _list can not be NULL
-	return _list->getAt(_pos);
+	// list_ can not be NULL
+	return list_->getAt(pos_);
 }
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::Iterator::operator==(const Iterator &other) const{
-	return _list == other._list && _pos == other._pos;
+	return list_ == other.list_ && pos_ == other.pos_;
 }
 
 // ===================================
@@ -251,13 +251,13 @@ auto VectorList<LOOKUP>::end() const -> Iterator{
 
 template class VectorList<arraysearch::Linear>;
 
-template bool VectorList<arraysearch::Linear>::_putT(Pair &&newdata);
-template bool VectorList<arraysearch::Linear>::_putT(const Pair &newdata);
+template bool VectorList<arraysearch::Linear>::putT_(Pair &&newdata);
+template bool VectorList<arraysearch::Linear>::putT_(const Pair &newdata);
 
 template class VectorList<arraysearch::Binary>;
 
-template bool VectorList<arraysearch::Binary>::_putT(Pair &&newdata);
-template bool VectorList<arraysearch::Binary>::_putT(const Pair &newdata);
+template bool VectorList<arraysearch::Binary>::putT_(Pair &&newdata);
+template bool VectorList<arraysearch::Binary>::putT_(const Pair &newdata);
 
 
 } // namespace

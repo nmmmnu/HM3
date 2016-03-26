@@ -5,11 +5,11 @@
 #include <unistd.h>	// close
 
 MMAPFile::MMAPFile(MMAPFile &&other) :
-		_mem(	std::move(other._mem)),
-		_size(	std::move(other._size)),
-		_fd(	std::move(other._fd)){
-	other._mem = nullptr;
-	other._size = 0;
+		mem_(	std::move(other.mem_)),
+		size_(	std::move(other.size_)),
+		fd_(	std::move(other.fd_)){
+	other.mem_ = nullptr;
+	other.size_ = 0;
 }
 
 bool MMAPFile::open(const StringRef &filename){
@@ -36,21 +36,21 @@ bool MMAPFile::open(const StringRef &filename){
 		return false;
 	}
 
-	_fd = fd;
-	_size = size;
-	_mem = mem;
+	fd_ = fd;
+	size_ = size;
+	mem_ = mem;
 
 	return true;
 }
 
 void MMAPFile::close(){
-	if (_mem == nullptr)
+	if (mem_ == nullptr)
 		return;
 
-	munmap((void *) _mem, _size);
-	::close(_fd);
+	munmap((void *) mem_, size_);
+	::close(fd_);
 
-	_mem = nullptr;
-	_size = 0;
+	mem_ = nullptr;
+	size_ = 0;
 }
 

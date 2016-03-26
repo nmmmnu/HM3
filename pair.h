@@ -85,14 +85,14 @@ public:
 public:
 	constexpr
 	static const Pair &zero(){
-		return __zero;
+		return zero_;
 	}
 
 private:
 	std::unique_ptr<Blob>	pimpl;
 
 private:
-	static Pair		__zero;
+	static Pair		zero_;
 };
 
 // ==============================

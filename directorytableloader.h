@@ -16,19 +16,19 @@ public:
 	using container_type	= std::vector<DiskTable>;
 
 public:
-	DirectoryTableLoader(const StringRef &path) : _path(path){
+	DirectoryTableLoader(const StringRef &path) : path_(path){
 		refresh();
 	}
 
 	const container_type &operator*() const{
-		return _vector;
+		return container_;
 	}
 
 	bool refresh();
 
 private:
-	std::string	_path;
-	container_type	_vector;
+	std::string	path_;
+	container_type	container_;
 };
 
 
