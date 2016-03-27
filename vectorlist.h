@@ -16,7 +16,7 @@ public:
 	static constexpr size_t     ELEMENT_SIZE  = sizeof(Pair);
 	static constexpr count_type REALLOC_COUNT = 16;
 
-	class Iterator;
+	using Iterator = Pair *;
 
 public:
 	explicit
@@ -72,8 +72,13 @@ public:
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator begin() const;
-	Iterator end() const;
+	Iterator begin() const{
+		return buffer_;
+	}
+
+	Iterator end() const{
+		return & buffer_[dataCount_];
+	}
 
 private:
 	void clear_(bool alsoFree = false);
@@ -85,28 +90,6 @@ private:
 
 	count_type _calcNewCount(count_type size);
 };
-
-// ===================================
-
-template <class LOOKUP>
-class VectorList<LOOKUP>::Iterator : public IIterator<Iterator>{
-private:
-	friend class VectorList;
-	Iterator(const VectorList *list, count_type pos);
-
-public:
-	Iterator &operator++();
-	Iterator &operator--();
-
-	const Pair &operator*() const;
-
-	bool operator==(const Iterator &other) const;
-
-private:
-	const VectorList	*list_;
-	count_type		pos_;
-};
-
 
 } // namespace
 

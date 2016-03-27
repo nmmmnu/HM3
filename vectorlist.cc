@@ -207,48 +207,6 @@ auto VectorList<LOOKUP>::_calcNewCount(count_type const count) -> count_type{
 
 // ===================================
 
-template <class LOOKUP>
-VectorList<LOOKUP>::Iterator::Iterator(const VectorList *list, count_type const pos) :
-			list_(list),
-			pos_(pos){}
-
-template <class LOOKUP>
-auto VectorList<LOOKUP>::Iterator::operator++() -> Iterator &{
-	++pos_;
-	return *this;
-}
-
-template <class LOOKUP>
-auto VectorList<LOOKUP>::Iterator::operator--() -> Iterator &{
-	--pos_;
-	return *this;
-}
-
-template <class LOOKUP>
-const Pair &VectorList<LOOKUP>::Iterator::operator*() const{
-	// list_ can not be NULL
-	return list_->getAt(pos_);
-}
-
-template <class LOOKUP>
-bool VectorList<LOOKUP>::Iterator::operator==(const Iterator &other) const{
-	return list_ == other.list_ && pos_ == other.pos_;
-}
-
-// ===================================
-
-template <class LOOKUP>
-auto VectorList<LOOKUP>::begin() const -> Iterator{
-	return Iterator(this, 0);
-}
-
-template <class LOOKUP>
-auto VectorList<LOOKUP>::end() const -> Iterator{
-	return Iterator(this, getCount());
-}
-
-// ===================================
-
 template class VectorList<arraysearch::Linear>;
 
 template bool VectorList<arraysearch::Linear>::putT_(Pair &&newdata);
