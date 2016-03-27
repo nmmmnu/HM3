@@ -16,7 +16,7 @@ public:
 	static constexpr size_t     ELEMENT_SIZE  = sizeof(Pair);
 	static constexpr count_type REALLOC_COUNT = 16;
 
-	using Iterator = Pair *;
+	using Iterator = const Pair *;
 
 public:
 	explicit

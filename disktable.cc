@@ -67,52 +67,28 @@ const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blob, size_t size) c
 // ===================================
 
 DiskTable::Iterator::Iterator(const DiskTable &list, count_type const pos, bool const useFastForward) :
-			_list(list),
-			_pos(pos),
-			_useFastForward(useFastForward){}
-
-DiskTable::Iterator &DiskTable::Iterator::operator++(){
-	++_pos;
-	return *this;
-}
-
-DiskTable::Iterator &DiskTable::Iterator::operator--(){
-	--_pos;
-	return *this;
-}
+			list_(list),
+			pos_(pos),
+			useFastForward_(useFastForward){}
 
 const Pair &DiskTable::Iterator::operator*() const{
-	if (tmp_pod && tmp_pos == _pos)
+	if (tmp_pod && tmp_pos == pos_)
 		return tmp_pair;
 
-	if (_useFastForward && tmp_pod && tmp_pos == _pos - 1){
+	if (useFastForward_ && tmp_pod && tmp_pos == pos_ - 1){
 		// get data without seek, walk forward
 		// this gives 50% performance
-		tmp_pod = _list.getNextFromDisk_(tmp_pod, tmp_pair.getSize() );
+		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getSize() );
 	}else{
 		// get data via seek
-		tmp_pod = _list.getAtFromDisk_(_pos);
+		tmp_pod = list_.getAtFromDisk_(pos_);
 	}
 
-	tmp_pos = _pos;
+	tmp_pos = pos_;
 
 	tmp_pair = tmp_pod;
 
 	return tmp_pair;
-}
-
-bool DiskTable::Iterator::operator==(const Iterator &other) const{
-	return &_list == &other._list && _pos == other._pos;
-}
-
-// ===================================
-
-auto DiskTable::begin() const -> Iterator{
-	return Iterator(*this, 0, header_.getSorted());
-}
-
-auto DiskTable::end() const -> Iterator{
-	return Iterator(*this, getCount(), false);
 }
 
 

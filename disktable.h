@@ -87,17 +87,26 @@ private:
 	Iterator(const DiskTable &list, count_type pos, bool useFastForward);
 
 public:
-	Iterator &operator++();
-	Iterator &operator--();
+	Iterator &operator++(){
+		++pos_;
+		return *this;
+	}
+
+	Iterator &operator--(){
+		--pos_;
+		return *this;
+	}
+
+	bool operator==(const Iterator &other) const{
+		return &list_ == &other.list_ && pos_ == other.pos_;
+	}
 
 	const Pair &operator*() const;
 
-	bool operator==(const Iterator &other) const;
-
 private:
-	const DiskTable	&_list;
-	count_type	_pos;
-	bool		_useFastForward;
+	const DiskTable	&list_;
+	count_type	pos_;
+	bool		useFastForward_;
 
 private:
 	/* !!! */ mutable
@@ -120,6 +129,16 @@ inline Pair DiskTable::getAt(count_type const index) const{
 inline Pair DiskTable::get(const StringRef &key) const{
 	const auto &l = lookup(key);
 	return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
+}
+
+// ==============================
+
+inline auto DiskTable::begin() const -> Iterator{
+	return Iterator(*this, 0, header_.getSorted());
+}
+
+inline auto DiskTable::end() const -> Iterator{
+	return Iterator(*this, getCount(), false);
 }
 
 
