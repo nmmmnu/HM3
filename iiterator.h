@@ -1,6 +1,7 @@
 #ifndef _IITERATOR_H
 #define _IITERATOR_H
 
+#include "pair.h"
 
 namespace hm3{
 
@@ -21,6 +22,7 @@ public:
 		return &p;
 	}
 };
+
 
 using EmptyIterator = const Pair *;
 

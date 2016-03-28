@@ -327,16 +327,6 @@ bool SkipList::Iterator::operator==(const Iterator &other) const{
 	return node_ == other.node_;
 }
 
-// ==============================
-
-SkipList::Iterator SkipList::begin() const{
-	return Iterator(heads_[0]);
-}
-
-SkipList::Iterator SkipList::end() const{
-	return Iterator(nullptr);
-}
-
 
 } // namespace
 

@@ -24,6 +24,7 @@ TARGETS	=	\
 		db_file db_lsm db_merge	db_lsmload\
 		\
 		test_stringref		\
+		test_checkedvalue	\
 		test_glob		\
 		test_idgenerator	\
 		test_stl		\
@@ -43,6 +44,9 @@ clean:
 			$(TARGETS)
 
 test_stringref: test_stringref.o
+	$(LINK) $@ $^			$(LIBS)
+
+test_checkedvalue: test_checkedvalue.o
 	$(LINK) $@ $^			$(LIBS)
 
 test_glob: test_glob.o myglob.o

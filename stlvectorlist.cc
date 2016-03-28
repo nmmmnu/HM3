@@ -9,14 +9,12 @@ template <class UPAIR>
 bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
-	const auto &l = lookup(key);
-	const auto cmp   = std::get<0>(l);
-	const auto index = std::get<1>(l);
+	const auto &lr = lookup(key);
 
-	if (cmp == 0){
+	if (lr){
 		// key exists, overwrite, do not shift
 
-		Pair & olddata = container_[index];
+		Pair & olddata = container_[ lr.get() ];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -38,12 +36,12 @@ bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	dataSize_ += newdata.getSize();
 
 	try{
-		if (index == container_.size()){
+		if (lr.get() == container_.size()){
 			// push_back micro-optimization :)
 			container_.push_back(std::forward<UPAIR>(newdata));
 		}else{
 			// This is slow, might shiftR
-			auto ptr = container_.begin() + index;
+			auto ptr = container_.begin() + lr.get();
 			container_.insert(ptr, std::forward<UPAIR>(newdata));
 		}
 	}catch(...){
@@ -55,21 +53,19 @@ bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 
 template <class LOOKUP>
 bool STLVectorList<LOOKUP>::remove(const StringRef &key){
-	const auto &l = lookup(key);
-	const auto cmp   = std::get<0>(l);
-	const auto index = std::get<1>(l);
+	const auto &lr = lookup(key);
 
-	if (cmp){
+	if (! lr){
 		// the key does not exists in the vector.
 		return true;
 	}
 
 	// Fix size
-	Pair & data = container_[index];
+	Pair & data = container_[ lr.get() ];
 	dataSize_ -= data.getSize();
 
 	// This is slow, might shiftL
-	auto ptr = container_.begin() + index;
+	auto ptr = container_.begin() + lr.get();
 	container_.erase(ptr);
 
 	return true;

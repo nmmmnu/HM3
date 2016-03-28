@@ -90,6 +90,16 @@ private:
 	const Node	*node_;
 };
 
+// ==============================
+
+inline SkipList::Iterator SkipList::begin() const{
+	return Iterator(heads_[0]);
+}
+
+inline SkipList::Iterator SkipList::end() const{
+	return Iterator(nullptr);
+}
+
 
 } // namespace
 

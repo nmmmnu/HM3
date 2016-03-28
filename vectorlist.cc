@@ -53,14 +53,12 @@ template <class UPAIR>
 bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
-	const auto &l = lookup(key);
-	const auto cmp   = std::get<0>(l);
-	const auto index = std::get<1>(l);
+	const auto &lr = lookup(key);
 
-	if (cmp == 0){
+	if (lr){
 		// key exists, overwrite, do not shift
 
-		Pair & olddata = buffer_[index];
+		Pair & olddata = buffer_[ lr.get() ];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -79,14 +77,14 @@ bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	}
 
 	// key not exists, shift, then add
-	if ( ! shiftR_(index) ){
+	if ( ! shiftR_( lr.get() ) ){
 		return false;
 	}
 
 	dataSize_ += newdata.getSize();
 
 	// placement new with copy constructor
-	void *placement = & buffer_[index];
+	void *placement = & buffer_[ lr.get() ];
 	new(placement) Pair(std::forward<UPAIR>(newdata));
 
 	return true;
@@ -94,21 +92,19 @@ bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
 
 template <class LOOKUP>
 bool VectorList<LOOKUP>::remove(const StringRef &key){
-	const auto &l = lookup(key);
-	const auto cmp   = std::get<0>(l);
-	const auto index = std::get<1>(l);
+	const auto &lr = lookup(key);
 
-	if (cmp){
+	if (! lr){
 		// the key does not exists in the vector.
 		return true;
 	}
 
 	// proceed with remove
-	Pair & data = buffer_[index];
+	Pair & data = buffer_[lr.get()];
 	dataSize_ -= data.getSize();
 	data.~Pair();
 
-	shiftL_(index);
+	shiftL_(lr.get());
 
 	return true;
 }
@@ -174,7 +170,7 @@ bool VectorList<LOOKUP>::resize_(int const delta){
 		return true;
 	}
 
-	count_type const new_reservedCount = _calcNewCount(new_dataCount);
+	count_type const new_reservedCount = calcNewCount_(new_dataCount);
 
 	if (reservedCount_ == new_reservedCount){
 		// already resized, done :)
@@ -196,7 +192,7 @@ bool VectorList<LOOKUP>::resize_(int const delta){
 }
 
 template <class LOOKUP>
-auto VectorList<LOOKUP>::_calcNewCount(count_type const count) -> count_type{
+auto VectorList<LOOKUP>::calcNewCount_(count_type const count) -> count_type{
 	count_type newsize = count / reallocCount_;
 
 	if (count % reallocCount_)

@@ -1,11 +1,12 @@
 #ifndef _DISK_TABLE_H
 #define _DISK_TABLE_H
 
-#include "arraysearch.h"
-#include "iiterator.h"
 #include "diskfile.h"
 #include "mmapfile.h"
 
+#include "arraysearch.h"
+#include "iiterator.h"
+#include "ilist.h"
 
 namespace hm3{
 
@@ -52,10 +53,6 @@ public:
 		return mmapData_.size();
 	}
 
-	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return lookup_(*this, key);
-	}
-
 public:
 	Iterator begin() const;
 	Iterator end() const;
@@ -77,6 +74,11 @@ private:
 	bool		validate_;
 
 	ArrayLookup	lookup_;
+
+private:
+	auto lookup(const StringRef &key) const -> decltype( lookup_(*this, key) ){
+		return lookup_(*this, key);
+	}
 };
 
 // ===================================
@@ -127,8 +129,8 @@ inline Pair DiskTable::getAt(count_type const index) const{
 }
 
 inline Pair DiskTable::get(const StringRef &key) const{
-	const auto &l = lookup(key);
-	return std::get<0>(l) ? nullptr : getAt( std::get<1>(l) );
+	const auto &lr = lookup_(*this, key);
+	return lr ? getAt( lr.get() ) : nullptr;
 }
 
 // ==============================

@@ -1,22 +1,20 @@
 #ifndef _IARRAY_H
 #define _IARRAY_H
 
-#include "ilist.h"
-
-#include <tuple>
+#include "stringref.h"
+#include "checkedvalue.h"
 
 namespace hm3{
 
 namespace arraysearch{
-
 	struct Linear{
 		template <class ARRAY>
-		typename std::tuple<int, typename ARRAY::count_type>   operator()(const ARRAY &array, const StringRef &key) const;
+		CheckedValue<typename ARRAY::count_type, bool, true>	operator()(const ARRAY &array, const StringRef &key) const;
 	};
 
 	struct Binary{
 		template <class ARRAY>
-		typename std::tuple<int, typename ARRAY::count_type>   operator()(const ARRAY &array, const StringRef &key) const;
+		CheckedValue<typename ARRAY::count_type, bool, true>	operator()(const ARRAY &array, const StringRef &key) const;
 	};
 }
 

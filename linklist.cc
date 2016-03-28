@@ -196,16 +196,6 @@ bool LinkList::Iterator::operator==(const Iterator &other) const{
 	return node_ == other.node_;
 }
 
-// ==============================
-
-LinkList::Iterator LinkList::begin() const{
-	return Iterator(head_);
-}
-
-LinkList::Iterator LinkList::end() const{
-	return Iterator(nullptr);
-}
-
 
 } // namespace
 

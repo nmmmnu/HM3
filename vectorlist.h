@@ -3,7 +3,7 @@
 
 #include "arraysearch.h"
 #include "iiterator.h"
-
+#include "ilist.h"
 
 namespace hm3{
 
@@ -57,13 +57,9 @@ public:
 		return dataSize_;
 	}
 
-	std::tuple<int, count_type> lookup(const StringRef &key) const{
-		return lookup_(*this, key);
-	}
-
 	const Pair &get(const StringRef &key) const{
-		const auto &l = lookup(key);
-		return std::get<0>(l) ? Pair::zero() : getAt( std::get<1>(l) );
+		const auto &lr = lookup(key);
+		return lr ? getAt( lr.get() ) : Pair::zero();
 	}
 
 public:
@@ -88,7 +84,13 @@ private:
 
 	bool resize_(int delta);
 
-	count_type _calcNewCount(count_type size);
+	count_type calcNewCount_(count_type size);
+
+private:
+	auto lookup(const StringRef &key) const -> decltype( lookup_(*this, key) ){
+		return lookup_(*this, key);
+	}
+
 };
 
 } // namespace

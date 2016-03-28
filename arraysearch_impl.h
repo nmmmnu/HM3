@@ -3,12 +3,12 @@ namespace hm3{
 namespace arraysearch{
 
 template <class ARRAY>
-typename std::tuple<int, typename ARRAY::count_type>   Linear::operator()(const ARRAY &self, const StringRef &key) const{
+CheckedValue<typename ARRAY::count_type, bool, true>	Linear::operator()(const ARRAY &self, const StringRef &key) const{
 	auto const count = self.getCount();
 
 	if (count == 0){
 		// index = 0; return 1;
-		return std::make_pair(1, 0);
+		return {false, 0};
 	}
 
 	int cmp = -1;
@@ -21,7 +21,7 @@ typename std::tuple<int, typename ARRAY::count_type>   Linear::operator()(const 
 		if (cmp == 0){
 			// found
 			// index = i; return 0;
-			return std::make_pair(0, i);
+			return i;
 		}
 
 		if (cmp > 0)
@@ -29,16 +29,16 @@ typename std::tuple<int, typename ARRAY::count_type>   Linear::operator()(const 
 	}
 
 	// index = i; return cmp;
-	return std::make_tuple(cmp, i);
+	return {false, i};
 }
 
 template <class ARRAY>
-typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const ARRAY &self, const StringRef &key) const{
+CheckedValue<typename ARRAY::count_type, bool, true>	Binary::operator()(const ARRAY &self, const StringRef &key) const{
 	auto const count = self.getCount();
 
 	if (count == 0){
 		// index = 0; return 1;
-		return std::make_pair(1, 0);
+		return {false, 0};
 	}
 
 	/*
@@ -61,7 +61,7 @@ typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const 
 		if (cmp == 0){
 			// found
 			// index = mid; return 0;
-			return std::make_pair(0, mid);
+			return mid;
 		}
 
 		if (cmp < 0){
@@ -74,7 +74,7 @@ typename std::tuple<int, typename ARRAY::count_type>   Binary::operator()(const 
 	}
 
 	// index = start; return cmp;
-	return std::make_tuple(cmp, start);
+	return {false, start};
 }
 
 } // namespace IArraySearch

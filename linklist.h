@@ -75,6 +75,16 @@ private:
 	const Node	*node_;
 };
 
+// ==============================
+
+inline LinkList::Iterator LinkList::begin() const{
+	return Iterator(head_);
+}
+
+inline LinkList::Iterator LinkList::end() const{
+	return Iterator(nullptr);
+}
+
 
 }
 
