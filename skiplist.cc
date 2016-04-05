@@ -286,7 +286,7 @@ const SkipList::Node *SkipList::locate_(const StringRef &key, bool const complet
 	}
 
 	return cmp ? nullptr : node;
-};
+}
 
 auto SkipList::_getRandomHeight() -> height_type{
 	// This gives slightly better performance,

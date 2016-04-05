@@ -5,7 +5,7 @@ CXX_OPT	= -g
 #CXX_OPT	= -O9
 #CXX_OPT	=
 
-CXX	= $(MYCC) -std=c++11 -Wall  -Wconversion 	\
+CXX	= $(MYCC) -std=c++11 -Wall  -Wconversion -Wpedantic 	\
 		-D_FILE_OFFSET_BITS=64	\
 		-MMD -MP		\
 		$(CXX_OPT)		\

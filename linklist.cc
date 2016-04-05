@@ -170,7 +170,7 @@ LinkList::Node *LinkList::locate_(const StringRef &key) const{
 	}
 
 	return nullptr;
-};
+}
 
 
 

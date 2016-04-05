@@ -37,15 +37,15 @@ inline bool MyTime::expired(uint64_t const date, uint32_t const expiration) noex
 
 constexpr inline uint64_t MyTime::combine(uint32_t const sec, uint32_t const usec) noexcept{
 	return (uint64_t) sec << 32 | usec;
-};
+}
 
 constexpr inline uint32_t MyTime::uncombine(uint64_t const timestamp) noexcept{
 	return (uint32_t) (timestamp >> 32);
-};
+}
 
 constexpr inline uint32_t MyTime::uncombine2(uint64_t const timestamp) noexcept{
 	return (uint32_t) (timestamp & 0xFFffFFff);
-};
+}
 
 #endif
 
