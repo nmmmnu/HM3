@@ -101,6 +101,10 @@ inline void swap(Pair &p1, Pair &p2){
 	p1.swap(p2);
 }
 
+inline bool comp(const Pair &p1, const Pair &p2){
+	return p1.cmp(p2) < 0;
+}
+
 } // namespace
 
 #endif

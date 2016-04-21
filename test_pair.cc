@@ -152,6 +152,17 @@ static void pair_test(const char *module){
 	PRINTF_TEST("valid",		p.valid(t)			);
 
 	{
+	const Pair p2 = { "__smaller", "val"};
+	PRINTF_TEST("cmp pair",		p.cmp(p) == 0			);
+	PRINTF_TEST("cmp pair",		p2.cmp(p) < 0			);
+	PRINTF_TEST("cmp pair",		p.cmp(p2) > 0			);
+
+	PRINTF_TEST("cmp comp",		! comp(p, p)			);
+	PRINTF_TEST("cmp comp",		! comp(p, p2)			);
+	PRINTF_TEST("cmp comp",		comp(p2, p)			);
+	}
+
+	{
 	Pair m1 = { key, val };
 
 	const Pair m2 = std::move(m1);
