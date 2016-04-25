@@ -7,6 +7,8 @@
 
 #include <utility>	// std::forward
 
+namespace hm3{
+
 template <class LIST1, class TABLE2>
 class DualList : public IMutableList<DualList<LIST1,TABLE2> >{
 public:
@@ -67,5 +69,7 @@ Pair DualList<LIST1, TABLE2>::get(const StringRef &key) const{
 	// lookup into immutable table
 	return table_.get(key);
 }
+
+} // namespace
 
 #endif

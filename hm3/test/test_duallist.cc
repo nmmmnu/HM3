@@ -14,7 +14,7 @@ int main(){
 	SkipList memlist{};
 	DiskTable disktable{};
 	disktable.open(FILENAME);
-	
+
 	DualList<SkipList,DiskTable> dl(memlist, disktable, max_size);
 
 	dl.emplace("Plovdiv", "new");
