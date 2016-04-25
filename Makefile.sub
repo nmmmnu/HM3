@@ -1,0 +1,8 @@
+
+$(O)%.o: $(SRC_DIR)%.cc
+	$(CXX) \
+			-c $<		\
+			-o $@
+
+-include $(SRC:%.cc=%.d)
+

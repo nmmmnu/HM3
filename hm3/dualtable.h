@@ -24,7 +24,14 @@ public:
 //	DualTable(DualTable &&other) = default;
 
 public:
-	Pair get(const StringRef &key) const;
+	Pair get(const StringRef &key) const{
+		const Pair &pair = table1_.get(key);
+
+		if (pair)
+			return pair;
+
+		return table2_.get(key);
+	}
 
 //	count_type getCount() const{
 //		return _table1.getCount() + _table2.getCount();
@@ -47,19 +54,6 @@ private:
 	const TABLE1	&table1_;
 	const TABLE2	&table2_;
 };
-
-// ===================================
-
-template <class TABLE1, class TABLE2>
-Pair DualTable<TABLE1, TABLE2>::get(const StringRef &key) const{
-	const Pair &pair = table1_.get(key);
-
-	if (pair)
-		return pair;
-
-	return table2_.get(key);
-}
-
 
 } // namespace
 

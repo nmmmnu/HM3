@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "disktable.h"
+#include "../disktable.h"
 
 
 namespace hm3{

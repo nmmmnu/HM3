@@ -1,0 +1,19 @@
+SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+#EXTRA_INCL += -I$(SRC_DIR)
+
+EXTRA_CLEAN += $(A)test_checkedvalue $(A)test_stringref $(A)test_glob
+
+include Makefile.sub
+
+all: $(A)test_checkedvalue $(A)test_stringref $(A)test_glob
+
+$(A)test_checkedvalue: $(O)test_checkedvalue.o
+	$(LINK)
+
+$(A)test_stringref: $(O)test_stringref.o
+	$(LINK)
+
+$(A)test_glob: $(O)test_glob.o $(O)myglob.o
+	$(LINK)
+

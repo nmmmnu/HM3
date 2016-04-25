@@ -16,16 +16,23 @@ public:
 
 public:
 	explicit
-	DualList(LIST1 &memlist, const TABLE2 &table, size_t const maxSize = MAX_SIZE) :
+	DualList(LIST1 &memlist, const TABLE2 &table) :
 					memlist_(memlist),
-					table_  (table),
-					maxSize_(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
+					table_(table){
 	}
 
 	DualList(DualList &&other) = default;
 
 public:
-	Pair get(const StringRef &key) const;
+	Pair get(const StringRef &key) const{
+		const Pair &pair = memlist_.get(key);
+
+		if (pair)
+			return pair;
+
+		// lookup into immutable table
+		return table_.get(key);
+	}
 
 	bool remove(const StringRef &key){
 		// remove by inserting tombstone
@@ -56,19 +63,6 @@ private:
 	LIST1		&memlist_;
 	const TABLE2	&table_;
 };
-
-// ===================================
-
-template <class LIST1, class TABLE2>
-Pair DualList<LIST1, TABLE2>::get(const StringRef &key) const{
-	const Pair &pair = memlist_.get(key);
-
-	if (pair)
-		return pair;
-
-	// lookup into immutable table
-	return table_.get(key);
-}
 
 } // namespace
 
