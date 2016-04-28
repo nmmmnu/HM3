@@ -3,6 +3,10 @@
 #include <fstream>
 
 
+namespace hm3{
+namespace diskfile{
+
+
 template <class ITERATOR>
 bool DiskFile::createFromIterator(const ITERATOR &begin, const ITERATOR &end,
 			bool keepTombstones) const{
@@ -80,4 +84,8 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 	DiskFileHeader head{datacount, true, tombstones, createdMin, createdMax};
 	return head.writeToFile(file_meta);
 }
+
+
+} // namespace diskfile
+} // namespace
 

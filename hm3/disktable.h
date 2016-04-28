@@ -67,7 +67,7 @@ private:
 	uint8_t getVersionFromDisk_() const;
 
 private:
-	DiskFileHeader	header_;
+	diskfile::DiskFileHeader	header_;
 	MMAPFile	mmapIndx_;
 	MMAPFile	mmapData_;
 

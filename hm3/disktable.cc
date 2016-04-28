@@ -9,6 +9,8 @@ namespace hm3{
 
 
 bool DiskTable::open(const std::string &filename){
+	using DiskFile = diskfile::DiskFile;
+
 	header_.open(DiskFile::filenameMeta(filename));
 
 	if (header_ == false)

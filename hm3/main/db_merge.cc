@@ -24,6 +24,8 @@ inline bool fileExists(const StringRef& name) {
 
 template <class TABLE>
 int merge(const TABLE &table, const char *output, bool const keepTombstones){
+	using DiskFile = hm3::diskfile::DiskFile;
+
 	DiskFile df = DiskFile(output);
 
 	df.createFromList(table, keepTombstones);

@@ -4,5 +4,3 @@ $(O)%.o: $(SRC_DIR)%.cc
 			-c $<		\
 			-o $@
 
--include $(SRC:%.cc=%.d)
-

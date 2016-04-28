@@ -13,7 +13,7 @@ CF_INCL		= -Iinclude $(EXTRA_INCL)
 CF_OPTIM	=
 CF_WARN		= -Wall -Wconversion -Wpedantic
 
-CF_MISC		= -D_FILE_OFFSET_BITS=64
+CF_MISC		=
 
 CF_ALL		= -std=c++11	\
 			$(CF_DEPS)	\
@@ -31,27 +31,27 @@ LL_ALL		= -lstdc++
 
 LINK		= $(MYCC) $(LD_ALL) -o $@ $^ $(LL_ALL)
 
-SRC		= $(wildcard *.cc)
-
 # ======================================================
 
 A		= bin/
 O		= obj/
 
 # ======================================================
-# ======================================================
-# ======================================================
 
-SUBDIRS = test common checksumcalculator	\
-		hm3/diskfile hm3/flusher hm3/idgenerator hm3/tableloader	\
-		hm3				\
-		hm3/test hm3/main
+include Makefile.dirlist
 
 include $(addsuffix /Makefile.dir, $(SUBDIRS))
+
+-include $(wildcard $(O)*.d)
 
 clean:
 	rm -f \
 		$(O)*.o		\
 		$(O)*.d		\
 		$(EXTRA_CLEAN)
+
+paramtest:
+	@echo $(wildcard $(O)*.d)
+
+.PHONY: all clean paramtest
 

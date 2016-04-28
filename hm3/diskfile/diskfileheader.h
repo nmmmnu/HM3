@@ -6,6 +6,11 @@
 
 #include "stringref.h"
 
+
+namespace hm3{
+namespace diskfile{
+
+
 class DiskFileHeader{
 public:
 	constexpr static const size_t	TITLE_LOGO_SIZE		= 4;		// size of ZUSE string
@@ -79,6 +84,11 @@ private:
 	uint64_t	createdMin_	= 0;
 	uint64_t	createdMax_	= 0;
 };
+
+
+} // namespace diskfile
+} // namespace
+
 
 #endif
 

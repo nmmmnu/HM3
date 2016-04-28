@@ -85,6 +85,8 @@ static void listSearch(const LIST &list, const StringRef &key){
 
 template <class LIST>
 static int op_write(LIST &&list, const StringRef &filename, const std::string &filename2){
+	using DiskFile = hm3::diskfile::DiskFile;
+
 	printf("Load start...\n");
 	listLoad(list, filename);
 	printf("Load done...\n");

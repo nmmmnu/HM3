@@ -5,6 +5,11 @@
 
 #include <inttypes.h>	// PRIu64
 
+
+namespace hm3{
+namespace diskfile{
+
+
 DiskFileHeader::DiskFileHeader(uint64_t const count,
 					bool const sorted,
 					uint64_t const tombstones, uint64_t const createdMin, uint64_t const createdMax):
@@ -105,3 +110,8 @@ void DiskFileHeader::print() const{
 	printf("%-14s: %s\n",		"Created::MIN",	createdMin_ ? MyTime::toString(createdMin_) : "n/a");
 	printf("%-14s: %s\n",		"Created::MAX",	createdMax_ ? MyTime::toString(createdMax_) : "n/a");
 }
+
+
+} // namespace diskfile
+} // namespace
+

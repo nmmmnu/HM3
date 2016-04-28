@@ -7,7 +7,10 @@
 
 #include <iostream>
 
-// ==============================
+
+namespace hm3{
+namespace diskfile{
+
 
 class DiskFile{
 public:
@@ -59,7 +62,10 @@ private:
 	std::string filename_data;
 };
 
-// ==============================
+
+} // namespace diskfile
+} // namespace
+
 
 #include "diskfile_impl.h"
 

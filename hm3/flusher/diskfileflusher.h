@@ -84,6 +84,8 @@ public:
 
 		const auto &filename = path_ + _idGenerator() + _ext;
 
+		using DiskFile = diskfile::DiskFile;
+
 		DiskFile df{ filename };
 		df.createFromList(list, _keepTombstones);
 
