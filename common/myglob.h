@@ -10,7 +10,14 @@
 class MyGlob final{
 public:
 	MyGlob() = default;
+
+	MyGlob(const MyGlob &other) = delete;
 	MyGlob& operator=(MyGlob other) = delete;
+
+	MyGlob(MyGlob &&other);
+	MyGlob& operator=(MyGlob &&other);
+
+	void swap(MyGlob &other);
 
 	~MyGlob() noexcept{
 		close();

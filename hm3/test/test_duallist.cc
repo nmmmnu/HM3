@@ -4,7 +4,7 @@
 #include "disktable.h"
 
 constexpr const char *FILENAME	= "TEST_DATA.BIN/data.001.bin";
-constexpr const char *KEY	= "Sofia";
+//constexpr const char *KEY	= "Sofia";
 
 int main(){
 	using MemList = hm3::SkipList;

@@ -43,7 +43,7 @@ public:
 		if (ptrc < memc)
 			return nullptr;
 
-		return safeAccess(ptrc - memc);
+		return safeAccess(ptrc - (size_t) memc);
 	}
 
 	size_t size() const{

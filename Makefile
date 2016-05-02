@@ -1,5 +1,5 @@
 MYCC		= clang
-MYCC		= g++
+#MYCC		= g++
 
 # ======================================================
 
@@ -11,7 +11,7 @@ EXTRA_INCL	:=
 CF_DEPS		= -MMD -MP
 CF_INCL		= -Iinclude $(EXTRA_INCL)
 CF_OPTIM	=
-CF_WARN		= -Wall -Wconversion -Wpedantic
+CF_WARN		= -Wall -Wpedantic -Wdeprecated -Wconversion
 
 CF_MISC		=
 

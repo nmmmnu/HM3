@@ -114,7 +114,7 @@ bool Pair::fwrite(std::ostream & os) const{
 	if (pimpl == nullptr)
 		return false;
 
-	os.write((const char *) pimpl.get(), getSize() );
+	os.write((const char *) pimpl.get(), (std::streamsize) getSize() );
 
 	return true;
 }

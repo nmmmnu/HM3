@@ -8,7 +8,7 @@ CheckedValue<typename ARRAY::count_type, bool, true>	Linear::operator()(const AR
 
 	if (count == 0){
 		// index = 0; return 1;
-		return {false, 0};
+		return {false, 0u};
 	}
 
 	int cmp = -1;
@@ -38,7 +38,7 @@ CheckedValue<typename ARRAY::count_type, bool, true>	Binary::operator()(const AR
 
 	if (count == 0){
 		// index = 0; return 1;
-		return {false, 0};
+		return {false, 0u};
 	}
 
 	/*

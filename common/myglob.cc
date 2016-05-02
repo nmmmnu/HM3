@@ -2,6 +2,28 @@
 
 #include <sys/stat.h>	// stat
 
+MyGlob::MyGlob(MyGlob &&other) :
+		globresults_	(std::move(other.globresults_	)),
+		isOpen_		(std::move(other.isOpen_	)),
+		data_		(std::move(other.data_		)){
+	other.isOpen_ = false;
+}
+
+MyGlob& MyGlob::operator=(MyGlob &&other){
+	if (isOpen_ || other.isOpen_)
+		swap(other);
+
+	return *this;
+}
+
+void MyGlob::swap(MyGlob &other){
+	using std::swap;
+
+	swap(globresults_,	other.globresults_	);
+	swap(isOpen_,		other.isOpen_		);
+	swap(data_,		other.data_		);
+}
+
 bool MyGlob::open(const StringRef &path) noexcept{
 	if (isOpen_)
 		close();
@@ -42,11 +64,11 @@ bool MyGlob::open_(const char *path, glob_t &globresults) noexcept{
 }
 
 void MyGlob::close() noexcept{
-	if (isOpen_){
-		globfree(& globresults_);
+	if (! isOpen_)
+		return;
 
-		data_.clear();
-	}
+	globfree(& globresults_);
+	data_.clear();
 
 	isOpen_ = false;
 }

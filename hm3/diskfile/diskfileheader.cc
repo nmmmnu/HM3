@@ -46,7 +46,7 @@ bool DiskFileHeader::open(std::ifstream &file_meta){
 	// read the rest, without rewind :-)
 	size_t additionalSize = sizeof(POD) - sizeof(PODBase);
 
-	file_meta.read( ((char *) &pod) + sizeof(PODBase), additionalSize);
+	file_meta.read( ((char *) &pod) + sizeof(PODBase), (std::streamsize) additionalSize);
 
 	if (! file_meta && file_meta.gcount() < (std::streamsize) additionalSize){
 		clear_();

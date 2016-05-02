@@ -255,10 +255,9 @@ inline size_t StringRef::__std_min(size_t const a, size_t const b) noexcept{
 
 // ==================================
 
-
-
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
-	return os.write(sr.data(), sr.size());
+	// cast because of clang
+	return os.write(sr.data(), (std::streamsize) sr.size());
 }
 
 #endif

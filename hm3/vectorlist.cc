@@ -163,7 +163,7 @@ bool VectorList<LOOKUP>::resize_(int const delta){
 		return true;
 	}
 
-	count_type const new_dataCount = (count_type) (dataCount_ + SGN(delta));
+	count_type const new_dataCount = dataCount_ + (count_type) SGN(delta);
 
 	if (new_dataCount == 0){
 		clear_(true);

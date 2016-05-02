@@ -14,7 +14,7 @@
 
 namespace hm3{
 
-class PairBlob;
+struct PairBlob;
 
 class Pair{
 public:

@@ -11,7 +11,7 @@ bool ArgTableLoader::refresh_(){
 	if (argc_ < 0)
 		return true;
 
-	container_.reserve(argc_);
+	container_.reserve((unsigned)argc_);
 
 	for (int i = 0; i < argc_; ++i){
 		const char *filename = argv_[i];
