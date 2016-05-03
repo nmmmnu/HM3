@@ -19,7 +19,7 @@ struct Binary{
 
 // ==============================
 
-#include "binaryarraysearch_impl.h"
+#include "binary_impl.h"
 
 #endif
 

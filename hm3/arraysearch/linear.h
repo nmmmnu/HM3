@@ -19,7 +19,7 @@ struct Linear{
 
 // ==============================
 
-#include "lineararraysearch_impl.h"
+#include "linear_impl.h"
 
 #endif
 

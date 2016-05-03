@@ -4,7 +4,7 @@
 
 #include "db_helper_impl.h"
 
-#include "directorytableloader.h"
+#include "tableloader/directorytableloader.h"
 
 static void printUsage(const char *cmd){
 	printf("Usage:\n");

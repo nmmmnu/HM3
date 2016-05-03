@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-#include "diskfile.h"
+#include "diskfile/diskfile.h"
 
 #include "stlvectorlist.h"
 #include "vectorlist.h"

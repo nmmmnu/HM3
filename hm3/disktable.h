@@ -1,10 +1,10 @@
 #ifndef _DISK_TABLE_H
 #define _DISK_TABLE_H
 
-#include "diskfile.h"
+#include "diskfile/diskfile.h"
 #include "mmapfile.h"
 
-#include "binaryarraysearch.h"
+#include "arraysearch/binary.h"
 #include "iiterator.h"
 #include "ilist.h"
 

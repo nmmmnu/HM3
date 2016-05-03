@@ -1,7 +1,7 @@
 #ifndef _DISK_FILE_FLUSH_H
 #define _DISK_FILE_FLUSH_H
 
-#include "diskfile.h"
+#include "diskfile/diskfile.h"
 
 // ==============================
 

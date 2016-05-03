@@ -1,8 +1,8 @@
 #ifndef _VECTORLIST_H
 #define _VECTORLIST_H
 
-#include "binaryarraysearch.h"
-#include "lineararraysearch.h"
+#include "arraysearch/binary.h"
+#include "arraysearch/linear.h"
 #include "iiterator.h"
 #include "ilist.h"
 

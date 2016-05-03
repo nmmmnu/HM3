@@ -13,8 +13,8 @@
 #include "hashlist.h"
 */
 
-#include "idgeneratordate.h"
-#include "diskfileflusher.h"
+#include "idgenerator/idgeneratordate.h"
+#include "flusher/diskfileflusher.h"
 
 #include "db_helper_impl.h"
 

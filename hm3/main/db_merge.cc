@@ -1,5 +1,5 @@
 #include "lsmtable.h"
-#include "argtableloader.h"
+#include "tableloader/argtableloader.h"
 
 #include "dualtable.h"
 
