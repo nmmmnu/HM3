@@ -1,4 +1,4 @@
-#include "idgenerator.h"
+#include "idgeneratorts.h"
 
 #include "mytime.h"
 
@@ -29,20 +29,6 @@ std::string IDGeneratorTS::operator()() const{
 	buff << ".";
 
 	_format(buff, MyTime::uncombine2(now));
-
-	return buff.str();
-}
-
-std::string IDGeneratorDate::operator()() const{
-	std::ostringstream buff;
-
-	static const char *FORMAT = MyTime::DATA_FORMAT_NUMBER;
-
-	buff	<< MyTime::toString(MyTime::now(), FORMAT)
-		<< "."
-		<< std::setfill('0') << std::setw(10)
-		<< MyTime::uncombine2(MyTime::now());
-
 
 	return buff.str();
 }

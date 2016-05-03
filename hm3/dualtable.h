@@ -15,7 +15,6 @@ public:
 	using Iterator = MultiTableIterator::Dual<TABLE1, TABLE2>;
 
 public:
-	explicit
 	DualTable(const TABLE1 &table1, const TABLE2 &table2) :
 					table1_(table1),
 					table2_(table2){
@@ -37,9 +36,9 @@ public:
 //		return _table1.getCount() + _table2.getCount();
 //	}
 
-	size_t getSize() const{
-		return table1_.getSize() + table2_.getSize();
-	}
+//	size_t getSize() const{
+//		return table1_.getSize() + table2_.getSize();
+//	}
 
 public:
 	Iterator begin() const{

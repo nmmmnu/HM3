@@ -1,7 +1,8 @@
 #ifndef _STL_VECTOR_LIST_H
 #define _STL_VECTOR_LIST_H
 
-#include "arraysearch.h"
+#include "binaryarraysearch.h"
+#include "lineararraysearch.h"
 #include "ilist.h"
 
 #include <vector>

@@ -4,7 +4,7 @@ EXTRA_INCL += -I$(SRC_DIR)
 
 #EXTRA_CLEAN +=
 
-include Makefile.sub
+#include Makefile.sub
 
-all: $(O)idgeneratorts.o $(O)idgeneratordate.o
+#all:
 

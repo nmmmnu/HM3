@@ -64,7 +64,7 @@ class LinkList::Iterator : public IIterator<Iterator>{
 protected:
 	friend class LinkList;
 
-	Iterator(const Node *node);
+	Iterator(const Node *node) : node_(node){}
 
 public:
 	Iterator &operator++();

@@ -1,4 +1,5 @@
-#include "idgenerator.h"
+#include "idgeneratorts.h"
+#include "idgeneratordate.h"
 
 #include <iostream>
 #include <iomanip>

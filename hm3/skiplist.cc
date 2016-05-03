@@ -308,19 +308,13 @@ auto SkipList::_getRandomHeight() -> height_type{
 // ==============================
 
 
-
-SkipList::Iterator::Iterator(const Node *node) :
-		node_(node){}
-
 SkipList::Iterator &SkipList::Iterator::operator++(){
-	if (node_)
-		node_ = node_->next[0];
-
+	node_ = node_->next[0];
 	return *this;
 }
 
 const Pair &SkipList::Iterator::operator*() const{
-	return node_ ? node_->data : Pair::zero();
+	return node_->data;
 }
 
 bool SkipList::Iterator::operator==(const Iterator &other) const{

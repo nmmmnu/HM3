@@ -177,19 +177,14 @@ LinkList::Node *LinkList::locate_(const StringRef &key) const{
 // ==============================
 
 
-
-LinkList::Iterator::Iterator(const Node *node) :
-		node_(node){}
-
 LinkList::Iterator &LinkList::Iterator::operator++(){
-	if (node_)
-		node_ = node_->next;
+	node_ = node_->next;
 
 	return *this;
 }
 
 const Pair &LinkList::Iterator::operator*() const{
-	return node_ ? node_->data : Pair::zero();
+	return node_->data;
 }
 
 bool LinkList::Iterator::operator==(const Iterator &other) const{

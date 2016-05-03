@@ -15,7 +15,6 @@ public:
 	using Iterator = MultiTableIterator::Dual<LIST1, TABLE2>;
 
 public:
-	explicit
 	DualList(LIST1 &memlist, const TABLE2 &table) :
 					memlist_(memlist),
 					table_(table){

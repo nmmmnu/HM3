@@ -30,6 +30,6 @@ $(A)test_idgenerator: $(O)test_idgenerator.o $(O)idgenerator.o $(O)mytime.o
 $(A)test_file: $(O)test_file.o $(O)stlvectorlist.o $(O)vectorlist.o $(O)linklist.o $(O)skiplist.o $(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)
 
-$(A)test_duallist: $(O)test_duallist.o $(O)skiplist.o $(PAIR_OBJ) $(DISKTABLE_OBJ)
-	$(LINK)
+#$(A)test_duallist: $(O)test_duallist.o $(O)skiplist.o $(PAIR_OBJ) $(DISKTABLE_OBJ)
+#	$(LINK)
 

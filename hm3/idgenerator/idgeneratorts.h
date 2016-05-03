@@ -1,5 +1,5 @@
-#ifndef _ID_GENERATOR_H
-#define _ID_GENERATOR_H
+#ifndef _ID_GENERATOR_TS_H
+#define _ID_GENERATOR_TS_H
 
 #include <string>
 #include <ostream>
@@ -20,12 +20,6 @@ private:
 
 private:
 	bool _hex;
-};
-
-
-class IDGeneratorDate{
-public:
-	std::string operator()() const;
 };
 
 

@@ -4,7 +4,7 @@
 #include "diskfile.h"
 #include "mmapfile.h"
 
-#include "arraysearch.h"
+#include "binaryarraysearch.h"
 #include "iiterator.h"
 #include "ilist.h"
 

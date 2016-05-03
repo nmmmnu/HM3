@@ -79,7 +79,7 @@ private:
 class SkipList::Iterator : public IIterator<Iterator>{
 private:
 	friend class SkipList;
-	Iterator(const Node *node);
+	Iterator(const Node *node) : node_(node){}
 
 public:
 	Iterator &operator++();
