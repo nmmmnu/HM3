@@ -13,10 +13,11 @@ namespace hm3{
 template <class LOOKUP>
 class STLVectorList : public IMutableList<STLVectorList<LOOKUP> >{
 public:
-	using vector_type = std::vector<Pair>;
+	using vector_type	= std::vector<Pair>;
 
-	using count_type  = vector_type::size_type;
-	using Iterator    = vector_type::const_iterator;
+	using count_type	= vector_type::size_type;
+	using difference_type	= vector_type::difference_type;
+	using Iterator		= vector_type::const_iterator;
 
 public:
 	STLVectorList() = default;

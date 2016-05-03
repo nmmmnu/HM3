@@ -16,7 +16,8 @@ protected:
 	static size_t PRINT_COUNT = 10;
 
 public:
-	using count_type = uint64_t;
+	using count_type	= uint64_t;
+	using difference_type	= int64_t;
 
 public:
 	void print(size_t count = PRINT_COUNT) const{
