@@ -2,7 +2,9 @@ SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 EXTRA_INCL += -I$(SRC_DIR)
 
-MY_TARGETS = $(A)test_pair $(A)test_list $(A)test_stl $(A)test_idgenerator $(A)test_file $(A)test_duallist
+MY_TARGETS = $(A)test_pair $(A)test_list $(A)test_stl $(A)test_idgenerator $(A)test_file
+
+#$(A)test_duallist
 
 EXTRA_CLEAN += $(MY_TARGETS)
 
@@ -24,7 +26,7 @@ $(A)test_list: $(O)test_list.o $(O)stlvectorlist.o $(O)vectorlist.o $(O)linklist
 $(A)test_stl: $(O)test_stl.o $(PAIR_OBJ)
 	$(LINK)
 
-$(A)test_idgenerator: $(O)test_idgenerator.o $(O)idgenerator.o $(O)mytime.o
+$(A)test_idgenerator: $(O)test_idgenerator.o $(O)idgeneratorts.o $(O)idgeneratordate.o $(O)mytime.o
 	$(LINK)
 
 $(A)test_file: $(O)test_file.o $(O)stlvectorlist.o $(O)vectorlist.o $(O)linklist.o $(O)skiplist.o $(PAIR_OBJ) $(DISKTABLE_OBJ)
