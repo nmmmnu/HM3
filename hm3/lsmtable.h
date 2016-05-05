@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-#include "multitableiterator.h"
+#include "multitableiterator/collectioniterator.h"
 
 
 namespace hm3{
@@ -13,7 +13,7 @@ template <class CONTAINER>
 class LSMTable : public IList<LSMTable<CONTAINER> >{
 public:
 	using count_type	= typename LSMTable::count_type;
-	using Iterator		= MultiTableIterator::Collection<CONTAINER>;
+	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
 public:
 	LSMTable(const CONTAINER &container) : container_(container){}

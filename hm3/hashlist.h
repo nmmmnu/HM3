@@ -4,7 +4,7 @@
 #include "djbhash.h"
 
 #include "ilist.h"
-#include "multitableiterator.h"
+#include "multitableiterator/collectioniterator.h"
 
 
 namespace hm3{
@@ -15,7 +15,7 @@ class HashList : public IMutableList<HashList<CONTAINER> >{
 public:
 	using List		= typename CONTAINER::value_type;
 	using count_type	= typename List::count_type;
-	using Iterator		= MultiTableIterator::Collection<CONTAINER>;
+	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
 public:
 	constexpr

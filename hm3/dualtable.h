@@ -3,7 +3,7 @@
 
 #include "ilist.h"
 
-#include "multitableiterator.h"
+#include "multitableiterator/dualiterator.h"
 
 
 namespace hm3{
@@ -12,7 +12,7 @@ namespace hm3{
 template <class TABLE1, class TABLE2>
 class DualTable : public IList<DualTable<TABLE1,TABLE2> >{
 public:
-	using Iterator = MultiTableIterator::Dual<TABLE1, TABLE2>;
+	using Iterator = multitableiterator::DualIterator<TABLE1, TABLE2>;
 
 public:
 	DualTable(const TABLE1 &table1, const TABLE2 &table2) :
