@@ -5,6 +5,7 @@
 
 #include "multitableiterator/collectioniterator.h"
 
+#include <algorithm>    // std::count
 
 namespace hm3{
 
@@ -40,7 +41,9 @@ public:
 
 private:
 	count_type getCountEstimated() const;
-	count_type getCountReal() const;
+	count_type getCountReal() const{
+		return std::distance(begin(), end());
+	}
 
 private:
 	const CONTAINER	&container_;

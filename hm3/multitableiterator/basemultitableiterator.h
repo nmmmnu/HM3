@@ -7,11 +7,8 @@ namespace hm3{
 namespace multitableiterator{
 
 
-class BaseMultiTableIterator{
-protected:
-	BaseMultiTableIterator() = default;
+namespace helpers{
 
-protected:
 	template <class TABLE>
 	class MatrixHelper_{
 	private:
@@ -52,7 +49,8 @@ protected:
 		Iterator cur;
 		Iterator end;
 	};
-};
+
+} // namespace base
 
 
 } // namespace multitableiterator

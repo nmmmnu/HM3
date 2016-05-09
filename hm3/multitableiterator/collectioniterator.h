@@ -10,12 +10,10 @@ namespace multitableiterator{
 
 
 template <class CONTAINER>
-class CollectionIterator :
-			private BaseMultiTableIterator,
-			public IIterator<CollectionIterator<CONTAINER> >{
+class CollectionIterator : public IIterator<CollectionIterator<CONTAINER> >{
 private:
 	using Table		= typename CONTAINER::value_type;
-	using Matrix		= MatrixHelper_<Table>;
+	using Matrix		= helpers::MatrixHelper_<Table>;
 	using vector_type	= std::vector<Matrix>;
 
 	using size_type		= typename vector_type::size_type;

@@ -38,6 +38,7 @@ auto LSMTable<CONTAINER>::getCountEstimated() const -> count_type{
 	return result;
 }
 
+#if 0
 template <class CONTAINER>
 auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
 	count_type result = 0;
@@ -48,6 +49,7 @@ auto LSMTable<CONTAINER>::getCountReal() const -> count_type{
 
 	return result;
 }
+#endif
 
 
 } // namespace
