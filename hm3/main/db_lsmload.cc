@@ -1,11 +1,6 @@
 #include <cstdio>	// printf
 #include <inttypes.h>	// PRIu64
-
-#ifndef PRIu64
-// cygwin fix
-#define PRIu64 "llu"
-#endif
-
+#include "port.h"
 #include <ctype.h>	// isspace
 
 #include <fstream>

@@ -4,11 +4,7 @@
 #include <fstream>
 
 #include <inttypes.h>	// PRIu64
-
-#ifndef PRIu64
-// cygwin fix
-#define PRIu64 "llu"
-#endif
+#include "port.h"
 
 
 namespace hm3{
