@@ -24,7 +24,7 @@ CheckedValue<typename ARRAY::count_type, bool, true>	Binary::operator()(const AR
 
 	while (start < end){
 	//	count_type mid = start + ((end - start) /  2);
-		count_type mid = (count_type) (start + ((end - start) >> 1));
+		count_type mid = count_type(start + ((end - start) >> 1));
 
 		cmp = self.cmpAt(mid, key);
 
