@@ -1,6 +1,8 @@
 #include "pair.h"
 #include "pairblob.h"
 
+#include <cstdio>		// printf for cygwin
+
 namespace hm3{
 
 // ==============================
