@@ -39,8 +39,9 @@ public:
 	Iterator begin() const;
 	Iterator end() const;
 
-public:
-	// needs to be public because of CRPT
+private:
+	friend class IMutableList<LinkList>;
+
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 

@@ -38,8 +38,9 @@ public:
 	count_type getCount(bool const estimated = false) const noexcept;
 	size_t getSize() const noexcept;
 
-public:
-	// needs to be public because of CRPT
+private:
+	friend class IMutableList<HashList<CONTAINER> >;
+
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 

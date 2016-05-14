@@ -54,8 +54,9 @@ public:
 		return list_.getCount();
 	}
 
-public:
-	// needs to be public because of CRPT
+private:
+	friend class IMutableList<FlushList<LIST, FLUSH> >;
+
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 

@@ -68,8 +68,9 @@ public:
 		return lr ? getAt( lr.get() ) : Pair::zero();
 	}
 
-public:
-	// needs to be public because of CRPT
+private:
+	friend class IMutableList<STLVectorList<LOOKUP> >;
+
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 

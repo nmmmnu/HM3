@@ -69,7 +69,6 @@ private:
 };
 
 
-
 } // namespace
 
 #endif
