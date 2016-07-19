@@ -188,7 +188,7 @@ bool SkipList::remove(const StringRef &key){
 		return true;
 
 	for(height_type i = 0; i < height_; ++i){
-		Node *prev = (Node *) loc_[i];
+		Node *prev = loc_[i];
 
 		if (prev){
 			// check if lane go to this node...
@@ -243,10 +243,12 @@ SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
 	if (node)
 		return Iterator(node);
 
-	if (loc_[0])
-		return Iterator(loc_[0]->next[0]);
+	const Node *prev = loc_[0];
 
-	return Iterator(heads_[0]);
+	if (prev)
+		return Iterator(prev->next[0]);
+	else
+		return Iterator(heads_[0]);
 }
 
 // ==============================
