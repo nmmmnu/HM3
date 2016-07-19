@@ -43,7 +43,14 @@ public:
 		if (ptrc < memc)
 			return nullptr;
 
+		/*
+		// old version, this is wrong:
 		return safeAccess(ptrc - (size_t) memc);
+		*/
+
+		/* long int */ auto const offset = ptrc - memc;
+
+		return safeAccess( (size_t) offset);
 	}
 
 	size_t size() const{
