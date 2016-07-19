@@ -2,7 +2,16 @@ using Pair = hm3::Pair;
 
 template <class LIST>
 static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t const count = 100){
-	list.print(count);
+	const auto bit = key.empty() ? list.begin() : list.getIterator(key);
+	const auto eit = list.end();
+
+	size_t c = 0;
+	for(auto it = bit; bit != eit; ++it){
+		it->print();
+
+		if (++c >= count)
+			break;
+	}
 
 	return 0;
 }

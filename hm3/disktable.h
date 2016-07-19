@@ -54,6 +54,7 @@ public:
 	}
 
 public:
+	Iterator getIterator(const StringRef &key) const;
 	Iterator begin() const;
 	Iterator end() const;
 
@@ -134,6 +135,11 @@ inline Pair DiskTable::get(const StringRef &key) const{
 }
 
 // ==============================
+
+inline auto DiskTable::getIterator(const StringRef &key) const -> Iterator{
+	const auto &lr = lookup_(*this, key);
+	return Iterator(*this, lr.get(), header_.getSorted());
+}
 
 inline auto DiskTable::begin() const -> Iterator{
 	return Iterator(*this, 0, header_.getSorted());
