@@ -10,8 +10,8 @@ namespace multitableiterator{
 template <class TABLE1, class TABLE2>
 class DualIterator : public IIterator<DualIterator<TABLE1, TABLE2> >{
 private:
-	using Matrix1	= helpers::MatrixHelper_<TABLE1>;
-	using Matrix2	= helpers::MatrixHelper_<TABLE2>;
+	using Matrix1	= helpers::IteratorPair_<TABLE1>;
+	using Matrix2	= helpers::IteratorPair_<TABLE2>;
 
 public:
 	DualIterator(const TABLE1 &table1, const TABLE2 &table2, bool endIt = false);

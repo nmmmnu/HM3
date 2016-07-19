@@ -45,8 +45,8 @@ private:
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator getIterator(const StringRef &) const{
-		return begin();
+	Iterator getIterator(const StringRef &key) const{
+		return Iterator(container_, key);
 	}
 
 	Iterator begin() const{

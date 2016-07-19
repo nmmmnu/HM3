@@ -13,19 +13,20 @@ template <class CONTAINER>
 class CollectionIterator : public IIterator<CollectionIterator<CONTAINER> >{
 private:
 	using Table		= typename CONTAINER::value_type;
-	using Matrix		= helpers::MatrixHelper_<Table>;
+	using Matrix		= helpers::IteratorPair_<Table>;
 	using vector_type	= std::vector<Matrix>;
 
 	using size_type		= typename vector_type::size_type;
 
+private:
 	template <typename T>
-	CollectionIterator(const CONTAINER &list, const T &param, int);
+	CollectionIterator(const CONTAINER &list, const T &param, std::nullptr_t);
 
 public:
 	CollectionIterator(const CONTAINER &list, bool endIt = false) :
-					CollectionIterator(list, endIt, 0){}
+					CollectionIterator(list, endIt, nullptr ){}
 	CollectionIterator(const CONTAINER &list, const StringRef &key) :
-					CollectionIterator(list, key, 0){}
+					CollectionIterator(list, key, nullptr ){}
 
 	CollectionIterator &operator++();
 
@@ -34,7 +35,7 @@ public:
 	bool operator==(const CollectionIterator &other) const;
 
 private:
-	void _tmp_pairUpdate(size_type index, const Pair *pair = nullptr) const;
+	void tmp_pairUpdate_(size_type index, const Pair *pair = nullptr) const;
 
 private:
 	vector_type		it_;

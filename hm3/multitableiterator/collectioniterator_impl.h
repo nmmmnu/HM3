@@ -4,7 +4,7 @@ namespace multitableiterator{
 
 template <class CONTAINER>
 template <typename T>
-CollectionIterator<CONTAINER>::CollectionIterator(const CONTAINER &list, const T &param, int){
+CollectionIterator<CONTAINER>::CollectionIterator(const CONTAINER &list, const T &param, std::nullptr_t){
 	it_.reserve(list.size());
 
 	// CONTAINER is responsible for ordering the tables,
@@ -17,8 +17,7 @@ CollectionIterator<CONTAINER>::CollectionIterator(const CONTAINER &list, const T
 
 template <class CONTAINER>
 auto CollectionIterator<CONTAINER>::operator++() -> CollectionIterator &{
-	// get cached...
-	const Pair &p = tmp_pair ? *tmp_pair : operator*();
+	const Pair &p = operator*();
 
 	if ( ! p ){
 		// notice, there is no increment here !!!
@@ -50,7 +49,7 @@ const Pair &CollectionIterator<CONTAINER>::operator*() const{
 
 		// initialize
 		if (tmp_pair == nullptr){
-			_tmp_pairUpdate(i, &pair);
+			tmp_pairUpdate_(i, &pair);
 
 			continue;
 		}
@@ -59,13 +58,13 @@ const Pair &CollectionIterator<CONTAINER>::operator*() const{
 
 		// if is smaller, swap
 		if (cmp < 0){
-			_tmp_pairUpdate(i, &pair);
+			tmp_pairUpdate_(i, &pair);
 
 			continue;
 		}
 
 		if (cmp == 0){
-			_tmp_pairUpdate(i);
+			tmp_pairUpdate_(i);
 
 			// if newer, swap
 			if ( pair.cmpTime(*tmp_pair) > 0 )
@@ -93,7 +92,7 @@ bool CollectionIterator<CONTAINER>::operator==(const CollectionIterator &other) 
 }
 
 template <class CONTAINER>
-void CollectionIterator<CONTAINER>::_tmp_pairUpdate(size_type const index, const Pair *pair) const{
+void CollectionIterator<CONTAINER>::tmp_pairUpdate_(size_type const index, const Pair *pair) const{
 	if (pair){
 		tmp_pair = pair;
 		tmp_index.clear();
