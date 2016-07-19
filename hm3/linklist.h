@@ -81,9 +81,6 @@ private:
 // ==============================
 
 inline LinkList::Iterator LinkList::getIterator(const StringRef &key) const{
-	if (key.empty())
-		return end();
-
 	const Node *node = locate_(key);
 	return Iterator(node);
 }

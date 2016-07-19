@@ -76,9 +76,6 @@ private:
 
 public:
 	Iterator getIterator(const StringRef &key) const{
-		if (key.empty())
-			return end();
-
 		const auto &lr = lookup(key);
 		return container_.cbegin() + (difference_type) lr.get();
 	}

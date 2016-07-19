@@ -15,8 +15,8 @@ public:
 	using height_type = uint8_t;
 
 public:
-	static const height_type MAX_HEIGHT		= 64;
-	static const height_type DEFAULT_HEIGHT	= 32;
+	static constexpr height_type MAX_HEIGHT		= 64;
+	static constexpr height_type DEFAULT_HEIGHT	= 32;
 
 	class Iterator;
 
@@ -93,14 +93,6 @@ private:
 };
 
 // ==============================
-
-inline SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
-	if (key.empty())
-		return end();
-
-	const Node *node = locate_(key);
-	return Iterator(node);
-}
 
 inline SkipList::Iterator SkipList::begin() const{
 	return Iterator(heads_[0]);

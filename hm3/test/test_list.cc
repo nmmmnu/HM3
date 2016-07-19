@@ -130,6 +130,8 @@ static void iterator_get_test(const char *module, LIST &list){
 	iterator_get_test_deref(module, list, "4 os",	"Linux"	);
 	iterator_get_test_deref(module, list, "5",	nullptr	);
 	iterator_get_test_deref(module, list, "6",	nullptr	);
+
+	iterator_get_test_deref(module, list, "",	nullptr	);
 }
 
 template <class LIST>

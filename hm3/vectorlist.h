@@ -71,9 +71,6 @@ private:
 
 public:
 	Iterator getIterator(const StringRef &key) const noexcept{
-		if (key.empty())
-			return end();
-
 		const auto &lr = lookup(key);
 		return buffer_ + lr.get();
 	}

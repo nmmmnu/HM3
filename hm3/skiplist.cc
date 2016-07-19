@@ -234,6 +234,23 @@ void SkipList::printLane(height_type const lane) const{
 
 // ==============================
 
+SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
+	if (key.empty())
+		return end();
+
+	const Node *node = locate_(key);
+
+	if (node)
+		return Iterator(node);
+
+	if (loc_[0])
+		return Iterator(loc_[0]->next[0]);
+
+	return Iterator(heads_[0]);
+}
+
+// ==============================
+
 void SkipList::clear_(){
 	dataSize_ = 0;
 	dataCount_ = 0;
