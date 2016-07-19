@@ -18,8 +18,14 @@ private:
 
 	using size_type		= typename vector_type::size_type;
 
+	template <typename T>
+	CollectionIterator(const CONTAINER &list, const T &param, int);
+
 public:
-	CollectionIterator(const CONTAINER &list, bool endIt = false);
+	CollectionIterator(const CONTAINER &list, bool endIt = false) :
+					CollectionIterator(list, endIt, 0){}
+	CollectionIterator(const CONTAINER &list, const StringRef &key) :
+					CollectionIterator(list, key, 0){}
 
 	CollectionIterator &operator++();
 

@@ -3,13 +3,14 @@ namespace multitableiterator{
 
 
 template <class CONTAINER>
-CollectionIterator<CONTAINER>::CollectionIterator(const CONTAINER &list, bool const endIt){
+template <typename T>
+CollectionIterator<CONTAINER>::CollectionIterator(const CONTAINER &list, const T &param, int){
 	it_.reserve(list.size());
 
 	// CONTAINER is responsible for ordering the tables,
 	// in correct (probably reverse) order.
 	for(const auto &table : list)
-		it_.push_back({ table, endIt });
+		it_.push_back({ table, param });
 
 	tmp_index.reserve(list.size());
 }

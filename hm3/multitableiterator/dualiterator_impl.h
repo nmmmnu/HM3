@@ -4,8 +4,14 @@ namespace multitableiterator{
 
 template <class TABLE1, class TABLE2>
 DualIterator<TABLE1, TABLE2>::DualIterator(const TABLE1 &table1, const TABLE2 &table2, bool const endIt) :
-					it1_({ table1, endIt }),
-					it2_({ table2, endIt }){
+					it1_(table1, endIt),
+					it2_(table2, endIt){
+}
+
+template <class TABLE1, class TABLE2>
+DualIterator<TABLE1, TABLE2>::DualIterator(const TABLE1 &table1, const TABLE2 &table2, const StringRef &key) :
+					it1_(table1, key),
+					it2_(table2, key){
 }
 
 #if 0

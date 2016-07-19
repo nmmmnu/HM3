@@ -6,7 +6,7 @@ static int op_list(const LIST &list, const StringRef &key = StringRef(), size_t 
 	const auto eit = list.end();
 
 	size_t c = 0;
-	for(auto it = bit; bit != eit; ++it){
+	for(auto it = bit; it != eit; ++it){
 		it->print();
 
 		if (++c >= count)

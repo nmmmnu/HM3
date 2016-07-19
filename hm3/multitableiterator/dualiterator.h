@@ -15,6 +15,7 @@ private:
 
 public:
 	DualIterator(const TABLE1 &table1, const TABLE2 &table2, bool endIt = false);
+	DualIterator(const TABLE1 &table1, const TABLE2 &table2, const StringRef &key);
 
 	DualIterator &operator++();
 

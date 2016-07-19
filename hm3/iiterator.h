@@ -9,11 +9,19 @@ namespace hm3{
 template <class T>
 class IIterator{
 public:
+#if 0
 	bool operator!=(const IIterator &other) const{
 		const T *a = static_cast<const T*>(this);
 		const T *b = static_cast<const T*>(&other);
 
 		return ! ( *a == *b );
+	}
+#endif
+
+	bool operator!=(const T &other) const{
+		const T *self = static_cast<const T*>(this);
+
+		return ! ( *self == other );
 	}
 
 	const Pair *operator->() const{

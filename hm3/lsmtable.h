@@ -20,6 +20,10 @@ public:
 	LSMTable(const CONTAINER &container) : container_(container){}
 
 public:
+	Iterator getIterator(const StringRef &key) const{
+		return Iterator(container_, key);
+	}
+
 	Iterator begin() const{
 		return Iterator(container_);
 	}

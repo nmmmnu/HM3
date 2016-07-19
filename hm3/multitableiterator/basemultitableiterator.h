@@ -3,6 +3,8 @@
 
 #include "iiterator.h"
 
+#include "stringref.h"
+
 namespace hm3{
 namespace multitableiterator{
 
@@ -22,6 +24,12 @@ namespace helpers{
 		MatrixHelper_(const TABLE &table, bool const endIt = false) :
 						MatrixHelper_(
 							endIt ? table.end() : table.begin(),
+							table.end()
+						){}
+
+		MatrixHelper_(const TABLE &table, const StringRef &key) :
+						MatrixHelper_(
+							table.getIterator(key),
 							table.end()
 						){}
 
