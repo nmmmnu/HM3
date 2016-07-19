@@ -70,12 +70,20 @@ private:
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator begin() const{
+	Iterator getIterator(const StringRef &key) const noexcept{
+		if (key.empty())
+			return end();
+
+		const auto &lr = lookup(key);
+		return buffer_ + lr.get();
+	}
+
+	Iterator begin() const noexcept{
 		return buffer_;
 	}
 
-	Iterator end() const{
-		return & buffer_[dataCount_];
+	Iterator end() const noexcept{
+		return buffer_ + dataCount_;
 	}
 
 private:

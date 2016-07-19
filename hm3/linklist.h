@@ -36,6 +36,8 @@ public:
 	}
 
 public:
+	Iterator getIterator(const StringRef &key) const;
+
 	Iterator begin() const;
 	Iterator end() const;
 
@@ -77,6 +79,14 @@ private:
 };
 
 // ==============================
+
+inline LinkList::Iterator LinkList::getIterator(const StringRef &key) const{
+	if (key.empty())
+		return end();
+
+	const Node *node = locate_(key);
+	return Iterator(node);
+}
 
 inline LinkList::Iterator LinkList::begin() const{
 	return Iterator(head_);

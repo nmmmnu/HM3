@@ -41,6 +41,7 @@ public:
 	}
 
 public:
+	Iterator getIterator(const StringRef &key) const;
 	Iterator begin() const;
 	Iterator end() const;
 
@@ -92,6 +93,14 @@ private:
 };
 
 // ==============================
+
+inline SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
+	if (key.empty())
+		return end();
+
+	const Node *node = locate_(key);
+	return Iterator(node);
+}
 
 inline SkipList::Iterator SkipList::begin() const{
 	return Iterator(heads_[0]);

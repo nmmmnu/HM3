@@ -17,6 +17,7 @@ using Pair	= hm3::Pair;
 	printf("%-20s : Testing %-20s %s\n", module, test, result ? "OK" : "Fail")
 
 
+static void skiplist_lanes_test(hm3::SkipList &list) __attribute__((unused));
 
 static void skiplist_lanes_test(hm3::SkipList &list){
 	list.emplace("name",		"Niki"		);
@@ -87,16 +88,7 @@ template <class IT>
 inline void iterator_test_deref(const char *module, IT &it, IT &et, const char *value){
 	PRINTF_TEST("*it   deref",	it != et && (*it).getVal() == value	);
 	PRINTF_TEST(" it-> deref",	it != et &&   it->getVal() == value	);
-/*
-	const std::string &s = it->getVal();
 
-	printf(
-		"'%s' '%s' '%s' %d %d\n",
-		value, (*it).getVal().data(), s.c_str(),
-		(*it).getVal() == value,
-		s == value
-	);
-*/
 	++it;
 }
 
@@ -111,6 +103,33 @@ static void iterator_test(const char *module, LIST &list){
 	iterator_test_deref(module, it, et, "Linux"	);
 
 	PRINTF_TEST("*it end()",	it == et				);
+}
+
+template <class LIST>
+inline void iterator_get_test_deref(const char *module, const LIST &list, const char *key, const char *value){
+	auto it = list.getIterator(key);
+	auto et = list.end();
+
+	if (value){
+	PRINTF_TEST("*get it   deref",	it != et && (*it).getVal() == value	);
+	PRINTF_TEST(" get it-> deref",	it != et &&   it->getVal() == value	);
+	}else{
+	PRINTF_TEST(".get it et",	it == et				);
+	}
+}
+
+template <class LIST>
+static void iterator_get_test(const char *module, LIST &list){
+	iterator_get_test_deref(module, list, "1",	"Niki"	);
+	iterator_get_test_deref(module, list, "1 name",	"Niki"	);
+	iterator_get_test_deref(module, list, "2",	"22"	);
+	iterator_get_test_deref(module, list, "2 age",	"22"	);
+	iterator_get_test_deref(module, list, "3",	"Sofia"	);
+	iterator_get_test_deref(module, list, "3 city",	"Sofia"	);
+	iterator_get_test_deref(module, list, "4",	"Linux"	);
+	iterator_get_test_deref(module, list, "4 os",	"Linux"	);
+	iterator_get_test_deref(module, list, "5",	nullptr	);
+	iterator_get_test_deref(module, list, "6",	nullptr	);
 }
 
 template <class LIST>
@@ -211,6 +230,7 @@ static void list_test(const char *module, LIST &list){
 	list_populate(list);
 
 	iterator_test(module, list);
+	iterator_get_test(module, list);
 
 	// TEST REFERENCES
 
@@ -287,6 +307,7 @@ int main(int argc, char **argv){
 
 	// =========================
 */
+
 	hm3::HashList<std::vector<hm3::SkipList> > hl_sl;
 		list_test("HashList@SkipList", hl_sl);
 

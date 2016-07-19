@@ -43,6 +43,11 @@ public:
 
 public:
 	constexpr
+	Iterator getIterator(const StringRef &) const noexcept{
+		return nullptr;
+	}
+
+	constexpr
 	Iterator begin() const{
 		return nullptr;
 	}

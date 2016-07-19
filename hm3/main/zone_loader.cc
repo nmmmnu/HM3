@@ -1,23 +1,16 @@
-#include <cstdio>	// printf
-#include <inttypes.h>	// PRIu64
-#include "port.h"
-#include <ctype.h>	// isspace
-
+#include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "flushlist.h"
 #include "skiplist.h"
 
-#include "stringtokenizer.h"
-
-/*
-#include <vector>
-#include "vectorlist.h"
-#include "hashlist.h"
-*/
-
 #include "idgenerator/idgeneratordate.h"
 #include "flusher/diskfileflusher.h"
+
+#include "stringtokenizer.h"
+
+
 
 //using MemList		= HashList<std::vector<SkipList> >;
 using MemList		= hm3::SkipList;
@@ -27,8 +20,7 @@ using Flusher		= hm3::flusher::DiskFileFlusher<MyIDGenerator>;
 
 using count_type	= MemList::count_type;
 
-
-constexpr size_t	MEMLIST_SIZE	= 10 * 1024 * 1024;
+constexpr size_t	MEMLIST_SIZE	= (size_t ) 512 * 1024 * 1024;
 constexpr count_type	PROCESS_STEP	= 1000 * 10;
 
 
@@ -36,9 +28,10 @@ static void printUsage(const char *cmd);
 
 static std::string &trim(std::string &line);
 
+
+
 template <class LIST>
 static int listLoad(LIST &list, const StringRef &filename){
-
 	std::ifstream f;
 	f.open(filename);
 
@@ -47,21 +40,54 @@ static int listLoad(LIST &list, const StringRef &filename){
 	for(std::string line; getline(f, line);){
 		trim(line);
 
-		StringTokenizer tok{ line };
+		StringTokenizer st{ line, ':' };
 
-		const StringRef &key = tok.getNext();
-		const StringRef &val = tok.getNext();
+		const auto &parts = st.getAll();
 
-		if (! key.empty())
-			list.put( { key, val } );
+		if (parts.size() != 3 && parts.size() != 4){
+			std::cout << "Problem with line " << line << std::endl;
+			continue;
+		}
+
+		char const op		= parts[0][0];
+		const auto &date	= parts[1];
+		const auto &domain	= parts[2];
+
+		{
+			// add locator key
+
+			std::stringstream sskey;
+			sskey << date << ':' << domain;
+
+			list.put( { sskey.str(), "1" } );
+		}
+
+		{
+			// add ns key
+
+			std::stringstream sskey;
+			sskey << domain << ':' << date;
+
+			if (parts.size() == 4){
+				const auto &ns = parts[3];
+
+				std::stringstream ssval;
+
+				ssval << op << ':' << ns;
+
+				list.put( { sskey.str(), ssval.str() } );
+			}else{
+				list.put( { sskey.str(), "d" } );
+			}
+		}
 
 		++i;
 
 		if (i % PROCESS_STEP == 0){
-			printf("Processed %10" PRIu64 " records, In memory %10" PRIu64 " records, %10zu bytes...\n",
-						i,
-						list.getList().getCount(),
-						list.getList().getSize() );
+			std::cout	<< "Processed "	<< i << " records, "
+					<< "In memory "	<< list.getList().getCount() << " records, "
+					<< list.getList().getSize() << " bytes..."
+					<< std::endl;
 		}
 	}
 
@@ -107,9 +133,11 @@ static std::string &trim(std::string &line){
 	return line;
 }
 
+
+
 static void printUsage(const char *cmd){
-	printf("Usage:\n");
-	printf("\t%s [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/\n",	cmd);
-	printf("\n");
+	std::cout	<< "Usage:" << std::endl
+			<< "\t" << cmd << " [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/" << std::endl
+			<< std::endl;
 }
 

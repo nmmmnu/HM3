@@ -41,7 +41,7 @@ bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 			container_.push_back(std::forward<UPAIR>(newdata));
 		}else{
 			// This is slow, might shiftR
-			auto ptr = container_.begin() + (difference_type) lr.get();
+			auto ptr = container_.cbegin() + (difference_type) lr.get();
 			container_.insert(ptr, std::forward<UPAIR>(newdata));
 		}
 	}catch(...){

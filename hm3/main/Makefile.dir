@@ -24,7 +24,7 @@ $(A)db_lsm: $(O)db_lsm.o $(O)directorytableloader.o $(O)myglob.o	$(PAIR_OBJ) $(D
 $(A)db_merge: $(O)db_merge.o $(O)argtableloader.o			$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)
 
-$(A)db_lsmload: $(O)db_lsmload.o $(O)skiplist.o $(O)idgeneratordate.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
+$(A)db_lsmload: $(O)db_lsmload.o $(O)skiplist.o $(O)idgeneratordate.o $(O)stringtokenizer.o	$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)
 
 $(A)zone_loader: $(O)zone_loader.o $(O)stringtokenizer.o $(O)skiplist.o $(O)idgeneratordate.o $(PAIR_OBJ) $(DISKTABLE_OBJ)
