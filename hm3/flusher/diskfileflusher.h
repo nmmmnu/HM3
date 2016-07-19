@@ -24,7 +24,7 @@ private:
 				path_(path),
 				_ext(ext),
 				_keepTombstones(keepTombstones),
-				_loader(loader){}
+				loader_(loader){}
 
 public:
 	template<class UIDGENERATOR>
@@ -91,21 +91,21 @@ public:
 
 		list.removeAll();
 
-		_notifyLoader(_loader);
+		notifyLoader_(loader_);
 
 		return true;
 	}
 
 private:
 	template<class T>
-	static bool _notifyLoader(T *loader){
+	static bool notifyLoader_(T *loader){
 		if (loader)
 			return loader->refresh();
 
 		return false;
 	}
 
-	static bool _notifyLoader(std::nullptr_t *){
+	static bool notifyLoader_(std::nullptr_t *){
 		return false;
 	}
 
@@ -114,7 +114,7 @@ private:
 	std::string	path_;
 	std::string	_ext;
 	bool		_keepTombstones;
-	TABLELOADER	*_loader;
+	TABLELOADER	*loader_;
 };
 
 } // namespace flusher

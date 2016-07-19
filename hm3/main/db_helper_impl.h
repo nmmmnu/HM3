@@ -31,7 +31,7 @@ static std::string &trim(std::string &line){
 	return line;
 }
 
-static std::pair<StringRef, StringRef> explode(const std::string &line, const char *delimiters = ":") __attribute__((unused));
+static std::pair<StringRef, StringRef> explode(const std::string &line, const char *delimiters = "\t") __attribute__((unused));
 
 static std::pair<StringRef, StringRef> explode(const std::string &line, const char *delimiters){
 	constexpr const char *trim_ch		= "\t\r\n ";

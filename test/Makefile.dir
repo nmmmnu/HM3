@@ -17,3 +17,8 @@ $(A)test_stringref: $(O)test_stringref.o
 $(A)test_glob: $(O)test_glob.o $(O)myglob.o
 	$(LINK)
 
+$(A)test_stringtokenizer: $(O)test_stringtokenizer.o $(O)stringtokenizer.o
+	$(LINK)
+
+$(A)test_stringimploder: $(O)test_stringimploder.o
+	$(LINK)

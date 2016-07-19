@@ -129,6 +129,12 @@ static void test_stringref(const char *module, const StringRef &sr){
 
 	PRINTF_TEST("[] char *",	sr[0] == hello[0]			);
 
+	size_t i = 0;
+	for(auto it = sr.begin(); it < sr.end(); ++it){
+		PRINTF_TEST("iterator",	sr[i] == *it				);
+		++i;
+	}
+
 	std::cout <<  sr << std::endl;
 }
 

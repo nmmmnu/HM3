@@ -28,6 +28,16 @@ public:
 
 	// ==================================
 
+	const char *begin() const noexcept{
+		return _data;
+	}
+
+	const char *end() const noexcept{
+		return _data + _size;
+	}
+
+	// ==================================
+
 	bool empty() const noexcept;
 
 	// ==================================

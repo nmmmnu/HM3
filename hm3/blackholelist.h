@@ -42,10 +42,12 @@ public:
 	}
 
 public:
+	constexpr
 	Iterator begin() const{
 		return nullptr;
 	}
 
+	constexpr
 	Iterator end() const{
 		return nullptr;
 	}
@@ -53,8 +55,8 @@ public:
 private:
 	friend class IMutableList<BlackHoleList>;
 
-	template <class UPAIR>
-	bool putT_(UPAIR &&) const {
+	constexpr
+	bool putT_(const Pair &) const {
 		return true;
 	}
 
