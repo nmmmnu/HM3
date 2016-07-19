@@ -178,6 +178,23 @@ const Pair &SkipList::get(const StringRef &key) const{
 	return node ? node->data : Pair::zero();
 }
 
+SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
+	if (key.empty())
+		return end();
+
+	const Node *node = locate_(key);
+
+	if (node)
+		return Iterator(node);
+
+	const Node *prev = loc_[0];
+
+	if (prev)
+		return Iterator(prev->next[0]);
+	else
+		return Iterator(heads_[0]);
+}
+
 bool SkipList::remove(const StringRef &key){
 	if (key.empty())
 		return true;
@@ -230,25 +247,6 @@ void SkipList::printLane(height_type const lane) const{
 		if (++i > 10)
 			break;
 	}
-}
-
-// ==============================
-
-SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
-	if (key.empty())
-		return end();
-
-	const Node *node = locate_(key);
-
-	if (node)
-		return Iterator(node);
-
-	const Node *prev = loc_[0];
-
-	if (prev)
-		return Iterator(prev->next[0]);
-	else
-		return Iterator(heads_[0]);
 }
 
 // ==============================
