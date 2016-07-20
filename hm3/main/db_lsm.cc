@@ -1,4 +1,4 @@
-#include <cstdio>	// printf
+#include <iostream>
 
 #include "lsmtable.h"
 
@@ -7,15 +7,16 @@
 #include "tableloader/directorytableloader.h"
 
 static void printUsage(const char *cmd){
-	printf("Usage:\n");
-	printf("\t%s r [lsm_path] [key] - load lsm_path, then search for the key\n",			cmd);
-	printf("\t%s l [lsm_path] -     - load lsm_path, then list using iterator\n",			cmd);
-	printf("\t%s L [lsm_path] [key] - load lsm_path, then list using iterator with start\n",	cmd);
+	std::cout
+		<< "Usage:"	<< std::endl
+		<< "\t"		<< cmd	<< " r [lsm_path] [key] - load lsm_path, then search for the key"	<< std::endl
+		<< "\t"		<< cmd	<< " l [lsm_path] -     - load lsm_path, then list using iterator"	<< std::endl
+		<< "\t"		<< cmd	<< " l [lsm_path] [key] - load lsm_path, then list using iterator"	<< std::endl
 
-	printf("\t\tPath names must be written without extention\n");
-	printf("\t\tExample 'directory/file.*' instead of 'directory/file.*.db'\n");
+		<< "\t\tPath names must be written without extention"		<< std::endl
+		<< "\t\tExample 'directory/file.*'"				<< std::endl
 
-	printf("\n");
+		<< std::endl;
 }
 
 int main(int argc, char **argv){
@@ -26,9 +27,11 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	const auto op	= argv[1];
-	const auto path	= argv[2];
-	const auto key	= argv[3];
+	const auto op		= argv[1];
+	const auto path		= argv[2];
+
+	size_t const keyCount	= (size_t) (argc - 3);
+	char **keys		= & argv[3];
 
 	// =======================
 
@@ -41,9 +44,8 @@ int main(int argc, char **argv){
 	// =======================
 
 	switch(op[0]){
-	case 'r':	return op_filesearch(mtlist, key);
-	case 'L':	return op_list(mtlist, key);
-	case 'l':	return op_list(mtlist);
+	case 'r':	return op_filesearch(mtlist, keyCount, keys);
+	case 'l':	return op_list(mtlist, keyCount, keys);
 	}
 
 	printUsage(argv[0]);

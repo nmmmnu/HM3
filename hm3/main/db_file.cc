@@ -1,19 +1,20 @@
-#include <cstdio>	// printf
+#include <iostream>
 
 #include "disktable.h"
 
 #include "db_helper_impl.h"
 
 static void printUsage(const char *cmd){
-	printf("Usage:\n");
-	printf("\t%s r [file.db] [key] - load file.db, then search for the key\n",			cmd);
-	printf("\t%s l [file.db] -     - load file.db, then list using iterator\n",			cmd);
-	printf("\t%s L [file.db] [key] - load file.db, then list using iterator with start\n",	cmd);
+	std::cout
+		<< "Usage:"	<< std::endl
+		<< "\t"		<< cmd	<< " r [file.db] [key] - load file.db, then search for the key"	<< std::endl
+		<< "\t"		<< cmd	<< " l [file.db] -     - load file.db, then list using iterator"	<< std::endl
+		<< "\t"		<< cmd	<< " l [file.db] [key] - load file.db, then list using iterator"	<< std::endl
 
-	printf("\t\tFiles must be written with the extention.\n");
-	printf("\t\tExample 'file.db'\n");
+		<< "\t\tPath names must be written without extention"		<< std::endl
+		<< "\t\tExample 'directory/file.*'"				<< std::endl
 
-	printf("\n");
+		<< std::endl;
 }
 
 int main(int argc, char **argv){
@@ -26,7 +27,9 @@ int main(int argc, char **argv){
 
 	const auto op		= argv[1];
 	const auto filename	= argv[2];
-	const auto key		= argv[3];
+
+	size_t const keyCount	= (size_t) (argc - 3);
+	char **keys		= & argv[3];
 
 	// =======================
 
@@ -39,9 +42,8 @@ int main(int argc, char **argv){
 	// =======================
 
 	switch(op[0]){
-	case 'r':	return op_filesearch(list, key);
-	case 'L':	return op_list(list, key);
-	case 'l':	return op_list(list);
+	case 'r':	return op_filesearch(list, keyCount, keys);
+	case 'l':	return op_list(list, keyCount, keys);
 	}
 
 	printUsage(argv[0]);
