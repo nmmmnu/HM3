@@ -29,7 +29,10 @@ bool MMAPFile::open(const StringRef &filename){
 		return false;
 	}
 
-	const void *mem = mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, /* offset */ 0);
+	/* const */ void *mem = mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, /* offset */ 0);
+
+	if (random_madvise_)
+		madvise(mem, size, MADV_RANDOM);
 
 	if (mem == MAP_FAILED){
 		::close(fd);

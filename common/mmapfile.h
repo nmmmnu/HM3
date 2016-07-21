@@ -5,7 +5,9 @@
 
 class MMAPFile{
 public:
-	MMAPFile() = default;
+	MMAPFile(bool const random_madvise = false) :
+				random_madvise_(random_madvise){}
+
 	MMAPFile(MMAPFile &&other);
 
 	~MMAPFile(){
@@ -62,6 +64,8 @@ private:
 	size_t		size_		= 0;
 
 	int		fd_;
+
+	bool		random_madvise_;
 };
 
 #endif

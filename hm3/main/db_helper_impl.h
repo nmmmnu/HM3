@@ -1,4 +1,3 @@
-using Pair = hm3::Pair;
 
 template <class LIST>
 static void op_list(const LIST &list, const StringRef &key, size_t const count){
@@ -29,7 +28,7 @@ static int op_filesearch(const LIST &list, size_t const keyCount, char **keys){
 	for(size_t i = 0; i < keyCount; ++i){
 		const auto key = keys[i];
 
-		const Pair pair = list.get(key);
+		const auto &pair = list.get(key);
 
 		if ( pair )
 			pair.print();

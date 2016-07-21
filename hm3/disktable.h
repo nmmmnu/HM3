@@ -18,8 +18,14 @@ private:
 public:
 	class Iterator;
 
+private:
+	static constexpr bool DEFALULT_MADVISE = true;
+
 public:
-	DiskTable(bool validate = true) : validate_(validate){}
+	DiskTable(bool validate = true) :
+				mmapIndx_(DEFALULT_MADVISE),
+				mmapData_(DEFALULT_MADVISE),
+				validate_(validate){}
 
 	DiskTable(DiskTable &&other) = default;
 
