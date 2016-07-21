@@ -13,7 +13,8 @@ namespace hm3{
 
 class DiskTable : public IList<DiskTable>{
 private:
-	using ArrayLookup	= arraysearch::Binary;
+	using ArrayLocator	= arraysearch::Binary;
+	using ArraySearch	= arraysearch::SimpleSearch<ArrayLocator>;
 
 public:
 	class Iterator;
@@ -80,12 +81,14 @@ private:
 
 	bool		validate_;
 
-	ArrayLookup	lookup_;
-
 private:
-	auto lookup(const StringRef &key) const -> decltype( lookup_(*this, key) ){
-		return lookup_(*this, key);
+	ArraySearch	search_;
+
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
+		return search_(*this, key);
+	//	return lookup_(*this, key);
 	}
+
 };
 
 // ===================================
@@ -136,14 +139,14 @@ inline Pair DiskTable::getAt(count_type const index) const{
 }
 
 inline Pair DiskTable::get(const StringRef &key) const{
-	const auto &lr = lookup_(*this, key);
+	const auto &lr = lookup(key);
 	return lr ? getAt( lr.get() ) : nullptr;
 }
 
 // ==============================
 
 inline auto DiskTable::getIterator(const StringRef &key) const -> Iterator{
-	const auto &lr = lookup_(*this, key);
+	const auto &lr = lookup(key);
 	return Iterator(*this, lr.get(), header_.getSorted());
 }
 

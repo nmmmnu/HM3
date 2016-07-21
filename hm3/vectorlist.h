@@ -9,8 +9,11 @@
 namespace hm3{
 
 
-template <class LOOKUP=arraysearch::Binary>
-class VectorList : public IMutableList<VectorList<LOOKUP> >{
+template <class LOCATOR=arraysearch::Binary>
+class VectorList : public IMutableList<VectorList<LOCATOR> >{
+private:
+	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
+
 public:
 	using count_type = typename VectorList::count_type;
 
@@ -34,8 +37,6 @@ private:
 	count_type	reservedCount_;
 	count_type	dataCount_;
 	size_t		dataSize_;
-
-	LOOKUP		lookup_;
 
 public:
 	bool removeAll();
@@ -64,7 +65,7 @@ public:
 	}
 
 private:
-	friend class IMutableList<VectorList<LOOKUP> >;
+	friend class IMutableList<VectorList<LOCATOR> >;
 
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
@@ -94,8 +95,11 @@ private:
 	count_type calcNewCount_(count_type size);
 
 private:
-	auto lookup(const StringRef &key) const -> decltype( lookup_(*this, key) ){
-		return lookup_(*this, key);
+	ArraySearch	search_;
+
+	auto lookup(const StringRef &key) const -> decltype( search_.operator()(*this, key) ){
+		return search_(*this, key);
+	//	return LOCATOR_(*this, key);
 	}
 
 };

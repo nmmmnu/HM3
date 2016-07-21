@@ -2,36 +2,29 @@ namespace hm3{
 namespace arraysearch{
 
 
+
 template <class ARRAY>
-CheckedValue<typename ARRAY::count_type, bool, true>	Linear::operator()(const ARRAY &self, const StringRef &key) const{
-	auto const count = self.getCount();
-
-	if (count == 0){
-		// index = 0; return 1;
-		return {false, 0u};
-	}
-
+result_type<ARRAY> Linear::operator()(const ARRAY &self, const StringRef &key,
+							typename ARRAY::count_type left,
+							typename ARRAY::count_type const right) const{
 	int cmp = -1;
 
-	using count_type = typename ARRAY::count_type;
-	count_type i;
-	for(i = 0; i < count; ++i){
-		cmp = self.cmpAt(i, key);
+	for(; left < right; ++left){
+		cmp = self.cmpAt(left, key);
 
 		if (cmp == 0){
 			// found
-			// index = i; return 0;
-			return i;
+			// index = left; return 0;
+			return left;
 		}
 
 		if (cmp > 0)
 			break;
 	}
 
-	// index = i; return cmp;
-	return {false, i};
+	// index = left; return cmp;
+	return {false, left};
 }
-
 
 
 } // namespace arraysearch

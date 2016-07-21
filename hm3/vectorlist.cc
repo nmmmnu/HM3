@@ -22,14 +22,14 @@ inline T SGN(const T &a){
 namespace hm3{
 
 
-template <class LOOKUP>
-VectorList<LOOKUP>::VectorList(count_type const reallocCount) :
+template <class LOCATOR>
+VectorList<LOCATOR>::VectorList(count_type const reallocCount) :
 		reallocCount_( reallocCount ? reallocCount : 1 ) {
 	clear_();
 }
 
-template <class LOOKUP>
-VectorList<LOOKUP>::VectorList(VectorList &&other):
+template <class LOCATOR>
+VectorList<LOCATOR>::VectorList(VectorList &&other):
 		reallocCount_	(std::move(other.reallocCount_		)),
 		buffer_		(std::move(other.buffer_		)),
 		reservedCount_	(std::move(other.reservedCount_		)),
@@ -38,8 +38,8 @@ VectorList<LOOKUP>::VectorList(VectorList &&other):
 	other.clear_();
 }
 
-template <class LOOKUP>
-bool VectorList<LOOKUP>::removeAll(){
+template <class LOCATOR>
+bool VectorList<LOCATOR>::removeAll(){
 	for(count_type i = 0; i < dataCount_; ++i)
 		buffer_[i].~Pair();
 
@@ -48,9 +48,9 @@ bool VectorList<LOOKUP>::removeAll(){
 	return true;
 }
 
-template <class LOOKUP>
+template <class LOCATOR>
 template <class UPAIR>
-bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
+bool VectorList<LOCATOR>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto &lr = lookup(key);
@@ -90,8 +90,8 @@ bool VectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	return true;
 }
 
-template <class LOOKUP>
-bool VectorList<LOOKUP>::remove(const StringRef &key){
+template <class LOCATOR>
+bool VectorList<LOCATOR>::remove(const StringRef &key){
 	const auto &lr = lookup(key);
 
 	if (! lr){
@@ -111,8 +111,8 @@ bool VectorList<LOOKUP>::remove(const StringRef &key){
 
 // ===================================
 
-template <class LOOKUP>
-void VectorList<LOOKUP>::clear_(bool const alsoFree){
+template <class LOCATOR>
+void VectorList<LOCATOR>::clear_(bool const alsoFree){
 	if (alsoFree && buffer_)
 		xfree(buffer_);
 
@@ -122,8 +122,8 @@ void VectorList<LOOKUP>::clear_(bool const alsoFree){
 	buffer_		= nullptr;
 }
 
-template <class LOOKUP>
-bool VectorList<LOOKUP>::shiftL_(count_type const index){
+template <class LOCATOR>
+bool VectorList<LOCATOR>::shiftL_(count_type const index){
 	// this is the most slow operation of them all
 	xmemmove(
 		& buffer_[index],
@@ -136,8 +136,8 @@ bool VectorList<LOOKUP>::shiftL_(count_type const index){
 	return true;
 }
 
-template <class LOOKUP>
-bool VectorList<LOOKUP>::shiftR_(count_type const index){
+template <class LOCATOR>
+bool VectorList<LOCATOR>::shiftR_(count_type const index){
 	if (! resize_(1))
 		return false;
 
@@ -151,8 +151,8 @@ bool VectorList<LOOKUP>::shiftR_(count_type const index){
 	return true;
 }
 
-template <class LOOKUP>
-bool VectorList<LOOKUP>::resize_(int const delta){
+template <class LOCATOR>
+bool VectorList<LOCATOR>::resize_(int const delta){
 	if (delta == 0){
 		// already resized, done :)
 		return true;
@@ -191,8 +191,8 @@ bool VectorList<LOOKUP>::resize_(int const delta){
 	return true;
 }
 
-template <class LOOKUP>
-auto VectorList<LOOKUP>::calcNewCount_(count_type const count) -> count_type{
+template <class LOCATOR>
+auto VectorList<LOCATOR>::calcNewCount_(count_type const count) -> count_type{
 	count_type newsize = count / reallocCount_;
 
 	if (count % reallocCount_)

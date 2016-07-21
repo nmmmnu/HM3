@@ -4,9 +4,9 @@
 namespace hm3{
 
 
-template <class LOOKUP>
+template <class LOCATOR>
 template <class UPAIR>
-bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
+bool STLVectorList<LOCATOR>::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	const auto &lr = lookup(key);
@@ -51,8 +51,8 @@ bool STLVectorList<LOOKUP>::putT_(UPAIR&& newdata){
 	return true;
 }
 
-template <class LOOKUP>
-bool STLVectorList<LOOKUP>::remove(const StringRef &key){
+template <class LOCATOR>
+bool STLVectorList<LOCATOR>::remove(const StringRef &key){
 	const auto &lr = lookup(key);
 
 	if (! lr){

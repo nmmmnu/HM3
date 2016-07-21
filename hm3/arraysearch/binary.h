@@ -1,8 +1,7 @@
 #ifndef _BINARY_ARRAY_SEARCH_H
 #define _BINARY_ARRAY_SEARCH_H
 
-#include "stringref.h"
-#include "checkedvalue.h"
+#include "arraysearch/base.h"
 
 namespace hm3{
 namespace arraysearch{
@@ -10,7 +9,10 @@ namespace arraysearch{
 
 struct Binary{
 	template <class ARRAY>
-	CheckedValue<typename ARRAY::count_type, bool, true>	operator()(const ARRAY &array, const StringRef &key) const;
+	result_type<ARRAY> operator()(const ARRAY &array, const StringRef &key,
+							typename ARRAY::count_type left,
+							typename ARRAY::count_type right) const;
+
 };
 
 

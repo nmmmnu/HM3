@@ -2,27 +2,21 @@ namespace hm3{
 namespace arraysearch{
 
 
+
 template <class ARRAY>
-CheckedValue<typename ARRAY::count_type, bool, true>	Binary::operator()(const ARRAY &self, const StringRef &key) const{
-	auto const count = self.getCount();
-
-	if (count == 0){
-		// index = 0; return 1;
-		return {false, 0u};
-	}
-
+result_type<ARRAY> Binary::operator()(const ARRAY &self, const StringRef &key,
+							typename ARRAY::count_type start,
+							typename ARRAY::count_type end) const{
 	/*
 	 * Lazy based from Linux kernel...
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
 	 */
 
-	using count_type = typename ARRAY::count_type;
-
-	count_type start = 0;
-	count_type end   = count;
 	int cmp = 0;
 
 	while (start < end){
+		using count_type = typename ARRAY::count_type;
+
 	//	count_type mid = start + ((end - start) /  2);
 		count_type mid = count_type(start + ((end - start) >> 1));
 

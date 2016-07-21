@@ -11,8 +11,11 @@
 namespace hm3{
 
 
-template <class LOOKUP>
-class STLVectorList : public IMutableList<STLVectorList<LOOKUP> >{
+template <class LOCATOR>
+class STLVectorList : public IMutableList<STLVectorList<LOCATOR> >{
+private:
+	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
+
 public:
 	using vector_type	= std::vector<Pair>;
 
@@ -34,8 +37,6 @@ public:
 private:
 	vector_type	container_;
 	size_t		dataSize_ = 0;
-
-	LOOKUP		lookup_;
 
 public:
 	bool removeAll(){
@@ -69,7 +70,7 @@ public:
 	}
 
 private:
-	friend class IMutableList<STLVectorList<LOOKUP> >;
+	friend class IMutableList<STLVectorList<LOCATOR> >;
 
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
@@ -89,8 +90,10 @@ public:
 	}
 
 private:
-	auto lookup(const StringRef &key) const -> decltype( lookup_(*this, key) ){
-		return lookup_(*this, key);
+	ArraySearch	search_;
+
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
+		return search_(*this, key);
 	}
 
 };
