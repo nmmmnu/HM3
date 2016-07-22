@@ -10,7 +10,7 @@ bool PartitionSearch<LOOKUP>::populate(const ARRAY &list) const{
 	size_type const partitionsSize = list.getCount() / partitionsCount_;
 
 	if (partitionsSize < MIN_PARTITIONS_SIZE){
-	//	printf("Resampling skipped...\n");
+	//	printf("Prefetching skipped...\n");
 		return false;
 	}
 
@@ -34,7 +34,7 @@ bool PartitionSearch<LOOKUP>::populate(const ARRAY &list) const{
 
 	populated_ =  true;
 
-	//printf("Resampling done...\n");
+	printf("Prefetching done...\n");
 
 	return true;
 }

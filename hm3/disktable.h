@@ -4,11 +4,12 @@
 #include "diskfile/diskfile.h"
 #include "mmapfile.h"
 
+//#include "arraysearch/jumplocator.h"
+
 #include "arraysearch/binarylocator.h"
 #include "arraysearch/partitionsearch.h"
 
 #include "iiterator.h"
-#include "ilist.h"
 
 namespace hm3{
 
@@ -16,6 +17,8 @@ namespace hm3{
 class DiskTable : public List<DiskTable>{
 private:
 	using ArrayLocator	= arraysearch::BinaryLocator;
+//	using ArrayLocator2	= arraysearch::JumpLocator;
+
 	using ArraySearch2	= arraysearch::SimpleSearch<ArrayLocator>;
 	using ArraySearch	= arraysearch::PartitionSearch<ArrayLocator>;
 
@@ -23,19 +26,19 @@ public:
 	class Iterator;
 
 private:
-	static constexpr bool DEFALULT_MADVISE = true;
+	static constexpr bool RANDOM_MADVISE = true;
 
 public:
 	DiskTable(bool validate = true) :
-				mmapIndx_(DEFALULT_MADVISE),
-				mmapData_(DEFALULT_MADVISE),
+				mmapIndx_(),
+				mmapData_(RANDOM_MADVISE),
 				validate_(validate){}
 
 	DiskTable(DiskTable &&other) = default;
 
 	// no need d-tor,
-	// MMAPFile-s will be closed automaticly
-	//~DiskTable(){ close(); }
+	// MMAPFile-s will be closed automatically
+	~DiskTable() = default;
 
 	bool open(const std::string &filename);
 	void close();
@@ -89,7 +92,6 @@ private:
 
 	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
 		return search_(*this, key);
-	//	return lookup_(*this, key);
 	}
 
 };
