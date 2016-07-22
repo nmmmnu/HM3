@@ -19,7 +19,7 @@ private:
 public:
 	using vector_type	= std::vector<Pair>;
 
-	using count_type	= vector_type::size_type;
+	using size_type	= vector_type::size_type;
 	using difference_type	= vector_type::difference_type;
 	using Iterator		= vector_type::const_iterator;
 
@@ -48,15 +48,15 @@ public:
 
 	bool remove(const StringRef &key);
 
-	const Pair &getAt(count_type const index) const{
+	const Pair &getAt(size_type const index) const{
 		return index < getCount() ? container_[index] : Pair::zero();
 	}
 
-	int cmpAt(count_type const index, const StringRef &key) const{
+	int cmpAt(size_type const index, const StringRef &key) const{
 		return getAt(index).cmp(key);
 	}
 
-	count_type getCount(bool const = false) const{
+	size_type getCount(bool const = false) const{
 		return container_.size();
 	}
 

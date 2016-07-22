@@ -10,8 +10,8 @@ namespace arraysearch{
 struct Linear{
 	template <class ARRAY>
 	result_type<ARRAY> operator()(const ARRAY &array, const StringRef &key,
-							typename ARRAY::count_type left,
-							typename ARRAY::count_type right) const;
+							typename ARRAY::size_type left,
+							typename ARRAY::size_type right) const;
 };
 
 

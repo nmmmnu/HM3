@@ -23,7 +23,7 @@ namespace hm3{
 
 
 template <class LOCATOR>
-VectorList<LOCATOR>::VectorList(count_type const reallocCount) :
+VectorList<LOCATOR>::VectorList(size_type const reallocCount) :
 		reallocCount_( reallocCount ? reallocCount : 1 ) {
 	clear_();
 }
@@ -40,7 +40,7 @@ VectorList<LOCATOR>::VectorList(VectorList &&other):
 
 template <class LOCATOR>
 bool VectorList<LOCATOR>::removeAll(){
-	for(count_type i = 0; i < dataCount_; ++i)
+	for(size_type i = 0; i < dataCount_; ++i)
 		buffer_[i].~Pair();
 
 	clear_(true);
@@ -123,7 +123,7 @@ void VectorList<LOCATOR>::clear_(bool const alsoFree){
 }
 
 template <class LOCATOR>
-bool VectorList<LOCATOR>::shiftL_(count_type const index){
+bool VectorList<LOCATOR>::shiftL_(size_type const index){
 	// this is the most slow operation of them all
 	xmemmove(
 		& buffer_[index],
@@ -137,7 +137,7 @@ bool VectorList<LOCATOR>::shiftL_(count_type const index){
 }
 
 template <class LOCATOR>
-bool VectorList<LOCATOR>::shiftR_(count_type const index){
+bool VectorList<LOCATOR>::shiftR_(size_type const index){
 	if (! resize_(1))
 		return false;
 
@@ -163,14 +163,14 @@ bool VectorList<LOCATOR>::resize_(int const delta){
 		return true;
 	}
 
-	count_type const new_dataCount = dataCount_ + (count_type) SGN(delta);
+	size_type const new_dataCount = dataCount_ + (size_type) SGN(delta);
 
 	if (new_dataCount == 0){
 		clear_(true);
 		return true;
 	}
 
-	count_type const new_reservedCount = calcNewCount_(new_dataCount);
+	size_type const new_reservedCount = calcNewCount_(new_dataCount);
 
 	if (reservedCount_ == new_reservedCount){
 		// already resized, done :)
@@ -192,8 +192,8 @@ bool VectorList<LOCATOR>::resize_(int const delta){
 }
 
 template <class LOCATOR>
-auto VectorList<LOCATOR>::calcNewCount_(count_type const count) -> count_type{
-	count_type newsize = count / reallocCount_;
+auto VectorList<LOCATOR>::calcNewCount_(size_type const count) -> size_type{
+	size_type newsize = count / reallocCount_;
 
 	if (count % reallocCount_)
 		++newsize;

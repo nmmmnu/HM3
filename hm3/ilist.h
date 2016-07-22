@@ -9,15 +9,19 @@
 namespace hm3{
 
 
-template <class T>
 class IList{
+public:
+	using size_type	= uint64_t;
+	using difference_type	= int64_t;
+};
+
+// ==============================
+
+template <class T>
+class List : public IList{
 protected:
 	constexpr
 	static size_t PRINT_COUNT = 10;
-
-public:
-	using count_type	= uint64_t;
-	using difference_type	= int64_t;
 
 public:
 	void print(size_t count = PRINT_COUNT) const{
@@ -33,7 +37,7 @@ public:
 	}
 
 public:
-	count_type getCount(bool const estimated = false) const{
+	size_type getCount(bool const estimated = false) const{
 		return self()->getCount(estimated);
 	}
 
@@ -46,7 +50,7 @@ private:
 // ==============================
 
 template <class T>
-class IMutableList : public IList<T>{
+class IMutableList : public List<T>{
 public:
 	bool put(const Pair &pair){
 		return self()->putT_(pair);

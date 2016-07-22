@@ -3,6 +3,8 @@
 
 #include "arraysearch/binary.h"
 #include "arraysearch/linear.h"
+#include "arraysearch/samplersearch.h"
+
 #include "iiterator.h"
 #include "ilist.h"
 
@@ -13,29 +15,30 @@ template <class LOCATOR=arraysearch::Binary>
 class VectorList : public IMutableList<VectorList<LOCATOR> >{
 private:
 	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
+//	using ArraySearch	= arraysearch::SamplerSearch<LOCATOR>;
 
 public:
-	using count_type = typename VectorList::count_type;
+	using size_type = typename VectorList::size_type;
 
 	static constexpr size_t     ELEMENT_SIZE  = sizeof(Pair);
-	static constexpr count_type REALLOC_COUNT = 16;
+	static constexpr size_type REALLOC_COUNT = 16;
 
 	using Iterator = const Pair *;
 
 public:
 	explicit
-	VectorList(count_type reallocCount = REALLOC_COUNT);
+	VectorList(size_type reallocCount = REALLOC_COUNT);
 	VectorList(VectorList &&other);
 	~VectorList(){
 		removeAll();
 	}
 
 private:
-	count_type	reallocCount_;
+	size_type	reallocCount_;
 
 	Pair		*buffer_;
-	count_type	reservedCount_;
-	count_type	dataCount_;
+	size_type	reservedCount_;
+	size_type	dataCount_;
 	size_t		dataSize_;
 
 public:
@@ -43,15 +46,15 @@ public:
 
 	bool remove(const StringRef &key);
 
-	const Pair &getAt(count_type const index) const{
+	const Pair &getAt(size_type const index) const{
 		return index < getCount() ? buffer_[index] : Pair::zero();
 	}
 
-	int cmpAt(count_type const index, const StringRef &key) const{
+	int cmpAt(size_type const index, const StringRef &key) const{
 		return getAt(index).cmp(key);
 	}
 
-	count_type getCount(bool const = false) const{
+	size_type getCount(bool const = false) const{
 		return dataCount_;
 	}
 
@@ -87,17 +90,17 @@ public:
 private:
 	void clear_(bool alsoFree = false);
 
-	bool shiftL_(count_type index);
-	bool shiftR_(count_type index);
+	bool shiftL_(size_type index);
+	bool shiftR_(size_type index);
 
 	bool resize_(int delta);
 
-	count_type calcNewCount_(count_type size);
+	size_type calcNewCount_(size_type size);
 
 private:
 	ArraySearch	search_;
 
-	auto lookup(const StringRef &key) const -> decltype( search_.operator()(*this, key) ){
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
 		return search_(*this, key);
 	//	return LOCATOR_(*this, key);
 	}

@@ -13,7 +13,7 @@ public:
 	constexpr static size_t MAX_SIZE = 1 * 1024 * 1024;
 
 	using Iterator		= typename LIST::Iterator;
-	using count_type	= typename LIST::count_type;
+	using size_type	= typename LIST::size_type;
 
 public:
 	template <class UFLUSH>
@@ -50,7 +50,7 @@ public:
 		return list_.getSize();
 	}
 
-	count_type getCount() const{
+	size_type getCount() const{
 		return list_.getCount();
 	}
 

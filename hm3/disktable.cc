@@ -27,7 +27,7 @@ void DiskTable::close(){
 	mmapData_.close();
 }
 
-int DiskTable::cmpAt(count_type const index, const StringRef &key) const{
+int DiskTable::cmpAt(size_type const index, const StringRef &key) const{
 	const PairBlob *p = getAtFromDisk_(index);
 	// StringRef is not null terminated
 	return p ? p->cmp(key.data(), key.size()) : Pair::CMP_ZERO;
@@ -43,7 +43,7 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 	return blob->validChecksum() ? blob : nullptr;
 }
 
-const PairBlob *DiskTable::getAtFromDisk_(count_type const index) const{
+const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
 
 	if (ptr_be){
@@ -68,7 +68,7 @@ const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blob, size_t size) c
 
 // ===================================
 
-DiskTable::Iterator::Iterator(const DiskTable &list, count_type const pos, bool const useFastForward) :
+DiskTable::Iterator::Iterator(const DiskTable &list, size_type const pos, bool const useFastForward) :
 			list_(list),
 			pos_(pos),
 			useFastForward_(useFastForward){}

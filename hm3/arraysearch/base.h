@@ -9,7 +9,7 @@ namespace arraysearch{
 
 
 template <class ARRAY>
-using result_type = CheckedValue<typename ARRAY::count_type, bool, true>;
+using result_type = CheckedValue<typename ARRAY::size_type, bool, true>;
 
 
 template <class LOOKUP>

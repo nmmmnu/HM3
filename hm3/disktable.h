@@ -5,16 +5,17 @@
 #include "mmapfile.h"
 
 #include "arraysearch/binary.h"
+#include "arraysearch/samplersearch.h"
 #include "iiterator.h"
 #include "ilist.h"
 
 namespace hm3{
 
 
-class DiskTable : public IList<DiskTable>{
+class DiskTable : public List<DiskTable>{
 private:
 	using ArrayLocator	= arraysearch::Binary;
-	using ArraySearch	= arraysearch::SimpleSearch<ArrayLocator>;
+	using ArraySearch	= arraysearch::SamplerSearch<ArrayLocator>;
 
 public:
 	class Iterator;
@@ -48,12 +49,12 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	Pair getAt(count_type index) const;
+	Pair getAt(size_type index) const;
 
-	int cmpAt(count_type index, const StringRef &key) const;
+	int cmpAt(size_type index, const StringRef &key) const;
 
-	count_type getCount() const{
-		return (count_type) header_.getCount();
+	size_type getCount() const{
+		return (size_type) header_.getCount();
 	}
 
 	size_t getSize() const{
@@ -68,7 +69,7 @@ public:
 private:
 	const PairBlob *validateFromDisk_(const PairBlob *blob) const;
 
-	const PairBlob *getAtFromDisk_(count_type index) const;
+	const PairBlob *getAtFromDisk_(size_type index) const;
 
 	const PairBlob *getNextFromDisk_(const PairBlob *blob, size_t size = 0) const;
 
@@ -82,6 +83,7 @@ private:
 	bool		validate_;
 
 private:
+	/* !!! */ mutable
 	ArraySearch	search_;
 
 	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
@@ -96,7 +98,7 @@ private:
 class DiskTable::Iterator : public IIterator<Iterator>{
 private:
 	friend class DiskTable;
-	Iterator(const DiskTable &list, count_type pos, bool useFastForward);
+	Iterator(const DiskTable &list, size_type pos, bool useFastForward);
 
 public:
 	Iterator &operator++(){
@@ -117,12 +119,12 @@ public:
 
 private:
 	const DiskTable	&list_;
-	count_type	pos_;
+	size_type	pos_;
 	bool		useFastForward_;
 
 private:
 	/* !!! */ mutable
-	count_type	tmp_pos = 0;
+	size_type	tmp_pos = 0;
 
 	/* !!! */ mutable
 	const PairBlob	*tmp_pod = nullptr;
@@ -134,7 +136,7 @@ private:
 
 // ==============================
 
-inline Pair DiskTable::getAt(count_type const index) const{
+inline Pair DiskTable::getAt(size_type const index) const{
 	return index < getCount() ? getAtFromDisk_(index) : nullptr;
 }
 

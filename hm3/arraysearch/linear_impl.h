@@ -5,8 +5,8 @@ namespace arraysearch{
 
 template <class ARRAY>
 result_type<ARRAY> Linear::operator()(const ARRAY &self, const StringRef &key,
-							typename ARRAY::count_type left,
-							typename ARRAY::count_type const right) const{
+							typename ARRAY::size_type left,
+							typename ARRAY::size_type const right) const{
 	int cmp = -1;
 
 	for(; left < right; ++left){

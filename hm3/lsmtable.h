@@ -11,9 +11,9 @@ namespace hm3{
 
 
 template <class CONTAINER>
-class LSMTable : public IList<LSMTable<CONTAINER> >{
+class LSMTable : public List<LSMTable<CONTAINER> >{
 public:
-	using count_type	= typename LSMTable::count_type;
+	using size_type	= typename LSMTable::size_type;
 	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
 public:
@@ -35,7 +35,7 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	count_type getCount(bool const estimated = false) const{
+	size_type getCount(bool const estimated = false) const{
 		// TODO: difference_type missing...
 		// distance(begin(), end());
 		return estimated ? getCountEstimated() : getCountReal();
@@ -44,8 +44,8 @@ public:
 	size_t getSize() const;
 
 private:
-	count_type getCountEstimated() const;
-	count_type getCountReal() const{
+	size_type getCountEstimated() const;
+	size_type getCountReal() const{
 		return std::distance(begin(), end());
 	}
 

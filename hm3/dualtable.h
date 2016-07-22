@@ -10,7 +10,7 @@ namespace hm3{
 
 
 template <class TABLE1, class TABLE2>
-class DualTable : public IList<DualTable<TABLE1,TABLE2> >{
+class DualTable : public List<DualTable<TABLE1,TABLE2> >{
 public:
 	using Iterator = multitableiterator::DualIterator<TABLE1, TABLE2>;
 
@@ -32,7 +32,7 @@ public:
 		return table2_.get(key);
 	}
 
-//	count_type getCount() const{
+//	size_type getCount() const{
 //		return _table1.getCount() + _table2.getCount();
 //	}
 

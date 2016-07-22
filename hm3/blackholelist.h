@@ -32,7 +32,7 @@ public:
 	}
 
 	constexpr
-	count_type getCount(bool const = true) const noexcept{
+	size_type getCount(bool const = true) const noexcept{
 		return 0;
 	}
 

@@ -18,10 +18,10 @@ using MyIDGenerator	= hm3::idgenerator::IDGeneratorDate;
 using Flusher		= hm3::flusher::DiskFileFlusher<MyIDGenerator>;
 
 
-using count_type	= MemList::count_type;
+using size_type	= MemList::size_type;
 
 constexpr size_t	MEMLIST_SIZE	= (size_t ) 512 * 1024 * 1024;
-constexpr count_type	PROCESS_STEP	= 1000 * 10;
+constexpr size_type	PROCESS_STEP	= 1000 * 10;
 
 
 static void printUsage(const char *cmd);
@@ -35,7 +35,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 	std::ifstream f;
 	f.open(filename);
 
-	count_type i = 0;
+	size_type i = 0;
 
 	for(std::string line; getline(f, line);){
 		trim(line);

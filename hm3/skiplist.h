@@ -32,7 +32,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	count_type getCount(bool const = true) const noexcept{
+	size_type getCount(bool const = true) const noexcept{
 		return dataCount_;
 	}
 
@@ -62,7 +62,7 @@ private:
 	Node		**heads_;
 	Node		**loc_;
 
-	count_type	dataCount_;
+	size_type	dataCount_;
 	size_t		dataSize_;
 
 private:

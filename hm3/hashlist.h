@@ -14,7 +14,7 @@ template <class CONTAINER>
 class HashList : public IMutableList<HashList<CONTAINER> >{
 public:
 	using List		= typename CONTAINER::value_type;
-	using count_type	= typename List::count_type;
+	using size_type		= typename List::size_type;
 	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
 public:
@@ -35,7 +35,7 @@ public:
 	const Pair &get(const StringRef &key) const;
 	bool remove(const StringRef &key);
 
-	count_type getCount(bool const estimated = false) const noexcept;
+	size_type getCount(bool const estimated = false) const noexcept;
 	size_t getSize() const noexcept;
 
 private:

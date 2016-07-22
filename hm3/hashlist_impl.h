@@ -30,12 +30,12 @@ bool HashList<CONTAINER>::remove(const StringRef &key){
 }
 
 template <class CONTAINER>
-auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> count_type{
-	count_type result = 0;
+auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> size_type{
+	size_type result = 0;
 
 	for(const auto &list : container_){
 		// a + b is int
-		result = (count_type) (result + list.getCount(estimated));
+		result = (size_type) (result + list.getCount(estimated));
 	}
 
 	return result;
