@@ -2,13 +2,23 @@ namespace hm3{
 namespace arraysearch{
 
 
+template <class ARRAY>
+auto JumpLocator::calcJump_(const ARRAY &list) const -> typename ARRAY::size_type{
+	auto const jump = list.getCount() / jumps_;
+
+	return jump > MINIMAL_JUMP ? jump : MINIMAL_JUMP;
+}
+
 
 template <class ARRAY>
 result_type<ARRAY> JumpLocator::operator()(const ARRAY &list, const StringRef &key,
 							typename ARRAY::size_type left,
 							typename ARRAY::size_type const right) const{
+	using size_type = typename ARRAY::size_type;
 
-	auto mid = left + jump_;
+	size_type const jump = calcJump_(list);
+
+	size_type mid = left + jump;
 
 	while(mid < right){
 		int cmp = list.cmpAt(mid, key);
@@ -28,7 +38,7 @@ result_type<ARRAY> JumpLocator::operator()(const ARRAY &list, const StringRef &k
 
 		//printf("%12zu to %12zu => %s\n", left, right, list.getAt(left).getKey().data());
 
-		mid += jump_;
+		mid += jump;
 	}
 
 	// index = left; return cmp;

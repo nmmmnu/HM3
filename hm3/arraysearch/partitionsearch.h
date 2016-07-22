@@ -19,7 +19,7 @@ public:
 
 	static constexpr size_type DEFAULT_PARTITIONS	= 500;
 
-	#if 0
+	/*
 	LSM on 229 files, ~8M records each
 
 	Partitions	VM		prefetch/heat	get
@@ -28,8 +28,7 @@ public:
 
 	LSM on 6 huge files
 	500		7G/228G		1:12		0:025
-
-	#endif
+	*/
 
 	static constexpr size_type MIN_PARTITIONS_SIZE	= 1000;
 
@@ -57,8 +56,8 @@ private:
 
 	size_type		partitionsCount_;
 
-	mutable bool		populated_	= false;
-	mutable  Container	partitions_;
+	/* !!! */ mutable bool		populated_	= false;
+	/* !!! */ mutable  Container	partitions_;
 };
 
 

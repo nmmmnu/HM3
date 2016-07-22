@@ -4,10 +4,9 @@
 #include "diskfile/diskfile.h"
 #include "mmapfile.h"
 
-//#include "arraysearch/jumplocator.h"
+#include "disktable_locator.h"
 
-#include "arraysearch/binarylocator.h"
-#include "arraysearch/partitionsearch.h"
+#include "ilist.h"
 
 #include "iiterator.h"
 
@@ -16,11 +15,8 @@ namespace hm3{
 
 class DiskTable : public List<DiskTable>{
 private:
-	using ArrayLocator	= arraysearch::BinaryLocator;
-//	using ArrayLocator2	= arraysearch::JumpLocator;
-
-	using ArraySearch2	= arraysearch::SimpleSearch<ArrayLocator>;
-	using ArraySearch	= arraysearch::PartitionSearch<ArrayLocator>;
+	// this is macro defined in "disktable_locator.h"
+	using ArraySearch	= DISK_TABLE_LOCATOR_SEARCH;
 
 public:
 	class Iterator;
