@@ -1,5 +1,5 @@
-#ifndef _BINARY_ARRAY_SEARCH_H
-#define _BINARY_ARRAY_SEARCH_H
+#ifndef _BinaryLocator_ARRAY_SEARCH_H
+#define _BinaryLocator_ARRAY_SEARCH_H
 
 #include "arraysearch/base.h"
 
@@ -7,7 +7,7 @@ namespace hm3{
 namespace arraysearch{
 
 
-struct Binary{
+struct BinaryLocator{
 	template <class ARRAY>
 	result_type<ARRAY> operator()(const ARRAY &array, const StringRef &key,
 							typename ARRAY::size_type left,
@@ -21,7 +21,7 @@ struct Binary{
 
 // ==============================
 
-#include "binary_impl.h"
+#include "binarylocator_impl.h"
 
 #endif
 

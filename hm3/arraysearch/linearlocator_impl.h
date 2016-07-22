@@ -4,7 +4,7 @@ namespace arraysearch{
 
 
 template <class ARRAY>
-result_type<ARRAY> Linear::operator()(const ARRAY &self, const StringRef &key,
+result_type<ARRAY> LinearLocator::operator()(const ARRAY &self, const StringRef &key,
 							typename ARRAY::size_type left,
 							typename ARRAY::size_type const right) const{
 	int cmp = -1;

@@ -271,18 +271,18 @@ int main(int argc, char **argv){
 
 	// =========================
 
-	hm3::STLVectorList<arraysearch::Binary> svlb;
+	hm3::STLVectorList<arraysearch::BinaryLocator> svlb;
 		list_test("STLVector<B>", svlb);
 
-	hm3::STLVectorList<arraysearch::Linear> svll;
+	hm3::STLVectorList<arraysearch::LinearLocator> svll;
 		list_test("STLVector<L>", svll);
 
 	// =========================
 
-	hm3::VectorList<arraysearch::Binary> vlb;
+	hm3::VectorList<arraysearch::BinaryLocator> vlb;
 		list_test("Vector<B>", vlb);
 
-	hm3::VectorList<arraysearch::Linear> vll;
+	hm3::VectorList<arraysearch::LinearLocator> vll;
 		list_test("Vector<L>", vll);
 
 	// =========================

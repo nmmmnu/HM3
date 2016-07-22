@@ -4,8 +4,9 @@
 #include "diskfile/diskfile.h"
 #include "mmapfile.h"
 
-#include "arraysearch/binary.h"
-#include "arraysearch/samplersearch.h"
+#include "arraysearch/binarylocator.h"
+#include "arraysearch/partitionsearch.h"
+
 #include "iiterator.h"
 #include "ilist.h"
 
@@ -14,8 +15,9 @@ namespace hm3{
 
 class DiskTable : public List<DiskTable>{
 private:
-	using ArrayLocator	= arraysearch::Binary;
-	using ArraySearch	= arraysearch::SamplerSearch<ArrayLocator>;
+	using ArrayLocator	= arraysearch::BinaryLocator;
+	using ArraySearch2	= arraysearch::SimpleSearch<ArrayLocator>;
+	using ArraySearch	= arraysearch::PartitionSearch<ArrayLocator>;
 
 public:
 	class Iterator;
@@ -83,10 +85,9 @@ private:
 	bool		validate_;
 
 private:
-	/* !!! */ mutable
 	ArraySearch	search_;
 
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
 		return search_(*this, key);
 	//	return lookup_(*this, key);
 	}

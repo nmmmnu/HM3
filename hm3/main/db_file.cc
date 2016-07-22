@@ -12,7 +12,7 @@ static void printUsage(const char *cmd){
 		<< "\t"		<< cmd	<< " l [file.db] [key] - load file.db, then list using iterator"	<< std::endl
 
 		<< "\t\tPath names must be written without extention"		<< std::endl
-		<< "\t\tExample 'directory/file.*'"				<< std::endl
+		<< "\t\tExample 'directory/file.db'"				<< std::endl
 
 		<< std::endl;
 }

@@ -1,5 +1,5 @@
-#ifndef _LINEAR_ARRAY_SEARCH_H
-#define _LINEAR_ARRAY_SEARCH_H
+#ifndef _LinearLocator_ARRAY_SEARCH_H
+#define _LinearLocator_ARRAY_SEARCH_H
 
 #include "arraysearch/base.h"
 
@@ -7,7 +7,7 @@ namespace hm3{
 namespace arraysearch{
 
 
-struct Linear{
+struct LinearLocator{
 	template <class ARRAY>
 	result_type<ARRAY> operator()(const ARRAY &array, const StringRef &key,
 							typename ARRAY::size_type left,
@@ -20,7 +20,7 @@ struct Linear{
 
 // ==============================
 
-#include "linear_impl.h"
+#include "linearlocator_impl.h"
 
 #endif
 

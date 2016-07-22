@@ -1,9 +1,8 @@
 #ifndef _VECTORLIST_H
 #define _VECTORLIST_H
 
-#include "arraysearch/binary.h"
-#include "arraysearch/linear.h"
-#include "arraysearch/samplersearch.h"
+#include "arraysearch/binarylocator.h"
+#include "arraysearch/linearlocator.h"
 
 #include "iiterator.h"
 #include "ilist.h"
@@ -11,7 +10,7 @@
 namespace hm3{
 
 
-template <class LOCATOR=arraysearch::Binary>
+template <class LOCATOR=arraysearch::BinaryLocator>
 class VectorList : public IMutableList<VectorList<LOCATOR> >{
 private:
 	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
@@ -100,7 +99,7 @@ private:
 private:
 	ArraySearch	search_;
 
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
 		return search_(*this, key);
 	//	return LOCATOR_(*this, key);
 	}

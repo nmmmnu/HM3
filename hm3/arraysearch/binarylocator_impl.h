@@ -4,7 +4,7 @@ namespace arraysearch{
 
 
 template <class ARRAY>
-result_type<ARRAY> Binary::operator()(const ARRAY &self, const StringRef &key,
+result_type<ARRAY> BinaryLocator::operator()(const ARRAY &self, const StringRef &key,
 							typename ARRAY::size_type start,
 							typename ARRAY::size_type end) const{
 	/*

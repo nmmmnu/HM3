@@ -73,15 +73,15 @@ bool STLVectorList<LOCATOR>::remove(const StringRef &key){
 
 // ===================================
 
-template class STLVectorList<arraysearch::Linear>;
+template class STLVectorList<arraysearch::LinearLocator>;
 
-template bool STLVectorList<arraysearch::Linear>::putT_(Pair &&newdata);
-template bool STLVectorList<arraysearch::Linear>::putT_(const Pair &newdata);
+template bool STLVectorList<arraysearch::LinearLocator>::putT_(Pair &&newdata);
+template bool STLVectorList<arraysearch::LinearLocator>::putT_(const Pair &newdata);
 
-template class STLVectorList<arraysearch::Binary>;
+template class STLVectorList<arraysearch::BinaryLocator>;
 
-template bool STLVectorList<arraysearch::Binary>::putT_(Pair &&newdata);
-template bool STLVectorList<arraysearch::Binary>::putT_(const Pair &newdata);
+template bool STLVectorList<arraysearch::BinaryLocator>::putT_(Pair &&newdata);
+template bool STLVectorList<arraysearch::BinaryLocator>::putT_(const Pair &newdata);
 
 
 } // namespace

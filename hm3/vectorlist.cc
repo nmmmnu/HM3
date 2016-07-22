@@ -203,15 +203,15 @@ auto VectorList<LOCATOR>::calcNewCount_(size_type const count) -> size_type{
 
 // ===================================
 
-template class VectorList<arraysearch::Linear>;
+template class VectorList<arraysearch::LinearLocator>;
 
-template bool VectorList<arraysearch::Linear>::putT_(Pair &&newdata);
-template bool VectorList<arraysearch::Linear>::putT_(const Pair &newdata);
+template bool VectorList<arraysearch::LinearLocator>::putT_(Pair &&newdata);
+template bool VectorList<arraysearch::LinearLocator>::putT_(const Pair &newdata);
 
-template class VectorList<arraysearch::Binary>;
+template class VectorList<arraysearch::BinaryLocator>;
 
-template bool VectorList<arraysearch::Binary>::putT_(Pair &&newdata);
-template bool VectorList<arraysearch::Binary>::putT_(const Pair &newdata);
+template bool VectorList<arraysearch::BinaryLocator>::putT_(Pair &&newdata);
+template bool VectorList<arraysearch::BinaryLocator>::putT_(const Pair &newdata);
 
 
 } // namespace

@@ -1,8 +1,8 @@
 #ifndef _STL_VECTOR_LIST_H
 #define _STL_VECTOR_LIST_H
 
-#include "arraysearch/binary.h"
-#include "arraysearch/linear.h"
+#include "arraysearch/binarylocator.h"
+#include "arraysearch/linearlocator.h"
 #include "ilist.h"
 
 #include <vector>
@@ -92,7 +92,7 @@ public:
 private:
 	ArraySearch	search_;
 
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ){
+	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
 		return search_(*this, key);
 	}
 

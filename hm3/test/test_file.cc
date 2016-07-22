@@ -137,11 +137,11 @@ static int op_search_v(char const what, const StringRef &filename, const StringR
 
 	switch(what){
 
-	case 't':	return op_search(hm3::STLVectorList<arraysearch::Linear>{},			filename, key);
-	case 'T':	return op_search(hm3::STLVectorList<arraysearch::Binary>{},			filename, key);
+	case 't':	return op_search(hm3::STLVectorList<arraysearch::LinearLocator>{},		filename, key);
+	case 'T':	return op_search(hm3::STLVectorList<arraysearch::BinaryLocator>{},		filename, key);
 
-	case 'v':	return op_search(hm3::VectorList<arraysearch::Linear>{},			filename, key);
-	case 'V':	return op_search(hm3::VectorList<arraysearch::Binary>{},			filename, key);
+	case 'v':	return op_search(hm3::VectorList<arraysearch::LinearLocator>{},			filename, key);
+	case 'V':	return op_search(hm3::VectorList<arraysearch::BinaryLocator>{},			filename, key);
 	case 'w':	return op_search(hm3::HashList<std::vector<hm3::VectorList<> > >{buckets},	filename, key);
 
 	case 'l':	return op_search(hm3::LinkList{},						filename, key);
