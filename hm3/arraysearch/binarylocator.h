@@ -1,7 +1,7 @@
 #ifndef _BinaryLocator_ARRAY_SEARCH_H
 #define _BinaryLocator_ARRAY_SEARCH_H
 
-#include "arraysearch/base.h"
+#include "simplesearch.h"
 
 namespace hm3{
 namespace arraysearch{
