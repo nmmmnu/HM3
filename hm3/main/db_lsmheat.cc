@@ -40,11 +40,13 @@ int main(int argc, char **argv){
 
 	// =======================
 
-	static const char frst[] = { (char) 0x01, '\0' };
-	static const char last[] = { (char) 0xFF, '\0' };
+	// first key
+	mtlist.begin();
 
-	mtlist.getIterator(frst);
-	mtlist.getIterator(last);
+	const char last[] = { (char) 0xFF, '\0' };
+
+	// ~last key
+	mtlist.getIterator( last );
 
 	return 0;
 }
