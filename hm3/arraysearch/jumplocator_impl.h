@@ -6,7 +6,7 @@ template <class ARRAY>
 auto JumpLocator::calcJump_(const ARRAY &list) const -> typename ARRAY::size_type{
 	auto const jump = list.getCount() / jumps_;
 
-	return jump > MINIMAL_JUMP ? jump : MINIMAL_JUMP;
+	return jump > DEFAULT_MINIMAL_JUMP ? jump : DEFAULT_MINIMAL_JUMP;
 }
 
 
@@ -41,8 +41,7 @@ result_type<ARRAY> JumpLocator::operator()(const ARRAY &list, const StringRef &k
 		mid += jump;
 	}
 
-	// index = left; return cmp;
-	return {false, left};
+	return locator_(list, key, left, right);
 }
 
 

@@ -22,11 +22,12 @@ class JumpLocator{
 public:
 	using my_size_type = size_t;
 
-	static constexpr my_size_type	MINIMAL_JUMP		= 1000 * 1000;
+	static constexpr my_size_type	DEFAULT_MINIMAL_JUMP	= 1000 * 1000;
 	static constexpr my_size_type	DEFAULT_JUMPS		= 500;
 
 public:
-	JumpLocator(my_size_type const jumps = DEFAULT_JUMPS) : jumps_(jumps){}
+	JumpLocator(my_size_type const jumps = DEFAULT_JUMPS, my_size_type const minimalJump = DEFAULT_MINIMAL_JUMP) :
+							jumps_(jumps){}
 
 public:
 	template <class ARRAY>

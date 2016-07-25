@@ -213,6 +213,11 @@ template class VectorList<arraysearch::BinaryLocator>;
 template bool VectorList<arraysearch::BinaryLocator>::putT_(Pair &&newdata);
 template bool VectorList<arraysearch::BinaryLocator>::putT_(const Pair &newdata);
 
+template class VectorList<arraysearch::JumpLocator>;
+
+template bool VectorList<arraysearch::JumpLocator>::putT_(Pair &&newdata);
+template bool VectorList<arraysearch::JumpLocator>::putT_(const Pair &newdata);
+
 
 } // namespace
 

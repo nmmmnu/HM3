@@ -277,6 +277,9 @@ int main(int argc, char **argv){
 	hm3::STLVectorList<arraysearch::LinearLocator> svll;
 		list_test("STLVector<L>", svll);
 
+	hm3::STLVectorList<arraysearch::JumpLocator> svlj;
+		list_test("STLVector<J>", svlj);
+
 	// =========================
 
 	hm3::VectorList<arraysearch::BinaryLocator> vlb;
@@ -284,6 +287,9 @@ int main(int argc, char **argv){
 
 	hm3::VectorList<arraysearch::LinearLocator> vll;
 		list_test("Vector<L>", vll);
+
+	hm3::VectorList<arraysearch::JumpLocator> vlj;
+		list_test("Vector<J>", vlj);
 
 	// =========================
 

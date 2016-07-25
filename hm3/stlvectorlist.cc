@@ -83,6 +83,11 @@ template class STLVectorList<arraysearch::BinaryLocator>;
 template bool STLVectorList<arraysearch::BinaryLocator>::putT_(Pair &&newdata);
 template bool STLVectorList<arraysearch::BinaryLocator>::putT_(const Pair &newdata);
 
+template class STLVectorList<arraysearch::JumpLocator>;
+
+template bool STLVectorList<arraysearch::JumpLocator>::putT_(Pair &&newdata);
+template bool STLVectorList<arraysearch::JumpLocator>::putT_(const Pair &newdata);
+
 
 } // namespace
 

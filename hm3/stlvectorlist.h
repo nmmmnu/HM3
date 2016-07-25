@@ -3,6 +3,7 @@
 
 #include "arraysearch/binarylocator.h"
 #include "arraysearch/linearlocator.h"
+#include "arraysearch/jumplocator.h"
 #include "arraysearch/simplesearch.h"
 
 #include "ilist.h"
