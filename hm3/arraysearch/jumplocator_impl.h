@@ -2,16 +2,18 @@ namespace hm3{
 namespace arraysearch{
 
 
+template <class LOCATOR>
 template <class ARRAY>
-auto JumpLocator::calcJump_(const ARRAY &list) const -> typename ARRAY::size_type{
+auto JumpLocatorBase<LOCATOR>::calcJump_(const ARRAY &list) const -> typename ARRAY::size_type{
 	auto const jump = list.getCount() / jumps_;
 
 	return jump > DEFAULT_MINIMAL_JUMP ? jump : DEFAULT_MINIMAL_JUMP;
 }
 
 
+template <class LOCATOR>
 template <class ARRAY>
-result_type<ARRAY> JumpLocator::operator()(const ARRAY &list, const StringRef &key,
+result_type<ARRAY> JumpLocatorBase<LOCATOR>::operator()(const ARRAY &list, const StringRef &key,
 							typename ARRAY::size_type left,
 							typename ARRAY::size_type const right) const{
 	using size_type = typename ARRAY::size_type;

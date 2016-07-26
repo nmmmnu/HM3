@@ -18,15 +18,14 @@ namespace arraysearch{
  *
  */
 
-class JumpLocator{
+template <class LOCATOR>
+class JumpLocatorBase{
 public:
-	using my_size_type = size_t;
-
-	static constexpr my_size_type	DEFAULT_MINIMAL_JUMP	= 1000 * 1000;
-	static constexpr my_size_type	DEFAULT_JUMPS		= 500;
+	static constexpr general_size_type	DEFAULT_MINIMAL_JUMP	= 1000 * 1000;
+	static constexpr general_size_type	DEFAULT_JUMPS		= 500;
 
 public:
-	JumpLocator(my_size_type const jumps = DEFAULT_JUMPS, my_size_type const minimalJump = DEFAULT_MINIMAL_JUMP) :
+	JumpLocatorBase(general_size_type const jumps = DEFAULT_JUMPS) :
 							jumps_(jumps){}
 
 public:
@@ -40,11 +39,12 @@ private:
 	typename ARRAY::size_type calcJump_(const ARRAY &list) const;
 
 private:
-	my_size_type	jumps_;
+	general_size_type	jumps_;
 
-	BinaryLocator	locator_;
+	LOCATOR			locator_;
 };
 
+using JumpLocator = JumpLocatorBase<BinaryLocator>;
 
 } // namespace arraysearch
 } // namespace

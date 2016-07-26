@@ -277,7 +277,7 @@ int main(int argc, char **argv){
 	hm3::STLVectorList<arraysearch::LinearLocator> svll;
 		list_test("STLVector<L>", svll);
 
-	hm3::STLVectorList<arraysearch::JumpLocator> svlj;
+	hm3::STLVectorList<arraysearch::JumpLocator > svlj;
 		list_test("STLVector<J>", svlj);
 
 	// =========================
