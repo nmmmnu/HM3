@@ -1,14 +1,13 @@
 #ifndef _ICHECKSUM_H
 #define _ICHECKSUM_H
 
-#include <cstdlib>	// size_t
-
 #include <memory>
 
 template<class T>
 class Checksum{
 public:
 	using result_type = typename T::result_type;
+	using size_t = std::size_t;
 
 public:
 	Checksum() = default;

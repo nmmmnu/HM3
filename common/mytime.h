@@ -1,9 +1,8 @@
 #ifndef _MYTIME_H
 #define _MYTIME_H
 
-#include <stdint.h>
-#include <stdlib.h>	// size_t
-#include <string.h>	// strlen
+#include <cstdint>
+#include <cstring>	// strlen
 
 class MyTime{
 public:

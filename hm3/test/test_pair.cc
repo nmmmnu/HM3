@@ -7,7 +7,7 @@ using Pair	= hm3::Pair;
 using PairBlob	= hm3::PairBlob;
 
 #include <stdio.h>	// printf
-#include <string.h>	// strcmp
+#include <cstring>	// strcmp
 #include <unistd.h>	// sleep
 
 #include <utility>	// std::move

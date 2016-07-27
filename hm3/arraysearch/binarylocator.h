@@ -3,8 +3,6 @@
 
 #include "linearlocator.h"
 
-#include "stringref.h"
-
 namespace hm3{
 namespace arraysearch{
 
@@ -18,8 +16,6 @@ struct HybridBinaryLocator{
 
 private:
 	LinearLocator		locator_;
-
-	general_size_type	minimumDistance_;
 };
 
 using BinaryLocator = HybridBinaryLocator<8>;
