@@ -1,0 +1,49 @@
+SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+EXTRA_INCL += -I$(SRC_DIR)
+
+include Makefile.sub
+
+
+
+all: $(A)test_iobuffer $(A)test_redisprotocol
+
+EXTRA_CLEAN +=	$(A)test_iobuffer $(A)test_redisprotocol
+
+all: $(A)test_echo_poll $(A)test_redis_poll
+
+EXTRA_CLEAN +=	$(A)test_echo_poll $(A)test_redis_poll
+
+ifeq ($(UNAME), Linux)
+	# add epoll support...
+	all: $(A)test_echo_epoll $(A)test_redis_epoll
+
+	EXTRA_CLEAN += $(A)test_echo_epoll $(A)test_redis_epoll
+endif
+
+
+
+$(A)test_iobuffer: $(O)test_iobuffer.o
+	$(LINK)
+
+$(A)test_redisprotocol: $(O)test_redisprotocol.o $(O)redisprotocol.o
+	$(LINK)
+
+
+
+$(A)test_echo_poll: $(O)test_echo_poll.o	$(O)pollselector.o	$(O)echoworker.o	$(O)timer.o $(O)sockets.o
+	$(LINK)
+
+$(A)test_echo_epoll: $(O)test_echo_epoll.o	$(O)epollselector.o	$(O)echoworker.o	$(O)timer.o $(O)sockets.o
+	$(LINK)
+
+
+
+$(A)test_redis_poll: $(O)test_redis_poll.o	$(O)pollselector.o	$(O)redisprotocol.o	$(O)timer.o $(O)sockets.o
+	$(LINK)
+
+$(A)test_redis_epoll: $(O)test_redis_epoll.o	$(O)epollselector.o	$(O)redisprotocol.o	$(O)timer.o $(O)sockets.o
+	$(LINK)
+
+
+

@@ -1,6 +1,8 @@
 
 SUBDIRS = test common checksumcalculator	\
-					\
+						\
+		net net/selector net/protocol net/worker net/test		\
+						\
 		hm3/diskfile hm3/flusher hm3/idgenerator hm3/tableloader	\
 		hm3				\
 		hm3/test hm3/main
