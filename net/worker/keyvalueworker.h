@@ -61,7 +61,7 @@ private:
 
 	// Actual commands
 	template<class DB_ADAPTER_>
-	static StringRef db_get_(const DB_ADAPTER_ *db, const StringRef &key){
+	static std::string db_get_(const DB_ADAPTER_ *db, const StringRef &key){
 		if (! db)
 			return {};
 
