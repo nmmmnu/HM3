@@ -1,7 +1,7 @@
 #ifndef _CHECKED_VALUE_H
 #define _CHECKED_VALUE_H
 
-#include <type_traits>
+//#include <type_traits>
 #include <utility>
 
 template<class T, class STATUS, STATUS SUCCESS>
