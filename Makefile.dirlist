@@ -7,5 +7,5 @@ SUBDIRS = test common checksumcalculator	\
 		hm3				\
 		hm3/test hm3/main		\
 						\
-		exe
+		main
 

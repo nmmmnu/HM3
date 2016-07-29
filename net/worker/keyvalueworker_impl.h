@@ -40,7 +40,6 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::process_request_(CONNECTION &
 
 	const auto &p = protocol_.getParams();
 
-
 	if (p[0] == SHUTDOWN || p[0] == SHUTDOWN2){
 		return WorkerStatus::SHUTDOWN;
 	}

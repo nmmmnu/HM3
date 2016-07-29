@@ -14,7 +14,12 @@ public:
 public:
 	static const char *toString(uint64_t date, const char *format = DATA_FORMAT_STANDARD) noexcept;
 
-	static uint64_t now() noexcept;
+	static uint64_t now() noexcept{
+		return now64();
+	}
+
+	static uint32_t now32() noexcept;
+	static uint64_t now64() noexcept;
 
 	static bool expired(uint64_t date, uint32_t expiration) noexcept;
 

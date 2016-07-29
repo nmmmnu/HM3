@@ -5,6 +5,8 @@
 
 #include "stringref.h"
 
+#include "iobuffer.h"
+
 #include <vector>
 
 

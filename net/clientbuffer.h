@@ -10,9 +10,8 @@
 namespace net{
 
 
-template<size_t CAPACITY>
 class ClientBuffer :
-		public IOBuffer<CAPACITY>,
+		public IOBuffer,
 		public Timer_{
 };
 

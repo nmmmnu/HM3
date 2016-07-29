@@ -16,7 +16,15 @@ uint64_t MyTime::now() noexcept{
 }
 #endif
 
-uint64_t MyTime::now() noexcept{
+uint32_t MyTime::now32() noexcept{
+	const auto now = std::chrono::system_clock::now().time_since_epoch();
+
+	const auto sec = std::chrono::duration_cast<std::chrono::seconds>(now);
+
+	return (uint32_t) sec.count();
+}
+
+uint64_t MyTime::now64() noexcept{
 	const auto now = std::chrono::system_clock::now().time_since_epoch();
 
 	const auto sec = std::chrono::duration_cast<std::chrono::seconds>(now);

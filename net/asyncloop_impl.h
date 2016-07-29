@@ -10,11 +10,24 @@
 
 namespace net{
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::AsyncLoop(SELECTOR &&selector, WORKER &&worker, const std::initializer_list<int> &serverFD) :
+template<class SELECTOR, class WORKER>
+AsyncLoop<SELECTOR, WORKER>::AsyncLoop(SELECTOR &&selector, WORKER &&worker, const std::initializer_list<int> &serverFD,
+			uint32_t const conf_connectionTimeout,
+			size_t const conf_maxPacketSize) :
 					selector_(std::move(selector)),
 					worker_(std::move(worker)),
-					serverFD_(serverFD){
+					serverFD_(serverFD),
+
+					conf_connectionTimeout_(
+						conf_connectionTimeout < CONNECTION_TIMEOUT ?
+							CONNECTION_TIMEOUT :
+							conf_connectionTimeout
+					),
+					conf_maxPacketSize_(
+						conf_maxPacketSize < BUFFER_CAPACITY ?
+							BUFFER_CAPACITY :
+							conf_maxPacketSize
+					){
 	for(int const fd : serverFD_){
 		socket_makeNonBlocking(fd);
 		selector_.insertFD(fd);
@@ -22,8 +35,8 @@ AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::AsyncLoop(SELECTOR &&selector, WORKER
 }
 
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::~AsyncLoop(){
+template<class SELECTOR, class WORKER>
+AsyncLoop<SELECTOR, WORKER>::~AsyncLoop(){
 	// serverFD_ will be closed if we close epoll
 	for(int const fd : serverFD_)
 		selector_.removeFD(fd);
@@ -31,8 +44,8 @@ AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::~AsyncLoop(){
 
 // ===========================
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::process(){
+template<class SELECTOR, class WORKER>
+bool AsyncLoop<SELECTOR, WORKER>::process(){
 	using WaitStatus = selector::WaitStatus;
 	using FDStatus   = selector::FDStatus;
 
@@ -86,13 +99,13 @@ bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::process(){
 
 // ===========================
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::isServerFD_(int const fd){
+template<class SELECTOR, class WORKER>
+bool AsyncLoop<SELECTOR, WORKER>::isServerFD_(int const fd){
 	return std::find(serverFD_.cbegin(), serverFD_.cend(), fd) != serverFD_.cend();
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleRead_(int const fd){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::handleRead_(int const fd){
 	if ( isServerFD_(fd) ){
 		while (handleConnect_(fd));
 		return;
@@ -109,27 +122,23 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleRead_(int const fd){
 
 	// -------------------------------------
 
-	auto available = buffer.capacity();
-
-	if (available == 0){
-		// buffer will overfow, disconnect.
-		return handleDisconnect_(fd, DisconnectStatus::PROBLEM_BUFFER_READ);
-	}
-
-	ssize_t const size = ::read(fd, buffer.dataTail(), available);
+	ssize_t const size = ::read(fd, inputBuffer_, BUFFER_CAPACITY);
 
 	if (size <= 0)
 		return handleSocketOps_(fd, size);
 
-	buffer.push((size_t) size);
+	buffer.push((size_t) size, inputBuffer_);
+
+	if (buffer.size() > conf_maxPacketSize_)
+		return handleDisconnect_(fd, DisconnectStatus::ERROR);
 
 	buffer.restartTimer();
 
 	handleWorker_(fd, buffer);
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleWrite_(int const fd){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::handleWrite_(int const fd){
 	if ( isServerFD_(fd) ){
 		// WTF?!?
 		return;
@@ -142,7 +151,7 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleWrite_(int const fd){
 	if (it == clients_.end())
 		return handleDisconnect_(fd, DisconnectStatus::PROBLEM_MAP_NOT_FOUND);
 
-	CLIENTBUFFER &buffer = it->second;
+	ClientBuffer &buffer = it->second;
 
 	// -------------------------------------
 
@@ -172,8 +181,8 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleWrite_(int const fd){
 	}
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleWorker_(int const fd, CLIENTBUFFER &buffer){
+template<class SELECTOR, class WORKER>
+bool AsyncLoop<SELECTOR, WORKER>::handleWorker_(int const fd, ClientBuffer &buffer){
 //	static const char *redis_ok  = "$2\r\nOK\r\n";
 //	static const char *redis_err = "-ERR Error\r\n";
 
@@ -212,8 +221,8 @@ bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleWorker_(int const fd, CLIE
 	}
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleConnect_(int const fd){
+template<class SELECTOR, class WORKER>
+bool AsyncLoop<SELECTOR, WORKER>::handleConnect_(int const fd){
 	// fd is same as serverFD_
 	int const newFD = socket_accept(fd);
 
@@ -234,8 +243,8 @@ bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleConnect_(int const fd){
 	return true;
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleDisconnect_(int const fd, const DisconnectStatus error){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::handleDisconnect_(int const fd, const DisconnectStatus error){
 	removeFD_(fd);
 
 	socket_close(fd);
@@ -256,8 +265,8 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleDisconnect_(int const fd, 
 
 // ===========================
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleSocketOps_(int const fd, ssize_t const size){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::handleSocketOps_(int const fd, ssize_t const size){
 	if (size < 0){
 		if ( socket_check_eagain() ){
 			// try again
@@ -276,8 +285,8 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::handleSocketOps_(int const fd, s
 
 // ===========================
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::insertFD_(int const fd){
+template<class SELECTOR, class WORKER>
+bool AsyncLoop<SELECTOR, WORKER>::insertFD_(int const fd){
 	// one for server fd
 	if (connectedClients_ + 1 >= selector_.maxFD() )
 		return false;
@@ -287,7 +296,7 @@ bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::insertFD_(int const fd){
 	if (result == false)
 		return false;
 
-	//clients_.insert(std::make_pair(fd, CLIENTBUFFER{}));
+	//clients_.insert(std::make_pair(fd, ClientBuffer{}));
 	clients_[fd];
 
 	++connectedClients_;
@@ -295,8 +304,8 @@ bool AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::insertFD_(int const fd){
 	return true;
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::removeFD_(int const fd){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::removeFD_(int const fd){
 	selector_.removeFD(fd);
 
 	clients_.erase(fd);
@@ -304,13 +313,13 @@ void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::removeFD_(int const fd){
 	--connectedClients_;
 }
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER>
-void AsyncLoop<SELECTOR, WORKER, CLIENTBUFFER>::expireFD_(){
+template<class SELECTOR, class WORKER>
+void AsyncLoop<SELECTOR, WORKER>::expireFD_(){
 	for(const auto &p : clients_){
 		int const fd = p.first;
 		auto &c = p.second;
 
-		if (c.expired(CONN_TIMEOUT)){
+		if (c.expired(conf_connectionTimeout_)){
 			handleDisconnect_(fd, DisconnectStatus::TIMEOUT);
 			// iterator is invalid now...
 			return;

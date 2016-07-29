@@ -4,21 +4,27 @@
 #include "selector/selectordefs.h"
 #include "clientbuffer.h"
 
-#include <map>
+#include <unordered_map>
 
 namespace net{
 
-template<class SELECTOR, class WORKER, class CLIENTBUFFER = ClientBuffer<1024> >
+template<class SELECTOR, class WORKER>
 class AsyncLoop{
 public:
-	constexpr static int  WAIT_TIMEOUT	=  5;
-	constexpr static int  CONN_TIMEOUT	= 20;
+	constexpr static int		WAIT_TIMEOUT		= 5;
+	constexpr static uint32_t	CONNECTION_TIMEOUT	= 20;
+
+	constexpr static size_t		BUFFER_CAPACITY 	= 1024 * 4;
 
 private:
-	constexpr static int  WAIT_TIMEOUT_MS	=  WAIT_TIMEOUT * 1000;
+	constexpr static int		WAIT_TIMEOUT_MS	=  WAIT_TIMEOUT * 1000;
+
+	using ClientBufferContainer	= std::unordered_map<int, ClientBuffer>;
 
 public:
-	AsyncLoop(SELECTOR &&selector, WORKER &&worker, const std::initializer_list<int> &serverFD);
+	AsyncLoop(SELECTOR &&selector, WORKER &&worker, const std::initializer_list<int> &serverFD,
+				uint32_t conf_connectionTimeout = 0,
+				size_t conf_maxPacketSize = 0);
 	~AsyncLoop();
 	AsyncLoop(AsyncLoop &&other) = default;
 	AsyncLoop &operator=(AsyncLoop &&other) = default;
@@ -44,7 +50,7 @@ private:
 	void handleWrite_(int fd);
 	bool handleConnect_(int fd);
 	void handleDisconnect_(int fd, const DisconnectStatus error);
-	bool handleWorker_(int fd, CLIENTBUFFER &connection);
+	bool handleWorker_(int fd, ClientBuffer &connection);
 
 	void handleSocketOps_(int fd, ssize_t size);
 
@@ -63,15 +69,23 @@ private:
 			printf("%-40s | clients: %5u | fd: %5d\n", s, connectedClients_, fd);
 	}
 
-private:
-	using ClientBufferContainer	= std::map<int, CLIENTBUFFER>;
+	template <typename T>
+	T min__(T const a, T const b){
+		return a < b ? a : b;
+	}
 
+private:
 	SELECTOR		selector_;
 	WORKER			worker_;
 	std::vector<int>	serverFD_;
 	ClientBufferContainer	clients_;
 	uint32_t		connectedClients_ = 0;
 	bool			keepProcessing_ = true;
+
+	uint32_t		conf_connectionTimeout_;
+	size_t			conf_maxPacketSize_;
+
+	char			inputBuffer_[4 * 1024];
 };
 
 

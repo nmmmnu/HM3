@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include <sstream>
+
 namespace net{
 namespace protocol{
 

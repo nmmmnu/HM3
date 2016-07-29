@@ -60,10 +60,12 @@ private:
 // ==================================
 
 int main(int argc, char **argv){
-	constexpr const char	*HOSTNAME	= "localhost.not.used.yet";
-	constexpr int		PORT		= 2000;
+	constexpr const char	*HOSTNAME		= "localhost.not.used.yet";
+	constexpr int		PORT			= 2000;
 
-	constexpr size_t	BUFFER		= 1024 * 16;
+	constexpr size_t	MAX_CLIENTS		= 1024;
+	constexpr uint32_t	CONNECTION_TIMEOUT	= 30;
+	constexpr size_t	MAX_PACKET_SIZE		= 1024 * 64;
 
 	// ==================================
 
@@ -95,7 +97,8 @@ int main(int argc, char **argv){
 
 	int const fd1 = net::socket_create(net::socket_tcp, HOSTNAME, PORT);
 
-	net::AsyncLoop<MySelector, MyWorker, net::ClientBuffer<BUFFER> > loop( MySelector{ 4 }, MyWorker{ &adapter }, { fd1 } );
+	net::AsyncLoop<MySelector, MyWorker> loop( MySelector{ MAX_CLIENTS }, MyWorker{ &adapter }, { fd1 },
+							CONNECTION_TIMEOUT, MAX_PACKET_SIZE);
 
 	while(loop.process());
 }

@@ -3,101 +3,62 @@
 
 #include "stringref.h"
 
-#include <limits>
+#include <vector>
 
-#include <cstdint>
 #include <cstring>
 #include <cstdio>
 
 namespace net{
 
-namespace iobuffer{
-	using size_type = uint16_t;
-}
 
 // ==================================
 
-template<
-	size_t CAPACITY,
-	bool VALID = CAPACITY < std::numeric_limits<iobuffer::size_type>::max()
->
 class IOBuffer{
-	static_assert(
-		VALID,
-		"IOBuffer invalid capacity; max capacity = std::numeric_limits<size_type>::max()"
-	);
-};
-
-// ==================================
-
-template<size_t CAPACITY>
-class IOBuffer<CAPACITY, true>{
 public:
-	using size_type = iobuffer::size_type;
+	using size_type = std::vector<char>::size_type;
 
 private:
-	size_type	head_	= 0;
-	size_type	tail_	= 0;
-	char		buffer_[CAPACITY];
+	size_type		head_	= 0;
+	std::vector<char>	buffer_;
 
 public:
 	void clear(){
+		buffer_.clear();
 		head_ = 0;
-		tail_ = 0;
-	}
-
-	constexpr
-	static size_t max_size(){
-		return CAPACITY;
 	}
 
 	// ==================================
 
 	const char *data() const{
-		return & buffer_[head_];
-	}
-
-	const char *dataTail() const{
-		return & buffer_[tail_];
-	}
-
-	char *dataTail(){
-		return & buffer_[tail_];
+		const char *s = buffer_.data();
+		return & s[head_];
 	}
 
 	size_t size() const{
-		return tail_ - head_;
-	}
-
-	size_t capacity() const{
-		return CAPACITY - tail_;
+		return buffer_.size() - head_;
 	}
 
 	// ==================================
 
-	bool push(const char *p){
-		return p ? push(strlen(p), p) : false;
+	bool push(const char c){
+		buffer_.push_back(c);
+		return true;
 	}
 
-	bool push(const char c){
-		return push(1, &c);
+	bool push(const char *p){
+		return p ? push(strlen(p), p) : false;
 	}
 
 	bool push(const StringRef &sr){
 		return push(sr.size(), sr.data());
 	}
 
-	bool push(size_t const len, const void *ptr = nullptr){
-		if (len == 0)
+	bool push(size_t const len, const char *ptr){
+		if (ptr == nullptr)
 			return false;
 
-		if (capacity() < len)
-			return false;
-
-		if (ptr)
-			memmove(&buffer_[tail_], ptr, len);
-
-		tail_ = (size_type) (tail_ + len);
+		for(size_t i = 0; i < len; ++i)
+			buffer_.push_back( ptr[i] );
 
 		return true;
 	}
@@ -124,10 +85,10 @@ public:
 	// ==================================
 
 	void print() const{
-		printf("h: %3u | t: %3u | ad: %3zu | ac: %3zu | %.*s\n",
-				head_, tail_,
-				size(), capacity(),
-				(int) size(), buffer_ );
+		printf("h: %3zu | s: %3zu | %.*s\n",
+				head_,
+				size(),
+				(int) size(), buffer_.data() );
 	}
 };
 
