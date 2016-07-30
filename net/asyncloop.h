@@ -69,10 +69,13 @@ private:
 			printf("%-40s | clients: %5u | fd: %5d\n", s, connectedClients_, fd);
 	}
 
+#if 0
+	// another non referenced min...
 	template <typename T>
-	T min__(T const a, T const b){
+	static T min__(T const a, T const b){
 		return a < b ? a : b;
 	}
+#endif
 
 private:
 	SELECTOR		selector_;

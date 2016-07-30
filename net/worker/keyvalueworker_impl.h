@@ -52,6 +52,13 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::process_request_(CONNECTION &
 		return sendResponseString_(buffer, "OK");
 	}
 
+	if (p[0] == INFO || p[0] == INFO2){
+		if (p.size() != 1)
+			return sendResponseError_(buffer, "Bad request");
+
+		return sendResponseString_(buffer, db_info_(db_) );
+	}
+
 	if (p[0] == GET || p[0] == GET2){
 		if (p.size() != 2)
 			return sendResponseError_(buffer, "Bad request");
@@ -103,7 +110,12 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::sendResponseMulti_(CONNECTION
 // ====================================
 
 template<class PROTOCOL, class DB_ADAPTER>
-StringRef KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_get_(const std::nullptr_t *, const StringRef &){
+std::string KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_info_(const std::nullptr_t *){
+	return "Mock Adapter Info";
+}
+
+template<class PROTOCOL, class DB_ADAPTER>
+std::string KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_get_(const std::nullptr_t *, const StringRef &){
 	return "value";
 }
 
@@ -116,7 +128,6 @@ std::vector<StringRef> KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_getall_(const st
 		"key4", "value4"
 	};
 }
-
 
 } // namespace worker
 } // namespace

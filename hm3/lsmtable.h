@@ -14,7 +14,7 @@ template <class CONTAINER>
 class LSMTable : public List<LSMTable<CONTAINER> >{
 public:
 	using size_type	= typename LSMTable::size_type;
-	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
+	using Iterator	= multitableiterator::CollectionIterator<CONTAINER>;
 
 public:
 	LSMTable(const CONTAINER &container) : container_(container){}
@@ -36,8 +36,6 @@ public:
 	Pair get(const StringRef &key) const;
 
 	size_type getCount(bool const estimated = false) const{
-		// TODO: difference_type missing...
-		// distance(begin(), end());
 		return estimated ? getCountEstimated() : getCountReal();
 	}
 
@@ -45,8 +43,20 @@ public:
 
 private:
 	size_type getCountEstimated() const;
+
 	size_type getCountReal() const{
-		return std::distance(begin(), end());
+		// Slooooow....
+		size_type count = 0;
+		for(const auto &p : *this){
+			(void) p;
+			++count;
+		}
+
+		return count;
+
+		// TODO: difference_type missing...
+		// distance(begin(), end());
+		//return std::distance(begin(), end());
 	}
 
 private:

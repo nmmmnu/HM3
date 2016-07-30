@@ -1,6 +1,7 @@
 #ifndef DBADAPTER_H_
 #define DBADAPTER_H_
 
+#include <sstream>
 
 template<class LIST>
 class DBAdapter{
@@ -38,6 +39,16 @@ public:
 			std::cout << x << std::endl;
 
 		return result;
+	}
+
+	std::string info() const{
+		std::stringstream ss;
+
+		ss	<< "Keys (estimated): "	<< list_.getCount(true)	<< std::endl
+			<< "Size: "		<< list_.getSize()	<< std::endl
+		;
+
+		return ss.str();
 	}
 
 private:

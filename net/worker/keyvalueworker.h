@@ -47,6 +47,9 @@ private:
 	static constexpr const char *SHUTDOWN	= "SHUTDOWN";
 	static constexpr const char *SHUTDOWN2	= "shutdown";
 
+	static constexpr const char *INFO	= "INFO";
+	static constexpr const char *INFO2	= "info";
+
 	static constexpr const char *RELOAD	= "RELOAD";
 	static constexpr const char *RELOAD2	= "reload";
 
@@ -58,10 +61,19 @@ private:
 
 private:
 	// Mock commands
-	static StringRef db_get_(const std::nullptr_t *, const StringRef &key);
+	static std::string db_info_(const std::nullptr_t *);
+	static std::string db_get_(const std::nullptr_t *, const StringRef &key);
 	static std::vector<StringRef> db_getall_(const std::nullptr_t *, const StringRef &key);
 
 	// Actual commands
+	template<class DB_ADAPTER_>
+	static std::string db_info_(const DB_ADAPTER_ *db){
+		if (! db)
+			return {};
+
+		return db->info();
+	}
+
 	template<class DB_ADAPTER_>
 	static std::string db_get_(const DB_ADAPTER_ *db, const StringRef &key){
 		if (! db)
