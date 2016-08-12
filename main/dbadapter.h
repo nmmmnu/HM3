@@ -23,7 +23,7 @@ public:
 
 		result.reserve(MAX_RESULTS * 2);
 
-		const auto bit = list_.getIterator(key);
+		const auto bit = list_.lowerBound(key);
 		const auto eit = list_.end();
 
 		size_t c = 0;

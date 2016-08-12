@@ -107,7 +107,7 @@ static void iterator_test(const char *module, LIST &list){
 
 template <class LIST>
 inline void iterator_get_test_deref(const char *module, const LIST &list, const char *key, const char *value){
-	auto it = list.getIterator(key);
+	auto it = list.lowerBound(key);
 	auto et = list.end();
 
 	if (value){

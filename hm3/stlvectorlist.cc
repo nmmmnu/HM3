@@ -11,7 +11,7 @@ const Pair &STLVectorList::get(const StringRef &key) const{
 	return found ? getAt( result ) : Pair::zero();
 }
 
-auto STLVectorList::getIterator(const StringRef &key) const -> Iterator{
+auto STLVectorList::lowerBound(const StringRef &key) const -> Iterator{
 	size_type result;
 	/* bool const found = */ binarySearch(*this, key, getSize(), result);
 

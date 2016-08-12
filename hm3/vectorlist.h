@@ -62,7 +62,7 @@ private:
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator getIterator(const StringRef &key) const noexcept;
+	Iterator lowerBound(const StringRef &key) const noexcept;
 
 	Iterator begin() const noexcept{
 		return buffer_;

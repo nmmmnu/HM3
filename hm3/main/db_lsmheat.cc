@@ -46,7 +46,7 @@ int main(int argc, char **argv){
 	const char last[] = { (char) 0xFF, '\0' };
 
 	// ~last key
-	mtlist.getIterator( last );
+	mtlist.lowerBound( last );
 
 	return 0;
 }

@@ -29,7 +29,7 @@ namespace helpers{
 
 		IteratorPair_(const TABLE &table, const StringRef &key) :
 						IteratorPair_(
-							table.getIterator(key),
+							table.lowerBound(key),
 							table.end()
 						){}
 

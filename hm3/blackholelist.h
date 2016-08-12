@@ -43,7 +43,7 @@ public:
 
 public:
 	constexpr
-	Iterator getIterator(const StringRef &) const noexcept{
+	Iterator lowerBound(const StringRef &) const noexcept{
 		return nullptr;
 	}
 

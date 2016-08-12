@@ -178,7 +178,7 @@ const Pair &SkipList::get(const StringRef &key) const{
 	return node ? node->data : Pair::zero();
 }
 
-SkipList::Iterator SkipList::getIterator(const StringRef &key) const{
+SkipList::Iterator SkipList::lowerBound(const StringRef &key) const{
 	if (key.empty())
 		return end();
 

@@ -36,7 +36,7 @@ public:
 	}
 
 public:
-	Iterator getIterator(const StringRef &key) const;
+	Iterator lowerBound(const StringRef &key) const;
 
 	Iterator begin() const;
 	Iterator end() const;
@@ -80,7 +80,7 @@ private:
 
 // ==============================
 
-inline LinkList::Iterator LinkList::getIterator(const StringRef &key) const{
+inline LinkList::Iterator LinkList::lowerBound(const StringRef &key) const{
 	const Node *node = locate_(key);
 	return Iterator(node);
 }

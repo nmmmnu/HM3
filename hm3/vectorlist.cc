@@ -40,7 +40,7 @@ const Pair &VectorList::get(const StringRef &key) const{
 	return found ? getAt( result ) : Pair::zero();
 }
 
-auto VectorList::getIterator(const StringRef &key) const noexcept -> Iterator{
+auto VectorList::lowerBound(const StringRef &key) const noexcept -> Iterator{
 	size_type result;
 	/* bool const found = */ binarySearch(*this, key, getSize(), result);
 

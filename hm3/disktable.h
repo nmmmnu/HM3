@@ -59,7 +59,7 @@ public:
 	}
 
 public:
-	Iterator getIterator(const StringRef &key) const;
+	Iterator lowerBound(const StringRef &key) const;
 	Iterator begin() const;
 	Iterator end() const;
 

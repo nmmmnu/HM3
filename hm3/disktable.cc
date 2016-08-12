@@ -36,7 +36,7 @@ Pair DiskTable::get(const StringRef &key) const{
 	return found ? getAt( result ) : nullptr;
 }
 
-auto DiskTable::getIterator(const StringRef &key) const -> Iterator{
+auto DiskTable::lowerBound(const StringRef &key) const -> Iterator{
 	size_type result;
 	/* bool const found = */ binarySearch(*this, key, getSize(), result);
 

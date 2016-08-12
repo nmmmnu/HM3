@@ -1,7 +1,7 @@
 
 template <class LIST>
 static void op_list(const LIST &list, const StringRef &key, size_t const count){
-	const auto bit = key == '-' ? list.begin() : list.getIterator(key);
+	const auto bit = key == '-' ? list.begin() : list.lowerBound(key);
 	const auto eit = list.end();
 
 	size_t c = 0;
