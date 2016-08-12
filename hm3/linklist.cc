@@ -107,14 +107,9 @@ template bool LinkList::putT_(Pair &&newdata);
 template bool LinkList::putT_(const Pair &newdata);
 
 const Pair &LinkList::get(const StringRef &key) const{
-	const Node *node = locate_(key);
+	const Node *node = locate_(key, true);
 
-	if (node == nullptr)
-		return Pair::zero();
-
-	const Pair & data = node->data;
-
-	return data.cmp(key) == 0 ? data : Pair::zero();
+	return node ? node->data : Pair::zero();
 }
 
 bool LinkList::remove(const StringRef &key){
@@ -155,7 +150,7 @@ void LinkList::clear_(){
 	head_ = nullptr;
 }
 
-LinkList::Node *LinkList::locate_(const StringRef &key) const{
+LinkList::Node *LinkList::locate_(const StringRef &key, bool const exact) const{
 	for(Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
 
@@ -165,7 +160,7 @@ LinkList::Node *LinkList::locate_(const StringRef &key) const{
 			return node;
 
 		if (cmp > 0)
-			return node;
+			return exact ? nullptr : node;
 			//break;
 	}
 

@@ -58,7 +58,7 @@ private:
 private:
 	void clear_();
 
-	Node *locate_(const StringRef &key) const;
+	Node *locate_(const StringRef &key, bool exact) const;
 };
 
 // ==============================
@@ -81,7 +81,7 @@ private:
 // ==============================
 
 inline LinkList::Iterator LinkList::lowerBound(const StringRef &key) const{
-	const Node *node = locate_(key);
+	const Node *node = locate_(key, false);
 	return Iterator(node);
 }
 
