@@ -54,6 +54,7 @@ private:
 	template <class ITERATOR>
 	bool _writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
+				std::ofstream &file_keyindex, std::ofstream &file_keydata,
 				bool keepTombstones) const;
 
 private:
