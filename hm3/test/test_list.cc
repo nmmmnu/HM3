@@ -267,29 +267,13 @@ void list_test(const char *module, hm3::BlackHoleList &list){
 }
 
 int main(int argc, char **argv){
-	namespace arraysearch = hm3::arraysearch;
+	hm3::STLVectorList svl;
+		list_test("STLVector", svl);
 
 	// =========================
 
-	hm3::STLVectorList<arraysearch::BinaryLocator> svlb;
-		list_test("STLVector<B>", svlb);
-
-	hm3::STLVectorList<arraysearch::LinearLocator> svll;
-		list_test("STLVector<L>", svll);
-
-	hm3::STLVectorList<arraysearch::JumpLocator > svlj;
-		list_test("STLVector<J>", svlj);
-
-	// =========================
-
-	hm3::VectorList<arraysearch::BinaryLocator> vlb;
-		list_test("Vector<B>", vlb);
-
-	hm3::VectorList<arraysearch::LinearLocator> vll;
-		list_test("Vector<L>", vll);
-
-	hm3::VectorList<arraysearch::JumpLocator> vlj;
-		list_test("Vector<J>", vlj);
+	hm3::VectorList vl;
+		list_test("Vector", vl);
 
 	// =========================
 

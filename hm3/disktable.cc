@@ -2,6 +2,8 @@
 
 #include "pairblob.h"
 
+#include "binarysearch.h"
+
 #include <endian.h>	// htobe16
 
 
@@ -25,6 +27,20 @@ bool DiskTable::open(const std::string &filename){
 void DiskTable::close(){
 	mmapIndx_.close();
 	mmapData_.close();
+}
+
+Pair DiskTable::get(const StringRef &key) const{
+	size_type result;
+	bool const found = binarySearch(*this, key, getSize(), result);
+
+	return found ? getAt( result ) : nullptr;
+}
+
+auto DiskTable::getIterator(const StringRef &key) const -> Iterator{
+	size_type result;
+	/* bool const found = */ binarySearch(*this, key, getSize(), result);
+
+	return Iterator(*this, result, header_.getSorted());
 }
 
 int DiskTable::cmpAt(size_type const index, const StringRef &key) const{

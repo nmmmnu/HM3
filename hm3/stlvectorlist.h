@@ -1,24 +1,14 @@
 #ifndef _STL_VECTOR_LIST_H
 #define _STL_VECTOR_LIST_H
 
-#include "arraysearch/binarylocator.h"
-#include "arraysearch/linearlocator.h"
-#include "arraysearch/jumplocator.h"
-#include "arraysearch/simplesearch.h"
-
 #include "ilist.h"
 
 #include <vector>
 
-
 namespace hm3{
 
 
-template <class LOCATOR>
-class STLVectorList : public IMutableList<STLVectorList<LOCATOR> >{
-private:
-	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
-
+class STLVectorList : public IMutableList<STLVectorList>{
 public:
 	using vector_type	= std::vector<Pair>;
 
@@ -67,22 +57,16 @@ public:
 		return dataSize_;
 	}
 
-	const Pair &get(const StringRef &key) const{
-		const auto &lr = lookup(key);
-		return lr ? getAt( lr.get() ) : Pair::zero();
-	}
+	const Pair &get(const StringRef &key) const;
 
 private:
-	friend class IMutableList<STLVectorList<LOCATOR> >;
+	friend class IMutableList<STLVectorList>;
 
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator getIterator(const StringRef &key) const{
-		const auto &lr = lookup(key);
-		return container_.cbegin() + (difference_type) lr.get();
-	}
+	Iterator getIterator(const StringRef &key) const;
 
 	Iterator begin() const{
 		return container_.cbegin();
@@ -91,14 +75,6 @@ public:
 	Iterator end() const{
 		return container_.cend();
 	}
-
-private:
-	ArraySearch	search_;
-
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
-		return search_(*this, key);
-	}
-
 };
 
 

@@ -4,8 +4,6 @@
 #include "diskfile/diskfile.h"
 #include "mmapfile.h"
 
-#include "disktable_locator.h"
-
 #include "ilist.h"
 
 #include "iiterator.h"
@@ -14,10 +12,6 @@ namespace hm3{
 
 
 class DiskTable : public List<DiskTable>{
-private:
-	// this is macro defined in "disktable_locator.h"
-	using ArraySearch	= DISK_TABLE_LOCATOR_SEARCH;
-
 public:
 	class Iterator;
 
@@ -50,7 +44,9 @@ public:
 public:
 	Pair get(const StringRef &key) const;
 
-	Pair getAt(size_type index) const;
+	Pair getAt(size_type index) const{
+		return index < getCount() ? getAtFromDisk_(index) : nullptr;
+	}
 
 	int cmpAt(size_type index, const StringRef &key) const;
 
@@ -82,13 +78,6 @@ private:
 	MMAPFile	mmapData_;
 
 	bool		validate_;
-
-private:
-	ArraySearch	search_;
-
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
-		return search_(*this, key);
-	}
 
 };
 
@@ -134,22 +123,6 @@ private:
 };
 
 // ==============================
-
-inline Pair DiskTable::getAt(size_type const index) const{
-	return index < getCount() ? getAtFromDisk_(index) : nullptr;
-}
-
-inline Pair DiskTable::get(const StringRef &key) const{
-	const auto &lr = lookup(key);
-	return lr ? getAt( lr.get() ) : nullptr;
-}
-
-// ==============================
-
-inline auto DiskTable::getIterator(const StringRef &key) const -> Iterator{
-	const auto &lr = lookup(key);
-	return Iterator(*this, lr.get(), header_.getSorted());
-}
 
 inline auto DiskTable::begin() const -> Iterator{
 	return Iterator(*this, 0, header_.getSorted());

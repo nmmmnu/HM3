@@ -1,20 +1,34 @@
 #include "stlvectorlist.h"
 
+#include "binarysearch.h"
 
 namespace hm3{
 
+const Pair &STLVectorList::get(const StringRef &key) const{
+	size_type result;
+	bool const found = binarySearch(*this, key, getSize(), result);
 
-template <class LOCATOR>
+	return found ? getAt( result ) : Pair::zero();
+}
+
+auto STLVectorList::getIterator(const StringRef &key) const -> Iterator{
+	size_type result;
+	/* bool const found = */ binarySearch(*this, key, getSize(), result);
+
+	return container_.cbegin() + (difference_type) result;
+}
+
 template <class UPAIR>
-bool STLVectorList<LOCATOR>::putT_(UPAIR&& newdata){
+bool STLVectorList::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
-	const auto &lr = lookup(key);
+	size_type result;
+	bool const found = binarySearch(*this, key, getSize(), result);
 
-	if (lr){
+	if (found){
 		// key exists, overwrite, do not shift
 
-		Pair & olddata = container_[ lr.get() ];
+		Pair & olddata = container_[ result ];
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -36,12 +50,12 @@ bool STLVectorList<LOCATOR>::putT_(UPAIR&& newdata){
 	dataSize_ += newdata.getSize();
 
 	try{
-		if (lr.get() == container_.size()){
+		if (result == container_.size()){
 			// push_back micro-optimization :)
 			container_.push_back(std::forward<UPAIR>(newdata));
 		}else{
 			// This is slow, might shiftR
-			auto ptr = container_.cbegin() + (difference_type) lr.get();
+			auto ptr = container_.cbegin() + (difference_type) result;
 			container_.insert(ptr, std::forward<UPAIR>(newdata));
 		}
 	}catch(...){
@@ -51,21 +65,21 @@ bool STLVectorList<LOCATOR>::putT_(UPAIR&& newdata){
 	return true;
 }
 
-template <class LOCATOR>
-bool STLVectorList<LOCATOR>::remove(const StringRef &key){
-	const auto &lr = lookup(key);
+bool STLVectorList::remove(const StringRef &key){
+	size_type result;
+	bool const found = binarySearch(*this, key, getSize(), result);
 
-	if (! lr){
+	if (! found){
 		// the key does not exists in the vector.
 		return true;
 	}
 
 	// Fix size
-	Pair & data = container_[ lr.get() ];
+	Pair & data = container_[ result ];
 	dataSize_ -= data.getSize();
 
 	// This is slow, might shiftL
-	auto ptr = container_.begin() + (difference_type) lr.get();
+	auto ptr = container_.begin() + (difference_type) result;
 	container_.erase(ptr);
 
 	return true;
@@ -73,21 +87,8 @@ bool STLVectorList<LOCATOR>::remove(const StringRef &key){
 
 // ===================================
 
-template class STLVectorList<arraysearch::LinearLocator>;
-
-template bool STLVectorList<arraysearch::LinearLocator>::putT_(Pair &&newdata);
-template bool STLVectorList<arraysearch::LinearLocator>::putT_(const Pair &newdata);
-
-template class STLVectorList<arraysearch::BinaryLocator>;
-
-template bool STLVectorList<arraysearch::BinaryLocator>::putT_(Pair &&newdata);
-template bool STLVectorList<arraysearch::BinaryLocator>::putT_(const Pair &newdata);
-
-template class STLVectorList<arraysearch::JumpLocator>;
-
-template bool STLVectorList<arraysearch::JumpLocator>::putT_(Pair &&newdata);
-template bool STLVectorList<arraysearch::JumpLocator>::putT_(const Pair &newdata);
-
+template bool STLVectorList::putT_(Pair &&newdata);
+template bool STLVectorList::putT_(const Pair &newdata);
 
 } // namespace
 

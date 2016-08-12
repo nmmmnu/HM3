@@ -1,23 +1,13 @@
 #ifndef _VECTORLIST_H
 #define _VECTORLIST_H
 
-#include "arraysearch/binarylocator.h"
-#include "arraysearch/linearlocator.h"
-#include "arraysearch/jumplocator.h"
-#include "arraysearch/simplesearch.h"
-
 #include "iiterator.h"
 #include "ilist.h"
 
 namespace hm3{
 
 
-template <class LOCATOR=arraysearch::BinaryLocator>
-class VectorList : public IMutableList<VectorList<LOCATOR> >{
-private:
-	using ArraySearch	= arraysearch::SimpleSearch<LOCATOR>;
-//	using ArraySearch	= arraysearch::SamplerSearch<LOCATOR>;
-
+class VectorList : public IMutableList<VectorList>{
 public:
 	using size_type = typename VectorList::size_type;
 
@@ -63,22 +53,16 @@ public:
 		return dataSize_;
 	}
 
-	const Pair &get(const StringRef &key) const{
-		const auto &lr = lookup(key);
-		return lr ? getAt( lr.get() ) : Pair::zero();
-	}
+	const Pair &get(const StringRef &key) const;
 
 private:
-	friend class IMutableList<VectorList<LOCATOR> >;
+	friend class IMutableList<VectorList>;
 
 	template <class UPAIR>
 	bool putT_(UPAIR &&data);
 
 public:
-	Iterator getIterator(const StringRef &key) const noexcept{
-		const auto &lr = lookup(key);
-		return buffer_ + lr.get();
-	}
+	Iterator getIterator(const StringRef &key) const noexcept;
 
 	Iterator begin() const noexcept{
 		return buffer_;
@@ -99,13 +83,8 @@ private:
 	size_type calcNewCount_(size_type size);
 
 private:
-	ArraySearch	search_;
-
-	auto lookup(const StringRef &key) const -> decltype( search_(*this, key) ) const{
-		return search_(*this, key);
-	//	return LOCATOR_(*this, key);
-	}
-
+	template<typename T>
+	static T sgn__(const T a);
 };
 
 } // namespace
