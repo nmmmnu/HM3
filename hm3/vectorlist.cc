@@ -33,17 +33,20 @@ bool VectorList::removeAll(){
 	return true;
 }
 
+inline bool VectorList::binarySearch_(const StringRef &key, size_type &result) const{
+	return binarySearch(*this, getSize(), key, BinarySearchCompList{}, result);
+}
+
 const Pair &VectorList::get(const StringRef &key) const{
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	return found ? getAt( result ) : Pair::zero();
 }
 
 auto VectorList::lowerBound(const StringRef &key) const noexcept -> Iterator{
 	size_type result;
-	/* bool const found = */ binarySearch(*this, key, getSize(), result);
-
+	/* bool const found = */ binarySearch_(key, result);
 	return buffer_ + result;
 }
 
@@ -52,7 +55,7 @@ bool VectorList::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	if (found){
 		// key exists, overwrite, do not shift
@@ -91,7 +94,7 @@ bool VectorList::putT_(UPAIR&& newdata){
 
 bool VectorList::remove(const StringRef &key){
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	if (! found){
 		// the key does not exists in the vector.

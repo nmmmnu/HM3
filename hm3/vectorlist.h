@@ -83,6 +83,8 @@ private:
 	size_type calcNewCount_(size_type size);
 
 private:
+	bool binarySearch_(const StringRef &key, size_type &result) const;
+
 	template<typename T>
 	static T sgn__(const T a);
 };

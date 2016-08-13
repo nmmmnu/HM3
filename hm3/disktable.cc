@@ -9,7 +9,6 @@
 
 namespace hm3{
 
-
 bool DiskTable::open(const std::string &filename){
 	using DiskFile = diskfile::DiskFile;
 
@@ -29,16 +28,20 @@ void DiskTable::close(){
 	mmapData_.close();
 }
 
+inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
+	return binarySearch(*this, getSize(), key, BinarySearchCompList{}, result);
+}
+
 Pair DiskTable::get(const StringRef &key) const{
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	return found ? getAt( result ) : nullptr;
 }
 
 auto DiskTable::lowerBound(const StringRef &key) const -> Iterator{
 	size_type result;
-	/* bool const found = */ binarySearch(*this, key, getSize(), result);
+	/* bool const found = */ binarySearch_(key, result);
 
 	return Iterator(*this, result, header_.getSorted());
 }

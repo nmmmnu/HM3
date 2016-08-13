@@ -75,6 +75,9 @@ public:
 	Iterator end() const{
 		return container_.cend();
 	}
+
+private:
+	bool binarySearch_(const StringRef &key, size_type &result) const;
 };
 
 

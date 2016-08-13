@@ -4,16 +4,20 @@
 
 namespace hm3{
 
+inline bool STLVectorList::binarySearch_(const StringRef &key, size_type &result) const{
+	return binarySearch(*this, getSize(), key, BinarySearchCompList{}, result);
+}
+
 const Pair &STLVectorList::get(const StringRef &key) const{
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	return found ? getAt( result ) : Pair::zero();
 }
 
 auto STLVectorList::lowerBound(const StringRef &key) const -> Iterator{
 	size_type result;
-	/* bool const found = */ binarySearch(*this, key, getSize(), result);
+	/* bool const found = */ binarySearch_(key, result);
 
 	return container_.cbegin() + (difference_type) result;
 }
@@ -23,7 +27,7 @@ bool STLVectorList::putT_(UPAIR&& newdata){
 	const StringRef &key = newdata.getKey();
 
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	if (found){
 		// key exists, overwrite, do not shift
@@ -67,7 +71,7 @@ bool STLVectorList::putT_(UPAIR&& newdata){
 
 bool STLVectorList::remove(const StringRef &key){
 	size_type result;
-	bool const found = binarySearch(*this, key, getSize(), result);
+	bool const found = binarySearch_(key, result);
 
 	if (! found){
 		// the key does not exists in the vector.

@@ -1,18 +1,17 @@
-template <class ARRAY, class T>
-bool binarySearch(const ARRAY &list, const T &key,
-					typename ARRAY::size_type start,
-					typename ARRAY::size_type end,
-					typename ARRAY::size_type &result){
+template <class ARRAY, class SIZE, class KEY, class COMP>
+bool binarySearch_(const ARRAY &list,
+				SIZE start, SIZE end,
+				const KEY &key,
+				const COMP &comp,
+				SIZE &result){
 	/*
 	 * Lazy based from Linux kernel...
 	 * http://lxr.free-electrons.com/source/lib/bsearch.c
 	 */
 
 	while (start < end){
-		using size_type = typename ARRAY::size_type;
-
-	//	size_type mid = start + ((end - start) /  2);
-		size_type mid = size_type(start + ((end - start) >> 1)); // 4% faster
+	//	SIZE mid = start + ((end - start) /  2);
+		SIZE mid = SIZE(start + ((end - start) >> 1)); // 4% faster
 
 		int const cmp = list.cmpAt(mid, key);
 
@@ -25,7 +24,7 @@ bool binarySearch(const ARRAY &list, const T &key,
 
 		if (cmp < 0){
 			// go right
-			start = (size_type) (mid + 1);
+			start = SIZE(mid + 1);
 
 			// scatter code would go here.
 			// but it have negative effect.

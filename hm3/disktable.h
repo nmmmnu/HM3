@@ -73,6 +73,9 @@ private:
 	uint8_t getVersionFromDisk_() const;
 
 private:
+	bool binarySearch_(const StringRef &key, size_type &result) const;
+
+private:
 	diskfile::DiskFileHeader	header_;
 	MMAPFile	mmapIndx_;
 	MMAPFile	mmapData_;
