@@ -12,8 +12,10 @@ namespace diskbtree{
 
 class DiskBTree{
 public:
-	constexpr static const char *DOT_INDX	= ".bindx";
-	constexpr static const char *DOT_DATA	= ".btree";
+	constexpr static const char *DOT_INDX	= ".tree";
+	constexpr static const char *DOT_DATA	= ".keys";
+
+	constexpr static bool MEMSET_UNUSED_NODES	= true;
 
 	constexpr static auto BRANCHES		= DiskBTreeNode::BRANCHES;
 	constexpr static auto VALUES		= DiskBTreeNode::VALUES;
@@ -62,8 +64,8 @@ private:
 					std::ofstream &file_indx) const;
 
 private:
-	constexpr
-	static branch_type ln__(offset_type const count, branch_type const branches);
+	static branch_type calcDepth__(offset_type const count);
+	static branch_type calcDepth1__(offset_type const count);
 
 private:
 	std::string	filename_indx;
