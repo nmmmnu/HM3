@@ -42,11 +42,11 @@ auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> size_
 }
 
 template <class CONTAINER>
-size_t HashList<CONTAINER>::getSize() const noexcept{
+size_t HashList<CONTAINER>::getMemSize() const noexcept{
 	size_t result = 0;
 
 	for(const auto &list : container_)
-		result += list.getSize();
+		result += list.getMemSize();
 
 	return result;
 }

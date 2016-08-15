@@ -17,11 +17,11 @@ Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
 }
 
 template <class CONTAINER>
-size_t LSMTable<CONTAINER>::getSize() const{
+size_t LSMTable<CONTAINER>::getMemSize() const{
 	size_type result = 0;
 
 	for(const auto &table : container_ )
-		result += table.getSize();
+		result += table.getMemSize();
 
 	return result;
 }

@@ -46,8 +46,8 @@ public:
 		return list_.remove(key);
 	}
 
-	size_t getSize() const{
-		return list_.getSize();
+	size_t getMemSize() const{
+		return list_.getMemSize();
 	}
 
 	size_type getCount() const{
@@ -91,7 +91,7 @@ template <class UPAIR>
 bool FlushList<LIST, FLUSH>::putT_(UPAIR &&data){
 	bool const result = list_.put( std::forward<UPAIR>(data) );
 
-	if (list_.getSize() > maxSize_)
+	if (list_.getMemSize() > maxSize_)
 		flush();
 
 	return result;

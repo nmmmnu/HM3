@@ -2,7 +2,7 @@ SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 EXTRA_INCL += -I$(SRC_DIR)
 
-MY_TARGETS = $(A)db_file $(A)db_lsm $(A)db_merge $(A)db_lsmload $(A)db_lsmheat
+MY_TARGETS = $(A)db_file $(A)db_lsm $(A)db_merge $(A)db_lsmload $(A)db_lsmheat $(A)db_mkbtree
 
 EXTRA_CLEAN += $(MY_TARGETS)
 
@@ -28,6 +28,9 @@ $(A)db_lsmload: $(O)db_lsmload.o $(O)skiplist.o $(O)idgeneratordate.o $(O)string
 	$(LINK)
 
 $(A)db_lsmheat: $(O)db_lsmheat.o $(O)directorytableloader.o $(O)myglob.o			$(PAIR_OBJ) $(DISKTABLE_OBJ)
+	$(LINK)
+
+$(A)db_mkbtree: $(O)db_mkbtree.o 					$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)
 
 $(A)zone_loader: $(O)zone_loader.o $(O)stringtokenizer.o $(O)skiplist.o $(O)idgeneratordate.o 	$(PAIR_OBJ) $(DISKTABLE_OBJ)

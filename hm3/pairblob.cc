@@ -64,7 +64,7 @@ std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen
 }
 
 std::unique_ptr<PairBlob> PairBlob::create(const PairBlob *src){
-	size_t const size = src->getSize();
+	size_t const size = src->getMemSize();
 
 	std::unique_ptr<PairBlob> pair{ new(size, false) PairBlob };
 

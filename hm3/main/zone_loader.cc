@@ -86,7 +86,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 		if (i % PROCESS_STEP == 0){
 			std::cout	<< "Processed "	<< i << " records, "
 					<< "In memory "	<< list.getList().getCount() << " records, "
-					<< list.getList().getSize() << " bytes..."
+					<< list.getList().getMemSize() << " bytes..."
 					<< std::endl;
 		}
 	}

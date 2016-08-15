@@ -45,7 +45,7 @@ public:
 		std::stringstream ss;
 
 		ss	<< "Keys (estimated): "	<< list_.getCount(true)	<< std::endl
-			<< "Size: "		<< list_.getSize()	<< std::endl
+			<< "Size: "		<< list_.getMemSize()	<< std::endl
 		;
 
 		return ss.str();

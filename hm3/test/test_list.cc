@@ -41,7 +41,7 @@ static void skiplist_lanes_test(hm3::SkipList &list){
 
 template <class LIST>
 inline static size_t list_add(LIST &list, Pair &&p){
-	const size_t size = p.getSize();
+	const size_t size = p.getMemSize();
 	list.put(std::move(p));
 	return size;
 }
@@ -158,7 +158,7 @@ static void list_test(const char *module, LIST &list){
 	PRINTF_TEST("count",		list.getCount() == count		);
 	PRINTF_TEST("count estim",	list.getCount(true) >= count		);
 	PRINTF_TEST("empty",		! list.isEmpty()			);
-	PRINTF_TEST("sizeof",		list.getSize() == size			);
+	PRINTF_TEST("sizeof",		list.getMemSize() == size			);
 
 
 
@@ -207,14 +207,14 @@ static void list_test(const char *module, LIST &list){
 
 	PRINTF_TEST("remove",		p.getVal() == "Sofia"			);
 	PRINTF_TEST("remove count",	list.getCount() == 1			);
-	PRINTF_TEST("remove sizeof",	list.getSize() == p.getSize()		);
+	PRINTF_TEST("remove sizeof",	list.getMemSize() == p.getMemSize()		);
 
 	// overwrite sizeof test
 	const Pair sopair = { "3 city", "" };
 
 	list.put(sopair);
 	PRINTF_TEST("overwrite count",	list.getCount() == 1			);
-	PRINTF_TEST("overwrite sizeof",	list.getSize() == sopair.getSize()	);
+	PRINTF_TEST("overwrite sizeof",	list.getMemSize() == sopair.getMemSize()	);
 
 	// remove last element
 	list.remove("3 city");
@@ -244,7 +244,7 @@ static void list_test(const char *module, LIST &list){
 	/* size = */ list_populate(list);
 
 	LIST mlist = std::move(list);
-	PRINTF_TEST("move c-tor 1",	mlist.getSize() == size			);
+	PRINTF_TEST("move c-tor 1",	mlist.getMemSize() == size			);
 	PRINTF_TEST("move c-tor 2",	list.isEmpty()				);
 }
 
@@ -259,7 +259,7 @@ void list_test(const char *module, hm3::BlackHoleList &list){
 	PRINTF_TEST("count",		list.getCount() == 0			);
 	PRINTF_TEST("count estim",	list.getCount(true) == 0		);
 	PRINTF_TEST("empty",		list.isEmpty()				);
-	PRINTF_TEST("sizeof",		list.getSize() == 0			);
+	PRINTF_TEST("sizeof",		list.getMemSize() == 0			);
 
 	PRINTF_TEST("put",		list.put( { "key", "val" } )		);
 	PRINTF_TEST("get",		! list.get("key")			);

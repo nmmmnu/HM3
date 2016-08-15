@@ -36,7 +36,7 @@ public:
 		return dataCount_;
 	}
 
-	size_t getSize() const noexcept{
+	size_t getMemSize() const noexcept{
 		return dataSize_;
 	}
 

@@ -92,7 +92,7 @@ public:
 
 	bool valid(bool tombstoneCheck = false) const noexcept;
 
-	size_t getSize() const noexcept{
+	size_t getMemSize() const noexcept{
 		return sizeofBase_() + sizeofBuffer_();
 	}
 
