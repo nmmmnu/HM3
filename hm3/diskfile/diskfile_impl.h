@@ -14,11 +14,7 @@ bool DiskFile::createFromIterator(const ITERATOR &begin, const ITERATOR &end,
 	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
 	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
 
-	std::ofstream fileKeyIndx(filename_indx + ".key",	std::ios::out | std::ios::binary);
-	std::ofstream fileKeyData(filename_data + ".key",	std::ios::out | std::ios::binary);
-
-	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData,
-							fileKeyIndx, fileKeyData, keepTombstones);
+	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData, keepTombstones);
 }
 
 
@@ -27,14 +23,10 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 			std::ofstream &file_meta,
 			std::ofstream &file_indx,
 			std::ofstream &file_data,
-			std::ofstream &file_keyindx,
-			std::ofstream &file_keydata,
 			bool const keepTombstones) const{
 	uint64_t be;
 
 	size_t current = 0;
-
-	size_t currentKey = 0;
 
 	size_t datacount = 0;
 	size_t tombstones = 0;
@@ -77,15 +69,8 @@ bool DiskFile::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 		be = htobe64(current);
 		file_indx.write( (const char *) & be, sizeof(uint64_t));
 
-		// write the index
-		be = htobe64(currentKey);
-		file_keyindx.write( (const char *) & be, sizeof(uint64_t));
-
 		// write the data
 		pair.fwrite(file_data);
-
-		// write the data
-		file_keydata.write(pair.getKey().data(), (std::streamsize) pair.getKey().size() );
 
 		current += pair.getSize();
 		++datacount;

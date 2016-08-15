@@ -54,7 +54,7 @@ public:
 		return (size_type) header_.getCount();
 	}
 
-	size_t getSize() const{
+	size_t getMemSize() const{
 		return mmapData_.size();
 	}
 
@@ -62,6 +62,9 @@ public:
 	Iterator lowerBound(const StringRef &key) const;
 	Iterator begin() const;
 	Iterator end() const;
+
+public:
+	size_t getAtOffset(size_type index) const;
 
 private:
 	const PairBlob *validateFromDisk_(const PairBlob *blob) const;

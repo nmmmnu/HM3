@@ -23,6 +23,11 @@ public:
 			filename_indx(filename_indx),
 			filename_data(filename_data){}
 
+	DiskFile(std::string &&filename_meta, std::string &&filename_indx, std::string &&filename_data) :
+			filename_meta(std::move(filename_meta)),
+			filename_indx(std::move(filename_indx)),
+			filename_data(std::move(filename_data)){}
+
 	DiskFile(const std::string &filename) :
 			DiskFile( filenameMeta(filename), filenameIndx(filename), filenameData(filename)){}
 
@@ -54,7 +59,6 @@ private:
 	template <class ITERATOR>
 	bool _writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
-				std::ofstream &file_keyindex, std::ofstream &file_keydata,
 				bool keepTombstones) const;
 
 private:

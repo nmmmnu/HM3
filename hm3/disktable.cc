@@ -29,7 +29,7 @@ void DiskTable::close(){
 }
 
 inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
-	return binarySearch(*this, getSize(), key, BinarySearchCompList{}, result);
+	return binarySearch(*this, getMemSize(), key, BinarySearchCompList{}, result);
 }
 
 Pair DiskTable::get(const StringRef &key) const{
@@ -62,6 +62,19 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 	return blob->validChecksum() ? blob : nullptr;
 }
 
+size_t DiskTable::getAtOffset(size_type const index) const{
+	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
+
+	if (ptr_be){
+		size_t const offset = (size_t) be64toh( *ptr_be );
+
+		return offset;
+	}
+
+	return (size_t) -1;
+}
+
+
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
 
@@ -77,7 +90,7 @@ const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 
 const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blob, size_t size) const{
 	if (size == 0)
-		size = blob->getSize();
+		size = blob->getMemSize();
 
 	const char *blobc = (const char *) blob;
 
@@ -99,7 +112,7 @@ const Pair &DiskTable::Iterator::operator*() const{
 	if (useFastForward_ && tmp_pod && tmp_pos == pos_ - 1){
 		// get data without seek, walk forward
 		// this gives 50% performance
-		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getSize() );
+		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getMemSize() );
 	}else{
 		// get data via seek
 		tmp_pod = list_.getAtFromDisk_(pos_);
