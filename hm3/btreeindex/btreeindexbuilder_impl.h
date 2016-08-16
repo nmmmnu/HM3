@@ -94,7 +94,7 @@ void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const ind
 	{
 		NodeData nd;
 		nd.keysize = htobe16(key.size());
-		nd.data    = htobe64( list.getAtOffset(index) );
+		nd.dataid  = htobe64(index); //list.getAtOffset(index) );
 
 		// push NodeData
 		file_data_.write( (const char *) &nd, sizeof(nd) );

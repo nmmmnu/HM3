@@ -18,7 +18,7 @@ constexpr branch_type	BRANCHES	= VALUES + 1;
 
 struct NodeData{
 	uint16_t	keysize;		// 2
-	uint64_t	data;			// 8
+	uint64_t	dataid;			// 8
 } __attribute__((__packed__));
 
 

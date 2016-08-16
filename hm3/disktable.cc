@@ -62,6 +62,7 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 	return blob->validChecksum() ? blob : nullptr;
 }
 
+/*
 size_t DiskTable::getAtOffset(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
 
@@ -73,7 +74,7 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 
 	return (size_t) -1;
 }
-
+*/
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );

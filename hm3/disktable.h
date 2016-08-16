@@ -64,7 +64,7 @@ public:
 	Iterator end() const;
 
 public:
-	size_t getAtOffset(size_type index) const;
+//	size_t getAtOffset(size_type index) const;
 
 private:
 	const PairBlob *validateFromDisk_(const PairBlob *blob) const;
