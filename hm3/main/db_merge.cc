@@ -3,6 +3,8 @@
 
 #include "dualtable.h"
 
+#include "diskfile/diskfilebuilder.h"
+
 #include <unistd.h>	// access
 
 static void printUsage(const char *name){
@@ -24,9 +26,9 @@ inline bool fileExists(const StringRef& name) {
 
 template <class TABLE>
 int merge(const TABLE &table, const char *output, bool const keepTombstones){
-	using DiskFile = hm3::diskfile::DiskFile;
+	using DiskFileBuilder = hm3::diskfile::DiskFileBuilder;
 
-	DiskFile df = DiskFile(output);
+	DiskFileBuilder df{ output };
 
 	df.createFromList(table, keepTombstones);
 

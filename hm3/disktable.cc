@@ -4,21 +4,21 @@
 
 #include "binarysearch.h"
 
+#include "diskfile/diskfilefilenames.h"
+
 #include <endian.h>	// htobe16
 
 
 namespace hm3{
 
 bool DiskTable::open(const std::string &filename){
-	using DiskFile = diskfile::DiskFile;
-
-	header_.open(DiskFile::filenameMeta(filename));
+	header_.open(diskfile::filenameMeta(filename));
 
 	if (header_ == false)
 		return false;
 
-	mmapIndx_.open(DiskFile::filenameIndx(filename));
-	mmapData_.open(DiskFile::filenameData(filename));
+	mmapIndx_.open(diskfile::filenameIndx(filename));
+	mmapData_.open(diskfile::filenameData(filename));
 
 	return true;
 }

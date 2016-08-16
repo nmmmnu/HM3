@@ -1,9 +1,10 @@
-#ifndef _DISK_FILE_H
-#define _DISK_FILE_H
+#ifndef DISK_FILE_BUILDER_H_
+#define DISK_FILE_BUILDER_H_
 
 #include "stringref.h"
+#include "diskfilefilenames.h"
 
-#include <cstdint>
+//#include <cstdint>
 
 #include <iostream>
 
@@ -12,37 +13,21 @@ namespace hm3{
 namespace diskfile{
 
 
-class DiskFile{
+class DiskFileBuilder{
 public:
-	constexpr static const char *DOT_INDX = ".indx";
-	constexpr static const char *DOT_DATA = ".data";
-
-public:
-	DiskFile(const StringRef &filename_meta, const StringRef &filename_indx, const StringRef &filename_data) :
+	DiskFileBuilder(const StringRef &filename_meta, const StringRef &filename_indx, const StringRef &filename_data) :
 			filename_meta(filename_meta),
 			filename_indx(filename_indx),
 			filename_data(filename_data){}
 
-	DiskFile(std::string &&filename_meta, std::string &&filename_indx, std::string &&filename_data) :
+	DiskFileBuilder(std::string &&filename_meta, std::string &&filename_indx, std::string &&filename_data) :
 			filename_meta(std::move(filename_meta)),
 			filename_indx(std::move(filename_indx)),
 			filename_data(std::move(filename_data)){}
 
-	DiskFile(const std::string &filename) :
-			DiskFile( filenameMeta(filename), filenameIndx(filename), filenameData(filename)){}
+	DiskFileBuilder(const std::string &filename) :
+			DiskFileBuilder( filenameMeta(filename), filenameIndx(filename), filenameData(filename)){}
 
-public:
-	static std::string filenameMeta(const std::string &filename){
-		return filename;
-	}
-
-	static std::string filenameIndx(const std::string &filename){
-		return filename + DOT_INDX;
-	}
-
-	static std::string filenameData(const std::string &filename){
-		return filename + DOT_DATA;
-	}
 
 public:
 	template <class LIST>
@@ -72,7 +57,7 @@ private:
 } // namespace
 
 
-#include "diskfile_impl.h"
+#include "diskfilebuilder_impl.h"
 
 #endif
 

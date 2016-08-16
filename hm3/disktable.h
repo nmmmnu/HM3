@@ -1,7 +1,7 @@
 #ifndef _DISK_TABLE_H
 #define _DISK_TABLE_H
 
-#include "diskfile/diskfile.h"
+#include "diskfile/diskfileheader.h"
 #include "mmapfile.h"
 
 #include "ilist.h"

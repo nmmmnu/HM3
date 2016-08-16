@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-#include "diskfile/diskfile.h"
+#include "diskfile/diskfilebuilder.h"
 
 #include "stlvectorlist.h"
 #include "vectorlist.h"
@@ -83,7 +83,7 @@ static void listSearch(const LIST &list, const StringRef &key){
 
 template <class LIST>
 static int op_write(LIST &&list, const StringRef &filename, const std::string &filename2){
-	using DiskFile = hm3::diskfile::DiskFile;
+	using DiskFileBuilder = hm3::diskfile::DiskFileBuilder;
 
 	printf("Load start...\n");
 	listLoad(list, filename);
@@ -91,7 +91,7 @@ static int op_write(LIST &&list, const StringRef &filename, const std::string &f
 	getchar();
 
 	printf("Write start...\n");
-	DiskFile df = DiskFile(filename2);
+	DiskFileBuilder df{ filename2 };
 	df.createFromList(list, true);
 	printf("Write done...\n");
 	getchar();

@@ -1,7 +1,7 @@
 #ifndef _DISK_FILE_FLUSH_H
 #define _DISK_FILE_FLUSH_H
 
-#include "diskfile/diskfile.h"
+#include "diskfile/diskfilebuilder.h"
 
 // ==============================
 
@@ -84,9 +84,9 @@ public:
 
 		const auto &filename = path_ + _idGenerator() + _ext;
 
-		using DiskFile = diskfile::DiskFile;
+		using DiskFileBuilder = diskfile::DiskFileBuilder;
 
-		DiskFile df{ filename };
+		DiskFileBuilder df{ filename };
 		df.createFromList(list, _keepTombstones);
 
 		list.removeAll();
