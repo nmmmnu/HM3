@@ -86,8 +86,8 @@ public:
 
 		using DiskFileBuilder = diskfile::DiskFileBuilder;
 
-		DiskFileBuilder df{ filename };
-		df.createFromList(list, _keepTombstones);
+		DiskFileBuilder df;
+		df.createFromList(filename, list, _keepTombstones);
 
 		list.removeAll();
 

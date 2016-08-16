@@ -25,12 +25,12 @@ inline bool fileExists(const StringRef& name) {
 }
 
 template <class TABLE>
-int merge(const TABLE &table, const char *output, bool const keepTombstones){
+int merge(const TABLE &table, const char *output_file, bool const keepTombstones){
 	using DiskFileBuilder = hm3::diskfile::DiskFileBuilder;
 
-	DiskFileBuilder df{ output };
+	DiskFileBuilder df;
 
-	df.createFromList(table, keepTombstones);
+	df.createFromList(output_file, table, keepTombstones);
 
 	return 0;
 }

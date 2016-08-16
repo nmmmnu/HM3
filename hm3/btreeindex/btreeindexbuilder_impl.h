@@ -8,7 +8,7 @@ namespace btreeindex{
 
 
 template <class LIST>
-bool BTreeIndexBuilder<LIST>::createFromList(const LIST &list){
+bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LIST &list){
 	auto const count = list.getCount();
 
 	branch_type const levels = calcDepth1__(count);
@@ -17,8 +17,8 @@ bool BTreeIndexBuilder<LIST>::createFromList(const LIST &list){
 	printf("Branching Factor : %u (const)\n",	BRANCHES);
 	printf("Tree Depth       : %u\n",		levels	);
 
-	file_indx_.open(filename_indx_,	std::ios::out | std::ios::binary);
-	file_data_.open(filename_data_,	std::ios::out | std::ios::binary);
+	file_indx_.open(filenameIndx(filename),	std::ios::out | std::ios::binary);
+	file_data_.open(filenameData(filename),	std::ios::out | std::ios::binary);
 
 	current_ = 0;
 

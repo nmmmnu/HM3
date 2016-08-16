@@ -22,8 +22,8 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	const char *input	= argv[1];
-	const char *output	= argv[2];
+	const char *input_file	= argv[1];
+	const char *output_file	= argv[2];
 
 #if 0
 	if (fileExists(output)){
@@ -35,12 +35,12 @@ int main(int argc, char **argv){
 	using DiskTable = hm3::DiskTable;
 
 	hm3::DiskTable list;
-	list.open(input);
+	list.open(input_file);
 
 	using BTreeIndexBuilder = hm3::btreeindex::BTreeIndexBuilder<DiskTable>;
 
-	BTreeIndexBuilder builder{ output };
+	BTreeIndexBuilder builder;
 
-	builder.createFromList(list);
+	builder.createFromList(output_file, list);
 }
 

@@ -8,11 +8,12 @@ namespace diskfile{
 
 
 template <class ITERATOR>
-bool DiskFileBuilder::createFromIterator(const ITERATOR &begin, const ITERATOR &end,
+bool DiskFileBuilder::createFromIterator(const StringRef &filename, const ITERATOR &begin, const ITERATOR &end,
 			bool keepTombstones) const{
-	std::ofstream fileMeta(filename_meta,	std::ios::out | std::ios::binary);
-	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
-	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
+
+	std::ofstream fileMeta(filenameMeta(filename),	std::ios::out | std::ios::binary);
+	std::ofstream fileIndx(filenameIndx(filename),	std::ios::out | std::ios::binary);
+	std::ofstream fileData(filenameData(filename),	std::ios::out | std::ios::binary);
 
 	return _writeIteratorToFile(begin, end, fileMeta, fileIndx, fileData, keepTombstones);
 }

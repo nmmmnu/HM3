@@ -20,19 +20,7 @@ public:
 	using size_type = typename LIST::size_type;
 
 public:
-	BTreeIndexBuilder(const StringRef &filename_indx_, const StringRef &filename_data_) :
-			filename_indx_(filename_indx_),
-			filename_data_(filename_data_){}
-
-	BTreeIndexBuilder(std::string &&filename_indx_, std::string &&filename_data_) :
-			filename_indx_(std::move(filename_indx_)),
-			filename_data_(std::move(filename_data_)){}
-
-	BTreeIndexBuilder(const std::string &filename) :
-			BTreeIndexBuilder( filenameIndx(filename), filenameData(filename)){}
-
-public:
-	bool createFromList(const LIST &list);
+	bool createFromList(const StringRef &filename, const LIST &list);
 
 private:
 	static branch_type calcDepth__(size_type count);
@@ -53,9 +41,6 @@ private:
 				branch_type level, branch_type this_level = 0);
 
 private:
-	std::string	filename_indx_;
-	std::string	filename_data_;
-
 	std::ofstream	file_indx_;
 	std::ofstream	file_data_;
 	size_t		current_		= 0;

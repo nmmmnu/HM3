@@ -4,7 +4,7 @@
 #include "stringref.h"
 #include "diskfilefilenames.h"
 
-//#include <cstdint>
+#include "stringref.h"
 
 #include <iostream>
 
@@ -15,29 +15,14 @@ namespace diskfile{
 
 class DiskFileBuilder{
 public:
-	DiskFileBuilder(const StringRef &filename_meta, const StringRef &filename_indx, const StringRef &filename_data) :
-			filename_meta(filename_meta),
-			filename_indx(filename_indx),
-			filename_data(filename_data){}
-
-	DiskFileBuilder(std::string &&filename_meta, std::string &&filename_indx, std::string &&filename_data) :
-			filename_meta(std::move(filename_meta)),
-			filename_indx(std::move(filename_indx)),
-			filename_data(std::move(filename_data)){}
-
-	DiskFileBuilder(const std::string &filename) :
-			DiskFileBuilder( filenameMeta(filename), filenameIndx(filename), filenameData(filename)){}
-
-
-public:
 	template <class LIST>
-	bool createFromList(const LIST &list,
+	bool createFromList(const StringRef &filename, const LIST &list,
 				bool keepTombstones) const{
-		return createFromIterator(list.begin(), list.end(), keepTombstones);
+		return createFromIterator(filename, list.begin(), list.end(), keepTombstones);
 	}
 
 	template <class ITERATOR>
-	bool createFromIterator(const ITERATOR &begin, const ITERATOR &end,
+	bool createFromIterator(const StringRef &filename, const ITERATOR &begin, const ITERATOR &end,
 				bool keepTombstones) const;
 
 private:
@@ -45,11 +30,6 @@ private:
 	bool _writeIteratorToFile(const ITERATOR &begin, const ITERATOR &end,
 				std::ofstream &file_meta, std::ofstream &file_index, std::ofstream &file_data,
 				bool keepTombstones) const;
-
-private:
-	std::string filename_meta;
-	std::string filename_indx;
-	std::string filename_data;
 };
 
 

@@ -91,8 +91,8 @@ static int op_write(LIST &&list, const StringRef &filename, const std::string &f
 	getchar();
 
 	printf("Write start...\n");
-	DiskFileBuilder df{ filename2 };
-	df.createFromList(list, true);
+	DiskFileBuilder df;
+	df.createFromList(filename2, list, true);
 	printf("Write done...\n");
 	getchar();
 
