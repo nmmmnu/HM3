@@ -11,41 +11,54 @@ namespace hm3{
 namespace btreeindex{
 
 
+template <class LIST>
 class BTreeIndexBuilder{
 public:
-	constexpr static bool MEMSET_UNUSED_NODES	= true;
+	constexpr static bool MEMSET_UNUSED_VALUES	= true;
 
 public:
-	BTreeIndexBuilder(const StringRef &filename_indx, const StringRef &filename_data) :
-			filename_indx(filename_indx),
-			filename_data(filename_data){}
+	using size_type = typename LIST::size_type;
 
-	BTreeIndexBuilder(std::string &&filename_indx, std::string &&filename_data) :
-			filename_indx(std::move(filename_indx)),
-			filename_data(std::move(filename_data)){}
+public:
+	BTreeIndexBuilder(const StringRef &filename_indx_, const StringRef &filename_data_) :
+			filename_indx_(filename_indx_),
+			filename_data_(filename_data_){}
+
+	BTreeIndexBuilder(std::string &&filename_indx_, std::string &&filename_data_) :
+			filename_indx_(std::move(filename_indx_)),
+			filename_data_(std::move(filename_data_)){}
 
 	BTreeIndexBuilder(const std::string &filename) :
 			BTreeIndexBuilder( filenameIndx(filename), filenameData(filename)){}
 
 public:
-	template <class LIST>
-	bool createFromList(const LIST &list) const;
+	bool createFromList(const LIST &list);
 
 private:
-	class BTreeIndexBuilderHelper_;
+	static branch_type calcDepth__(size_type count);
 
-private:
-	static branch_type calcDepth__(offset_type const count);
-
-	static branch_type calcDepth1__(offset_type const count){
+	static branch_type calcDepth1__(size_type const count){
 		branch_type result = calcDepth__(count);
 
 		return result > 1 ? result - 1 : 1;
 	}
 
 private:
-	std::string	filename_indx;
-	std::string	filename_data;
+	void injectEmptyNode_(branch_type level, branch_type this_level);
+
+	void injectValue_(const LIST &list, size_type index);
+
+	void reorder(const LIST &list,
+				size_type begin, size_type end,
+				branch_type level, branch_type this_level = 0);
+
+private:
+	std::string	filename_indx_;
+	std::string	filename_data_;
+
+	std::ofstream	file_indx_;
+	std::ofstream	file_data_;
+	size_t		current_		= 0;
 };
 
 

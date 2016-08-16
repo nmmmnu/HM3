@@ -32,10 +32,12 @@ int main(int argc, char **argv){
 	}
 #endif
 
+	using DiskTable = hm3::DiskTable;
+
 	hm3::DiskTable list;
 	list.open(input);
 
-	using BTreeIndexBuilder = hm3::btreeindex::BTreeIndexBuilder;
+	using BTreeIndexBuilder = hm3::btreeindex::BTreeIndexBuilder<DiskTable>;
 
 	BTreeIndexBuilder builder{ output };
 

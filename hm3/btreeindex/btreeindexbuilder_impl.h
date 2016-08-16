@@ -7,52 +7,8 @@ namespace hm3{
 namespace btreeindex{
 
 
-class BTreeIndexBuilder::BTreeIndexBuilderHelper_{
-public:
-	BTreeIndexBuilderHelper_(std::ofstream &&file_indx, std::ofstream &&file_data) :
-					file_indx(std::move(file_indx)),
-					file_data(std::move(file_data)){}
-
-public:
-	template <class LIST>
-	void reorder(const LIST &list,
-				typename LIST::size_type begin, typename LIST::size_type end,
-				branch_type level, branch_type this_level = 0);
-
-private:
-	template <class LIST>
-	NodeValue prepareNode_(const LIST &list, typename LIST::size_type index);
-
-	void injectEmptyNode_(branch_type level, branch_type this_level){
-		if (this_level == level){
-			// add empty node
-
-			Node node;
-			node.leaf = 1;
-			node.size = 0;
-
-			// push the node
-			file_indx.write( (const char *) & node, sizeof node );
-
-			return;
-		}
-
-		if (this_level < level){
-			// add children
-			for(branch_type i = 0; i < BRANCHES; ++i)
-				injectEmptyNode_( level, branch_type(this_level + 1) );
-		}
-	}
-
-private:
-	std::ofstream	file_indx;
-	std::ofstream	file_data;
-	size_t		current		= 0;
-};
-
-
 template <class LIST>
-bool BTreeIndexBuilder::createFromList(const LIST &list) const{
+bool BTreeIndexBuilder<LIST>::createFromList(const LIST &list){
 	auto const count = list.getCount();
 
 	branch_type const levels = calcDepth1__(count);
@@ -61,22 +17,26 @@ bool BTreeIndexBuilder::createFromList(const LIST &list) const{
 	printf("Branching Factor : %u (const)\n",	BRANCHES);
 	printf("Tree Depth       : %u\n",		levels	);
 
-	std::ofstream fileIndx(filename_indx,	std::ios::out | std::ios::binary);
-	std::ofstream fileData(filename_data,	std::ios::out | std::ios::binary);
+	file_indx_.open(filename_indx_,	std::ios::out | std::ios::binary);
+	file_data_.open(filename_data_,	std::ios::out | std::ios::binary);
 
-	BTreeIndexBuilderHelper_ builder(std::move(fileIndx), std::move(fileData));
+	current_ = 0;
 
 	for(branch_type level = 0; level < levels; ++level){
 		printf("Processing level %u...\n", level);
 
-		builder.reorder(list, 0, count, level);
+		reorder(list, 0, count, level);
 	}
+
+	file_indx_.close();
+        file_data_.close();
 
 	return true;
 }
 
 
-auto BTreeIndexBuilder::calcDepth__(offset_type count) -> branch_type{
+template <class LIST>
+auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> branch_type{
 	// Biliana
 	// log 54 (123) = ln (123) / ln (54)
 	// but this is true for B+Tree...
@@ -100,32 +60,57 @@ auto BTreeIndexBuilder::calcDepth__(offset_type count) -> branch_type{
 }
 
 
+template <class LIST>
+void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_type const this_level){
+	if (this_level == level){
+		// add empty node
+
+		Node node;
+		node.leaf = 1;
+		node.size = 0;
+
+		if (MEMSET_UNUSED_VALUES){
+			// optimal way
+			memset(node.values, 0, sizeof(node.values) );
+		}
+
+		// push the node
+		file_indx_.write( (const char *) & node, sizeof node );
+	}else if (this_level < level){
+		// add children
+		for(branch_type i = 0; i < BRANCHES; ++i)
+			injectEmptyNode_( level, branch_type(this_level + 1) );
+	}
+}
 
 
 template <class LIST>
-NodeValue BTreeIndexBuilder::BTreeIndexBuilderHelper_::prepareNode_(const LIST &list, typename LIST::size_type index){
+void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const index){
 	// we need to key the pair,
 	// because key "live" inside it.
 	const auto &p = list.getAt(index);
 	const StringRef &key = p.getKey();
 
-	// push the key
-	file_data.write( key.data(), (std::streamsize) key.size() );
+	{
+		NodeData nd;
+		nd.keysize = htobe16(key.size());
+		nd.data    = htobe64( list.getAtOffset(index) );
 
-	NodeValue nv;
-	nv.key     = htobe64( current );
-	nv.data    = htobe64( list.getAtOffset(index) );
-	nv.keysize = htobe16( key.size() );
+		// push NodeData
+		file_data_.write( (const char *) &nd, sizeof(nd) );
 
-	current += key.size();
+		// push the key
+		file_data_.write( key.data(), (std::streamsize) key.size() );
+	}
 
-	return nv;
+	current_ += sizeof(uint16_t) + sizeof(uint64_t) + key.size();
 }
 
+
 template <class LIST>
-void BTreeIndexBuilder::BTreeIndexBuilderHelper_::reorder(const LIST &list,
-				typename LIST::size_type begin, typename LIST::size_type end,
-				branch_type level, branch_type this_level){
+void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
+				size_type const begin, size_type const end,
+				branch_type const level, branch_type const this_level){
 	if (begin >= end)
 		return injectEmptyNode_(level, this_level);
 
@@ -145,15 +130,20 @@ void BTreeIndexBuilder::BTreeIndexBuilderHelper_::reorder(const LIST &list,
 			node.size = htobe16(size);
 			node.leaf = 1;
 
-			for(branch_type i = 0; i < size; ++i){
-				node.values[i] = prepareNode_(list, begin + i);
+			if (MEMSET_UNUSED_VALUES){
+				// not optimal way, but more clear
+				memset(node.values, 0, sizeof(node.values) );
 			}
 
-			//if (MEMSET_UNUSED_NODES)
-			//	memset( & node.values[size], 0, VALUES - size);
+			for(branch_type i = 0; i < size; ++i){
+				node.values[i] = htobe64( current_ );
+				injectValue_(list, begin + i);
+				// and current_ is increased here...
+			}
+
 
 			// push the node
-			file_indx.write( (const char *) & node, sizeof node );
+			file_indx_.write( (const char *) & node, sizeof node );
 
 		}else if (this_level < level){
 			// there are no children here.
@@ -171,11 +161,13 @@ void BTreeIndexBuilder::BTreeIndexBuilderHelper_::reorder(const LIST &list,
 			node.leaf = 0;
 
 			for(branch_type i = 0; i < VALUES; ++i){
-				node.values[i] = prepareNode_(list, begin + distance * (i + 1));
+				node.values[i] = htobe64( current_ );
+				injectValue_(list, begin + distance * (i + 1));
+				// and current_ is increased here...
 			}
 
 			// push the node
-			file_indx.write( (const char *) & node, sizeof node );
+			file_indx_.write( (const char *) & node, sizeof node );
 
 		}else if (this_level < level){
 			// add the children
