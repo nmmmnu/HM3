@@ -1,4 +1,4 @@
-#include "diskbtree/diskbtree.h"
+#include "btreeindex/btreeindexbuilder.h"
 
 #include "disktable.h"
 
@@ -35,8 +35,10 @@ int main(int argc, char **argv){
 	hm3::DiskTable list;
 	list.open(input);
 
-	hm3::diskbtree::DiskBTree btree(output);
+	using BTreeIndexBuilder = hm3::btreeindex::BTreeIndexBuilder;
 
-	btree.createFromList(list);
+	BTreeIndexBuilder builder{ output };
+
+	builder.createFromList(list);
 }
 
