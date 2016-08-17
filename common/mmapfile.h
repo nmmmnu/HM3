@@ -18,8 +18,8 @@ public:
 
 	void close();
 
-	operator bool(){
-		return mem_ == nullptr;
+	operator bool() const{
+		return mem_ != nullptr;
 	}
 
 	const void *mem() const{

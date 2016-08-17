@@ -12,8 +12,10 @@ using offset_type	= uint64_t;
 
 
 // 512 would fit in 4K page, but keys are unknown size.
-constexpr branch_type	VALUES		= 200;
+constexpr branch_type	VALUES		= 511;
 constexpr branch_type	BRANCHES	= VALUES + 1;
+
+constexpr branch_type	LEAFMARK	= VALUES + 1;
 
 
 struct NodeData{
@@ -24,9 +26,8 @@ struct NodeData{
 
 struct Node{
 	uint16_t	size;			// 2
-	uint8_t		leaf;			// 1
 
-	uint8_t		pad_01_	= 0xAA;		// 1 padding
+	uint16_t	pad_01_	= 0xAAaa;	// 2 padding
 	uint32_t	pad_02_	= 0xAAaaAAaa;	// 4 padding
 
 	uint64_t	values[VALUES];		// 8 * VALUES

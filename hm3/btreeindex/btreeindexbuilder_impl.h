@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include <iostream>
+//#include <iostream>
 
 namespace hm3{
 namespace btreeindex{
@@ -11,18 +11,18 @@ template <class LIST>
 bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LIST &list){
 	auto const count = list.getCount();
 
-	branch_type const levels = calcDepth1__(count);
+	levels_ = calcDepth1__(count);
 
 	printf("Records          : %zu\n",		count	);
 	printf("Branching Factor : %u (const)\n",	BRANCHES);
-	printf("Tree Depth       : %u\n",		levels	);
+	printf("Tree Depth       : %u\n",		levels_	);
 
 	file_indx_.open(filenameIndx(filename),	std::ios::out | std::ios::binary);
 	file_data_.open(filenameData(filename),	std::ios::out | std::ios::binary);
 
 	current_ = 0;
 
-	for(branch_type level = 0; level < levels; ++level){
+	for(branch_type level = 0; level < levels_; ++level){
 		printf("Processing level %u...\n", level);
 
 		reorder(list, 0, count, level);
@@ -66,7 +66,6 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_t
 		// add empty node
 
 		Node node;
-		node.leaf = 1;
 		node.size = 0;
 
 		if (MEMSET_UNUSED_VALUES){
@@ -86,7 +85,7 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_t
 
 template <class LIST>
 void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const index){
-	// we need to key the pair,
+	// we need to have the pair,
 	// because key "live" inside it.
 	const auto &p = list.getAt(index);
 	const StringRef &key = p.getKey();
@@ -111,8 +110,14 @@ template <class LIST>
 void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 				size_type const begin, size_type const end,
 				branch_type const level, branch_type const this_level){
-	if (begin >= end)
-		return injectEmptyNode_(level, this_level);
+
+	// can't happen, but is good safeguard.
+	if (this_level > level || begin >= end){
+		if (begin >= end)
+			injectEmptyNode_(level, this_level);
+
+		return;
+	}
 
 	using size_type = typename LIST::size_type;
 
@@ -128,7 +133,6 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 		if (this_level == level){
 			Node node;
 			node.size = htobe16(size);
-			node.leaf = 1;
 
 			if (MEMSET_UNUSED_VALUES){
 				// not optimal way, but more clear
@@ -157,8 +161,12 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 		if (this_level == level){
 			Node node;
-			node.size = htobe16(VALUES);
-			node.leaf = 0;
+
+			// check if we want leaf
+			if (this_level == levels_ - 1)
+				node.size = htobe16(VALUES);
+			else
+				node.size = htobe16(LEAFMARK);
 
 			for(branch_type i = 0; i < VALUES; ++i){
 				node.values[i] = htobe64( current_ );
@@ -174,7 +182,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 			size_type b = begin;
 			for(branch_type i = 0; i < VALUES; ++i){
-				branch_type e = branch_type(begin + distance * (i + 1));
+				size_type e = begin + distance * (i + 1);
 
 				reorder(list, b, e, level, branch_type(this_level + 1) );
 

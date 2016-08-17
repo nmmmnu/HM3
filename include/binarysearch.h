@@ -23,7 +23,7 @@ struct BinarySearchCompList{
 };
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
-bool binarySearch_(const ARRAY &list,
+bool binarySearch(const ARRAY &list,
 				SIZE start, SIZE end,
 				const KEY &key,
 				const COMP &comp,
@@ -31,11 +31,11 @@ bool binarySearch_(const ARRAY &list,
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
-				SIZE size,
+				SIZE const size,
 				const KEY &key,
 				const COMP &comp,
 				SIZE &result){
-	return binarySearch_(list, (decltype(size)) 0, size, key, comp, result);
+	return binarySearch(list, (SIZE) 0, size, key, comp, result);
 }
 
 #include "binarysearch_impl.h"

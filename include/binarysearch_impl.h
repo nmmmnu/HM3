@@ -1,5 +1,5 @@
 template <class ARRAY, class SIZE, class KEY, class COMP>
-bool binarySearch_(const ARRAY &list,
+bool binarySearch(const ARRAY &list,
 				SIZE start, SIZE end,
 				const KEY &key,
 				const COMP &comp,

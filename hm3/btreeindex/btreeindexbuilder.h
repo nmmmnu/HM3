@@ -43,7 +43,8 @@ private:
 private:
 	std::ofstream	file_indx_;
 	std::ofstream	file_data_;
-	size_t		current_		= 0;
+	size_t		current_	= 0;
+	branch_type	levels_;
 };
 
 

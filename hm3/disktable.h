@@ -20,7 +20,6 @@ private:
 
 public:
 	DiskTable(bool validate = true) :
-				mmapIndx_(),
 				mmapData_(RANDOM_MADVISE),
 				validate_(validate){}
 
@@ -78,12 +77,19 @@ private:
 private:
 	bool binarySearch_(const StringRef &key, size_type &result) const;
 
+	bool btreeSearch_(const StringRef &key, size_type &result) const;
+
+	bool search_(const StringRef &key, size_type &result) const;
+
 private:
 	diskfile::DiskFileHeader	header_;
-	MMAPFile	mmapIndx_;
-	MMAPFile	mmapData_;
+	MMAPFile			mmapIndx_;
+	MMAPFile			mmapData_;
 
-	bool		validate_;
+	MMAPFile			mmapTree_;
+	MMAPFile			mmapKeys_;
+
+	bool				validate_;
 
 };
 
