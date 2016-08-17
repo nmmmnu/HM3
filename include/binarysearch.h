@@ -27,15 +27,17 @@ bool binarySearch(const ARRAY &list,
 				SIZE start, SIZE end,
 				const KEY &key,
 				const COMP &comp,
-				SIZE &result);
+				SIZE &result,
+				SIZE minimum_distance = 5);
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
 				SIZE const size,
 				const KEY &key,
 				const COMP &comp,
-				SIZE &result){
-	return binarySearch(list, (SIZE) 0, size, key, comp, result);
+				SIZE &result,
+				SIZE const minimum_distance = 5){
+	return binarySearch(list, (SIZE) 0, size, key, comp, result, minimum_distance);
 }
 
 #include "binarysearch_impl.h"

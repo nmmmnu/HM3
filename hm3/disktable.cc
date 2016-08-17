@@ -14,32 +14,9 @@
 
 namespace hm3{
 
-#if 0
-
-namespace{
-	template<typename T>
-	void log__print__(T first){
-		std::cout << first << " ";
-	}
-
-	template<typename T, typename... ARGS>
-	void log__print__(T first, ARGS... args){
-		log__print__(first);
-		log__print__(args...);
-	}
-
-	template<typename... ARGS>
-	void log__(ARGS... args){
-		log__print__(args...);
-		std::cout << std::endl;
-	}
-};
-
-#else
+//#include "logger.h"
 
 #define log__(...) /* nada */
-
-#endif
 
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
@@ -65,7 +42,7 @@ void DiskTable::close(){
 }
 
 inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
-	return binarySearch(*this, getCount(), key, BinarySearchCompList{}, result);
+	return binarySearch(*this, getCount(), key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
 }
 
 inline bool DiskTable::search_(const StringRef &key, size_type &result) const{
@@ -115,7 +92,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 		size_type node_index;
 
-		// MODIFIED BINARY SEARCH
+		// MODIFIED MINI-BINARY SEARCH
 		{
 			/*
 			 * Lazy based from Linux kernel...
@@ -153,6 +130,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				int const cmp = keyx.compare(key);
 
+				// not optimal way, but more clear
 				if (cmp == 0){
 					// found
 
@@ -191,7 +169,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 			log__("BTREE LEAF:", pos);
 			log__("Fallback to binary search", bs_left, bs_right, "diff", bs_right - bs_left);
 
-			return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result);
+			return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
 		}
 
 		if (node_index == size){

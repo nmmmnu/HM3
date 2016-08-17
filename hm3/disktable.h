@@ -16,8 +16,8 @@ public:
 	class Iterator;
 
 private:
-	static constexpr bool		RANDOM_MADVISE		= true;
-//	static constexpr size_type	BIN_SEARCH_FALLBACK	= 3;
+	static constexpr bool		RANDOM_MADVISE			= true;
+	static constexpr size_type	BIN_SEARCH_MINIMUM_DISTANCE	= 3;
 
 public:
 	DiskTable(bool validate = true) :
