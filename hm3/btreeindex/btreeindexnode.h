@@ -12,7 +12,7 @@ using offset_type	= uint64_t;
 
 
 // 512 would fit in 4K page, but keys are unknown size.
-constexpr branch_type	VALUES		= 511;
+constexpr branch_type	VALUES		= 1024;
 constexpr branch_type	BRANCHES	= VALUES + 1;
 
 constexpr branch_type	LEAFMARK	= VALUES + 1;

@@ -10,13 +10,36 @@
 
 #include <endian.h>	// htobe16
 
-inline void blog___(const char *s){
-	printf("%s\n", s);
-}
-
-#define blog__(a) blog___(a)
+#include <iostream>
 
 namespace hm3{
+
+#if 0
+
+namespace{
+	template<typename T>
+	void log__print__(T first){
+		std::cout << first << " ";
+	}
+
+	template<typename T, typename... ARGS>
+	void log__print__(T first, ARGS... args){
+		log__print__(first);
+		log__print__(args...);
+	}
+
+	template<typename... ARGS>
+	void log__(ARGS... args){
+		log__print__(args...);
+		std::cout << std::endl;
+	}
+};
+
+#else
+
+#define log__(...) /* nada */
+
+#endif
 
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
@@ -47,10 +70,10 @@ inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) co
 
 inline bool DiskTable::search_(const StringRef &key, size_type &result) const{
 	if (mmapTree_ && mmapKeys_){
-		blog__("btree\n");
+		log__("btree");
 		return btreeSearch_(key, result);
 	}else{
-		blog__("binary\n");
+		log__("binary");
 		return binarySearch_(key, result);
 	}
 }
@@ -76,12 +99,10 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 		if (!node){
 			// go try with binary search
-			blog__("Problem, switch to binary search\n");
+			log__("Problem, switch to binary search");
 			return binarySearch_(key, result);
 		}
 		// ---
-
-		bool needGoRight = true;
 
 		// check if node is half full
 
@@ -91,63 +112,98 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		branch_type const size 	= size_ <= VALUES ? size_ : VALUES;
 
 
-		for(branch_type i = 0; i < size; ++i){
-			// ---
-			const uint64_t offset = be64toh(node->values[i]);
 
-			const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
+		size_type node_index;
 
-			if (!nd){
-				// go try with binary search
-				blog__("Problem, switch to binary search\n");
-				return binarySearch_(key, result);
+		// MODIFIED BINARY SEARCH
+		{
+			/*
+			 * Lazy based from Linux kernel...
+			 * http://lxr.free-electrons.com/source/lib/bsearch.c
+			 */
+
+			size_type start = 0;
+			size_type end   = size;
+
+			while (start < end){
+			//	size_type mid = start + ((end - start) /  2);
+				size_type mid = size_type(start + ((end - start) >> 1)); // 4% faster
+
+
+				// ACCESS ELEMENT
+				// ---
+				const uint64_t offset = be64toh(node->values[ mid ]);
+
+				const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
+
+				if (!nd){
+					// go try with binary search
+					log__("Problem, switch to binary search");
+					return binarySearch_(key, result);
+				}
+
+				const uint16_t keysize = be16toh(nd->keysize);
+				const uint64_t dataid  = be64toh(nd->dataid);
+
+				const char *keyptr = (const char *) nd + sizeof(NodeData);
+
+				const StringRef keyx{ keyptr, keysize };
+				// ---
+				// EO ACCESS ELEMENT
+
+				int const cmp = keyx.compare(key);
+
+				if (cmp == 0){
+					// found
+
+					log__("node F: POS:", mid);
+
+					result = dataid;
+					return true;
+				}
+
+				if (cmp < 0){
+					// go right
+					start = size_type(mid + 1);
+
+					bs_left = dataid;
+
+					log__("node R:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+				}else{
+					// go left
+					end = mid;
+
+					bs_right = dataid;
+
+					log__("node L:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+				}
 			}
 
-			const uint16_t keysize = be16toh(nd->keysize);
-			const uint64_t dataid  = be64toh(nd->dataid);
-
-			const char *keyptr = (const char *) nd + sizeof(NodeData);
-
-			const StringRef keyx{ keyptr, keysize };
-			// ---
-
-			int const cmp = key.compare(keyx);
-
-			if (cmp == 0){
-			//	printf("Found\n");
-				result = be64toh(nd->dataid);
-				return true;
-			}
-
-			if (cmp < 0){
-				pos = pos * BRANCHES + i + 1;
-			//	printf("L -> %zu %u\n", pos, i);
-
-				bs_right = dataid;
-
-				needGoRight = false;
-				break;
-			}
-
-			bs_left = dataid;
+			node_index = start;
 		}
+		// EO MODIFIED BINARY SEARCH
+
 
 		if (leaf){
 			// leaf
 			// fallback to binary search :)
 
-		//	printf("LEAF -> %zu\n", pos);
-		//	printf("Fallback to binary search -> %zu to %zu (size: %zu)\n", bs_left, bs_right, bs_right - bs_left);
+			log__("BTREE LEAF:", pos);
+			log__("Fallback to binary search", bs_left, bs_right, "diff", bs_right - bs_left);
 
 			return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result);
 		}
 
-		if (needGoRight){
+		if (node_index == size){
+			// Go Right
 			pos = pos * BRANCHES + VALUES + 1;
 
-		//	printf("R -> %zu\n", pos);
+			log__("BTREE R:", pos);
+		}else{
+			// Go Left
+			pos = pos * BRANCHES + node_index + 1;
 
-			// bs_left is already set.
+			log__("BTREE L:", pos, "node[", node_index, "]");
 		}
 	}
 
@@ -184,7 +240,7 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 	return blob->validChecksum() ? blob : nullptr;
 }
 
-/*
+#if 0
 size_t DiskTable::getAtOffset(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
 
@@ -196,7 +252,7 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 
 	return (size_t) -1;
 }
-*/
+#endif
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
@@ -250,4 +306,53 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 
 } // namespace
+
+
+
+
+
+#if 0
+
+		for(branch_type i = 0; i < size; ++i){
+			// ---
+			const uint64_t offset = be64toh(node->values[i]);
+
+			const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
+
+			if (!nd){
+				// go try with binary search
+				log__("Problem, switch to binary search\n");
+				return binarySearch_(key, result);
+			}
+
+			const uint16_t keysize = be16toh(nd->keysize);
+			const uint64_t dataid  = be64toh(nd->dataid);
+
+			const char *keyptr = (const char *) nd + sizeof(NodeData);
+
+			const StringRef keyx{ keyptr, keysize };
+			// ---
+
+			int const cmp = key.compare(keyx);
+
+			if (cmp == 0){
+			//	printf("Found\n");
+				result = be64toh(nd->dataid);
+				return true;
+			}
+
+			if (cmp < 0){
+				pos = pos * BRANCHES + i + 1;
+			//	printf("L -> %zu %u\n", pos, i);
+
+				bs_right = dataid;
+
+				needGoRight = false;
+				break;
+			}
+
+			bs_left = dataid;
+		}
+
+#endif
 

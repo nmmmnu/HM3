@@ -1,7 +1,8 @@
 #include <cstdio>
 #include <cstring>
 
-//#include <iostream>
+#include <iostream>
+
 
 namespace hm3{
 namespace btreeindex{
@@ -93,7 +94,7 @@ void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const ind
 	{
 		NodeData nd;
 		nd.keysize = htobe16(key.size());
-		nd.dataid  = htobe64(index); //list.getAtOffset(index) );
+		nd.dataid  = htobe64(index);
 
 		// push NodeData
 		file_data_.write( (const char *) &nd, sizeof(nd) );
@@ -149,7 +150,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			// push the node
 			file_indx_.write( (const char *) & node, sizeof node );
 
-		}else if (this_level < level){
+		}else{ // if (this_level < level){
 			// there are no children here.
 			for(branch_type i = 0; i < BRANCHES; ++i)
 				injectEmptyNode_( level, branch_type(this_level + 1) );
@@ -177,7 +178,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			// push the node
 			file_indx_.write( (const char *) & node, sizeof node );
 
-		}else if (this_level < level){
+		}else{ // if (this_level < level){
 			// add the children
 
 			size_type b = begin;

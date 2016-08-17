@@ -24,7 +24,7 @@ bool binarySearch(const ARRAY &list,
 
 		if (cmp < 0){
 			// go right
-			start = SIZE(mid + 1);
+			start = mid + 1;
 
 			// scatter code would go here.
 			// but it have negative effect.
