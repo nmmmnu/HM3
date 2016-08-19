@@ -1,8 +1,6 @@
 #ifndef BTREE_INDEX_NODE_H
 #define BTREE_INDEX_NODE_H
 
-#include <cstdint>
-
 namespace hm3{
 namespace btreeindex{
 
@@ -11,8 +9,9 @@ using branch_type	= uint16_t;
 using offset_type	= uint64_t;
 
 
-// 512 would fit in 4K page, but keys are unknown size.
-constexpr branch_type	VALUES		= 1024;
+// 512 would will fit in 4K page, but keys are unknown size.
+// because of in-node binary search, best to be power of 2 - 1
+constexpr branch_type	VALUES		= 127;
 constexpr branch_type	BRANCHES	= VALUES + 1;
 
 constexpr branch_type	LEAFMARK	= VALUES + 1;

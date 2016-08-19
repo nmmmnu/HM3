@@ -71,7 +71,7 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_t
 
 		if (MEMSET_UNUSED_VALUES){
 			// optimal way
-			memset(node.values, 0, sizeof(node.values) );
+			memset(node.values, 0, sizeof node.values );
 		}
 
 		// push the node
@@ -97,7 +97,7 @@ void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const ind
 		nd.dataid  = htobe64(index);
 
 		// push NodeData
-		file_data_.write( (const char *) &nd, sizeof(nd) );
+		file_data_.write( (const char *) &nd, sizeof nd );
 
 		// push the key
 		file_data_.write( key.data(), (std::streamsize) key.size() );
@@ -137,7 +137,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 			if (MEMSET_UNUSED_VALUES){
 				// not optimal way, but more clear
-				memset(node.values, 0, sizeof(node.values) );
+				memset(node.values, 0, sizeof node.values );
 			}
 
 			for(branch_type i = 0; i < size; ++i){
@@ -145,7 +145,6 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 				injectValue_(list, begin + i);
 				// and current_ is increased here...
 			}
-
 
 			// push the node
 			file_indx_.write( (const char *) & node, sizeof node );
