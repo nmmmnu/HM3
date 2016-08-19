@@ -23,22 +23,22 @@ public:
 	bool createFromList(const StringRef &filename, const LIST &list);
 
 private:
-	static branch_type calcDepth__(size_type count);
+	static level_type calcDepth__(size_type count);
 
-	static branch_type calcDepth1__(size_type const count){
-		branch_type result = calcDepth__(count);
+	static level_type calcDepth1__(size_type const count){
+		level_type const result = calcDepth__(count);
 
 		return result > 1 ? result - 1 : 1;
 	}
 
 private:
-	void injectEmptyNode_(branch_type level, branch_type this_level);
+	void injectEmptyNode_(level_type level, level_type this_level);
 
 	void injectValue_(const LIST &list, size_type index);
 
 	void reorder(const LIST &list,
 				size_type begin, size_type end,
-				branch_type level, branch_type this_level = 0);
+				level_type level, level_type this_level = 0);
 
 private:
 	std::ofstream	file_indx_;

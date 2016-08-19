@@ -23,7 +23,7 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 
 	current_ = 0;
 
-	for(branch_type level = 0; level < levels_; ++level){
+	for(level_type level = 0; level < levels_; ++level){
 		printf("Processing level %u...\n", level);
 
 		reorder(list, 0, count, level);
@@ -37,12 +37,12 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 
 
 template <class LIST>
-auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> branch_type{
+auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> level_type{
 	// Biliana
 	// log 54 (123) = ln (123) / ln (54)
-	// but this is true for B+Tree...
+	// but this is true for B+Tree only...
 
-	branch_type result = 0;
+	level_type result = 0;
 
 	while(count > 0){
 		++result; // tree is always 1 level.
@@ -52,7 +52,6 @@ auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> branch_type{
 			// because BTree have data in non-leaf nodes.
 			count = (count - VALUES) / BRANCHES;
 		}else{
-			// count = 0;
 			break;
 		}
 	}
@@ -62,7 +61,7 @@ auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> branch_type{
 
 
 template <class LIST>
-void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_type const this_level){
+void BTreeIndexBuilder<LIST>::injectEmptyNode_(level_type const level, level_type const this_level){
 	if (this_level == level){
 		// add empty node
 
@@ -79,7 +78,7 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(branch_type const level, branch_t
 	}else if (this_level < level){
 		// add children
 		for(branch_type i = 0; i < BRANCHES; ++i)
-			injectEmptyNode_( level, branch_type(this_level + 1) );
+			injectEmptyNode_( level, level_type(this_level + 1) );
 	}
 }
 
@@ -110,7 +109,7 @@ void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const ind
 template <class LIST>
 void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 				size_type const begin, size_type const end,
-				branch_type const level, branch_type const this_level){
+				level_type const level, level_type const this_level){
 
 	// can't happen, but is good safeguard.
 	if (this_level > level || begin >= end){
@@ -142,7 +141,10 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 			for(branch_type i = 0; i < size; ++i){
 				node.values[i] = htobe64( current_ );
-				injectValue_(list, begin + i);
+
+				size_type const index = begin + i;
+
+				injectValue_(list, index);
 				// and current_ is increased here...
 			}
 
@@ -152,7 +154,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 		}else{ // if (this_level < level){
 			// there are no children here.
 			for(branch_type i = 0; i < BRANCHES; ++i)
-				injectEmptyNode_( level, branch_type(this_level + 1) );
+				injectEmptyNode_( level, level_type(this_level + 1) );
 		}
 
 		//return;
@@ -170,7 +172,10 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 			for(branch_type i = 0; i < VALUES; ++i){
 				node.values[i] = htobe64( current_ );
-				injectValue_(list, begin + distance * (i + 1));
+
+				size_type const index = begin + distance * (i + 1);
+
+				injectValue_(list, index);
 				// and current_ is increased here...
 			}
 
@@ -184,13 +189,13 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			for(branch_type i = 0; i < VALUES; ++i){
 				size_type e = begin + distance * (i + 1);
 
-				reorder(list, b, e, level, branch_type(this_level + 1) );
+				reorder(list, b, e, level, level_type(this_level + 1) );
 
 				b = e + 1;
 			}
 
 			// last right child
-			reorder(list, b, end, level, branch_type(this_level + 1) );
+			reorder(list, b, end, level, level_type(this_level + 1) );
 		}
 
 		//return;
