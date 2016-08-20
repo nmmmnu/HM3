@@ -112,8 +112,17 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				const uint64_t offset = be64toh(node->values[ node_pos ]);
 
 				if (offset == Node::NIL){
-					// special case, go left,
-					// no need to update anything
+					// special case go left
+					/*
+					 *   1   0   2
+					 * 1 2 n n n n n
+					 *
+					 *       n
+					 *   2       n
+					 * 1   n   n   n
+					 *
+					 */
+
 					node_pos = 2 * node_pos + 1;
 
 					log__("\t L: NIL");
