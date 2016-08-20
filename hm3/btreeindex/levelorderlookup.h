@@ -18,12 +18,8 @@ public:
 			reorder_(0, SIZE, level);
 	}
 
-	branch_type fw(branch_type const index) const{
+	branch_type operator[](branch_type const index) const{
 		return fw_[index];
-	}
-
-	branch_type bw(branch_type const index) const{
-		return bw_[index];
 	}
 
 	branch_type size() const{
@@ -34,19 +30,14 @@ private:
 	void reorder_(branch_type begin, branch_type end, level_type level, level_type this_level = 0);
 
 	void push_(branch_type const value){
-		fw_[pos_] = value;
-		bw_[pos_] = 0;
-		//bw_[value] = pos_;
-		++pos_;
+		fw_[pos_++] = value;
 	}
 
 private:
 	branch_type fw_[SIZE];
-	branch_type bw_[SIZE];
 
 	branch_type pos_ = 0;
 };
-
 
 
 

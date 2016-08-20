@@ -8,7 +8,7 @@ int main(){
 	LevelOrderLookup<7> lookup;
 
 	for(branch_type i = 0; i < lookup.size(); ++i)
-		printf("%4hu | %4hu | %4hu\n", i, lookup.fw(i), lookup.bw(i) );
+		printf("%4hu | %4hu\n", i, lookup[i] ); //, lookup.bw(i) );
 
 }
 
