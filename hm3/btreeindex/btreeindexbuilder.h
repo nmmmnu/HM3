@@ -4,6 +4,7 @@
 #include "stringref.h"
 #include "btreeindexnode.h"
 #include "btreeindexfilenames.h"
+#include "levelorderlookup.h"
 
 #include <fstream>
 
@@ -45,6 +46,8 @@ private:
 	std::ofstream	file_data_;
 	size_t		current_	= 0;
 	branch_type	levels_;
+
+	LevelOrderLookup<NODE_LEVELS> ll_;
 };
 
 

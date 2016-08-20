@@ -68,10 +68,9 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(level_type const level, level_typ
 		Node node;
 		node.size = 0;
 
-		if (MEMSET_UNUSED_VALUES){
-			// optimal way
-			memset(node.values, 0, sizeof node.values );
-		}
+		// fill gets refference to NIL
+		auto const nil = Node::NIL;
+		std::fill_n(node.values, VALUES, nil);
 
 		// push the node
 		file_indx_.write( (const char *) & node, sizeof node );
@@ -134,13 +133,15 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			Node node;
 			node.size = htobe16(size);
 
-			if (MEMSET_UNUSED_VALUES){
-				// not optimal way, but more clear
-				memset(node.values, 0, sizeof node.values );
-			}
+			for(branch_type j = 0; j < VALUES; ++j){
+				branch_type const i = ll_.fw(j);
 
-			for(branch_type i = 0; i < size; ++i){
-				node.values[i] = htobe64( current_ );
+				if (i >= size){
+					node.values[j] = Node::NIL;
+					continue;
+				}
+
+				node.values[j] = htobe64( current_ );
 
 				size_type const index = begin + i;
 
@@ -170,8 +171,10 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			else
 				node.size = htobe16(LEAFMARK);
 
-			for(branch_type i = 0; i < VALUES; ++i){
-				node.values[i] = htobe64( current_ );
+			for(branch_type j = 0; j < VALUES; ++j){
+				branch_type const i = ll_.fw(j);
+
+				node.values[j] = htobe64( current_ );
 
 				size_type const index = begin + distance * (i + 1);
 
