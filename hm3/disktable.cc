@@ -89,8 +89,9 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		branch_type const size 	= size_ <= VALUES ? size_ : VALUES;
 
 
+		using branch_type = btreeindex::branch_type;
 
-		size_type node_index;
+		branch_type node_index;
 
 		// MODIFIED MINI-BINARY SEARCH
 		{
@@ -99,12 +100,12 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 			 * http://lxr.free-electrons.com/source/lib/bsearch.c
 			 */
 
-			size_type start = 0;
-			size_type end   = size;
+			branch_type start = 0;
+			branch_type end   = size;
 
 			while (start < end){
-			//	size_type mid = start + ((end - start) /  2);
-				size_type mid = size_type(start + ((end - start) >> 1)); // 4% faster
+			//	branch_type mid = start + ((end - start) /  2);
+				branch_type mid = branch_type(start + ((end - start) >> 1)); // 4% faster
 
 
 				// ACCESS ELEMENT
@@ -142,7 +143,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				if (cmp < 0){
 					// go right
-					start = size_type(mid + 1);
+					start = branch_type(mid + 1);
 
 					bs_left = dataid;
 
