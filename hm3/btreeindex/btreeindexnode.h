@@ -14,7 +14,7 @@ using offset_type	= uint64_t;
 
 // 512 would will fit in 4K page, but keys are unknown size.
 // because of in-node binary search, best to be power of 2 - 1
-constexpr level_type	NODE_LEVELS	= 3;
+constexpr level_type	NODE_LEVELS	= 7;
 constexpr branch_type	BRANCHES	= 1 << NODE_LEVELS;
 constexpr branch_type	VALUES		= BRANCHES - 1;
 

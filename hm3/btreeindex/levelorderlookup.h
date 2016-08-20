@@ -35,13 +35,14 @@ private:
 
 	void push_(branch_type const value){
 		fw_[pos_] = value;
-		bw_[value] = pos_;
+		bw_[pos_] = 0;
+		//bw_[value] = pos_;
 		++pos_;
 	}
 
 private:
-	branch_type fw_[SIZE*2];
-	branch_type bw_[SIZE*2];
+	branch_type fw_[SIZE];
+	branch_type bw_[SIZE];
 
 	branch_type pos_ = 0;
 };

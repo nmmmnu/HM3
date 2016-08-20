@@ -8,15 +8,21 @@
 #include "btreeindex/btreeindexfilenames.h"
 #include "btreeindex/btreeindexnode.h"
 
+#include "levelorderlookup.h"
+
 #include <endian.h>	// htobe16
 
 #include <iostream>
 
 namespace hm3{
 
-//#include "logger.h"
+#include "logger.h"
 
-#define log__(...) /* nada */
+//#define log__(...) /* nada */
+
+
+const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_ll;
+
 
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
@@ -86,30 +92,34 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		uint16_t const size_ = be16toh(node->size);
 
 		bool const leaf		= size_ <= VALUES;
-		branch_type const size 	= size_ <= VALUES ? size_ : VALUES;
 
 
+		branch_type node_index;
+		bool needRight = true;
 
-		size_type node_index;
-
-		// MODIFIED MINI-BINARY SEARCH
+		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 		{
-			/*
-			 * Lazy based from Linux kernel...
-			 * http://lxr.free-electrons.com/source/lib/bsearch.c
-			 */
+			const auto &ll = g_ll;
 
-			size_type start = 0;
-			size_type end   = size;
+			branch_type node_pos = 0;
 
-			while (start < end){
-			//	size_type mid = start + ((end - start) /  2);
-				size_type mid = size_type(start + ((end - start) >> 1)); // 4% faster
+			node_index = ll.fw(node_pos);
 
+			while (node_pos < VALUES){
 
 				// ACCESS ELEMENT
 				// ---
-				const uint64_t offset = be64toh(node->values[ mid ]);
+				const uint64_t offset = be64toh(node->values[ node_pos ]);
+
+				if (offset == Node::NIL){
+					// special case, go left,
+					// no need to update anything
+					node_pos = 2 * node_pos + 1;
+
+					log__("\t L: NIL");
+
+					continue;
+				}
 
 				const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
 
@@ -128,38 +138,48 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				// ---
 				// EO ACCESS ELEMENT
 
+				log__("node [", node_index, "]: POS:", node_pos, keyx);
+
 				int const cmp = keyx.compare(key);
 
 				// not optimal way, but more clear
 				if (cmp == 0){
 					// found
 
-					log__("node F: POS:", mid);
+					log__("\t F: POS:", node_pos);
 
 					result = dataid;
 					return true;
 				}
 
 				if (cmp < 0){
+					// this + 1 is because the element is checked already
+					// see standard binary search implementation.
+					// took me two days to figure it out :)
+					node_index = ll.fw(node_pos) + 1;
+
 					// go right
-					start = size_type(mid + 1);
+					node_pos = 2 * node_pos + 2;
 
 					bs_left = dataid;
 
-					log__("node R:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+					log__("\t R:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
 				}else{
+					node_index = ll.fw(node_pos);
+
 					// go left
-					end = mid;
+					node_pos = 2 * node_pos + 1;
 
 					bs_right = dataid;
 
-					log__("node L:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+					needRight = false;
+
+					log__("\t L:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
 				}
 			}
-
-			node_index = start;
 		}
-		// EO MODIFIED BINARY SEARCH
+		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
+
 
 
 		if (leaf){
@@ -172,7 +192,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 			return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
 		}
 
-		if (node_index == size){
+		if (needRight){ //node_index == size){
 			// Go Right
 			pos = pos * BRANCHES + VALUES + 1;
 
@@ -332,5 +352,75 @@ const Pair &DiskTable::Iterator::operator*() const{
 			bs_left = dataid;
 		}
 
+
+
+		// MODIFIED MINI-BINARY SEARCH
+		{
+			/*
+			 * Lazy based from Linux kernel...
+			 * http://lxr.free-electrons.com/source/lib/bsearch.c
+			 */
+
+			branch_type start = 0;
+			branch_type end   = size;
+
+			while (start < end){
+			//	branch_type mid = start + ((end - start) /  2);
+				branch_type mid = branch_type(start + ((end - start) >> 1)); // 4% faster
+
+
+				// ACCESS ELEMENT
+				// ---
+				const uint64_t offset = be64toh(node->values[ mid ]);
+
+				const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
+
+				if (!nd){
+					// go try with binary search
+					log__("Problem, switch to binary search");
+					return binarySearch_(key, result);
+				}
+
+				const uint16_t keysize = be16toh(nd->keysize);
+				const uint64_t dataid  = be64toh(nd->dataid);
+
+				const char *keyptr = (const char *) nd + sizeof(NodeData);
+
+				const StringRef keyx{ keyptr, keysize };
+				// ---
+				// EO ACCESS ELEMENT
+
+				int const cmp = keyx.compare(key);
+
+				// not optimal way, but more clear
+				if (cmp == 0){
+					// found
+
+					log__("node F: POS:", mid);
+
+					result = dataid;
+					return true;
+				}
+
+				if (cmp < 0){
+					// go right
+					start = branch_type(mid + 1);
+
+					bs_left = dataid;
+
+					log__("node R:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+				}else{
+					// go left
+					end = mid;
+
+					bs_right = dataid;
+
+					log__("node L:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+				}
+			}
+
+			node_index = start;
+		}
+		// EO MODIFIED BINARY SEARCH
 #endif
 
