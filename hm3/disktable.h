@@ -21,7 +21,10 @@ private:
 
 public:
 	DiskTable(bool validate = true) :
-				mmapData_(RANDOM_MADVISE),
+			//	mmapIndx_(MADV_RANDOM),
+				mmapData_(MADV_RANDOM),
+			//	mmapTree_(MADV_RANDOM),
+			//	mmapKeys_(MADV_RANDOM),
 				validate_(validate){}
 
 	DiskTable(DiskTable &&other) = default;

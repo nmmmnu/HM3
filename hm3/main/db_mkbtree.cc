@@ -6,7 +6,7 @@
 
 static void printUsage(const char *name){
 	printf("Usage:\n");
-	printf("%s [file.db] btree_file\n", name);
+	printf("%s [file.db] [btree_file]\n", name);
 	printf("\t\tPath names must be written without extention\n");
 	printf("\t\tExample 'file.db'\n");
 	printf("\t\tDo not forget that usually btree_file must have same name as [file.db]\n");

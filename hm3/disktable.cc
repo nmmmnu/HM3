@@ -187,7 +187,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 		uint16_t const size_ = be16toh(node->size);
 
-		bool const leaf		= size_ <= VALUES;
+		bool const leaf      = size_ <= VALUES;
 
 
 		if (leaf){

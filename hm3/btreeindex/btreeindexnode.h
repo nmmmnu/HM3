@@ -18,8 +18,6 @@ constexpr level_type	NODE_LEVELS	= 7;
 constexpr branch_type	BRANCHES	= 1 << NODE_LEVELS;
 constexpr branch_type	VALUES		= BRANCHES - 1;
 
-constexpr branch_type	LEAFMARK	= VALUES + 1;
-
 
 struct NodeData{
 	uint16_t	keysize;		// 2
@@ -28,7 +26,8 @@ struct NodeData{
 
 
 struct Node{
-	constexpr static uint64_t NIL = (uint64_t) -1;
+	constexpr static uint16_t NON_LEAF	= VALUES + 1;
+	constexpr static uint64_t NIL		= (uint64_t) -1;
 
 	uint16_t	size;			// 2
 

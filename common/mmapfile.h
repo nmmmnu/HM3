@@ -3,10 +3,12 @@
 
 #include "stringref.h"
 
+#include <sys/mman.h>	// mmap
+
 class MMAPFile{
 public:
-	MMAPFile(bool const random_madvise = false) :
-				random_madvise_(random_madvise){}
+	MMAPFile(int const madvise = MADV_NORMAL) :
+				madvise_(madvise){}
 
 	MMAPFile(MMAPFile &&other);
 
@@ -27,10 +29,7 @@ public:
 	}
 
 	const void *safeAccess(size_t const offset) const{
-		if (mem_ == nullptr)
-			return nullptr;
-
-		if (size_ < offset)
+		if (mem_ == nullptr || offset >= size_)
 			return nullptr;
 
 		const char *memc = (const char *) mem_;
@@ -65,7 +64,7 @@ private:
 
 	int		fd_;
 
-	bool		random_madvise_;
+	int		madvise_;
 };
 
 #endif

@@ -36,8 +36,7 @@ bool MMAPFile::open(const StringRef &filename){
 		return false;
 	}
 
-	if (random_madvise_)
-		madvise(mem, size, MADV_RANDOM);
+	madvise(mem, size, madvise_);
 
 	fd_ = fd;
 	size_ = size;

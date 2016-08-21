@@ -167,9 +167,10 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 			// check if we want leaf
 			if (this_level == levels_ - 1)
+				// leaf
 				node.size = htobe16(VALUES);
 			else
-				node.size = htobe16(LEAFMARK);
+				node.size = htobe16(Node::NON_LEAF);
 
 			for(branch_type j = 0; j < VALUES; ++j){
 				branch_type const i = ll_[j];
