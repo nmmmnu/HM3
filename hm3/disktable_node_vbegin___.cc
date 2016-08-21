@@ -8,7 +8,7 @@
 #include "btreeindex/btreeindexfilenames.h"
 #include "btreeindex/btreeindexnode.h"
 
-#include "levelorderlookup.h"
+//#include "levelorderlookup.h"
 
 #include <endian.h>	// htobe16
 
@@ -21,7 +21,7 @@ namespace hm3{
 //#define log__(...) /* nada */
 
 
-const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_ll;
+//const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_levelOrderLookupTable;
 
 
 bool DiskTable::open(const std::string &filename){
@@ -87,37 +87,24 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		}
 		// ---
 
+
 		branch_type node_index;
 		bool needRight = true;
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 		{
-			const auto &ll = g_ll;
-
 			branch_type node_pos = 0;
 
-<<<<<<< HEAD
-		using branch_type = btreeindex::branch_type;
-
-		branch_type node_index;
-=======
-			node_index = ll[node_pos];
+			branch_type node_vstart = 0;
+			branch_type node_vend   = VALUES;
 
 			while (node_pos < VALUES){
->>>>>>> levelordernode_take2
+				branch_type const node_vmid = branch_type(node_vstart + ((node_vend - node_vstart) >> 1)); // 4% faster
 
 				// ACCESS ELEMENT
 				// ---
 				const uint64_t offset = be64toh(node->values[ node_pos ]);
 
-<<<<<<< HEAD
-			branch_type start = 0;
-			branch_type end   = size;
-
-			while (start < end){
-			//	branch_type mid = start + ((end - start) /  2);
-				branch_type mid = branch_type(start + ((end - start) >> 1)); // 4% faster
-=======
 				if (offset == Node::NIL){
 					// special case go left
 					/*
@@ -154,7 +141,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				// ---
 				// EO ACCESS ELEMENT
 
-				log__("node [", ll[node_pos], "]: POS:", node_pos, keyx);
+				log__("node [", node_vmid, "]: POS:", node_pos, keyx);
 
 				int const cmp = keyx.compare(key);
 
@@ -169,18 +156,16 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				}
 
 				if (cmp < 0){
-					// this + 1 is because the element is checked already
-					// see standard binary search implementation.
-					// took me two days to figure it out :)
-					node_index = ll[node_pos] + 1;
+					node_vstart = branch_type(node_vmid + 1);
 
 					// go right
+					node_pos = 2 * node_pos + 2;
 
 					bs_left = dataid;
 
 					log__("\t R:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
 				}else{
-					node_index = ll[node_pos];
+					node_vend = node_vmid;
 
 					// go left
 					node_pos = 2 * node_pos + 1;
@@ -192,14 +177,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					log__("\t L:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
 				}
 			}
+
+			node_index = node_vstart;
 		}
 		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 
 
 		// check if node is half full
-
 		uint16_t const size_ = be16toh(node->size);
-
 		bool const leaf		= size_ <= VALUES;
 
 
@@ -332,7 +317,6 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 #if 0
 
-		// LINEAR SEARCH
 		for(branch_type i = 0; i < size; ++i){
 			// ---
 			const uint64_t offset = be64toh(node->values[i]);
@@ -373,7 +357,6 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 			bs_left = dataid;
 		}
-		// EO LINEAR SEARCH
 
 
 
