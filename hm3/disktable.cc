@@ -161,6 +161,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					node_index = ll[node_pos] + 1;
 
 					// go right
+					node_pos = 2 * node_pos + 2;
 
 					bs_left = dataid;
 
@@ -318,7 +319,6 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 #if 0
 
-		// LINEAR SEARCH
 		for(branch_type i = 0; i < size; ++i){
 			// ---
 			const uint64_t offset = be64toh(node->values[i]);
@@ -359,7 +359,6 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 			bs_left = dataid;
 		}
-		// EO LINEAR SEARCH
 
 
 
