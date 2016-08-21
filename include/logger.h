@@ -1,4 +1,8 @@
 
+#ifdef log__
+#undef log__
+#endif
+
 namespace{
 	template<typename T>
 	void log__print__(T first){

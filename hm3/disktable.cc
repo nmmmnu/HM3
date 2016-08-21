@@ -96,28 +96,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 			branch_type node_pos = 0;
 
-<<<<<<< HEAD
-		using branch_type = btreeindex::branch_type;
-
-		branch_type node_index;
-=======
 			node_index = ll[node_pos];
 
 			while (node_pos < VALUES){
->>>>>>> levelordernode_take2
 
 				// ACCESS ELEMENT
 				// ---
 				const uint64_t offset = be64toh(node->values[ node_pos ]);
 
-<<<<<<< HEAD
-			branch_type start = 0;
-			branch_type end   = size;
-
-			while (start < end){
-			//	branch_type mid = start + ((end - start) /  2);
-				branch_type mid = branch_type(start + ((end - start) >> 1)); // 4% faster
-=======
 				if (offset == Node::NIL){
 					// special case go left
 					/*
