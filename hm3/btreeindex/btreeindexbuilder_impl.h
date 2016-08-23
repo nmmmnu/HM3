@@ -66,7 +66,6 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(level_type const level, level_typ
 		// add empty node
 
 		Node node;
-		node.size = 0;
 
 		// fill gets refference to NIL
 		auto const nil = Node::NIL;
@@ -131,7 +130,6 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 		// leaf node - just flush everything into the node...
 		if (this_level == level){
 			Node node;
-			node.size = htobe16(size);
 
 			for(branch_type j = 0; j < VALUES; ++j){
 				branch_type const i = ll_[j];
@@ -164,13 +162,6 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 
 		if (this_level == level){
 			Node node;
-
-			// check if we want leaf
-			if (this_level == levels_ - 1)
-				// leaf
-				node.size = htobe16(VALUES);
-			else
-				node.size = htobe16(Node::NON_LEAF);
 
 			for(branch_type j = 0; j < VALUES; ++j){
 				branch_type const i = ll_[j];

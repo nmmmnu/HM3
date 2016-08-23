@@ -71,12 +71,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	constexpr auto VALUES   = btreeindex::VALUES;
 	constexpr auto BRANCHES = btreeindex::BRANCHES;
 
+	size_type const nodes = mmapTree_.size() / sizeof(Node);
+
 	size_type bs_left  = 0;
 	size_type bs_right = getCount();
 
 	size_type pos = 0;
 
-	while(true){
+	while(pos < nodes){
 		// ---
 		const Node *node = (const Node *) mmapTree_.safeAccess(pos * sizeof(Node));
 
@@ -182,24 +184,6 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		}
 		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 
-
-		// check if node is half full
-
-		uint16_t const size_ = be16toh(node->size);
-
-		bool const leaf      = size_ <= VALUES;
-
-
-		if (leaf){
-			// leaf
-			// fallback to binary search :)
-
-			log__("BTREE LEAF:", pos);
-			log__("Fallback to binary search", bs_left, bs_right, "diff", bs_right - bs_left);
-
-			return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
-		}
-
 		if (needRight){ //node_index == size){
 			// Go Right
 			pos = pos * BRANCHES + VALUES + 1;
@@ -213,7 +197,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		}
 	}
 
-	// never go there
+
+	// leaf or similar
+	// fallback to binary search :)
+
+	log__("BTREE LEAF:", pos);
+	log__("Fallback to binary search", bs_left, bs_right, "diff", bs_right - bs_left);
+
+	return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
 }
 
 Pair DiskTable::get(const StringRef &key) const{

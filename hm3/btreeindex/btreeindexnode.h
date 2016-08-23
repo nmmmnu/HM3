@@ -26,13 +26,7 @@ struct NodeData{
 
 
 struct Node{
-	constexpr static uint16_t NON_LEAF	= VALUES + 1;
 	constexpr static uint64_t NIL		= (uint64_t) -1;
-
-	uint16_t	size;			// 2
-
-	uint8_t		pad_01_[6]	= { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA };
-						// 6 padding
 
 	uint64_t	values[VALUES];		// 8 * VALUES
 } __attribute__((__packed__));
