@@ -16,24 +16,22 @@ bool binarySearch(const ARRAY &list,
 
 		int const cmp = list.cmpAt(mid, key);
 
-		// not optimal way, but more clear
-		if (cmp == 0){
-			// found
-			// index = mid; return 0;
-			result = mid;
-			return true;
-		}
-
 		if (cmp < 0){
 			// go right
 			start = mid + 1;
 
 			// scatter code would go here.
 			// but it have negative effect.
-		}else{
+		}else if (cmp > 0){
 			// go left
 			end = mid;
+		}else{
+			// found
+			// index = mid; return 0;
+			result = mid;
+			return true;
 		}
+
 	}
 
 	// fallback to linear search...

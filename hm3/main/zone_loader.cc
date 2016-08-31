@@ -57,7 +57,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 			// add locator key
 
 			std::stringstream sskey;
-			sskey << date << ':' << domain;
+			sskey << 't' << ':' << date << ':' << domain;
 
 			list.put( { sskey.str(), "1" } );
 		}
@@ -66,7 +66,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 			// add ns key
 
 			std::stringstream sskey;
-			sskey << domain << ':' << date;
+			sskey << 'd' << ':' << domain << ':' << date;
 
 			if (parts.size() == 4){
 				const auto &ns = parts[3];

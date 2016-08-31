@@ -98,7 +98,11 @@ private:
 	static int __memcmp( const void *s1, const void *s2, size_t const n) noexcept;
 	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 
-	static size_t __std_min(size_t const a, size_t const b) noexcept;
+	template<typename T>
+	static T __std_min(const T a, const T b) noexcept;
+
+	template<typename T>
+	static int __sgn(const  T a) noexcept;
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -228,17 +232,13 @@ inline bool StringRef::operator !=(char const c) const noexcept{
 
 // ==================================
 
-inline int StringRef::__memcmp(const void *s1, const void *s2, size_t const n) noexcept{
-//	return __builtin_memcmp(s1, s2, n);
-	return memcmp(s1, s2, n);
-}
-
+#if 0
 inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
 	// check prefix
-	if ( int res = __memcmp(s1, s2, __std_min(size1, size2 ) ) )
+	if ( int const res = __memcmp(s1, s2, __std_min(size1, size2 ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
@@ -247,8 +247,33 @@ inline int StringRef::__compare(const char *s1, size_t const size1, const char *
 
 	return size1 < size2 ? -1 : +1;
 }
+#else
+template<typename T>
+int StringRef::__sgn(const T a) noexcept{
+	return (T(0) < a) - (a < T(0));
+}
+
+inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	if ( int const res = __memcmp(s1, s2, __std_min(size1, size2) ) )
+		return res; // most likely exit
+
+	// sgn helps convert size_t to int
+	return __sgn(size1 - size2);
+}
+#endif
 
 // ==================================
+
+// this apears to be faster than std::min because is by value
+template<typename T>
+inline T StringRef::__std_min(const T a, const T b) noexcept{
+	return a > b ? a : b;
+}
+
+inline int StringRef::__memcmp(const void *s1, const void *s2, size_t const n) noexcept{
+//	return __builtin_memcmp(s1, s2, n);
+	return memcmp(s1, s2, n);
+}
 
 inline size_t StringRef::__strlen(const char *s) noexcept{
 	return s ? strlen(s) : 0;
@@ -256,11 +281,6 @@ inline size_t StringRef::__strlen(const char *s) noexcept{
 
 inline const char *StringRef::__strptr(const char *s) noexcept{
 	return s ? s : "";
-}
-
-// this apears to be faster than std::min
-inline size_t StringRef::__std_min(size_t const a, size_t const b) noexcept{
-	return a > b ? a : b;
 }
 
 // ==================================
