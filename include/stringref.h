@@ -19,21 +19,21 @@ public:
 	// ==================================
 
 	const char *data() const noexcept{
-		return _data;
+		return data_;
 	}
 
 	size_t size() const noexcept{
-		return _size;
+		return size_;
 	}
 
 	// ==================================
 
 	const char *begin() const noexcept{
-		return _data;
+		return data_;
 	}
 
 	const char *end() const noexcept{
-		return _data + _size;
+		return data_ + size_;
 	}
 
 	// ==================================
@@ -90,22 +90,22 @@ public:
 	}
 
 private:
-	size_t		_size	= 0;
-	const char	*_data	= "";
+	size_t		size_	= 0;
+	const char	*data_	= "";
 
 private:
-	static size_t __strlen(const char *s) noexcept;
-	static const char *__strptr(const char *s) noexcept;
+	static size_t strlen__(const char *s) noexcept;
+	static const char *strptr__(const char *s) noexcept;
 
-	static int __memcmp( const void *s1, const void *s2, size_t const n) noexcept;
-	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
-	static bool __equals(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
-
-	template<typename T>
-	static T __std_min(const T a, const T b) noexcept;
+	static int memcmp__( const void *s1, const void *s2, size_t const n) noexcept;
+	static int compare__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
+	static bool equals__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 
 	template<typename T>
-	static int __sgn(const  T a) noexcept;
+	static T std_min__(const T a, const T b) noexcept;
+
+	template<typename T>
+	static int sgn__(const  T a) noexcept;
 };
 
 std::ostream& operator << (std::ostream& os, const StringRef &sr);
@@ -117,20 +117,20 @@ std::ostream& operator << (std::ostream& os, const StringRef &sr);
 
 
 inline StringRef::StringRef(const char *data, size_t const size) :
-		_size(size),
-		_data(__strptr(data)){}
+		size_(size),
+		data_(strptr__(data)){}
 
 inline StringRef::StringRef(const char *data) :
-		StringRef(data, __strlen(data)){}
+		StringRef(data, strlen__(data)){}
 
 inline StringRef::StringRef(const std::string &s) :
-		_size(s.size()),
-		_data(s.data()){}
+		size_(s.size()),
+		data_(s.data()){}
 
 // ==================================
 
 inline bool StringRef::empty() const noexcept{
-	return _size == 0;
+	return size_ == 0;
 }
 
 // ==================================
@@ -141,27 +141,27 @@ inline int StringRef::compare(const char *s1, size_t const size1, const char *s2
 			return 0;
 	}
 
-	return __compare(s1, size1, s2, size2);
+	return compare__(s1, size1, s2, size2);
 }
 
 // ==================================
 
 inline int StringRef::compare(const char *data, size_t const size) const noexcept{
 	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (_data == data && _size == size)
+		if (data_ == data && size_ == size)
 			return 0;
 	}
 
-	return __compare(_data, _size, data, size);
+	return compare__(data_, size_, data, size);
 }
 
 inline int StringRef::compare(const char *data) const noexcept{
-	return compare(data, __strlen(data) );
+	return compare(data, strlen__(data) );
 }
 
 inline int StringRef::compare(const std::string &s) const noexcept{
 	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (_data == s.data() && _size == s.size())
+		if (data_ == s.data() && size_ == s.size())
 			return 0;
 	}
 
@@ -170,7 +170,7 @@ inline int StringRef::compare(const std::string &s) const noexcept{
 
 inline int StringRef::compare(const StringRef &sr) const noexcept{
 	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (_data == sr.data() && _size == sr.size())
+		if (data_ == sr.data() && size_ == sr.size())
 			return 0;
 	}
 
@@ -180,21 +180,21 @@ inline int StringRef::compare(const StringRef &sr) const noexcept{
 // ==================================
 
 inline StringRef::operator std::string() const{
-	return std::string(_data, _size);
+	return std::string(data_, size_);
 }
 
 inline const char &StringRef::operator [] (size_t const index) const noexcept{
-	return _data[index];
+	return data_[index];
 }
 
 // ==================================
 
 inline bool StringRef::equals(const char *data, size_t const size) const noexcept{
-	return __equals(_data, _size, data, size);
+	return equals__(data_, size_, data, size);
 }
 
 inline bool StringRef::operator ==(const char *data) const noexcept{
-	return equals(data, __strlen(data) );
+	return equals(data, strlen__(data) );
 }
 
 inline bool StringRef::operator ==(const std::string &s) const noexcept{
@@ -206,7 +206,7 @@ inline bool StringRef::operator ==(const StringRef &sr) const noexcept{
 }
 
 inline bool StringRef::operator ==(char const c) const noexcept{
-	return _size == 1 && _data[0] == c;
+	return size_ == 1 && data_[0] == c;
 }
 
 // ==================================
@@ -230,12 +230,12 @@ inline bool StringRef::operator !=(char const c) const noexcept{
 // ==================================
 
 #if 0
-inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+inline int StringRef::compare__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
 	// check prefix
-	if ( int const res = __memcmp(s1, s2, __std_min(size1, size2 ) ) )
+	if ( int const res = memcmp__(s1, s2, std_min__(size1, size2 ) ) )
 		return res < 0 ? -1 : +1;
 
 	// prefixes match, so we only need to check the lengths.
@@ -246,43 +246,43 @@ inline int StringRef::__compare(const char *s1, size_t const size1, const char *
 }
 #else
 template<typename T>
-int StringRef::__sgn(const T a) noexcept{
+int StringRef::sgn__(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
 }
 
-inline int StringRef::__compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
-	if ( int const res = __memcmp(s1, s2, __std_min(size1, size2) ) )
+inline int StringRef::compare__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	if ( int const res = memcmp__(s1, s2, std_min__(size1, size2) ) )
 		return res; // most likely exit
 
 	// sgn helps convert size_t to int
-	return __sgn(size1 - size2);
+	return sgn__(size1 - size2);
 }
 #endif
 
-inline bool StringRef::__equals(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+inline bool StringRef::equals__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Idea based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
-	return size1 == size2 && __memcmp(s1, s2, size1) == 0;
+	return size1 == size2 && memcmp__(s1, s2, size1) == 0;
 }
 
 // ==================================
 
 // this apears to be faster than std::min because is by value
 template<typename T>
-inline T StringRef::__std_min(const T a, const T b) noexcept{
+inline T StringRef::std_min__(const T a, const T b) noexcept{
 	return a > b ? a : b;
 }
 
-inline int StringRef::__memcmp(const void *s1, const void *s2, size_t const n) noexcept{
+inline int StringRef::memcmp__(const void *s1, const void *s2, size_t const n) noexcept{
 //	return __builtin_memcmp(s1, s2, n);
 	return memcmp(s1, s2, n);
 }
 
-inline size_t StringRef::__strlen(const char *s) noexcept{
+inline size_t StringRef::strlen__(const char *s) noexcept{
 	return s ? strlen(s) : 0;
 }
 
-inline const char *StringRef::__strptr(const char *s) noexcept{
+inline const char *StringRef::strptr__(const char *s) noexcept{
 	return s ? s : "";
 }
 
