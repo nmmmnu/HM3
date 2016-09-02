@@ -109,6 +109,7 @@ static void test_stringref(const char *module, const StringRef &sr){
 	PRINTF_TEST("data",		strcmp(sr.data(), hello) == 0		);
 	PRINTF_TEST("data",		strcmp(sr.c_str(), hello) == 0		);
 
+	PRINTF_TEST("cmp char * MO",	sr.compare("bello") != 0		);
 	PRINTF_TEST("cmp char *",	sr.compare(hello) == 0			);
 	PRINTF_TEST("cmp char []",	sr.compare(hello_c) == 0		);
 	PRINTF_TEST("cmp string",	sr.compare(std::string(hello)) == 0	);
@@ -121,6 +122,8 @@ static void test_stringref(const char *module, const StringRef &sr){
 	PRINTF_TEST("== char []",	sr == hello_c				);
 	PRINTF_TEST("== string",	sr == std::string(hello)		);
 	PRINTF_TEST("== StringRef",	sr == StringRef(hello)			);
+
+	PRINTF_TEST("eq char *",	sr.equals(hello, strlen(hello))		);
 
 	PRINTF_TEST("|= char *",	sr != bla				);
 	PRINTF_TEST("!= char []",	sr != bla_c				);

@@ -146,16 +146,6 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				int const cmp = keyx.compare(key);
 
-				// not optimal way, but more clear
-				if (cmp == 0){
-					// found
-
-					log__("\t F: POS:", node_pos);
-
-					result = dataid;
-					return true;
-				}
-
 				if (cmp < 0){
 					// this + 1 is because the element is checked already
 					// see standard binary search implementation.
@@ -168,7 +158,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					bs_left = dataid;
 
 					log__("\t R:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
-				}else{
+				}else if (cmp > 0){
 					node_index = ll[node_pos];
 
 					// go left
@@ -179,6 +169,13 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					needRight = false;
 
 					log__("\t L:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+				}else{
+					// found
+
+					log__("\t F: POS:", node_pos);
+
+					result = dataid;
+					return true;
 				}
 			}
 		}

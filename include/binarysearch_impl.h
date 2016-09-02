@@ -14,7 +14,7 @@ bool binarySearch(const ARRAY &list,
 	//	SIZE mid = start + ((end - start) /  2);
 		SIZE mid = SIZE(start + ((end - start) >> 1)); // 4% faster
 
-		int const cmp = list.cmpAt(mid, key);
+		int const cmp = comp(list, mid, key); //list.cmpAt(mid, key);
 
 		if (cmp < 0){
 			// go right
@@ -36,7 +36,7 @@ bool binarySearch(const ARRAY &list,
 
 	// fallback to linear search...
 	for(; start < end; ++start){
-		int const cmp = list.cmpAt(start, key);
+		int const cmp = comp(list, start, key); //list.cmpAt(start, key);
 
 		if (cmp == 0){
 			// found

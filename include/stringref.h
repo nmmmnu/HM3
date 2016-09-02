@@ -42,7 +42,7 @@ public:
 
 	// ==================================
 
-	int compare(const char *data, size_t const size) const noexcept;
+	int compare(const char *data, size_t size) const noexcept;
 
 	int compare(const char *data) const noexcept;
 	int compare(const std::string &s) const noexcept;
@@ -55,6 +55,8 @@ public:
 	const char &operator [] (size_t index) const noexcept;
 
 	// ==================================
+
+	bool equals(const char *data, size_t size) const noexcept;
 
 	bool operator ==(const char *data) const noexcept;
 	bool operator ==(const std::string &data) const noexcept;
@@ -97,6 +99,7 @@ private:
 
 	static int __memcmp( const void *s1, const void *s2, size_t const n) noexcept;
 	static int __compare(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
+	static bool __equals(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 
 	template<typename T>
 	static T __std_min(const T a, const T b) noexcept;
@@ -153,16 +156,6 @@ inline int StringRef::compare(const char *data, size_t const size) const noexcep
 }
 
 inline int StringRef::compare(const char *data) const noexcept{
-	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (_data == data){
-			size_t const size = __strlen(data);
-			if (_size == size)
-				return 0;
-
-			return compare(data, size);
-		}
-	}
-
 	return compare(data, __strlen(data) );
 }
 
@@ -196,16 +189,20 @@ inline const char &StringRef::operator [] (size_t const index) const noexcept{
 
 // ==================================
 
+inline bool StringRef::equals(const char *data, size_t const size) const noexcept{
+	return __equals(_data, _size, data, size);
+}
+
 inline bool StringRef::operator ==(const char *data) const noexcept{
-	return compare(data) == 0;
+	return equals(data, __strlen(data) );
 }
 
-inline bool StringRef::operator ==(const std::string &data) const noexcept{
-	return compare(data) == 0;
+inline bool StringRef::operator ==(const std::string &s) const noexcept{
+	return equals(s.data(), s.size() );
 }
 
-inline bool StringRef::operator ==(const StringRef &data) const noexcept{
-	return compare(data) == 0;
+inline bool StringRef::operator ==(const StringRef &sr) const noexcept{
+	return equals(sr.data(), sr.size() );
 }
 
 inline bool StringRef::operator ==(char const c) const noexcept{
@@ -261,6 +258,12 @@ inline int StringRef::__compare(const char *s1, size_t const size1, const char *
 	return __sgn(size1 - size2);
 }
 #endif
+
+inline bool StringRef::__equals(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	// Idea based on LLVM::StringRef
+	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
+	return size1 == size2 && __memcmp(s1, s2, size1) == 0;
+}
 
 // ==================================
 
