@@ -1,3 +1,5 @@
+#include "sgn.h"
+
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
 				SIZE start, SIZE end,
@@ -51,5 +53,30 @@ bool binarySearch(const ARRAY &list,
 
 	result = start;
 	return false;
+}
+
+// ===================================
+
+template <class T>
+int binarySearchComparator(const T &a, const T &b){
+	if (a < b){
+		return -1;
+	}else if (a > b){
+		return +1;
+	}
+
+	return 0;
+}
+
+inline int binarySearchComparator(char const a, char const b){
+	return a - b;
+}
+
+inline int binarySearchComparator(int const a, int const b){
+	return a - b;
+}
+
+inline int binarySearchComparator(long int const a, long int const b){
+	return sgn(a - b);
 }
 

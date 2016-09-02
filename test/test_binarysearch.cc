@@ -1,5 +1,3 @@
-inline int binarySearchComparator(int const &a, int const &b);
-
 #include "binarysearch.h"
 
 #include <cstdio>
@@ -15,12 +13,6 @@ public:
 		return T(index);
 	}
 };
-
-
-inline int binarySearchComparator(int const &a, int const &b){
-	printf(".");
-	return a - b;
-}
 
 constexpr unsigned short MAX = 10000;
 
@@ -45,6 +37,7 @@ void test(const char *name){
 }
 
 int main(){
+	test<char>("char");
 	test<short>("short");
 	test<int>("int");
 	test<long>("long");

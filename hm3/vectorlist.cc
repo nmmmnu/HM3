@@ -161,7 +161,7 @@ bool VectorList::resize_(int const delta){
 		return true;
 	}
 
-	size_type const new_dataCount = dataCount_ + (size_type) sgn__(delta);
+	size_type const new_dataCount = dataCount_ + (size_type) sgn(delta);
 
 	if (new_dataCount == 0){
 		clear_(true);
@@ -196,21 +196,6 @@ auto VectorList::calcNewCount_(size_type const count) -> size_type{
 		++newsize;
 
 	return newsize * reallocCount_;
-}
-
-#if 0
-template<typename T>
-T VectorList::sgn__(const T a){
-	if (a == 0)
-		return 0;
-
-	return a > 0 ? 1 : -1;
-}
-#endif
-
-template<typename T>
-T VectorList::sgn__(const T a){
-	return (T(0) < a) - (a < T(0));
 }
 
 // ===================================

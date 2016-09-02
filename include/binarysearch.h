@@ -1,16 +1,12 @@
-#ifndef _BINARY_SEARCH_H
-#define _BINARY_SEARCH_H
+#ifndef BINARY_SEARCH_H_
+#define BINARY_SEARCH_H_
 
 template <class T>
-int binarySearchComparator(const T &a, const T &b){
-	if (a < b){
-		return -1;
-	}else if (a > b){
-		return +1;
-	}
+int binarySearchComparator(const T &a, const T &b);
 
-	return 0;
-}
+int binarySearchComparator(char a, char b);
+int binarySearchComparator(int a, int b);
+int binarySearchComparator(long int a, long int b);
 
 struct BinarySearchCompStdandard{
 	template <class ARRAY, class SIZE, class KEY>
@@ -37,6 +33,7 @@ bool binarySearch(const ARRAY &list,
 				const COMP &comp,
 				SIZE &result,
 				SIZE minimum_distance = 5);
+int binarySearchComparator(long int a, long int b);
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
