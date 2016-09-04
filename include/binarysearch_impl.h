@@ -1,4 +1,4 @@
-#include "sgn.h"
+#include "comparator.h"
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
@@ -57,26 +57,16 @@ bool binarySearch(const ARRAY &list,
 
 // ===================================
 
-template <class T>
-int binarySearchComparator(const T &a, const T &b){
-	if (a < b){
-		return -1;
-	}else if (a > b){
-		return +1;
+struct BinarySearchCompStdandard{
+	template <class ARRAY, class SIZE, class KEY>
+	int operator()(const ARRAY &list, SIZE const index, const KEY &key) const{
+		return comparator::comp(list[index], key);
 	}
+};
 
-	return 0;
-}
-
-inline int binarySearchComparator(char const a, char const b){
-	return a - b;
-}
-
-inline int binarySearchComparator(int const a, int const b){
-	return a - b;
-}
-
-inline int binarySearchComparator(long int const a, long int const b){
-	return sgn(a - b);
-}
-
+struct BinarySearchCompList{
+	template <class ARRAY, class SIZE, class KEY>
+	int operator()(const ARRAY &list, SIZE const index, const KEY &key) const{
+		return list.cmpAt(index, key);
+	}
+};
