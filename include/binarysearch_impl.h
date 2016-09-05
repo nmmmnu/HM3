@@ -70,3 +70,4 @@ struct BinarySearchCompList{
 		return list.cmpAt(index, key);
 	}
 };
+

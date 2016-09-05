@@ -11,7 +11,6 @@ bool binarySearch(const ARRAY &list,
 				const COMP &comp,
 				SIZE &result,
 				SIZE minimum_distance = 5);
-int binarySearchComparator(long int a, long int b);
 
 template <class ARRAY, class SIZE, class KEY, class COMP>
 bool binarySearch(const ARRAY &list,
