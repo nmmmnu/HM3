@@ -24,8 +24,15 @@ struct PairBlob{
 	// ==============================
 
 private:
-	static constexpr uint16_t MAX_KEY_SIZE = 0xffff;
-	static constexpr uint32_t MAX_VAL_SIZE = 0xffffffff;
+	static constexpr uint32_t MAX_SIZE     = 256 * 1024;
+
+	static constexpr uint16_t MAX_KEY_SIZE =   8 * 1024;
+	static constexpr uint32_t MAX_VAL_SIZE = MAX_SIZE
+						- MAX_KEY_SIZE
+						// key and value null terminators
+						- 1 - 1
+						// struct members
+						- 8 - 4 - 4 - 2 - 1;
 
 	static constexpr int      CMP_NULLKEY  = -1;
 
