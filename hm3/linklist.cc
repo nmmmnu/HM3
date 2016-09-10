@@ -150,8 +150,8 @@ void LinkList::clear_(){
 	head_ = nullptr;
 }
 
-LinkList::Node *LinkList::locate_(const StringRef &key, bool const exact) const{
-	for(Node *node = head_; node; node = node->next){
+const LinkList::Node *LinkList::locate_(const StringRef &key, bool const exact) const{
+	for(const Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
 
 		const int cmp = data.cmp(key);

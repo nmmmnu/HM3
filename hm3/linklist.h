@@ -58,7 +58,7 @@ private:
 private:
 	void clear_();
 
-	Node *locate_(const StringRef &key, bool exact) const;
+	const Node *locate_(const StringRef &key, bool exact) const;
 };
 
 // ==============================

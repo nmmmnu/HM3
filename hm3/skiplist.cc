@@ -1,7 +1,7 @@
 #include "skiplist.h"
 
 #include <stdexcept>
-
+#include <algorithm> // fill
 
 namespace hm3{
 
@@ -46,9 +46,6 @@ SkipList::SkipList(height_type height){
 		height = DEFAULT_HEIGHT;
 
 	height_ = height;
-	// LEAK POSSIBLE!!!
-	heads_ = new Node*[height];
-	loc_   = new Node*[height];
 
 	clear_();
 }
@@ -56,27 +53,16 @@ SkipList::SkipList(height_type height){
 SkipList::SkipList(SkipList &&other):
 		height_		(std::move(other.height_	)),
 		heads_		(std::move(other.heads_		)),
-		loc_		(std::move(other.loc_		)),
 		dataCount_	(std::move(other.dataCount_	)),
 		dataSize_	(std::move(other.dataSize_	)){
-	other.heads_ = nullptr;
-	other.loc_ = nullptr;
-
 	other.clear_();
 }
 
 SkipList::~SkipList(){
 	removeAll();
-
-	delete[] heads_;
-	delete[] loc_;
 }
 
 bool SkipList::removeAll(){
-	// _heads may be nullptr, when move constructor is on the way...
-	if (heads_ == nullptr)
-		return true;
-
 	for(const Node *node = heads_[0]; node; ){
 		const Node *copy = node;
 
@@ -97,12 +83,12 @@ bool SkipList::putT_(UPAIR&& newdata){
 	if (key.empty())
 		return true;
 
-	Node *node = (Node *) locate_(key);
+	const auto nl = locate_(key);
 
-	if (node){
+	if (nl.node){
 		// update in place. node MUST be not NULL...
 
-		Pair & olddata = node->data;
+		const Pair & olddata = nl.node->data;
 
 		// check if the data in database is valid
 		if (! newdata.valid(olddata) ){
@@ -115,7 +101,7 @@ bool SkipList::putT_(UPAIR&& newdata){
 			+ newdata.getMemSize();
 
 		// copy assignment
-		olddata = std::forward<UPAIR>(newdata);
+		const_cast<Pair &>(olddata) = std::forward<UPAIR>(newdata);
 
 		return true;
 	}
@@ -138,12 +124,12 @@ bool SkipList::putT_(UPAIR&& newdata){
 	// place new node where it belongs
 
 	for(height_type i = 0; i < height; ++i){
-		if (loc_[i]){
+		if (nl.loc[i]){
 			// we are at the middle
-			Node *node = loc_[i];
+			const Node *node = nl.loc[i];
 
 			newnode->next[i] = node->next[i];
-			node->next[i] = newnode;
+			const_cast<Node *>(node)->next[i] = newnode;
 		}else{
 			newnode->next[i] = heads_[i];
 			heads_[i] = newnode;
@@ -173,21 +159,21 @@ const Pair &SkipList::get(const StringRef &key) const{
 	if (key.empty())
 		return Pair::zero();
 
-	const Node *node = locate_(key);
+	const auto nl = locate_(key);
 
-	return node ? node->data : Pair::zero();
+	return nl.node ? nl.node->data : Pair::zero();
 }
 
 SkipList::Iterator SkipList::lowerBound(const StringRef &key) const{
 	if (key.empty())
 		return end();
 
-	const Node *node = locate_(key);
+	const auto nl = locate_(key);
 
-	if (node)
-		return Iterator(node);
+	if (nl.node)
+		return Iterator(nl.node);
 
-	const Node *prev = loc_[0];
+	const Node *prev = nl.loc[0];
 
 	if (prev)
 		return Iterator(prev->next[0]);
@@ -199,31 +185,31 @@ bool SkipList::remove(const StringRef &key){
 	if (key.empty())
 		return true;
 
-	const Node *node = locate_(key, true);
+	const auto nl = locate_(key, true);
 
-	if (node == nullptr)
+	if (nl.node == nullptr)
 		return true;
 
 	for(height_type i = 0; i < height_; ++i){
-		Node *prev = loc_[i];
+		const Node *prev = nl.loc[i];
 
 		if (prev){
 			// check if lane go to this node...
-			if (prev->next[i] == node)
-				prev->next[i] = node->next[i];
+			if (prev->next[i] == nl.node)
+				const_cast<Node *>(prev)->next[i] = nl.node->next[i];
 		}else{
 			// must be first
-			if (heads_[i] == node)
-				heads_[i] = node->next[i];
+			if (heads_[i] == nl.node)
+				heads_[i] = nl.node->next[i];
 		}
 	}
 
-	const Pair & data = node->data;
+	const Pair & data = nl.node->data;
 
 	dataSize_ -= data.getMemSize();
 	dataCount_--;
 
-	delete node;
+	delete nl.node;
 
 	return true;
 }
@@ -255,20 +241,17 @@ void SkipList::clear_(){
 	dataSize_ = 0;
 	dataCount_ = 0;
 
-	if (heads_)
-		memset(heads_, 0, height_ * sizeof(Node *) );
-
-	// no need to clean _loc
-	//if (_loc)
-	//	memset(_loc, 0, _height * sizeof(Node *) );
+	std::fill(heads_.begin(), heads_.end(), nullptr);
 }
 
-const SkipList::Node *SkipList::locate_(const StringRef &key, bool const complete_evaluation) const{
+auto SkipList::locate_(const StringRef &key, bool const complete_evaluation) const -> NodeLocator{
 	// it is extremly dangerous to have key == nullptr here.
 	if (key.empty()){
 		std::logic_error exception("Key can not be nullptr in SkipList::_locate");
 		throw exception;
 	}
+
+	NodeArrayC loc;
 
 	// smart over-optimizations, such skip NULL lanes or
 	// start from the middle of the list did not pay off.
@@ -295,14 +278,14 @@ const SkipList::Node *SkipList::locate_(const StringRef &key, bool const complet
 
 
 		if (complete_evaluation == false && cmp == 0)
-			return node;
+			return { node, loc };
 
-		loc_[height - 1] = (Node *) prev;
+		loc[height - 1] = prev;
 
 		--height;
 	}
 
-	return cmp ? nullptr : node;
+	return { cmp ? nullptr : node , loc };
 }
 
 auto SkipList::_getRandomHeight() -> height_type{

@@ -5,6 +5,7 @@
 #include "iiterator.h"
 
 #include <random>
+#include <array>
 
 
 namespace hm3{
@@ -57,10 +58,16 @@ public:
 
 private:
 	struct		Node;
+	using		NodeArray	= std::array<Node *, MAX_HEIGHT>;
+	using		NodeArrayC	= std::array<const Node *, MAX_HEIGHT>;
+
+	struct		NodeLocator{
+				const Node *node;
+				NodeArrayC loc;
+			};
 
 	height_type	height_;
-	Node		**heads_;
-	Node		**loc_;
+	NodeArray	heads_;
 
 	size_type	dataCount_;
 	size_t		dataSize_;
@@ -68,7 +75,7 @@ private:
 private:
 	void clear_();
 
-	const Node *locate_(const StringRef &key, bool complete_evaluation = false) const;
+	NodeLocator locate_(const StringRef &key, bool complete_evaluation = false) const;
 
 	height_type _getRandomHeight();
 
