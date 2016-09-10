@@ -3,12 +3,14 @@
 
 #include "sgn.h"
 
-//#include <cstdio>
+#define log__(...)
+//#include "logger.h"
 
 namespace comparator{
 
 template <class T>
 int comp(const T &a, const T &b){
+	log__("all");
 	if (a < b)
 		return -1;
 
@@ -19,12 +21,12 @@ int comp(const T &a, const T &b){
 }
 
 inline int comp(int const a, int const b){
-//	printf("i");
+	log__("int");
 	return a - b;
 }
 
 inline int comp(long int const a, long int const b){
-//	printf("l");
+	log__("long");
 	return sgn(a - b);
 }
 

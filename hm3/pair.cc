@@ -7,7 +7,7 @@ namespace hm3{
 
 // ==============================
 
-Pair Pair::zero_ = {};
+const Pair Pair::zero_ = {};
 
 // ==============================
 
@@ -17,22 +17,20 @@ Pair &Pair::operator=(Pair &&other) = default;
 
 // ==============================
 
-Pair::Pair(const StringRef &key, const StringRef &val, uint32_t const expires, uint32_t const created){
-	pimpl = Blob::create(	key.data(), key.size(),
+Pair::Pair(const StringRef &key, const StringRef &val, uint32_t const expires, uint32_t const created):
+	pimpl(
+		Blob::create(	key.data(), key.size(),
 				val.data(), val.size(),
-				expires, created);
-}
+				expires, created)
+	){}
 
-Pair::Pair(const Blob *blob){
-	if (blob == nullptr)
-		return;
-
-	pimpl = Blob::create(blob);
-}
+Pair::Pair(const Blob *blob) :
+	pimpl(
+		Blob::create(blob)
+	){}
 
 Pair::Pair(const Pair &other) :
-	Pair(other.pimpl.get()){
-}
+	Pair(other.pimpl.get()){}
 
 Pair &Pair::operator=(const Pair &other){
 	Pair pair = Pair(other);

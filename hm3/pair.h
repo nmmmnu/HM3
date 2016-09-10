@@ -100,7 +100,7 @@ private:
 	std::unique_ptr<Blob>	pimpl;
 
 private:
-	static Pair		zero_;
+	static const Pair		zero_;
 };
 
 // ==============================
