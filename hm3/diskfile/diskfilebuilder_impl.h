@@ -73,7 +73,7 @@ bool DiskFileBuilder::_writeIteratorToFile(const ITERATOR &begin, const ITERATOR
 		// write the data
 		pair.fwrite(file_data);
 
-		current += pair.getMemSize();
+		current += pair.getBytes();
 		++datacount;
 
 	//	pair.print();

@@ -60,7 +60,7 @@ static void listLoad(LIST &list, const StringRef &filename, bool const tombstone
 		++i;
 
 		if (i % ( PROCESS_STEP ) == 0){
-			printf("Processed %10u records, %10zu bytes...\n", i, list.getMemSize() );
+			printf("Processed %10u records, %10zu bytes...\n", i, list.getBytes() );
 		}
 	}
 }

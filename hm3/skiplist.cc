@@ -97,8 +97,8 @@ bool SkipList::putT_(UPAIR&& newdata){
 		}
 
 		dataSize_ = dataSize_
-			- olddata.getMemSize()
-			+ newdata.getMemSize();
+			- olddata.getBytes()
+			+ newdata.getBytes();
 
 		// copy assignment
 		const_cast<Pair &>(olddata) = std::forward<UPAIR>(newdata);
@@ -108,7 +108,7 @@ bool SkipList::putT_(UPAIR&& newdata){
 
 	// create new node
 
-	size_t const size = newdata.getMemSize();
+	size_t const size = newdata.getBytes();
 	height_type const height = _getRandomHeight();
 
 	Node *newnode = new(height, true) Node(std::forward<UPAIR>(newdata));
@@ -206,7 +206,7 @@ bool SkipList::remove(const StringRef &key){
 
 	const Pair & data = nl.node->data;
 
-	dataSize_ -= data.getMemSize();
+	dataSize_ -= data.getBytes();
 	dataCount_--;
 
 	delete nl.node;

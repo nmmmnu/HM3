@@ -49,7 +49,7 @@ public:
 		return dataCount_;
 	}
 
-	size_t getMemSize() const{
+	size_t getBytes() const{
 		return dataSize_;
 	}
 

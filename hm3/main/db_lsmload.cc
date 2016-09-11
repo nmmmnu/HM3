@@ -61,7 +61,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 			printf("Processed %10" PRIu64 " records, In memory %10" PRIu64 " records, %10zu bytes...\n",
 						i,
 						list.getList().getCount(),
-						list.getList().getMemSize() );
+						list.getList().getBytes() );
 		}
 	}
 

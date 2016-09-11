@@ -39,7 +39,7 @@ public:
 		return estimated ? getCountEstimated() : getCountReal();
 	}
 
-	size_t getMemSize() const;
+	size_t getBytes() const;
 
 private:
 	size_type getCountEstimated() const;

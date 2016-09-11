@@ -53,7 +53,7 @@ public:
 		return container_.size();
 	}
 
-	size_t getMemSize() const{
+	size_t getBytes() const{
 		return dataSize_;
 	}
 

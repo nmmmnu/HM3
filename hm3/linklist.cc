@@ -64,8 +64,8 @@ bool LinkList::putT_(UPAIR&& newdata){
 			}
 
 			dataSize_ = dataSize_
-					- olddata.getMemSize()
-					+ newdata.getMemSize();
+					- olddata.getBytes()
+					+ newdata.getBytes();
 
 			// copy assignment
 			olddata = std::forward<UPAIR>(newdata);
@@ -79,7 +79,7 @@ bool LinkList::putT_(UPAIR&& newdata){
 		prev = node;
 	}
 
-	size_t const size = newdata.getMemSize();
+	size_t const size = newdata.getBytes();
 
 	Node *newnode = new(std::nothrow) Node(std::forward<UPAIR>(newdata));
 	if (newnode == nullptr){
@@ -126,7 +126,7 @@ bool LinkList::remove(const StringRef &key){
 				head_ = node->next;
 			}
 
-			dataSize_ -= data.getMemSize();
+			dataSize_ -= data.getBytes();
 			dataCount_--;
 
 			delete node;

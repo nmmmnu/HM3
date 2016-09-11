@@ -56,7 +56,7 @@ public:
 		return (size_type) header_.getCount();
 	}
 
-	size_t getMemSize() const{
+	size_t getBytes() const{
 		return mmapData_.size();
 	}
 

@@ -36,7 +36,7 @@ public:
 	bool remove(const StringRef &key);
 
 	size_type getCount(bool const estimated = false) const noexcept;
-	size_t getMemSize() const noexcept;
+	size_t getBytes() const noexcept;
 
 private:
 	friend class IMutableList<HashList<CONTAINER> >;

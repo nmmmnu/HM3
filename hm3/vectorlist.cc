@@ -34,7 +34,7 @@ bool VectorList::removeAll(){
 }
 
 inline bool VectorList::binarySearch_(const StringRef &key, size_type &result) const{
-	return binarySearch(*this, getMemSize(), key, BinarySearchCompList{}, result);
+	return binarySearch(*this, getBytes(), key, BinarySearchCompList{}, result);
 }
 
 const Pair &VectorList::get(const StringRef &key) const{
@@ -69,8 +69,8 @@ bool VectorList::putT_(UPAIR&& newdata){
 		}
 
 		dataSize_ = dataSize_
-					- olddata.getMemSize()
-					+ newdata.getMemSize();
+					- olddata.getBytes()
+					+ newdata.getBytes();
 
 		// copy assignment
 		olddata = std::forward<UPAIR>(newdata);
@@ -83,7 +83,7 @@ bool VectorList::putT_(UPAIR&& newdata){
 		return false;
 	}
 
-	dataSize_ += newdata.getMemSize();
+	dataSize_ += newdata.getBytes();
 
 	// placement new with copy constructor
 	void *placement = & buffer_[ result ];
@@ -103,7 +103,7 @@ bool VectorList::remove(const StringRef &key){
 
 	// proceed with remove
 	Pair & data = buffer_[result];
-	dataSize_ -= data.getMemSize();
+	dataSize_ -= data.getBytes();
 	data.~Pair();
 
 	shiftL_(result);

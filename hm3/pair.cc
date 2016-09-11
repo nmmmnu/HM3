@@ -95,9 +95,9 @@ bool Pair::valid(bool const tombstoneCheck) const noexcept{
 		false;
 }
 
-size_t Pair::getMemSize() const noexcept{
+size_t Pair::getBytes() const noexcept{
 	return pimpl ?
-		pimpl->getMemSize() :
+		pimpl->getBytes() :
 		0;
 }
 
@@ -114,7 +114,7 @@ bool Pair::fwrite(std::ostream & os) const{
 	if (pimpl == nullptr)
 		return false;
 
-	os.write((const char *) pimpl.get(), (std::streamsize) getMemSize() );
+	os.write((const char *) pimpl.get(), (std::streamsize) getBytes() );
 
 	return true;
 }

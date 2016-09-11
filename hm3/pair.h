@@ -71,7 +71,7 @@ public:
 		return valid(tombstoneCheck);
 	}
 
-	size_t getMemSize() const noexcept;
+	size_t getBytes() const noexcept;
 
 public:
 	bool fwrite(std::ostream & os) const;

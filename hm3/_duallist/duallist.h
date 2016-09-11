@@ -38,8 +38,8 @@ public:
 		return putT_( Pair::tombstone(key) );
 	}
 
-	size_t getMemSize() const{
-		return memlist_.getMemSize();
+	size_t getBytes() const{
+		return memlist_.getBytes();
 	}
 
 public:

@@ -37,7 +37,7 @@ public:
 	}
 
 	constexpr
-	size_t getMemSize() const noexcept{
+	size_t getBytes() const noexcept{
 		return 0;
 	}
 

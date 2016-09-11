@@ -263,7 +263,7 @@ const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 
 const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blob, size_t size) const{
 	if (size == 0)
-		size = blob->getMemSize();
+		size = blob->getBytes();
 
 	const char *blobc = (const char *) blob;
 
@@ -285,7 +285,7 @@ const Pair &DiskTable::Iterator::operator*() const{
 	if (useFastForward_ && tmp_pod && tmp_pos == pos_ - 1){
 		// get data without seek, walk forward
 		// this gives 50% performance
-		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getMemSize() );
+		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getBytes() );
 	}else{
 		// get data via seek
 		tmp_pod = list_.getAtFromDisk_(pos_);

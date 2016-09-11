@@ -36,8 +36,8 @@ public:
 //		return _table1.getCount() + _table2.getCount();
 //	}
 
-//	size_t getMemSize() const{
-//		return table1_.getMemSize() + table2_.getMemSize();
+//	size_t getBytes() const{
+//		return table1_.getBytes() + table2_.getBytes();
 //	}
 
 public:

@@ -5,7 +5,7 @@
 namespace hm3{
 
 inline bool STLVectorList::binarySearch_(const StringRef &key, size_type &result) const{
-	return binarySearch(*this, getMemSize(), key, BinarySearchCompList{}, result);
+	return binarySearch(*this, getBytes(), key, BinarySearchCompList{}, result);
 }
 
 const Pair &STLVectorList::get(const StringRef &key) const{
@@ -41,8 +41,8 @@ bool STLVectorList::putT_(UPAIR&& newdata){
 		}
 
 		dataSize_ = dataSize_
-					- olddata.getMemSize()
-					+ newdata.getMemSize();
+					- olddata.getBytes()
+					+ newdata.getBytes();
 
 		// copy assignment
 		olddata = std::forward<UPAIR>(newdata);
@@ -51,7 +51,7 @@ bool STLVectorList::putT_(UPAIR&& newdata){
 	}
 
 	// key not exists
-	dataSize_ += newdata.getMemSize();
+	dataSize_ += newdata.getBytes();
 
 	try{
 		if (result == container_.size()){
@@ -80,7 +80,7 @@ bool STLVectorList::remove(const StringRef &key){
 
 	// Fix size
 	Pair & data = container_[ result ];
-	dataSize_ -= data.getMemSize();
+	dataSize_ -= data.getBytes();
 
 	// This is slow, might shiftL
 	auto ptr = container_.begin() + (difference_type) result;

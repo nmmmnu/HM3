@@ -67,7 +67,7 @@ std::unique_ptr<PairBlob> PairBlob::create(const PairBlob *src){
 	if (src == nullptr)
 		return {};
 
-	size_t const size = src->getMemSize();
+	size_t const size = src->getBytes();
 
 	std::unique_ptr<PairBlob> pair{ new(size, false) PairBlob };
 

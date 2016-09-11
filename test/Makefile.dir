@@ -3,13 +3,14 @@ SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 #EXTRA_INCL += -I$(SRC_DIR)
 
 EXTRA_CLEAN += $(A)test_checkedvalue $(A)test_stringref			\
+		$(A)test_blobref					\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
 		$(A)test_binarysearch
 
 include Makefile.sub
 
-all: $(A)test_checkedvalue $(A)test_stringref				\
+all: $(A)test_checkedvalue $(A)test_stringref $(A)test_blobref		\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
 		$(A)test_binarysearch
@@ -18,6 +19,9 @@ $(A)test_checkedvalue: $(O)test_checkedvalue.o
 	$(LINK)
 
 $(A)test_stringref: $(O)test_stringref.o
+	$(LINK)
+
+$(A)test_blobref: $(O)test_blobref.o
 	$(LINK)
 
 $(A)test_glob: $(O)test_glob.o $(O)myglob.o
