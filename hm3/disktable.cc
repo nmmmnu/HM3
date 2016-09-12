@@ -49,18 +49,17 @@ bool DiskTable::open(const std::string &filename){
 }
 
 void DiskTable::close(){
-	mmapIndx_.close();
-	mmapData_.close();
-
-	mmapTree_.close();
-	mmapKeys_.close();
-
 	blobIndx_.reset();
 	blobData_.reset();
 
 	blobTree_.reset();
 	blobKeys_.reset();
 
+	mmapIndx_.close();
+	mmapData_.close();
+
+	mmapTree_.close();
+	mmapKeys_.close();
 }
 
 inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
