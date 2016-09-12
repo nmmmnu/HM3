@@ -56,3 +56,35 @@ void MMAPFile::close(){
 	size_ = 0;
 }
 
+#if 0
+
+	// Old API
+
+	const void *safeAccess(size_t const offset) const{
+		if (mem_ == nullptr || offset >= size_)
+			return nullptr;
+
+		const char *memc = (const char *) mem_;
+
+		return & memc[offset];
+	}
+
+	const void *safeAccess(const void *ptr) const{
+		const char *ptrc = (const char *)  ptr;
+		const char *memc = (const char *) mem_;
+
+		if (ptrc < memc)
+			return nullptr;
+
+		/*
+		// old version, this is wrong:
+		return safeAccess(ptrc - (size_t) memc);
+		*/
+
+		/* long int */ auto const offset = ptrc - memc;
+
+		return safeAccess( (size_t) offset);
+	}
+
+#endif
+

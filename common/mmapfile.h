@@ -28,32 +28,6 @@ public:
 		return mem_;
 	}
 
-	const void *safeAccess(size_t const offset) const{
-		if (mem_ == nullptr || offset >= size_)
-			return nullptr;
-
-		const char *memc = (const char *) mem_;
-
-		return & memc[offset];
-	}
-
-	const void *safeAccess(const void *ptr) const{
-		const char *ptrc = (const char *)  ptr;
-		const char *memc = (const char *) mem_;
-
-		if (ptrc < memc)
-			return nullptr;
-
-		/*
-		// old version, this is wrong:
-		return safeAccess(ptrc - (size_t) memc);
-		*/
-
-		/* long int */ auto const offset = ptrc - memc;
-
-		return safeAccess( (size_t) offset);
-	}
-
 	size_t size() const{
 		return size_;
 	}
@@ -68,4 +42,5 @@ private:
 };
 
 #endif
+
 

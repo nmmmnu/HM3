@@ -23,6 +23,9 @@ namespace hm3{
 
 const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_ll;
 
+inline BlobRef DiskTable::mmap2blob__(const MMAPFile &m){
+	return { m.mem(), m.size() };
+}
 
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
@@ -36,6 +39,12 @@ bool DiskTable::open(const std::string &filename){
 	mmapTree_.open(btreeindex::filenameIndx(filename));
 	mmapKeys_.open(btreeindex::filenameData(filename));
 
+	blobIndx_ =  mmap2blob__(mmapIndx_);
+	blobData_ =  mmap2blob__(mmapData_);
+
+	blobTree_ =  mmap2blob__(mmapTree_);
+	blobKeys_ =  mmap2blob__(mmapKeys_);
+
 	return true;
 }
 
@@ -45,6 +54,13 @@ void DiskTable::close(){
 
 	mmapTree_.close();
 	mmapKeys_.close();
+
+	blobIndx_.reset();
+	blobData_.reset();
+
+	blobTree_.reset();
+	blobKeys_.reset();
+
 }
 
 inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
@@ -71,23 +87,24 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	constexpr auto VALUES   = btreeindex::VALUES;
 	constexpr auto BRANCHES = btreeindex::BRANCHES;
 
-	size_type const nodes = mmapTree_.size() / sizeof(Node);
+	size_type const nodesCount = mmapTree_.size() / sizeof(Node);
+
+	const Node *nodes = blobTree_.as<const Node>(0, nodesCount);
+
+	if (!nodes){
+		// go try with binary search
+		log__("Problem, switch to binary search");
+		return binarySearch_(key, result);
+	}
+
 
 	size_type bs_left  = 0;
 	size_type bs_right = getCount();
 
 	size_type pos = 0;
 
-	while(pos < nodes){
-		// ---
-		const Node *node = (const Node *) mmapTree_.safeAccess(pos * sizeof(Node));
-
-		if (!node){
-			// go try with binary search
-			log__("Problem, switch to binary search");
-			return binarySearch_(key, result);
-		}
-		// ---
+	while(pos < nodesCount){
+		const Node &node = nodes[pos];
 
 		branch_type node_index;
 		bool needRight = true;
@@ -104,7 +121,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				// ACCESS ELEMENT
 				// ---
-				const uint64_t offset = be64toh(node->values[ node_pos ]);
+				const uint64_t offset = be64toh(node.values[ node_pos ]);
 
 				if (offset == Node::NIL){
 					// special case go left
@@ -125,7 +142,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					continue;
 				}
 
-				const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
+				const NodeData *nd = blobKeys_.as<const NodeData>(offset);
 
 				if (!nd){
 					// go try with binary search
@@ -136,7 +153,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				const uint16_t keysize = be16toh(nd->keysize);
 				const uint64_t dataid  = be64toh(nd->dataid);
 
-				const char *keyptr = (const char *) nd + sizeof(NodeData);
+				// key is just after the NodeData
+				const char *keyptr = blobKeys_.as<const char>( offset + sizeof(NodeData), keysize);
+
+				if (!keyptr){
+					// go try with binary search
+					log__("Problem, switch to binary search");
+					return binarySearch_(key, result);
+				}
 
 				const StringRef keyx{ keyptr, keysize };
 				// ---
@@ -249,26 +273,43 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 #endif
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
-	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
+	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, getCount());
 
-	if (ptr_be){
-		size_t const offset = (size_t) be64toh( *ptr_be );
+	if (!ptrs_be)
+		return nullptr;
 
-		const PairBlob *blob = (const PairBlob *) mmapData_.safeAccess( offset );
+	const uint64_t ptr_be = ptrs_be[index];
+
+	size_t const offset = (size_t) be64toh( ptr_be );
+
+	// here unfortunately, we overrun the buffer, since PairBlob is variable size...
+	const PairBlob *blob = blobData_.as<const PairBlob>(offset);
+
+	// so we check overrun here...
+	bool const overrun = nullptr == blobData_.safeAccessMemory(offset, blob->getBytes());
+
+	if ( blob && !overrun)
 		return validateFromDisk_(blob);
-	}
 
 	return nullptr;
 }
 
-const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blob, size_t size) const{
+const PairBlob *DiskTable::getNextFromDisk_(const PairBlob *blobPrevious, size_t size) const{
 	if (size == 0)
-		size = blob->getBytes();
+		size = blobPrevious->getBytes();
 
-	const char *blobc = (const char *) blob;
+	const char *blobc = (const char *) blobPrevious;
 
-	const PairBlob *blobNext = (const PairBlob *) mmapData_.safeAccess( blobc + size );
-	return validateFromDisk_(blobNext);
+	// here unfortunately, we overrun the buffer, since PairBlob is variable size...
+	const PairBlob *blob = blobData_.as<const PairBlob>(blobc + size);
+
+	// so we check overrun here...
+	bool const overrun = nullptr == blobData_.safeAccessMemory(blob, blob->getBytes());
+
+	if ( blob && !overrun)
+		return validateFromDisk_(blob);
+
+	return nullptr;
 }
 
 // ===================================
@@ -300,123 +341,4 @@ const Pair &DiskTable::Iterator::operator*() const{
 
 
 } // namespace
-
-
-
-
-
-#if 0
-
-		for(branch_type i = 0; i < size; ++i){
-			// ---
-			const uint64_t offset = be64toh(node->values[i]);
-
-			const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
-
-			if (!nd){
-				// go try with binary search
-				log__("Problem, switch to binary search\n");
-				return binarySearch_(key, result);
-			}
-
-			const uint16_t keysize = be16toh(nd->keysize);
-			const uint64_t dataid  = be64toh(nd->dataid);
-
-			const char *keyptr = (const char *) nd + sizeof(NodeData);
-
-			const StringRef keyx{ keyptr, keysize };
-			// ---
-
-			int const cmp = key.compare(keyx);
-
-			if (cmp == 0){
-			//	printf("Found\n");
-				result = be64toh(nd->dataid);
-				return true;
-			}
-
-			if (cmp < 0){
-				pos = pos * BRANCHES + i + 1;
-			//	printf("L -> %zu %u\n", pos, i);
-
-				bs_right = dataid;
-
-				needGoRight = false;
-				break;
-			}
-
-			bs_left = dataid;
-		}
-
-
-
-		// MODIFIED MINI-BINARY SEARCH
-		{
-			/*
-			 * Lazy based from Linux kernel...
-			 * http://lxr.free-electrons.com/source/lib/bsearch.c
-			 */
-
-			branch_type start = 0;
-			branch_type end   = size;
-
-			while (start < end){
-			//	branch_type mid = start + ((end - start) /  2);
-				branch_type mid = branch_type(start + ((end - start) >> 1)); // 4% faster
-
-
-				// ACCESS ELEMENT
-				// ---
-				const uint64_t offset = be64toh(node->values[ mid ]);
-
-				const NodeData *nd = (const NodeData *) mmapKeys_.safeAccess((size_t) offset);
-
-				if (!nd){
-					// go try with binary search
-					log__("Problem, switch to binary search");
-					return binarySearch_(key, result);
-				}
-
-				const uint16_t keysize = be16toh(nd->keysize);
-				const uint64_t dataid  = be64toh(nd->dataid);
-
-				const char *keyptr = (const char *) nd + sizeof(NodeData);
-
-				const StringRef keyx{ keyptr, keysize };
-				// ---
-				// EO ACCESS ELEMENT
-
-				int const cmp = keyx.compare(key);
-
-				// not optimal way, but more clear
-				if (cmp == 0){
-					// found
-
-					log__("node F: POS:", mid);
-
-					result = dataid;
-					return true;
-				}
-
-				if (cmp < 0){
-					// go right
-					start = branch_type(mid + 1);
-
-					bs_left = dataid;
-
-					log__("node R:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
-				}else{
-					// go left
-					end = mid;
-
-					bs_right = dataid;
-
-					log__("node L:", start, end, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
-				}
-			}
-
-			node_index = start;
-		}
-		// EO MODIFIED BINARY SEARCH
-#endif
 

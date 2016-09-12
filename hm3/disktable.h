@@ -3,6 +3,7 @@
 
 #include "diskfile/diskfileheader.h"
 #include "mmapfile.h"
+#include "blobref.h"
 
 #include "ilist.h"
 
@@ -85,6 +86,9 @@ private:
 	bool search_(const StringRef &key, size_type &result) const;
 
 private:
+	static BlobRef mmap2blob__(const MMAPFile &m);
+
+private:
 	diskfile::DiskFileHeader	header_;
 	MMAPFile			mmapIndx_;
 	MMAPFile			mmapData_;
@@ -94,6 +98,11 @@ private:
 
 	bool				validate_;
 
+	BlobRef				blobIndx_;
+	BlobRef				blobData_;
+
+	BlobRef				blobTree_;
+	BlobRef				blobKeys_;
 };
 
 // ===================================
