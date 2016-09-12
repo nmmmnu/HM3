@@ -86,7 +86,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	constexpr auto VALUES   = btreeindex::VALUES;
 	constexpr auto BRANCHES = btreeindex::BRANCHES;
 
-	size_type const nodesCount = mmapTree_.size() / sizeof(Node);
+	size_type const nodesCount = blobTree_.size() / sizeof(Node);
 
 	const Node *nodes = blobTree_.as<const Node>(0, nodesCount);
 

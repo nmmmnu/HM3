@@ -69,7 +69,7 @@ public:
 		return reinterpret_cast<const T *>( safeAccessMemory(ptr, elements * sizeof(T)) );
 	}
 
-	// ambiguous call guard fpr 0
+	// ambiguous call guard for 0
 	template <class T>
 	const T *as(int const pos = 0, size_t const elements = 1) const noexcept{
 		return as<T>( (size_t) pos, elements );
