@@ -34,8 +34,7 @@ auto HashList<CONTAINER>::getCount(bool const estimated) const noexcept -> size_
 	size_type result = 0;
 
 	for(const auto &list : container_){
-		// a + b is int
-		result = (size_type) (result + list.getCount(estimated));
+		result = size_type(result + list.getCount(estimated));
 	}
 
 	return result;

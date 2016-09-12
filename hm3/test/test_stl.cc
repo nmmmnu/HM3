@@ -8,9 +8,9 @@
 
 #include "pair.h"
 
-using Pair = hm3::Pair;
+constexpr unsigned int PROCESS_STEP = 1000 * 10;
 
-#define PROCESS_STEP	1000 * 10
+using Pair = hm3::Pair;
 
 static void printUsage(const char *cmd);
 
@@ -83,7 +83,7 @@ static void listLoad(MySet &list, const StringRef &filename, bool const tombston
 
 		++i;
 
-		if (i % ( PROCESS_STEP ) == 0){
+		if (i % PROCESS_STEP == 0){
 			printf("Processed %10u records, %10zu bytes...\n", i, list.size() );
 		}
 	}

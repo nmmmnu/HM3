@@ -14,7 +14,7 @@ public:
 	}
 };
 
-constexpr unsigned short MAX = 10000;
+constexpr size_t MAX = 10000;
 
 template<class T>
 void test(const char *name, const T key){

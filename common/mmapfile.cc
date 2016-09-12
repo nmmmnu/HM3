@@ -15,7 +15,7 @@ MMAPFile::MMAPFile(MMAPFile &&other) :
 bool MMAPFile::open(const StringRef &filename){
 	close();
 
-	int fd = ::open(filename.data(), O_RDONLY);
+	int const fd = ::open(filename.data(), O_RDONLY);
 
 	if (fd < 0)
 		return false;

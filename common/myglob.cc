@@ -52,7 +52,7 @@ bool MyGlob::open(const StringRef &path) noexcept{
 }
 
 bool MyGlob::open_(const char *path, glob_t &globresults) noexcept{
-	int result = glob(path, 0, nullptr, & globresults);
+	int const result = glob(path, 0, nullptr, & globresults);
 
 	if (result != 0)
 		return false;

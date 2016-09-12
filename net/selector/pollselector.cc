@@ -69,7 +69,7 @@ FDResult PollSelector::getFDStatus(uint32_t const no) const{
 	return { fd, FDStatus::NONE };
 }
 
-bool PollSelector::insertFD(int const fd, FDEvent event){
+bool PollSelector::insertFD(int const fd, const FDEvent event){
 	uint32_t pos = 0;
 	bool     pok = false;
 
@@ -95,7 +95,7 @@ bool PollSelector::insertFD(int const fd, FDEvent event){
 	return true;
 }
 
-bool PollSelector::updateFD(int fd, FDEvent event){
+bool PollSelector::updateFD(int const fd, const FDEvent event){
 	// bit ugly.
 	for(auto &item : statusData_)
 		if (item.fd == fd){

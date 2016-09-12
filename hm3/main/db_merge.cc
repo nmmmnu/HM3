@@ -45,7 +45,7 @@ int main(int argc, char **argv){
 	const char *output	= argv[2];
 
 	const char **path	= (const char **) &argv[3];
-	const int  pathc	= argc - 3;
+	int const pathc		= argc - 3;
 
 	if (fileExists(output)){
 		printf("File %s exists. Please remove it and try again.\n", output);

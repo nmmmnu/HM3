@@ -51,7 +51,7 @@ bool LinkList::putT_(UPAIR&& newdata){
 	for(Node *node = head_; node; node = node->next){
 		Pair & olddata = node->data;
 
-		const int cmp = olddata.cmp(key);
+		int const cmp = olddata.cmp(key);
 
 		if (cmp == 0){
 			// handle overwrite,
@@ -116,7 +116,7 @@ bool LinkList::remove(const StringRef &key){
 	Node *prev = nullptr;
 	for(Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
-		const int cmp = data.cmp(key);
+		int const cmp = data.cmp(key);
 
 		if (cmp == 0){
 			if (prev){
@@ -127,7 +127,7 @@ bool LinkList::remove(const StringRef &key){
 			}
 
 			dataSize_ -= data.getBytes();
-			dataCount_--;
+			--dataCount_;
 
 			delete node;
 			return true;
@@ -154,7 +154,7 @@ const LinkList::Node *LinkList::locate_(const StringRef &key, bool const exact) 
 	for(const Node *node = head_; node; node = node->next){
 		const Pair & data = node->data;
 
-		const int cmp = data.cmp(key);
+		int const cmp = data.cmp(key);
 
 		if (cmp == 0)
 			return node;

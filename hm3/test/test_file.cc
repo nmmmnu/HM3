@@ -16,7 +16,7 @@
 
 #include "disktable.h"
 
-#define PROCESS_STEP	1000 * 10
+constexpr unsigned int PROCESS_STEP = 1000 * 10;
 
 using Pair = hm3::Pair;
 
@@ -59,7 +59,7 @@ static void listLoad(LIST &list, const StringRef &filename, bool const tombstone
 
 		++i;
 
-		if (i % ( PROCESS_STEP ) == 0){
+		if (i % PROCESS_STEP == 0){
 			printf("Processed %10u records, %10zu bytes...\n", i, list.getBytes() );
 		}
 	}
