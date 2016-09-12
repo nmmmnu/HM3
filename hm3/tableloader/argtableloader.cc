@@ -1,5 +1,6 @@
 #include "argtableloader.h"
 
+#include "arrayref.h"
 
 namespace hm3{
 namespace tableloader{
@@ -13,9 +14,7 @@ bool ArgTableLoader::refresh_(){
 
 	container_.reserve(argc_);
 
-	for (int i = 0; i < argc_; ++i){
-		const char *filename = argv_[i];
-
+	for(const char *filename : ArrayRef<const char *>{ argv_, (size_t) argc_ } ){
 		DiskTable dt;
 		dt.open(filename);
 		container_.push_back( std::move(dt) );

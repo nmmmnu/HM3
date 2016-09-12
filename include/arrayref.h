@@ -1,3 +1,7 @@
+#ifndef ARRAY_REF_H_
+#define ARRAY_REF_H_
+
+//#include <vector>
 
 template<class T>
 class ArrayRef{
@@ -17,6 +21,9 @@ public:
 	template<size_t N>
 	ArrayRef(const value_type (&ptr)[N]) noexcept:
 				ArrayRef(ptr, N){}
+
+//	ArrayRef(const std::vector<T> &vector) noexcept :
+//				ArrayRef(vector.data(), vector.size()){}
 
 public:
 	bool empty() const noexcept{
@@ -51,3 +58,7 @@ private:
 	const value_type	*ptr_ = nullptr;
 	size_type		size_ = 0;
 };
+
+#endif
+
+

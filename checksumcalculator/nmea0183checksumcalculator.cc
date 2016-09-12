@@ -7,8 +7,7 @@ auto NMEA0183ChecksumCalculator::operator()(const void *data2, size_t const size
 	const uint8_t *data = (const uint8_t *) data2;
 	uint8_t sum = start;
 
-	size_t i;
-	for(i = 0; i < size; ++i)
+	for(size_t i = 0; i < size; ++i)
 		sum = sum ^ data[i];
 
 	return sum;
