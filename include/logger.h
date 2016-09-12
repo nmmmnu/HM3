@@ -14,5 +14,5 @@ namespace{
 		std::cout << first << " ";
 		log__(args...);
 	}
-};
+}
 

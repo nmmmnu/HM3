@@ -88,7 +88,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 	size_type const nodesCount = blobTree_.size() / sizeof(Node);
 
-	const Node *nodes = blobTree_.as<const Node>(0, nodesCount);
+	const Node *nodes = blobTree_.as<const Node>(0, (size_t) nodesCount);
 
 	if (!nodes){
 		// go try with binary search
@@ -134,14 +134,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					 *
 					 */
 
-					node_pos = 2 * node_pos + 1;
+					node_pos = branch_type(2 * node_pos + 1);
 
 					log__("\t L: NIL");
 
 					continue;
 				}
 
-				const NodeData *nd = blobKeys_.as<const NodeData>(offset);
+				const NodeData *nd = blobKeys_.as<const NodeData>( (size_t) offset);
 
 				if (!nd){
 					// go try with binary search
@@ -153,7 +153,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				const uint64_t dataid  = be64toh(nd->dataid);
 
 				// key is just after the NodeData
-				const char *keyptr = blobKeys_.as<const char>( offset + sizeof(NodeData), keysize);
+				const char *keyptr = blobKeys_.as<const char>( (size_t) offset + sizeof(NodeData), keysize);
 
 				if (!keyptr){
 					// go try with binary search
@@ -173,10 +173,10 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					// this + 1 is because the element is checked already
 					// see standard binary search implementation.
 					// took me two days to figure it out :)
-					node_index = ll[node_pos] + 1;
+					node_index = branch_type( ll[node_pos] + 1 );
 
 					// go right
-					node_pos = 2 * node_pos + 2;
+					node_pos = branch_type( 2 * node_pos + 2 );
 
 					bs_left = dataid;
 
@@ -185,7 +185,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					node_index = ll[node_pos];
 
 					// go left
-					node_pos = 2 * node_pos + 1;
+					node_pos = branch_type( 2 * node_pos + 1 );
 
 					bs_right = dataid;
 
@@ -272,7 +272,7 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 #endif
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
-	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, getCount());
+	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, (size_t) getCount());
 
 	if (!ptrs_be)
 		return nullptr;

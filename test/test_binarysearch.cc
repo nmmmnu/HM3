@@ -47,5 +47,5 @@ int main(){
 	test<unsigned long>("u long");
 
 	test<size_t>("size_t");
-};
+}
 

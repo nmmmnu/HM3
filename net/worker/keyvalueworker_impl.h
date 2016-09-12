@@ -25,6 +25,7 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::operator()(CONNECTION &buffer
 		case Status::OK :
 			return process_request_(buffer);
 
+		default: // for GCC warning...
 		case Status::ERROR :
 			return sendResponseError_(buffer, "Internal Error");
 	}

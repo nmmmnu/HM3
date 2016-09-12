@@ -29,7 +29,7 @@ private:
 	static level_type calcDepth1__(size_type const count){
 		level_type const result = calcDepth__(count);
 
-		return result > 1 ? result - 1 : 1;
+		return level_type( result > 1 ? result - 1 : 1 );
 	}
 
 private:

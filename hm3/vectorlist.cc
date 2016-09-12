@@ -34,7 +34,7 @@ bool VectorList::removeAll(){
 }
 
 inline bool VectorList::binarySearch_(const StringRef &key, size_type &result) const{
-	return binarySearch(*this, getBytes(), key, BinarySearchCompList{}, result);
+	return binarySearch(*this, getCount(), key, BinarySearchCompList{}, result);
 }
 
 const Pair &VectorList::get(const StringRef &key) const{

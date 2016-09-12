@@ -14,9 +14,9 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 
 	levels_ = calcDepth1__(count);
 
-	printf("Records          : %zu\n",		count	);
-	printf("Branching Factor : %u (const)\n",	BRANCHES);
-	printf("Tree Depth       : %u\n",		levels_	);
+	printf("Records          : %zu\n",		(size_t) count	);
+	printf("Branching Factor : %u (const)\n",	BRANCHES	);
+	printf("Tree Depth       : %u\n",		levels_		);
 
 	file_indx_.open(filenameIndx(filename),	std::ios::out | std::ios::binary);
 	file_data_.open(filenameData(filename),	std::ios::out | std::ios::binary);
@@ -37,7 +37,7 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 
 
 template <class LIST>
-auto BTreeIndexBuilder<LIST>::calcDepth__(size_type const count) -> level_type{
+auto BTreeIndexBuilder<LIST>::calcDepth__(size_type count) -> level_type{
 	// Biliana
 	// log 54 (123) = ln (123) / ln (54)
 	// but this is true for B+Tree only...

@@ -18,7 +18,7 @@ Pair LSMTable<CONTAINER>::get(const StringRef &key) const{
 
 template <class CONTAINER>
 size_t LSMTable<CONTAINER>::getBytes() const{
-	size_type result = 0;
+	size_t result = 0;
 
 	for(const auto &table : container_ )
 		result += table.getBytes();
