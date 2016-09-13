@@ -77,7 +77,7 @@ public:
 			return true;
 		}
 
-		head_ = (size_type) (head_ + len);
+		head_ = head_ + len;
 
 		return true;
 	}

@@ -86,9 +86,9 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	constexpr auto VALUES   = btreeindex::VALUES;
 	constexpr auto BRANCHES = btreeindex::BRANCHES;
 
-	size_type const nodesCount = blobTree_.size() / sizeof(Node);
+	size_t const nodesCount = blobTree_.size() / sizeof(Node);
 
-	const Node *nodes = blobTree_.as<const Node>(0, (size_t) nodesCount);
+	const Node *nodes = blobTree_.as<const Node>(0, nodesCount);
 
 	if (!nodes){
 		// go try with binary search
@@ -141,7 +141,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					continue;
 				}
 
-				const NodeData *nd = blobKeys_.as<const NodeData>( (size_t) offset);
+				const NodeData *nd = blobKeys_.as<const NodeData>(offset);
 
 				if (!nd){
 					// go try with binary search
@@ -149,11 +149,11 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					return binarySearch_(key, result);
 				}
 
-				const uint16_t keysize = be16toh(nd->keysize);
-				const uint64_t dataid  = be64toh(nd->dataid);
+				size_t    const keysize = static_cast<size_type>(be16toh(nd->keysize));
+				size_type const dataid  = static_cast<size_type>(be64toh(nd->dataid));
 
 				// key is just after the NodeData
-				const char *keyptr = blobKeys_.as<const char>( (size_t) offset + sizeof(NodeData), keysize);
+				const char *keyptr = blobKeys_.as<const char>(offset + sizeof(NodeData), keysize);
 
 				if (!keyptr){
 					// go try with binary search
@@ -259,10 +259,10 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 
 #if 0
 size_t DiskTable::getAtOffset(size_type const index) const{
-	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( (size_t) index * sizeof(uint64_t) );
+	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( index * sizeof(uint64_t) );
 
 	if (ptr_be){
-		size_t const offset = (size_t) be64toh( *ptr_be );
+		size_t const offset = be64toh( *ptr_be );
 
 		return offset;
 	}
@@ -272,14 +272,14 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 #endif
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
-	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, (size_t) getCount());
+	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, getCount());
 
 	if (!ptrs_be)
 		return nullptr;
 
 	const uint64_t ptr_be = ptrs_be[index];
 
-	size_t const offset = (size_t) be64toh( ptr_be );
+	size_t const offset = be64toh( ptr_be );
 
 	// here unfortunately, we overrun the buffer, since PairBlob is variable size...
 	const PairBlob *blob = blobData_.as<const PairBlob>(offset);

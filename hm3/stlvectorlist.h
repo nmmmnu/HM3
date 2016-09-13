@@ -12,7 +12,7 @@ class STLVectorList : public IMutableList<STLVectorList>{
 public:
 	using vector_type	= std::vector<Pair>;
 
-	using size_type	= vector_type::size_type;
+	using size_type		= vector_type::size_type;
 	using difference_type	= vector_type::difference_type;
 	using Iterator		= vector_type::const_iterator;
 

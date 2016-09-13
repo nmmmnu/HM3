@@ -11,8 +11,8 @@ namespace hm3{
 
 class IList{
 public:
-	using size_type	= uint64_t;
-	using difference_type	= int64_t;
+	using size_type	= size_t;
+//	using difference_type	= int64_t;
 };
 
 // ==============================
@@ -33,12 +33,12 @@ public:
 	}
 
 	bool isEmpty() const{
-		return getCount(true) == 0;
+		return ! getCount(true);
 	}
 
 public:
 	size_type getCount(bool const estimated = false) const{
-		return self()->getCount(estimated);
+		return static_cast<size_type>( self()->getCount(estimated) );
 	}
 
 private:

@@ -54,7 +54,7 @@ public:
 	int cmpAt(size_type index, const StringRef &key) const;
 
 	size_type getCount() const{
-		return (size_type) header_.getCount();
+		return static_cast<size_type>(header_.getCount());
 	}
 
 	size_t getBytes() const{

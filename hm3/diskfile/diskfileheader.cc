@@ -4,7 +4,6 @@
 #include <fstream>
 
 #include <inttypes.h>	// PRIu64
-#include "port.h"
 
 
 namespace hm3{
@@ -42,7 +41,7 @@ bool DiskFileHeader::open(std::ifstream &file_meta){
 		return false;
 
 	version_	= pod.version;
-	count_		= (size_t) be64toh(pod.size);
+	count_		= be64toh(pod.size);
 
 	// read the rest, without rewind :-)
 	size_t additionalSize = sizeof(POD) - sizeof(PODBase);
@@ -58,7 +57,7 @@ bool DiskFileHeader::open(std::ifstream &file_meta){
 
 	sorted_		= pod.sorted == HEADER_SORTED ? true : false;
 
-	tombstones_	= (size_t) be64toh(pod.tombstones);
+	tombstones_	= be64toh(pod.tombstones);
 
 	createdMin_	= be64toh(pod.createdMin);
 	createdMax_	= be64toh(pod.createdMax);

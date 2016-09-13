@@ -1,6 +1,5 @@
 #include <cstdio>	// printf
 #include <inttypes.h>	// PRIu64
-#include "port.h"
 #include <ctype.h>	// isspace
 
 #include <fstream>
@@ -42,7 +41,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 	std::ifstream f;
 	f.open(filename);
 
-	size_type i = 0;
+	size_t i = 0;
 
 	for(std::string line; getline(f, line);){
 		trim(line);
@@ -58,9 +57,9 @@ static int listLoad(LIST &list, const StringRef &filename){
 		++i;
 
 		if (i % PROCESS_STEP == 0){
-			printf("Processed %10" PRIu64 " records, In memory %10" PRIu64 " records, %10zu bytes...\n",
+			printf("Processed %10zu records, In memory %10zu records, %10zu bytes...\n",
 						i,
-						list.getList().getCount(),
+						(size_t) list.getList().getCount(),
 						list.getList().getBytes() );
 		}
 	}

@@ -26,7 +26,7 @@ VectorList::VectorList(VectorList &&other):
 }
 
 bool VectorList::removeAll(){
-	for(auto &p : ArrayRef<Pair>{ buffer_, (size_t) dataCount_ } )
+	for(auto &p : ArrayRef<Pair>{ buffer_, dataCount_ } )
 		p.~Pair();
 
 	clear_(true);
@@ -162,7 +162,7 @@ bool VectorList::resize_(int const delta){
 		return true;
 	}
 
-	size_type const new_dataCount = dataCount_ + (size_type) sgn(delta);
+	size_type const new_dataCount = dataCount_ + sgn(delta);
 
 	if (new_dataCount == 0){
 		clear_(true);
