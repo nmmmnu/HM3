@@ -51,7 +51,7 @@ public:
 
 		/* long int */ auto const pos = ptrc - mem_;
 
-		return safeAccessMemory((size_t) pos, size);
+		return safeAccessMemory( size_t(pos), size);
 	}
 
 public:
@@ -72,7 +72,10 @@ public:
 	// ambiguous call guard for 0
 	template <class T>
 	const T *as(int const pos = 0, size_t const elements = 1) const noexcept{
-		return as<T>( (size_t) pos, elements );
+		if (pos < 0)
+			return nullptr;
+
+		return as<T>( size_t( pos ), elements );
 	}
 
 private:

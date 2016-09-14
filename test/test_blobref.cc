@@ -13,7 +13,7 @@ int test_blobref(){
 	constexpr size_t SIZE = 256;
 	char mem[SIZE];
 
-	for(int i = 0; i < (int) SIZE; ++i)
+	for(size_t i = 0; i < SIZE; ++i)
 		mem[i] = (char) i;
 
 	BlobRef br{ mem };

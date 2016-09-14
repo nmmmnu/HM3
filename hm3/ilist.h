@@ -11,8 +11,8 @@ namespace hm3{
 
 class IList{
 public:
-	using size_type	= size_t;
-//	using difference_type	= int64_t;
+	using size_type		= size_t;
+//	using difference_type	= ssize_t;
 };
 
 // ==============================

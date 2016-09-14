@@ -267,7 +267,7 @@ size_t DiskTable::getAtOffset(size_type const index) const{
 		return offset;
 	}
 
-	return (size_t) -1;
+	return static_cast<size_t>(-1);
 }
 #endif
 

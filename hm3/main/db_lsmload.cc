@@ -1,5 +1,4 @@
 #include <cstdio>	// printf
-#include <inttypes.h>	// PRIu64
 #include <ctype.h>	// isspace
 
 #include <fstream>
@@ -59,7 +58,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 		if (i % PROCESS_STEP == 0){
 			printf("Processed %10zu records, In memory %10zu records, %10zu bytes...\n",
 						i,
-						(size_t) list.getList().getCount(),
+						size_t{ list.getList().getCount() },
 						list.getList().getBytes() );
 		}
 	}

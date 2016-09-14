@@ -14,7 +14,7 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 
 	levels_ = calcDepth1__(count);
 
-	printf("Records          : %zu\n",		(size_t) count	);
+	printf("Records          : %zu\n",		size_t{ count }	);
 	printf("Branching Factor : %u (const)\n",	BRANCHES	);
 	printf("Tree Depth       : %u\n",		levels_		);
 
