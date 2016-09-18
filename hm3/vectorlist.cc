@@ -162,8 +162,7 @@ bool VectorList::resize_(int const delta){
 		return true;
 	}
 
-	int const sd = sgn(delta);
-	size_type const new_dataCount = dataCount_ +  size_type(sd);
+	size_type const new_dataCount = dataCount_ + (size_type) sgn(delta);
 
 	if (new_dataCount == 0){
 		clear_(true);

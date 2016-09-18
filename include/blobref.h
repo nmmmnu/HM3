@@ -51,7 +51,7 @@ public:
 
 		/* long int */ auto const pos = ptrc - mem_;
 
-		return safeAccessMemory( size_t(pos), size);
+		return safeAccessMemory( (size_t) pos, size);
 	}
 
 public:
@@ -75,7 +75,7 @@ public:
 		if (pos < 0)
 			return nullptr;
 
-		return as<T>( size_t( pos ), elements );
+		return as<T>( pos, elements );
 	}
 
 private:

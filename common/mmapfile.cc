@@ -22,7 +22,7 @@ bool MMAPFile::open(const StringRef &filename){
 
 	off_t size2 = lseek(fd, 0, SEEK_END);
 
-	size_t size = size2 <= 0 ? 0 : size_t(size2);
+	size_t size = size2 <= 0 ? 0 : (size_t) size2;
 
 	if (size == 0){
 		::close(fd);
