@@ -27,12 +27,8 @@ private:
 	static constexpr uint32_t MAX_SIZE     = 256 * 1024;
 
 	static constexpr uint16_t MAX_KEY_SIZE =   8 * 1024;
-	static constexpr uint32_t MAX_VAL_SIZE = MAX_SIZE
-						- MAX_KEY_SIZE
-						// key and value null terminators
-						- 1 - 1
-						// struct members
-						- 8 - 4 - 4 - 2 - 1;
+	// defined at the end
+	static const     uint32_t MAX_VAL_SIZE; // = sizeofValue__();
 
 	static constexpr int      CMP_NULLKEY  = -1;
 
@@ -100,11 +96,11 @@ public:
 	bool valid(bool tombstoneCheck = false) const noexcept;
 
 	size_t getBytes() const noexcept{
-		return sizeofBase_() + sizeofBuffer_();
+		return sizeofBase__() + sizeofBuffer__();
 	}
 
 	uint8_t calcChecksum() const noexcept{
-		return calcChecksum_(buffer, sizeofBuffer_());
+		return calcChecksum_(buffer, sizeofBuffer__());
 	}
 
 	uint8_t validChecksum() const noexcept{
@@ -116,13 +112,23 @@ public:
 	void print() const noexcept;
 
 private:
-	size_t sizeofBuffer_() const noexcept{
+	size_t sizeofBuffer__() const noexcept{
 		return getKeyLen() + 1 + getValLen() + 1;
 	}
 
 	constexpr
-	static size_t sizeofBase_() noexcept{
+	static size_t sizeofBase__() noexcept{
 		return offsetof(PairBlob, buffer);
+	}
+
+	constexpr
+	static size_t sizeofValue__()noexcept{
+		return MAX_SIZE
+				- MAX_KEY_SIZE
+				// key and value null terminators
+				- 1 - 1
+				// struct members
+				- sizeofBase__();
 	}
 
 	// ==============================

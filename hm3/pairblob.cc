@@ -12,7 +12,9 @@ namespace hm3{
 
 using ChecksumCalculator = checksumcalculator::NMEA0183ChecksumCalculator;
 
+const uint32_t PairBlob::MAX_VAL_SIZE = PairBlob::sizeofValue__();
 
+// ==============================
 
 void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
 	if (nothrow)
@@ -41,7 +43,7 @@ std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen
 		throw exception;
 	}
 
-	size_t const size = sizeofBase_() + keylen + 1 + vallen + 1;
+	size_t const size = sizeofBase__() + keylen + 1 + vallen + 1;
 
 	std::unique_ptr<PairBlob>  pair{ new(size, false) PairBlob };
 

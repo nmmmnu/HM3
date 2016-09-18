@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 	const auto op		= argv[1];
 	const auto path		= argv[2];
 
-	size_t const keyCount	= (argc - 3);
+	size_t const keyCount	= size_t(argc - 3);
 	char **keys		= & argv[3];
 
 	// =======================

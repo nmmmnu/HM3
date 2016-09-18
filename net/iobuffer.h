@@ -63,6 +63,10 @@ public:
 		return true;
 	}
 
+	bool push(ssize_t const len, const char *ptr){
+		return push(size_t(len), ptr);
+	}
+
 	bool pop(size_t const len){
 		if (len == 0)
 			return false;
@@ -80,6 +84,10 @@ public:
 		head_ = head_ + len;
 
 		return true;
+	}
+
+	bool pop(ssize_t const len){
+		return pop(size_t(len));
 	}
 
 	// ==================================
