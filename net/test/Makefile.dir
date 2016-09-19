@@ -15,10 +15,10 @@ all: $(A)test_echo_poll $(A)test_redis_poll
 EXTRA_CLEAN +=	$(A)test_echo_poll $(A)test_redis_poll
 
 ifeq ($(UNAME), Linux)
-	# add epoll support...
-	all: $(A)test_echo_epoll $(A)test_redis_epoll
+# add epoll support...
+all: $(A)test_echo_epoll $(A)test_redis_epoll
 
-	EXTRA_CLEAN += $(A)test_echo_epoll $(A)test_redis_epoll
+EXTRA_CLEAN += $(A)test_echo_epoll $(A)test_redis_epoll
 endif
 
 

@@ -1,6 +1,6 @@
-#include "epollselector.h"
-#include "keyvalueworker.h"
-#include "redisprotocol.h"
+#include "selector/epollselector.h"
+#include "worker/keyvalueworker.h"
+#include "protocol/redisprotocol.h"
 
 using MySelector	= net::selector::EPollSelector;
 using MyProtocol	= net::protocol::RedisProtocol;

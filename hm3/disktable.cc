@@ -141,7 +141,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					continue;
 				}
 
-				const NodeData *nd = blobKeys_.as<const NodeData>(offset);
+				const NodeData *nd = blobKeys_.as<const NodeData>((size_t) offset);
 
 				if (!nd){
 					// go try with binary search
@@ -153,7 +153,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				size_type const dataid  = static_cast<size_type>(be64toh(nd->dataid));
 
 				// key is just after the NodeData
-				const char *keyptr = blobKeys_.as<const char>(offset + sizeof(NodeData), keysize);
+				const char *keyptr = blobKeys_.as<const char>((size_t) offset + sizeof(NodeData), keysize);
 
 				if (!keyptr){
 					// go try with binary search
@@ -279,7 +279,7 @@ const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 
 	const uint64_t ptr_be = ptrs_be[index];
 
-	size_t const offset = be64toh( ptr_be );
+	size_t const offset = (size_t) be64toh( ptr_be );
 
 	// here unfortunately, we overrun the buffer, since PairBlob is variable size...
 	const PairBlob *blob = blobData_.as<const PairBlob>(offset);
