@@ -5,7 +5,7 @@
 #include <sys/un.h>		// AF_UNIX
 #include <netinet/tcp.h>	// TCP_NODELAY
 #include <fcntl.h>		// fcntl
-
+#include <netinet/in.h>		// IPPROTO_TCP for FreeBSD 
 #include <string.h>		// strlen
 #include <unistd.h>		// close
 
