@@ -75,7 +75,7 @@ public:
 		if (pos < 0)
 			return nullptr;
 
-		return as<T>( pos, elements );
+		return as<T>( (size_t) pos, elements );
 	}
 
 private:

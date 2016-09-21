@@ -54,7 +54,7 @@ public:
 	}
 
 	bool push(size_t const len, const char *ptr){
-		if (ptr == nullptr)
+		if (ptr == nullptr || len == 0)
 			return false;
 
 		for(size_t i = 0; i < len; ++i)
