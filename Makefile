@@ -50,6 +50,11 @@ CF_MISC		+= -D_GLIBCXX_USE_C99 -D_GLIBCXX_USE_C99_MATH -D_GLIBCXX_USE_C99_MATH_T
 LL_ALL		+= -lm
 endif
 
+ifeq ($(UNAME), Darwin)
+# fix endian mess for OSX
+EXTRA_INCL	+= -Iinclude.darwin/
+endif
+
 # ======================================================
 
 include Makefile.dirlist

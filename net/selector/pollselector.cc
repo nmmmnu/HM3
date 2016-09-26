@@ -41,7 +41,8 @@ uint32_t PollSelector::maxFD() const{
 }
 
 WaitStatus PollSelector::wait(int const timeout){
-	int const activity = poll(statusData_.data(), statusData_.size(), timeout);
+	// size cast is for FreeBSD and OSX warning
+	int const activity = poll(statusData_.data(), (nfds_t) statusData_.size(), timeout);
 
 	if (activity < 0)
 		return WaitStatus::ERROR;

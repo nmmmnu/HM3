@@ -4,7 +4,7 @@
 #include <cstring>
 
 #include <assert.h>
-#include <endian.h>
+#include "endian.h"
 
 #include <iostream>
 #include <iomanip>

@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cstdint>
 
-#include <endian.h>
+#include "endian.h"
 
 #include <memory>
 

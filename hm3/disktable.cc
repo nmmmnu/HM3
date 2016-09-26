@@ -10,7 +10,7 @@
 
 #include "levelorderlookup.h"
 
-#include <endian.h>	// htobe16
+#include "endian.h"	// htobe16
 
 #include <iostream>
 
