@@ -1,10 +1,11 @@
 #include "diskfileheader.h"
 #include "mytime.h"
 
+#include <endian.h>
+
 #include <fstream>
 
 #include <inttypes.h>	// PRIu64
-
 
 namespace hm3{
 namespace diskfile{

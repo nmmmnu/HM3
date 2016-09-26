@@ -1,7 +1,8 @@
 #include "diskfileheader.h"
 
-#include <fstream>
+#include <endian.h>
 
+#include <fstream>
 
 namespace hm3{
 namespace diskfile{
