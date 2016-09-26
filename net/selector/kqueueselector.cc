@@ -1,7 +1,9 @@
-#include "KQueueSelector.h"
+#include "kqueueselector.h"
 
+#include <sys/types.h>	// types for kqueue
 #include <sys/event.h>	// kqueue
 #include <unistd.h>	// close, for closeKQueue_()
+#include <time.h>	// struct timespec
 
 namespace net{
 namespace selector{
@@ -9,7 +11,7 @@ namespace selector{
 
 namespace{
 
-auto kQueueConvert(const FDEvent event) -> decltype(epoll_event::events){
+auto kQueueConvert(const FDEvent event) -> decltype(EVFILT_READ){
 	switch(event){
 		default:
 		case FDEvent::READ	: return EVFILT_READ;
@@ -63,7 +65,16 @@ WaitStatus KQueueSelector::wait(int const timeout){
 	if (kqueueFD_ < 0)
 		return WaitStatus::ERROR;
 
-	statusCount_ = epoll_wait(kqueueFD_, statusData_.data(), (int) statusData_.size(), timeout);
+	struct timespec ts;
+	struct timespec *tsp = nullptr;
+
+	if (timeout >= 0){
+		ts.tv_sec  = timeout / 1000;	// sec
+		ts.tv_nsec = timeout % 1000;	// nanoseconds
+		tsp = &ts;
+	}
+
+	statusCount_ = kevent(kqueueFD_, NULL, 0, statusData_.data(), (int) statusData_.size(), tsp);
 
 	if (statusCount_ < 0)
 		return WaitStatus::ERROR;
@@ -76,17 +87,17 @@ WaitStatus KQueueSelector::wait(int const timeout){
 
 FDResult KQueueSelector::getFDStatus(uint32_t const no) const{
 	if (no < (uint32_t) statusCount_){
-		const epoll_event &ev = statusData_[no];
+		const struct kevent &ev = statusData_[no];
 
-		int const fd = ev.data.fd;
+		int const fd = (int) ev.ident;
 
-		if (ev.events & EPOLLERR)
+		if (ev.flags & EV_ERROR)
 			return { fd, FDStatus::ERROR };
 
-		if ((ev.events & EPOLLIN) || (ev.events & EPOLLHUP))
+		if ((ev.filter == EVFILT_READ) || (ev.flags & EV_EOF))
 			return { fd, FDStatus::READ };
 
-		if (ev.events & EPOLLOUT)
+		if (ev.filter == EVFILT_WRITE)
 			return { fd, FDStatus::WRITE };
 	}
 
@@ -94,34 +105,33 @@ FDResult KQueueSelector::getFDStatus(uint32_t const no) const{
 }
 
 bool KQueueSelector::insertFD(int const fd, FDEvent const event){
-	return mutateFD_(fd, event, EV_ADD | EV_ENABLE);
-}
+	struct kevent ev;
 
-bool KQueueSelector::updateFD(int const fd, FDEvent const event){
-	return mutateFD_(fd, event, EV_DELETE);
-}
+	int const event2 = kQueueConvert(event);
 
-bool KQueueSelector::mutateFD_(int const fd, FDEvent const event, int const op){
-	kevent ev;
-	ev.events = kQueueConvert(event);
-	ev.data.fd = fd;
+	EV_SET(&ev, fd, event2, EV_ADD, 0, 0, nullptr);
 
-	int const result = EV_SET(&ev, kqueueFD_, EVFILT_READ, op, 0, 0, 0);
+	int const result = kevent(kqueueFD_, &ev, 1, nullptr, 0, nullptr);
 
 	return result >= 0;
 }
 
 bool KQueueSelector::removeFD(int const fd){
-	kevent ev;
-	int const result = EV_SET(&ev, kqueueFD_, EVFILT_READ, op, 0, 0, 0);
+	struct kevent ev;
 
-	return result >= 0;
+	EV_SET(&ev, fd, EVFILT_READ,  EV_DELETE, 0, 0, nullptr);
+	int const result1 = kevent(kqueueFD_, &ev, 1, nullptr, 0, nullptr);
+
+	EV_SET(&ev, fd, EVFILT_WRITE, EV_DELETE, 0, 0, nullptr);
+	int const result2 = kevent(kqueueFD_, &ev, 1, nullptr, 0, nullptr);
+
+	return result1 >= 0 && result2 >= 0;
 }
 
 // ===========================
 
 void KQueueSelector::initializeKQueue_(){
-	kqueueFD_ = kqueue(); // must be >= 0
+	kqueueFD_ = kqueue();
 }
 
 void KQueueSelector::closeKQueue_(){

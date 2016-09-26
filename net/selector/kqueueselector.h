@@ -25,7 +25,12 @@ public:
 	uint32_t maxFD() const;
 
 	bool insertFD(int fd, FDEvent event = FDEvent::READ);
-	bool updateFD(int fd, FDEvent event);
+
+	bool updateFD(int const fd, FDEvent const event){
+		removeFD(fd);
+		return insertFD(fd, event);
+	}
+
 	bool removeFD(int fd);
 
 	WaitStatus wait(int timeout);
@@ -38,13 +43,11 @@ public:
 
 private:
 	void initializeKQueue_();
-	void closeEPoll_();
-
-	bool mutateFD_(int fd, FDEvent event, int op);
+	void closeKQueue_();
 
 private:
 	int				kqueueFD_;
-	std::vector<epoll_event>	statusData_;
+	std::vector<struct kevent>	statusData_;
 	int				statusCount_	= 0;
 };
 
