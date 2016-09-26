@@ -1,6 +1,8 @@
 #ifndef MY_OSX_ENDIAN_H_
 #define MY_OSX_ENDIAN_H_
 
+#include <libkern/OSByteOrder.h>
+
 #define htobe16(x) OSSwapHostToBigInt16(x)
 #define htobe32(x) OSSwapHostToBigInt32(x)
 #define htobe64(x) OSSwapHostToBigInt64(x)
