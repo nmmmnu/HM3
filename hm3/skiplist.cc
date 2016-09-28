@@ -17,6 +17,10 @@ It turn out it does not need, because NULL lanes are already NULL.
 Disadvantage is once allocated, no one knows the size,
 except probably with malloc_usable_size();
 
+[2]------------------------------->NULL
+[1]------>[1]------>[1]----------->NULL
+[0]->[0]->[0]->[0]->[0]->[0]->[0]->NULL
+
 Uncommend DEBUG_PRINT_LANES for visualisation.
 
 #define DEBUG_PRINT_LANES
@@ -139,7 +143,7 @@ bool SkipList::putT_(UPAIR&& newdata){
 #ifdef DEBUG_PRINT_LANES
 	printf("%3u Lanes-> ", height);
 	for(height_type i = 0; i < height; ++i)
-		printf("%p ", newnode->next[i]);
+		printf("%p ", (void *) newnode->next[i]);
 	printf("\n");
 #endif
 
