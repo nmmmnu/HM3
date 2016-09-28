@@ -7,10 +7,10 @@ namespace net{
 
 using options_type = uint8_t;
 
-constexpr options_type SOCKET_NONBLOCK	= 1 << 0;
-constexpr options_type SOCKET_REUSEADDR	= 1 << 1;
+constexpr options_type SOCKET_NONBLOCK		= 1 << 0;
+constexpr options_type SOCKET_REUSEADDR		= 1 << 1;
 constexpr options_type SOCKET_TCPNODELAY	= 1 << 2;
-constexpr options_type SOCKET_KEEPALIVE	= 1 << 3;
+constexpr options_type SOCKET_KEEPALIVE		= 1 << 3;
 
 // ===========================
 
@@ -30,8 +30,8 @@ constexpr int SOCKET_NAME_SIZE		= -8;
 
 // ===========================
 
-struct SOCKET_TCP{};
-struct SOCKET_UNIX{};
+struct SOCKET_TCP{  constexpr SOCKET_TCP(){}  };
+struct SOCKET_UNIX{ constexpr SOCKET_UNIX(){} };
 
 constexpr SOCKET_TCP	socket_tcp;
 constexpr SOCKET_UNIX	socket_unix;

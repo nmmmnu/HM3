@@ -1,5 +1,5 @@
 #MYCC		= /usr/lib/clang/c++-analyzer
-MYCC		= clang
+MYCC		= clang++
 #MYCC		= g++
 
 # ======================================================
@@ -15,7 +15,8 @@ UNAME		= $(shell uname -s)
 
 CF_DEPS		= -MMD -MP
 CF_INCL		= -Iinclude $(EXTRA_INCL)
-CF_OPTIM	= -O3
+CF_OPTIM	= -O2
+#CF_OPTIM	+= -march=native
 CF_WARN		= -Wall -Wpedantic -Wdeprecated -Wconversion
 
 CF_MISC		=
@@ -44,11 +45,14 @@ O		= obj/
 # ======================================================
 
 ifeq ($(UNAME), FreeBSD)
-# need for FreeBSD
+# add correct endian for FreeBSD
+# fix compilation for FreeBSD
 EXTRA_INCL	+= -Iinclude.freebsd/
 CF_MISC		+= -D_GLIBCXX_USE_C99 -D_GLIBCXX_USE_C99_MATH -D_GLIBCXX_USE_C99_MATH_TR1
 LL_ALL		+= -lm
 endif
+
+# ======================================================
 
 ifeq ($(UNAME), Darwin)
 # fix endian mess for OSX
