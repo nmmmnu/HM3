@@ -18,7 +18,7 @@ enum class RedisProtocol::Error{
 
 void RedisProtocol::print() const{
 	for(const auto &item : params_ )
-		std::cout << item << std::endl;
+		std::cout << item << '\n';
 }
 
 

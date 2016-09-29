@@ -6,7 +6,7 @@
 
 namespace{
 	inline void log__(){
-		std::cout << std::endl;
+		std::cout << '\n';
 	}
 
 	template<typename T, typename... ARGS>

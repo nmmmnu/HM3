@@ -7,13 +7,13 @@
 template <class T>
 void test(T id, const char *name, unsigned count = 10){
 	std::cout	<< name
-			<< std::endl;
+			<< '\n';
 
 	for(unsigned i = 0; i < count; ++i)
 		std::cout	<< std::setw (3) << i
 				<< " => "
 				<< id()
-				<< std::endl;
+				<< '\n';
 }
 
 int main(){

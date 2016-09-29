@@ -45,7 +45,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 		const auto &parts = st.getAll();
 
 		if (parts.size() != 3 && parts.size() != 4){
-			std::cout << "Problem with line " << line << std::endl;
+			std::cout << "Problem with line " << line << '\n';
 			continue;
 		}
 
@@ -87,7 +87,7 @@ static int listLoad(LIST &list, const StringRef &filename){
 			std::cout	<< "Processed "	<< i << " records, "
 					<< "In memory "	<< list.getList().getCount() << " records, "
 					<< list.getList().getBytes() << " bytes..."
-					<< std::endl;
+					<< '\n';
 		}
 	}
 
@@ -136,8 +136,8 @@ static std::string &trim(std::string &line){
 
 
 static void printUsage(const char *cmd){
-	std::cout	<< "Usage:" << std::endl
-			<< "\t" << cmd << " [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/" << std::endl
-			<< std::endl;
+	std::cout	<< "Usage:" << '\n'
+			<< "\t" << cmd << " [file.txt] [lsm_path/] - load file.txt, then create / add to lsm_path/" << '\n'
+			<< '\n';
 }
 

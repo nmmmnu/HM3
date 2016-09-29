@@ -138,7 +138,7 @@ static void test_stringref(const char *module, const StringRef &sr){
 		++i;
 	}
 
-	std::cout <<  sr << std::endl;
+	std::cout <<  sr << '\n';
 }
 
 

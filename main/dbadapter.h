@@ -14,7 +14,7 @@ public:
 	std::string get(const StringRef &key) const{
 		const auto &p = list_.get(key);
 		std::string s = p.getVal();
-		std::cout << s << std::endl;
+		std::cout << s << '\n';
 		return s;
 	}
 
@@ -36,7 +36,7 @@ public:
 		}
 
 		for(auto x : result)
-			std::cout << x << std::endl;
+			std::cout << x << '\n';
 
 		return result;
 	}
@@ -44,8 +44,8 @@ public:
 	std::string info() const{
 		std::stringstream ss;
 
-		ss	<< "Keys (estimated): "	<< list_.getCount(true)	<< std::endl
-			<< "Size: "		<< list_.getBytes()	<< std::endl
+		ss	<< "Keys (estimated): "	<< list_.getCount(true)	<< '\n'
+			<< "Size: "		<< list_.getBytes()	<< '\n'
 		;
 
 		return ss.str();

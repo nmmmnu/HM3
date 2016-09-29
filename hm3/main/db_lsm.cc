@@ -8,15 +8,15 @@
 
 static void printUsage(const char *cmd){
 	std::cout
-		<< "Usage:"	<< std::endl
-		<< "\t"		<< cmd	<< " r [lsm_path] [key] - load lsm_path, then search for the key"	<< std::endl
-		<< "\t"		<< cmd	<< " l [lsm_path] -     - load lsm_path, then list using iterator"	<< std::endl
-		<< "\t"		<< cmd	<< " l [lsm_path] [key] - load lsm_path, then list using iterator"	<< std::endl
+		<< "Usage:"	<< '\n'
+		<< "\t"		<< cmd	<< " r [lsm_path] [key] - load lsm_path, then search for the key"	<< '\n'
+		<< "\t"		<< cmd	<< " l [lsm_path] -     - load lsm_path, then list using iterator"	<< '\n'
+		<< "\t"		<< cmd	<< " l [lsm_path] [key] - load lsm_path, then list using iterator"	<< '\n'
 
-		<< "\t\tPath names must be written without extention"		<< std::endl
-		<< "\t\tExample 'directory/file.*'"				<< std::endl
+		<< "\t\tPath names must be written without extention"		<< '\n'
+		<< "\t\tExample 'directory/file.*'"				<< '\n'
 
-		<< std::endl;
+		<< '\n';
 }
 
 int main(int argc, char **argv){
