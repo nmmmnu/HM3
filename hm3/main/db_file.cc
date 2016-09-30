@@ -6,15 +6,15 @@
 
 static void printUsage(const char *cmd){
 	std::cout
-		<< "Usage:"	<< std::endl
-		<< "\t"		<< cmd	<< " r [file.db] [key] - load file.db, then search for the key"	<< std::endl
-		<< "\t"		<< cmd	<< " l [file.db] -     - load file.db, then list using iterator"	<< std::endl
-		<< "\t"		<< cmd	<< " l [file.db] [key] - load file.db, then list using iterator"	<< std::endl
+		<< "Usage:"	<< '\n'
+		<< "\t"		<< cmd	<< " r [file.db] [key] - load file.db, then search for the key"		<< '\n'
+		<< "\t"		<< cmd	<< " l [file.db] -     - load file.db, then list using iterator"	<< '\n'
+		<< "\t"		<< cmd	<< " l [file.db] [key] - load file.db, then list using iterator"	<< '\n'
 
-		<< "\t\tPath names must be written without extention"		<< std::endl
-		<< "\t\tExample 'directory/file.db'"				<< std::endl
+		<< "\t\tPath names must be written without extention"		<< '\n'
+		<< "\t\tExample 'directory/file.db'"				<< '\n'
 
-		<< std::endl;
+		<< '\n';
 }
 
 int main(int argc, char **argv){

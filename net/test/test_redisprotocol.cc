@@ -20,15 +20,15 @@ void test(PROTOCOL &p, const char *data){
 
 	const Status status = p(data);
 
-	std::cout	<< "Result status: " << test_status(status) << std::endl
-			<< std::endl
+	std::cout	<< "Result status: " << test_status(status) << '\n'
+			<< '\n'
 	;
 
 	if (status == Status::OK)
 		p.print();
 
-	std::cout	<< "---(eof)---" << std::endl
-			<< std::endl
+	std::cout	<< "---(eof)---" << '\n'
+			<< '\n'
 	;
 }
 
@@ -53,7 +53,7 @@ int main(){
 		const auto &status = p(data);
 
 		if (status == Status::BUFFER_NOT_READ)
-			std::cout << "problem" << std::endl;
+			std::cout << "problem" << '\n';
 	}
 #endif
 }
