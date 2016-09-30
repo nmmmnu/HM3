@@ -6,14 +6,17 @@ EXTRA_CLEAN += $(A)test_checkedvalue $(A)test_stringref			\
 		$(A)test_blobref					\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
-		$(A)test_binarysearch
+		$(A)test_binarysearch					\
+		$(A)test_compressor
 
 include Makefile.sub
 
-all: $(A)test_checkedvalue $(A)test_stringref $(A)test_blobref		\
+all: 		$(A)test_checkedvalue $(A)test_stringref		\
+		$(A)test_blobref					\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
-		$(A)test_binarysearch
+		$(A)test_binarysearch					\
+		$(A)test_compressor
 
 $(A)test_checkedvalue: $(O)test_checkedvalue.o
 	$(LINK)
@@ -35,4 +38,7 @@ $(A)test_stringimploder: $(O)test_stringimploder.o
 
 $(A)test_binarysearch: $(O)test_binarysearch.o
 	$(LINK)
+
+$(A)test_compressor: $(O)test_compressor.o $(O)zlibcompressor.o
+	$(LINK) -lz
 

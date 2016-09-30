@@ -1,4 +1,4 @@
-#include "zlibeasy.h"
+#include "zlibeasycompressor.h"
 
 #include <cstring>
 

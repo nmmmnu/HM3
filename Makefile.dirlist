@@ -1,5 +1,6 @@
 
 SUBDIRS = test common checksumcalculator	\
+		compressor			\
 						\
 		net net/selector net/protocol net/worker net/test		\
 						\
