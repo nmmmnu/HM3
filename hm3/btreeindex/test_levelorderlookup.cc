@@ -5,10 +5,11 @@
 int main(){
 	using namespace	hm3::btreeindex;
 
-	LevelOrderLookup<7> lookup;
+	LevelOrderLookup<7> lookupHolder;
+	const auto &table = lookupHolder.get();
 
-	for(branch_type i = 0; i < lookup.size(); ++i)
-		printf("%4hu | %4hu\n", i, lookup[i] ); //, lookup.bw(i) );
+	for(branch_type i = 0; i < table.size(); ++i)
+		printf("%4hu | %4hu\n", i, table[i] );
 
 }
 

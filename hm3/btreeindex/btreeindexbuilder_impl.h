@@ -119,6 +119,8 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 		return;
 	}
 
+	const auto &ll = llHolder_.get();
+
 	using size_type = typename LIST::size_type;
 
 	size_type const size = end - begin;
@@ -134,7 +136,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			Node node;
 
 			for(branch_type j = 0; j < VALUES; ++j){
-				branch_type const i = ll_[j];
+				branch_type const i = ll[j];
 
 				if (i >= size){
 					node.values[j] = Node::NIL;
@@ -166,7 +168,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 			Node node;
 
 			for(branch_type j = 0; j < VALUES; ++j){
-				branch_type const i = ll_[j];
+				branch_type const i = ll[j];
 
 				node.values[j] = htobe64( current_ );
 

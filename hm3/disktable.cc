@@ -21,7 +21,7 @@ namespace hm3{
 //#define log__(...) /* nada */
 
 
-const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_ll;
+const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_llholder;
 
 inline BlobRef DiskTable::mmap2blob__(const MMAPFile &m){
 	return { m.mem(), m.size() };
@@ -110,7 +110,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 		{
-			const auto &ll = g_ll;
+			const auto &ll = g_llholder.get();
 
 			branch_type node_pos = 0;
 

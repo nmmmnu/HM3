@@ -47,7 +47,7 @@ private:
 	size_t		current_	= 0;
 	branch_type	levels_;
 
-	LevelOrderLookup<NODE_LEVELS> ll_;
+	LevelOrderLookup<NODE_LEVELS> llHolder_;
 };
 
 
