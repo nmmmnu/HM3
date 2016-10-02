@@ -12,11 +12,9 @@ public:
 	constexpr CheckedValue(STATUS const status) noexcept:
 			status_(status){}
 
-	constexpr CheckedValue(T &&value) :
-			CheckedValue(SUCCESS, std::move(value)){}
-
-	constexpr CheckedValue(const T &value) :
-			CheckedValue(SUCCESS, value){}
+	template<class UT>
+	constexpr CheckedValue(UT &&value) :
+			CheckedValue(SUCCESS, std::forward<UT>(value)){}
 
 	template<class UT>
 	constexpr CheckedValue(STATUS const status, UT &&value) :
@@ -43,7 +41,7 @@ public:
 
 private:
 	STATUS	status_;
-	T	value_;
+	T	value_ = T(0);
 };
 
 

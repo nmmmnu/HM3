@@ -40,7 +40,9 @@ public:
 
 	// ==================================
 
-	constexpr bool empty() const noexcept;
+	constexpr bool empty() const noexcept{
+		return size_ == 0;
+	}
 
 	// ==================================
 
@@ -54,7 +56,9 @@ public:
 
 	operator std::string() const;
 
-	constexpr const char &operator [] (size_t index) const noexcept;
+	constexpr const char &operator [] (size_t index) const noexcept{
+		return data_[index];
+	}
 
 	// ==================================
 
@@ -98,9 +102,10 @@ private:
 	const char	*data_	= "";
 
 private:
+	constexpr static size_t strlen___(const char *s) noexcept;
 	constexpr static size_t strlen__(const char *s) noexcept;
 	constexpr static const char *strptr__(const char *s) noexcept;
-	/* constexpr */ 
+	/* constexpr */
 	static int memcmp__( const void *s1, const void *s2, size_t const n) noexcept;
 
 	static int compare__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
@@ -133,12 +138,6 @@ inline StringRef::StringRef(const std::string &s) :
 
 // ==================================
 
-constexpr inline bool StringRef::empty() const noexcept{
-	return size_ == 0;
-}
-
-// ==================================
-
 inline int StringRef::compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	if (COMPARE_MICRO_OPTIMIZATIONS){
 		if (s1 == s2 && size1 == size2)
@@ -164,20 +163,10 @@ inline int StringRef::compare(const char *data) const noexcept{
 }
 
 inline int StringRef::compare(const std::string &s) const noexcept{
-	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (data_ == s.data() && size_ == s.size())
-			return 0;
-	}
-
 	return compare(s.data(), s.size() );
 }
 
 inline int StringRef::compare(const StringRef &sr) const noexcept{
-	if (COMPARE_MICRO_OPTIMIZATIONS){
-		if (data_ == sr.data() && size_ == sr.size())
-			return 0;
-	}
-
 	return compare(sr.data(), sr.size() );
 }
 
@@ -185,10 +174,6 @@ inline int StringRef::compare(const StringRef &sr) const noexcept{
 
 inline StringRef::operator std::string() const{
 	return std::string(data_, size_);
-}
-
-constexpr inline const char &StringRef::operator [] (size_t const index) const noexcept{
-	return data_[index];
 }
 
 // ==================================
@@ -233,37 +218,28 @@ constexpr inline bool StringRef::operator !=(char const c) const noexcept{
 
 // ==================================
 
-#if 0
-inline int StringRef::compare__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
-	// Lazy based on LLVM::StringRef
-	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
-
-	// check prefix
-	if ( int const res = memcmp__(s1, s2, std_min__(size1, size2 ) ) )
-		return res < 0 ? -1 : +1;
-
-	// prefixes match, so we only need to check the lengths.
-	if (size1 == size2)
-		return 0;
-
-	return size1 < size2 ? -1 : +1;
-}
-#else
 template<typename T>
 int StringRef::sgn__(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
 }
 
 inline int StringRef::compare__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	// First idea was lazy based on LLVM::StringRef
+	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
+
 	if ( int const res = memcmp__(s1, s2, std_min__(size1, size2) ) )
 		return res; // most likely exit
 
-	// sgn helps convert size_t to int
+	// sgn helps convert size_t to int, without a branch
 	return sgn__(size1 - size2);
 }
-#endif
 
 constexpr inline bool StringRef::equals__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+	// Here clang do constexpr as follows -
+	// it checks the sizes and short cut memcmp__().
+	// There is *NO* constexpr, if you supply same sized strings:
+	// StringRef::equals__("Hello", 5, "Bello", 5);
+
 	// Idea based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 	return size1 == size2 && memcmp__(s1, s2, size1) == 0;
@@ -280,12 +256,16 @@ inline T StringRef::std_min__(const T a, const T b) noexcept{
 /* constexpr */
 inline int StringRef::memcmp__(const void *s1, const void *s2, size_t const n) noexcept{
 //	return __builtin_memcmp(s1, s2, n);
-	// clang do not like memcmp() in constexpr
 	return memcmp(s1, s2, n);
 }
 
+constexpr inline size_t StringRef::strlen___(const char *s) noexcept{
+	// __builtin_strlen is constexpr in clang
+	return __builtin_strlen(s);
+}
+
 constexpr inline size_t StringRef::strlen__(const char *s) noexcept{
-	return s ? strlen(s) : 0;
+	return s ? strlen___(s) : 0;
 }
 
 constexpr inline const char *StringRef::strptr__(const char *s) noexcept{
@@ -296,7 +276,7 @@ constexpr inline const char *StringRef::strptr__(const char *s) noexcept{
 
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr) {
 	// cast because of clang
-	return os.write(sr.data(), (std::streamsize) sr.size());
+	return os.write(sr.data(), static_cast<std::streamsize>( sr.size() ));
 }
 
 #endif

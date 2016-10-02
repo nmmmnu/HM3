@@ -24,6 +24,8 @@ static void test_std_string_ref(const char *);
 
 static void test_stringref(const char *module, const StringRef &sr);
 
+static void test_stringref_constexpr(const char *module);
+
 int main(){
 	test_tools_empty_ref("tools empty");
 	test_tools_compare_ref("tools compare");
@@ -35,6 +37,8 @@ int main(){
 	test_stringref("char *",	hello);
 	test_stringref("char []",	hello_c);
 	test_stringref("std::string",	std::string(hello));
+
+	test_stringref_constexpr("constexpr");
 
 	return 0;
 }
@@ -141,7 +145,22 @@ static void test_stringref(const char *module, const StringRef &sr){
 	std::cout <<  sr << '\n';
 }
 
+// ==================================
 
+static void test_stringref_constexpr(const char *module){
+	constexpr StringRef sss{ "Hello" };
+	constexpr StringRef s{ sss };
 
+	constexpr auto data = s.data();
+	PRINTF_TEST("constexpr data",	s == data				);
 
+	constexpr auto size = s.size();
+	PRINTF_TEST("constexpr size",	size == s.size()			);
+
+	constexpr auto ch = s[0];
+	PRINTF_TEST("constexpr []",	ch == s[0]				);
+
+	constexpr auto it = s.begin();
+	PRINTF_TEST("constexpr *it",	*it == s[0]				);
+}
 

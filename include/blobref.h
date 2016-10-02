@@ -69,7 +69,6 @@ public:
 	}
 
 	template <class T>
-	constexpr
 	const T *as(const void *ptr, size_t const elements = 1) const noexcept{
 		static_assert(std::is_pod<T>::value, "T must be POD type");
 
@@ -78,7 +77,6 @@ public:
 
 	// ambiguous call guard for 0
 	template <class T>
-	constexpr
 	const T *as(int const pos = 0, size_t const elements = 1) const noexcept{
 		return pos < 0 ?
 			nullptr

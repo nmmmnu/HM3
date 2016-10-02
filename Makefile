@@ -1,7 +1,6 @@
 #MYCC		= /usr/lib/clang/c++-analyzer
-#MYCC		= clang++
-#MYCC		= clang++ -stdlib=libc++
-MYCC		= g++
+MYCC		= clang++
+#MYCC		= g++
 
 # ======================================================
 
