@@ -20,7 +20,6 @@ public:
 		pos_ = 0;
 	}
 
-	constexpr
 	bool hasNext() const{
 		return pos_ < line_.size();
 	}
