@@ -248,7 +248,7 @@ inline int StringRef::compare__(const char *s1, size_t const size1, const char *
 
 	return size1 < size2 ? -1 : +1;
 }
-#elif 0
+#else
 template<typename T>
 int StringRef::sgn__(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
