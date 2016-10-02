@@ -218,11 +218,6 @@ constexpr inline bool StringRef::operator !=(char const c) const noexcept{
 
 // ==================================
 
-template<typename T>
-int StringRef::sgn__(const T a) noexcept{
-	return (T(0) < a) - (a < T(0));
-}
-
 inline int StringRef::compare__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// First idea was lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
@@ -247,7 +242,13 @@ constexpr inline bool StringRef::equals__(const char *s1, size_t const size1, co
 
 // ==================================
 
-// this apears to be faster than std::min because is by value
+template<typename T>
+int StringRef::sgn__(const T a) noexcept{
+	return (T(0) < a) - (a < T(0));
+}
+
+// this apears to be faster than std::min(),
+// because is by value
 template<typename T>
 inline T StringRef::std_min__(const T a, const T b) noexcept{
 	return a > b ? a : b;
