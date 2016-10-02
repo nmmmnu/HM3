@@ -10,35 +10,37 @@ private:
 	constexpr static bool COMPARE_MICRO_OPTIMIZATIONS = true;
 
 public:
-	StringRef() = default;
+	constexpr StringRef() = default;
 
-	StringRef(const char *data, size_t const size);
-	StringRef(const char *data);
+	constexpr StringRef(const char *data, size_t const size);
+
+	constexpr StringRef(const char *data);
+
 	StringRef(const std::string &s);
 
 	// ==================================
 
-	const char *data() const noexcept{
+	constexpr const char *data() const noexcept{
 		return data_;
 	}
 
-	size_t size() const noexcept{
+	constexpr size_t size() const noexcept{
 		return size_;
 	}
 
 	// ==================================
 
-	const char *begin() const noexcept{
+	constexpr const char *begin() const noexcept{
 		return data_;
 	}
 
-	const char *end() const noexcept{
+	constexpr const char *end() const noexcept{
 		return data_ + size_;
 	}
 
 	// ==================================
 
-	bool empty() const noexcept;
+	constexpr bool empty() const noexcept;
 
 	// ==================================
 
@@ -52,40 +54,42 @@ public:
 
 	operator std::string() const;
 
-	const char &operator [] (size_t index) const noexcept;
+	constexpr const char &operator [] (size_t index) const noexcept;
 
 	// ==================================
 
-	bool equals(const char *data, size_t size) const noexcept;
+	constexpr bool equals(const char *data, size_t size) const noexcept;
 
-	bool operator ==(const char *data) const noexcept;
-	bool operator ==(const std::string &data) const noexcept;
-	bool operator ==(const StringRef &data) const noexcept;
-	bool operator ==(char c) const noexcept;
 
-	bool operator !=(const char *data) const noexcept;
-	bool operator !=(const std::string &data) const noexcept;
-	bool operator !=(const StringRef &data) const noexcept;
-	bool operator !=(char c) const noexcept;
+	constexpr bool operator ==(const char *data) const noexcept;
+	constexpr bool operator ==(const std::string &data) const noexcept;
+	constexpr bool operator ==(const StringRef &data) const noexcept;
+	constexpr bool operator ==(char c) const noexcept;
+
+
+	constexpr bool operator !=(const char *data) const noexcept;
+	constexpr bool operator !=(const std::string &data) const noexcept;
+	constexpr bool operator !=(const StringRef &data) const noexcept;
+	constexpr bool operator !=(char c) const noexcept;
 
 	// ==================================
 
-	const char *c_str() const noexcept{
+	constexpr const char *c_str() const noexcept{
 		return data();
 	}
 
-	size_t length() const noexcept{
+	constexpr size_t length() const noexcept{
 		return size();
 	}
 
 public:
 	static int compare(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept;
 
-	static bool fastEmptyChar(const char* s){
+	constexpr static bool fastEmptyChar(const char* s){
 		return s == nullptr ? true : s[0] == 0;
 	}
 
-	static bool fastEmptyChar(const char* s, size_t const size){
+	constexpr static bool fastEmptyChar(const char* s, size_t const size){
 		return s == nullptr ? true : size == 0;
 	}
 
@@ -94,12 +98,13 @@ private:
 	const char	*data_	= "";
 
 private:
-	static size_t strlen__(const char *s) noexcept;
-	static const char *strptr__(const char *s) noexcept;
-
+	constexpr static size_t strlen__(const char *s) noexcept;
+	constexpr static const char *strptr__(const char *s) noexcept;
+	/* constexpr */ 
 	static int memcmp__( const void *s1, const void *s2, size_t const n) noexcept;
+
 	static int compare__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
-	static bool equals__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
+	constexpr static bool equals__(const char *s1, size_t size1, const char *s2, size_t size2) noexcept;
 
 	template<typename T>
 	static T std_min__(const T a, const T b) noexcept;
@@ -115,12 +120,11 @@ std::ostream& operator << (std::ostream& os, const StringRef &sr);
 // ==================================
 
 
-
-inline StringRef::StringRef(const char *data, size_t const size) :
+constexpr inline StringRef::StringRef(const char *data, size_t const size) :
 		size_(size),
 		data_(strptr__(data)){}
 
-inline StringRef::StringRef(const char *data) :
+constexpr inline StringRef::StringRef(const char *data) :
 		StringRef(data, strlen__(data)){}
 
 inline StringRef::StringRef(const std::string &s) :
@@ -129,7 +133,7 @@ inline StringRef::StringRef(const std::string &s) :
 
 // ==================================
 
-inline bool StringRef::empty() const noexcept{
+constexpr inline bool StringRef::empty() const noexcept{
 	return size_ == 0;
 }
 
@@ -183,47 +187,47 @@ inline StringRef::operator std::string() const{
 	return std::string(data_, size_);
 }
 
-inline const char &StringRef::operator [] (size_t const index) const noexcept{
+constexpr inline const char &StringRef::operator [] (size_t const index) const noexcept{
 	return data_[index];
 }
 
 // ==================================
 
-inline bool StringRef::equals(const char *data, size_t const size) const noexcept{
+constexpr inline bool StringRef::equals(const char *data, size_t const size) const noexcept{
 	return equals__(data_, size_, data, size);
 }
 
-inline bool StringRef::operator ==(const char *data) const noexcept{
+constexpr inline bool StringRef::operator ==(const char *data) const noexcept{
 	return equals(data, strlen__(data) );
 }
 
-inline bool StringRef::operator ==(const std::string &s) const noexcept{
+constexpr inline bool StringRef::operator ==(const std::string &s) const noexcept{
 	return equals(s.data(), s.size() );
 }
 
-inline bool StringRef::operator ==(const StringRef &sr) const noexcept{
+constexpr inline bool StringRef::operator ==(const StringRef &sr) const noexcept{
 	return equals(sr.data(), sr.size() );
 }
 
-inline bool StringRef::operator ==(char const c) const noexcept{
+constexpr inline bool StringRef::operator ==(char const c) const noexcept{
 	return size_ == 1 && data_[0] == c;
 }
 
 // ==================================
 
-inline bool StringRef::operator !=(const char *data) const noexcept{
+constexpr inline bool StringRef::operator !=(const char *data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(const std::string &data) const noexcept{
+constexpr inline bool StringRef::operator !=(const std::string &data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(const StringRef &data) const noexcept{
+constexpr inline bool StringRef::operator !=(const StringRef &data) const noexcept{
 	return ! (*this == data);
 }
 
-inline bool StringRef::operator !=(char const c) const noexcept{
+constexpr inline bool StringRef::operator !=(char const c) const noexcept{
 	return ! (*this == c);
 }
 
@@ -244,7 +248,7 @@ inline int StringRef::compare__(const char *s1, size_t const size1, const char *
 
 	return size1 < size2 ? -1 : +1;
 }
-#else
+#elif 0
 template<typename T>
 int StringRef::sgn__(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
@@ -259,7 +263,7 @@ inline int StringRef::compare__(const char *s1, size_t const size1, const char *
 }
 #endif
 
-inline bool StringRef::equals__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
+constexpr inline bool StringRef::equals__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
 	// Idea based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 	return size1 == size2 && memcmp__(s1, s2, size1) == 0;
@@ -273,16 +277,18 @@ inline T StringRef::std_min__(const T a, const T b) noexcept{
 	return a > b ? a : b;
 }
 
+/* constexpr */
 inline int StringRef::memcmp__(const void *s1, const void *s2, size_t const n) noexcept{
 //	return __builtin_memcmp(s1, s2, n);
+	// clang do not like memcmp() in constexpr
 	return memcmp(s1, s2, n);
 }
 
-inline size_t StringRef::strlen__(const char *s) noexcept{
+constexpr inline size_t StringRef::strlen__(const char *s) noexcept{
 	return s ? strlen(s) : 0;
 }
 
-inline const char *StringRef::strptr__(const char *s) noexcept{
+constexpr inline const char *StringRef::strptr__(const char *s) noexcept{
 	return s ? s : "";
 }
 
