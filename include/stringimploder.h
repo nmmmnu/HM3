@@ -3,6 +3,7 @@
 
 #include <sstream>
 
+#if 0
 class StringImploder{
 public:
 	template<class CONTAINER>
@@ -29,6 +30,32 @@ public:
 private:
 	std::stringstream ss_;
 };
+#else
+
+struct StringImploder{
+	template<class CONTAINER>
+	std::string operator() (const CONTAINER &container, char const delimiter){
+		std::stringstream ss;
+
+		bool first = true;
+
+		for(const auto &s : container){
+			if (first){
+				first = false;
+			}else{
+				ss.put(delimiter);
+			}
+
+			ss << s;
+		}
+
+		return ss.str();
+	}
+};
+
+
+#endif
+
 
 #endif
 
