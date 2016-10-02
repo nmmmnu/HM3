@@ -1,12 +1,24 @@
 #include "skiplist.h"
 
 #include <stdexcept>
-#include <algorithm> // fill
+#include <algorithm>	// fill
+#include <random>	// mt19937, bernoulli_distribution
 
 namespace hm3{
 
 
-std::mt19937 SkipList::rand_{ (uint32_t) time(nullptr) };
+class SkipList::RandomGenerator{
+public:
+	bool operator()(){
+		return distr_(gen_);
+	}
+
+private:
+	std::mt19937			gen_{ (uint32_t) time(nullptr) };
+	std::bernoulli_distribution	distr_{ 0.5 };
+};
+
+SkipList::RandomGenerator SkipList::rand_;
 
 /*
 We do ***NOT*** store next[] array size,
@@ -295,13 +307,12 @@ auto SkipList::locate_(const StringRef &key, bool const complete_evaluation) con
 auto SkipList::_getRandomHeight() -> height_type{
 	// This gives slightly better performance,
 	// than divide by 3 or multply by 0.33
-	auto part = rand_.max() >> 1;
 
 	// We execute rand() inside the loop,
 	// but performance is fast enought.
 
 	height_type h = 1;
-	while(h < height_ && rand_() > part)
+	while( h < height_ && rand_() )
 		h++;
 
 	return h;

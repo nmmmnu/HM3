@@ -7,25 +7,31 @@
 
 class BlobRef{
 public:
+	constexpr
 	BlobRef() = default;
 
+	constexpr
 	BlobRef(const void *mem, size_t const size) noexcept :
 				mem_( (const char *) mem ),
 				size_(size){}
 
 	template<size_t N>
+	constexpr
 	BlobRef(const char(&mem)[N]) noexcept:
 				BlobRef(mem, N){}
 
 public:
+	constexpr
 	bool empty() const noexcept{
 		return mem_ == nullptr || size_ == 0;
 	}
 
+	constexpr
 	size_t size() const noexcept{
 		return size_;
 	}
 
+	constexpr
 	const void *data_() const noexcept{
 		return mem_;
 	}
@@ -63,6 +69,7 @@ public:
 	}
 
 	template <class T>
+	constexpr
 	const T *as(const void *ptr, size_t const elements = 1) const noexcept{
 		static_assert(std::is_pod<T>::value, "T must be POD type");
 
@@ -71,11 +78,12 @@ public:
 
 	// ambiguous call guard for 0
 	template <class T>
+	constexpr
 	const T *as(int const pos = 0, size_t const elements = 1) const noexcept{
-		if (pos < 0)
-			return nullptr;
-
-		return as<T>( (size_t) pos, elements );
+		return pos < 0 ?
+			nullptr
+		:
+			as<T>( (size_t) pos, elements );
 	}
 
 private:

@@ -4,7 +4,6 @@
 #include "ilist.h"
 #include "iiterator.h"
 
-#include <random>
 #include <array>
 
 
@@ -80,7 +79,9 @@ private:
 	height_type _getRandomHeight();
 
 private:
-	static std::mt19937 rand_;
+	class RandomGenerator;
+
+	static RandomGenerator rand_;
 };
 
 // ==============================

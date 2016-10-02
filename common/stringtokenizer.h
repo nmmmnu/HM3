@@ -11,6 +11,7 @@ private:
 	static constexpr char DEFAULT_DELIMITER = ' ';
 
 public:
+	constexpr
 	StringTokenizer(const StringRef &line, char const delimiter = DEFAULT_DELIMITER) :
 						line_(line),
 						delimiter_(delimiter){}
@@ -19,7 +20,7 @@ public:
 		pos_ = 0;
 	}
 
-	bool hasNext(){
+	bool hasNext() const{
 		return pos_ < line_.size();
 	}
 

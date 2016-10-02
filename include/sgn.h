@@ -2,7 +2,7 @@
 #define SGN_H_
 
 template<typename T>
-int sgn(const T a) noexcept{
+constexpr int sgn(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
 }
 
