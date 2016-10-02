@@ -1,5 +1,5 @@
-#ifndef ZLIB_COMPRESSOR_H_
-#define ZLIB_COMPRESSOR_H_
+#ifndef ZLIB_EASY_COMPRESSOR_H_
+#define ZLIB_EASY_COMPRESSOR_H_
 
 #include <cstddef>
 
