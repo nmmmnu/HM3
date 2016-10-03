@@ -48,7 +48,6 @@ private:
 		reorder_(push_pos, begin,                mid, level, level_type(this_level + 1));
 		reorder_(push_pos, branch_type(mid + 1), end, level, level_type(this_level + 1));
 	}
-
 };
 
 

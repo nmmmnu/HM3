@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 
 	using MyLoop		= net::AsyncLoop<MySelector, MyWorker>;
 
-	int const fd1 = net::socket_create(net::socket_tcp, HOSTNAME, PORT);
+	int const fd1 = net::socket_create(net::SOCKET_TCP{}, HOSTNAME, PORT);
 
 	MyLoop loop( MySelector{ MAX_CLIENTS }, MyWorker{ &adapter }, { fd1 },
 							CONNECTION_TIMEOUT, MAX_PACKET_SIZE);

@@ -30,11 +30,8 @@ constexpr int SOCKET_NAME_SIZE		= -8;
 
 // ===========================
 
-struct SOCKET_TCP{  constexpr SOCKET_TCP(){}  };
-struct SOCKET_UNIX{ constexpr SOCKET_UNIX(){} };
-
-constexpr SOCKET_TCP	socket_tcp;
-constexpr SOCKET_UNIX	socket_unix;
+struct SOCKET_TCP{};
+struct SOCKET_UNIX{};
 
 // ===========================
 
