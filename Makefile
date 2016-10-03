@@ -21,7 +21,7 @@ CF_WARN		= -Wall -Wpedantic -Wdeprecated -Wconversion
 
 CF_MISC		=
 
-CF_ALL		= -std=c++11	\
+CF_ALL		= -std=c++14	\
 			$(CF_DEPS)	\
 			$(CF_INCL)	\
 			$(CF_OPTIM)	\

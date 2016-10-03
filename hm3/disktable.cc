@@ -110,7 +110,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
 		{
-			const auto &ll = g_llholder.get();
+			const auto &ll = g_llholder.value;
 
 			branch_type node_pos = 0;
 

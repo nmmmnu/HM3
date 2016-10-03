@@ -3,13 +3,12 @@
 #include <cstdio>
 
 int main(){
-	using namespace	hm3::btreeindex;
+	using namespace hm3::btreeindex;
 
-	LevelOrderLookup<7> lookupHolder;
-	const auto &table = lookupHolder.get();
+	constexpr LevelOrderLookup<7> ll;
 
-	for(branch_type i = 0; i < table.size(); ++i)
-		printf("%4hu | %4hu\n", i, table[i] );
+	for(branch_type i = 0; i < ll.size; ++i)
+		printf("%4hu | %4hu\n", i, ll.value[i] );
 
 }
 

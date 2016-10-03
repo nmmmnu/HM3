@@ -119,7 +119,7 @@ void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
 		return;
 	}
 
-	const auto &ll = llHolder_.get();
+	const auto &ll = llHolder_.value;
 
 	using size_type = typename LIST::size_type;
 
