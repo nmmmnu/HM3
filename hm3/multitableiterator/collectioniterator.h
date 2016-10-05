@@ -13,8 +13,8 @@ template <class CONTAINER>
 class CollectionIterator : public IIterator<CollectionIterator<CONTAINER> >{
 private:
 	using Table		= typename CONTAINER::value_type;
-	using Matrix		= helpers::IteratorPair_<Table>;
-	using vector_type	= std::vector<Matrix>;
+	using IteratorPair	= multitableiterator_impl::IteratorPair_<Table>;
+	using vector_type	= std::vector<IteratorPair>;
 
 	using size_type		= typename vector_type::size_type;
 

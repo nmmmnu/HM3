@@ -9,7 +9,7 @@ namespace hm3{
 namespace multitableiterator{
 
 
-namespace helpers{
+namespace multitableiterator_impl{
 
 	template <class TABLE>
 	class IteratorPair_{
@@ -35,10 +35,7 @@ namespace helpers{
 
 	public:
 		const Pair &operator *() const{
-			if (cur == end)
-				return Pair::zero();
-
-			return *cur;
+			return cur != end ? *cur : Pair::zero();
 		}
 
 		void operator ++(){

@@ -15,8 +15,9 @@ all: 		$(A)test_checkedvalue $(A)test_stringref		\
 		$(A)test_blobref					\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
-		$(A)test_binarysearch					\
-		$(A)test_compressor
+		$(A)test_binarysearch
+#					\
+#		$(A)test_compressor
 
 $(A)test_checkedvalue: $(O)test_checkedvalue.o
 	$(LINK)
