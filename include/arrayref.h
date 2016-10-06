@@ -2,6 +2,7 @@
 #define ARRAY_REF_H_
 
 //#include <vector>
+#include <cstdlib>	// size_t
 
 template<class T>
 class ArrayRef{
