@@ -26,8 +26,6 @@ public:
 private:
 	IteratorPair1	it1_;
 	IteratorPair2	it2_;
-
-	bool	_internalError = false;
 };
 
 

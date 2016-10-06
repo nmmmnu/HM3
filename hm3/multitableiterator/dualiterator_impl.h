@@ -14,25 +14,6 @@ DualIterator<TABLE1, TABLE2>::DualIterator(const TABLE1 &table1, const TABLE2 &t
 					it2_(table2, key){
 }
 
-#if 0
-// straight forward solution 3 comparisons
-template <class TABLE1, class TABLE2>
-auto DualIterator<TABLE1, TABLE2>::operator++() -> DualIterator &{
-	const Pair &p = operator*();
-
-	if ( ! p ){
-		// notice, there is no increment here !!!
-		_internalError = true;
-		return *this;
-	}
-
-	it1_.incrementIfSame(p);
-	it2_.incrementIfSame(p);
-
-	return *this;
-}
-#endif
-
 // faster solution with 1 comparison.
 template <class TABLE1, class TABLE2>
 auto DualIterator<TABLE1, TABLE2>::operator++() -> DualIterator &{
@@ -68,9 +49,6 @@ const Pair &DualIterator<TABLE1, TABLE2>::operator*() const{
 
 template <class TABLE1, class TABLE2>
 bool DualIterator<TABLE1, TABLE2>::operator==(const DualIterator &other) const{
-	if (_internalError)
-		return true;
-
 	return it1_ == other.it1_ && it2_ == other.it2_;
 }
 
