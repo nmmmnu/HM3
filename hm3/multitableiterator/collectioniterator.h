@@ -30,17 +30,19 @@ public:
 
 	CollectionIterator &operator++();
 
-	const Pair &operator*() const;
+	const Pair &operator*() const{
+		return tmp_pair ? *tmp_pair : dereference_();
+	}
 
 	bool operator==(const CollectionIterator &other) const;
 
 private:
-	void tmp_pairUpdate_(size_type index, const Pair *pair = nullptr) const;
+	const Pair &dereference_() const;
 
 private:
 	vector_type		it_;
 
-	bool			_internalError	= false;
+	bool			_ended		= false;
 
 	/* !!! */ mutable
 	const Pair		*tmp_pair	= nullptr;

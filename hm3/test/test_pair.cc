@@ -148,6 +148,9 @@ static void pair_test(const char *module){
 
 	PRINTF_TEST("cmp null",		p.cmp((char *) nullptr)		);
 
+	PRINTF_TEST("eq",		p.equals(key)			);
+	PRINTF_TEST("!eq",		! p.equals("something")		);
+
 	PRINTF_TEST("valid",		p.valid()			);
 	PRINTF_TEST("valid",		p.valid(t)			);
 
@@ -157,11 +160,9 @@ static void pair_test(const char *module){
 	PRINTF_TEST("cmp pair",		p2.cmp(p) < 0			);
 	PRINTF_TEST("cmp pair",		p.cmp(p2) > 0			);
 
-	Pair::Comp comp;
-
-	PRINTF_TEST("cmp comp",		! comp(p, p)			);
-	PRINTF_TEST("cmp comp",		! comp(p, p2)			);
-	PRINTF_TEST("cmp comp",		comp(p2, p)			);
+	PRINTF_TEST("eq pair",		p.equals(p)			);
+	PRINTF_TEST("eq pair",		! p.equals(p2)			);
+	PRINTF_TEST("!eq pair",		! p2.equals(p)			);
 	}
 
 	{

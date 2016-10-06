@@ -61,6 +61,17 @@ public:
 		return cmp( pair.getKey() );
 	}
 
+	bool equals(const char *key, size_t size) const noexcept;
+	bool equals(const char *key) const noexcept;
+
+	bool equals(const StringRef &key) const noexcept{
+		return equals(key.data(), key.size());
+	}
+
+	bool equals(const Pair &pair) const noexcept{
+		return equals( pair.getKey() );
+	}
+
 	int cmpTime(const Pair &pair) const noexcept;
 
 	bool isTombstone() const noexcept;
@@ -81,14 +92,6 @@ public:
 	void swap(Pair &other){
 		std::swap(pimpl, other.pimpl);
 	}
-
-public:
-	struct Comp{
-		template <typename T>
-		bool operator()(const Pair &p, const T &rhs){
-			return p.cmp(rhs) < 0;
-		}
-	};
 
 public:
 	constexpr

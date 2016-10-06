@@ -72,6 +72,18 @@ int Pair::cmp(const char *key) const noexcept{
 		CMP_ZERO;
 }
 
+bool Pair::equals(const char *key, size_t size) const noexcept{
+	return pimpl ?
+		pimpl->equals(key, size) :
+		false;
+}
+
+bool Pair::equals(const char *key) const noexcept{
+	return pimpl ?
+		pimpl->equals(key) :
+		false;
+}
+
 int Pair::cmpTime(const Pair &pair) const noexcept{
 	// Compare time
 	auto const c1 = getCreated();
