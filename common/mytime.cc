@@ -25,10 +25,10 @@ uint32_t MyTime::now32() noexcept{
 }
 
 uint64_t MyTime::now64() noexcept{
+	// thanks to Howard Hinnant for this
 	const auto now = std::chrono::system_clock::now().time_since_epoch();
 
 	const auto sec = std::chrono::duration_cast<std::chrono::seconds>(now);
-//	const auto mil = std::chrono::duration_cast<std::chrono::milliseconds>(now - sec);
 	const auto mil = std::chrono::duration_cast<std::chrono::microseconds>(now - sec);
 
 	const auto sec_int = (uint32_t) sec.count();

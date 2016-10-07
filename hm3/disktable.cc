@@ -322,17 +322,21 @@ const Pair &DiskTable::Iterator::operator*() const{
 	if (tmp_pod && tmp_pos == pos_)
 		return tmp_pair;
 
+	const PairBlob *pod;
+
 	if (useFastForward_ && tmp_pod && tmp_pos == pos_ - 1){
 		// get data without seek, walk forward
 		// this gives 50% performance
-		tmp_pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getBytes() );
+		pod = list_.getNextFromDisk_(tmp_pod, tmp_pair.getBytes() );
 	}else{
 		// get data via seek
-		tmp_pod = list_.getAtFromDisk_(pos_);
+		pod = list_.getAtFromDisk_(pos_);
 	}
 
-	tmp_pos = pos_;
+	// SETTING MUTABLE VARIABLES
 
+	tmp_pod  = pod;
+	tmp_pos  = pos_;
 	tmp_pair = tmp_pod;
 
 	return tmp_pair;

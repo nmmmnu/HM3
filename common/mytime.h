@@ -21,35 +21,26 @@ public:
 	static uint32_t now32() noexcept;
 	static uint64_t now64() noexcept;
 
-	static bool expired(uint64_t date, uint32_t expiration) noexcept;
+	static bool expired(uint64_t const date, uint32_t const expiration) noexcept{
+		return date + combine(expiration) < now();
+	}
 
-	constexpr static uint64_t combine(uint32_t sec, uint32_t usec = 0) noexcept;
+	constexpr static uint64_t combine(uint32_t const sec, uint32_t const usec = 0) noexcept{
+		return (uint64_t) sec << 32 | usec;
+	}
 
-	constexpr static uint32_t uncombine(uint64_t timestamp) noexcept;
-	constexpr static uint32_t uncombine2(uint64_t timestamp) noexcept;
+	constexpr static uint32_t uncombine(uint64_t const timestamp) noexcept{
+		return uint32_t( timestamp >> 32 );
+	}
+
+	constexpr static uint32_t uncombine2(uint64_t const timestamp) noexcept{
+		return uint32_t( timestamp & 0xFFffFFff );
+	}
 
 private:
 	static char buffer[STRING_SIZE];
 
 };
-
-// ==============================
-
-inline bool MyTime::expired(uint64_t const date, uint32_t const expiration) noexcept{
-	return date + combine(expiration) < now();
-}
-
-constexpr inline uint64_t MyTime::combine(uint32_t const sec, uint32_t const usec) noexcept{
-	return (uint64_t) sec << 32 | usec;
-}
-
-constexpr inline uint32_t MyTime::uncombine(uint64_t const timestamp) noexcept{
-	return (uint32_t) (timestamp >> 32);
-}
-
-constexpr inline uint32_t MyTime::uncombine2(uint64_t const timestamp) noexcept{
-	return (uint32_t) (timestamp & 0xFFffFFff);
-}
 
 #endif
 

@@ -88,7 +88,7 @@ public:
 		return equals(data.data(), data.size() );
 	}
 
-	constexpr bool operator ==(char c) const noexcept{
+	constexpr bool operator ==(char const c) const noexcept{
 		return size_ == 1 && data_[0] == c;
 	}
 
