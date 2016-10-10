@@ -10,8 +10,12 @@ namespace hm3{
 namespace btreeindex{
 
 
-template <class LIST>
-bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LIST &list){
+template <class LIST, class COMPRESSOR>
+constexpr LevelOrderLookup<NODE_LEVELS> BTreeIndexBuilder<LIST, COMPRESSOR>::llHolder_;
+
+
+template <class LIST, class COMPRESSOR>
+bool BTreeIndexBuilder<LIST, COMPRESSOR>::createFromList(const StringRef &filename, const LIST &list){
 	auto const count = list.getCount();
 
 	levels_ = calcDepth1__(count);
@@ -32,14 +36,14 @@ bool BTreeIndexBuilder<LIST>::createFromList(const StringRef &filename, const LI
 	}
 
 	file_indx_.close();
-        file_data_.close();
+	file_data_.close();
 
 	return true;
 }
 
 
-template <class LIST>
-auto BTreeIndexBuilder<LIST>::calcDepth__(size_type count) -> level_type{
+template <class LIST, class COMPRESSOR>
+auto BTreeIndexBuilder<LIST, COMPRESSOR>::calcDepth__(size_type count) -> level_type{
 	// Biliana
 	// log 54 (123) = ln (123) / ln (54)
 	// but this is true for B+Tree only...
@@ -62,8 +66,8 @@ auto BTreeIndexBuilder<LIST>::calcDepth__(size_type count) -> level_type{
 }
 
 
-template <class LIST>
-void BTreeIndexBuilder<LIST>::injectEmptyNode_(level_type const level, level_type const this_level){
+template <class LIST, class COMPRESSOR>
+void BTreeIndexBuilder<LIST, COMPRESSOR>::injectEmptyNode_(level_type const level, level_type const this_level){
 	if (this_level == level){
 		// add empty node
 
@@ -83,8 +87,8 @@ void BTreeIndexBuilder<LIST>::injectEmptyNode_(level_type const level, level_typ
 }
 
 
-template <class LIST>
-void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const index){
+template <class LIST, class COMPRESSOR>
+void BTreeIndexBuilder<LIST, COMPRESSOR>::injectValue_(const LIST &list, size_type const index){
 	// we need to have the pair,
 	// because key "live" inside it.
 	const auto &p = list.getAt(index);
@@ -99,15 +103,26 @@ void BTreeIndexBuilder<LIST>::injectValue_(const LIST &list, size_type const ind
 		file_data_.write( (const char *) &nd, sizeof nd );
 
 		// push the key
-		file_data_.write( key.data(), (std::streamsize) key.size() );
+		injectValueKey_(compressor_, key);
 	}
 
 	current_ += sizeof(uint16_t) + sizeof(uint64_t) + key.size();
 }
 
+template <class LIST, class COMPRESSOR>
+template <class CT>
+void BTreeIndexBuilder<LIST, COMPRESSOR>::injectValueKey_(const CT &, const StringRef &key){
+	file_data_.write( key.data(), (std::streamsize) key.size() );
+}
 
-template <class LIST>
-void BTreeIndexBuilder<LIST>::reorder(const LIST &list,
+template <class LIST, class COMPRESSOR>
+void BTreeIndexBuilder<LIST, COMPRESSOR>::injectValueKey_(std::nullptr_t, const StringRef &key){
+	file_data_.write( key.data(), (std::streamsize) key.size() );
+}
+
+
+template <class LIST, class COMPRESSOR>
+void BTreeIndexBuilder<LIST, COMPRESSOR>::reorder(const LIST &list,
 				size_type const begin, size_type const end,
 				level_type const level, level_type const this_level){
 

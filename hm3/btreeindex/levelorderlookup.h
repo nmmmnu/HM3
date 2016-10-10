@@ -1,7 +1,7 @@
 #ifndef LEVEL_ORDER_LOOKUP_H_
 #define LEVEL_ORDER_LOOKUP_H_
 
-#include "btreeindexnode.h"
+#include "btreeindextypes.h"
 
 namespace hm3{
 namespace btreeindex{

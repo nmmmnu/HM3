@@ -47,6 +47,14 @@ private:
 	buffer_type buffer_;
 };
 
+// ===========================
+
+struct ZLibCompressorTag{
+	using fw_type	= ZLibCompressor;
+	using bw_type	= ZLibDeCompressor;
+};
+
+
 } // namespace
 
 #endif

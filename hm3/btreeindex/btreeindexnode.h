@@ -1,16 +1,10 @@
 #ifndef BTREE_INDEX_NODE_H
 #define BTREE_INDEX_NODE_H
 
-#include <cstdint>
+#include "btreeindextypes.h"
 
 namespace hm3{
 namespace btreeindex{
-
-
-using level_type	= uint8_t;
-using branch_type	= uint16_t;
-using offset_type	= uint64_t;
-
 
 // 512 would will fit in 4K page, but keys are unknown size.
 // because of in-node binary search, best to be power of 2 - 1
