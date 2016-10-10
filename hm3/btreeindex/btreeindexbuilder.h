@@ -39,7 +39,10 @@ private:
 
 	template <class CT>
 	void injectValueKey_(const CT &, const StringRef &key);
-	void injectValueKey_(std::nullptr_t, const StringRef &key);
+
+	void injectValueKey_(std::nullptr_t, const StringRef &key){
+		file_data_.write( key.data(), (std::streamsize) key.size() );
+	}
 
 	void reorder(const LIST &list,
 				size_type begin, size_type end,

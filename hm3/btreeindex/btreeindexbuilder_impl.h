@@ -116,12 +116,6 @@ void BTreeIndexBuilder<LIST, COMPRESSOR>::injectValueKey_(const CT &, const Stri
 }
 
 template <class LIST, class COMPRESSOR>
-void BTreeIndexBuilder<LIST, COMPRESSOR>::injectValueKey_(std::nullptr_t, const StringRef &key){
-	file_data_.write( key.data(), (std::streamsize) key.size() );
-}
-
-
-template <class LIST, class COMPRESSOR>
 void BTreeIndexBuilder<LIST, COMPRESSOR>::reorder(const LIST &list,
 				size_type const begin, size_type const end,
 				level_type const level, level_type const this_level){
