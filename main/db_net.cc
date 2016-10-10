@@ -50,7 +50,7 @@ int main(int argc, char **argv){
 
 	int const fd1 = net::socket_create(net::SOCKET_TCP{}, HOSTNAME, PORT);
 
-	MyLoop loop( MySelector{ MAX_CLIENTS }, MyWorker{ &adapter }, { fd1 },
+	MyLoop loop( MySelector{ MAX_CLIENTS }, MyWorker{ adapter }, { fd1 },
 							CONNECTION_TIMEOUT, MAX_PACKET_SIZE);
 
 	while(loop.process());

@@ -35,7 +35,13 @@ private:
 private:
 	PairBlob() = default;
 
-	static void *operator new(size_t, size_t size, bool nothrow);
+	static void *operator new(size_t, size_t const size){
+		return ::operator new(size);
+	}
+
+	static void *operator new(size_t, size_t const size, const std::nothrow_t){
+		return ::operator new(size, std::nothrow);
+	}
 
 public:
 	static std::unique_ptr<PairBlob> create(	const char *key, size_t keylen,

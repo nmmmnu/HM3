@@ -7,16 +7,39 @@
 
 #include "iobuffer.h"
 
+#include "stringref.h"
+
 #include <vector>
 
 
 namespace net{
 namespace worker{
 
-template<class PROTOCOL, class DB_ADAPTER = std::nullptr_t>
-class KeyValueWorker{
+struct KeyValueWorkerStrings{
+	static constexpr StringRef EXIT		= "EXIT";
+	static constexpr StringRef EXIT2	= "exit";
+
+	static constexpr StringRef SHUTDOWN	= "SHUTDOWN";
+	static constexpr StringRef SHUTDOWN2	= "shutdown";
+
+	static constexpr StringRef INFO		= "INFO";
+	static constexpr StringRef INFO2	= "info";
+
+	static constexpr StringRef RELOAD	= "RELOAD";
+	static constexpr StringRef RELOAD2	= "reload";
+
+	static constexpr StringRef GET		= "GET";
+	static constexpr StringRef GET2		= "get";
+
+	static constexpr StringRef GETALL	= "HGETALL";
+	static constexpr StringRef GETALL2	= "hgetall";
+
+};
+
+template<class PROTOCOL, class DB_ADAPTER>
+class KeyValueWorker : private KeyValueWorkerStrings{
 public:
-	KeyValueWorker(DB_ADAPTER *db = nullptr) : db_(db){}
+	KeyValueWorker(DB_ADAPTER &db) : db_(db){}
 
 	template<class CONNECTION>
 	WorkerStatus operator()(CONNECTION &buffer);
@@ -41,58 +64,8 @@ private:
 	WorkerStatus sendResponseMulti_(CONNECTION &buffer, const CONTAINER &msg);
 
 private:
-	static constexpr const char *EXIT	= "EXIT";
-	static constexpr const char *EXIT2	= "exit";
-
-	static constexpr const char *SHUTDOWN	= "SHUTDOWN";
-	static constexpr const char *SHUTDOWN2	= "shutdown";
-
-	static constexpr const char *INFO	= "INFO";
-	static constexpr const char *INFO2	= "info";
-
-	static constexpr const char *RELOAD	= "RELOAD";
-	static constexpr const char *RELOAD2	= "reload";
-
-	static constexpr const char *GET	= "GET";
-	static constexpr const char *GET2	= "get";
-
-	static constexpr const char *GETALL	= "HGETALL";
-	static constexpr const char *GETALL2	= "hgetall";
-
-private:
-	// Mock commands
-	static std::string db_info_(const std::nullptr_t *);
-	static std::string db_get_(const std::nullptr_t *, const StringRef &key);
-	static std::vector<StringRef> db_getall_(const std::nullptr_t *, const StringRef &key);
-
-	// Actual commands
-	template<class DB_ADAPTER_>
-	static std::string db_info_(const DB_ADAPTER_ *db){
-		if (! db)
-			return {};
-
-		return db->info();
-	}
-
-	template<class DB_ADAPTER_>
-	static std::string db_get_(const DB_ADAPTER_ *db, const StringRef &key){
-		if (! db)
-			return {};
-
-		return db->get(key);
-	}
-
-	template<class DB_ADAPTER_>
-	static std::vector<std::string> db_getall_(const DB_ADAPTER_ *db, const StringRef &key){
-		if (! db)
-			return {};
-
-		return db->getall(key);
-	}
-
-private:
 	PROTOCOL	protocol_;
-	DB_ADAPTER	*db_;
+	DB_ADAPTER	&db_;
 };
 
 

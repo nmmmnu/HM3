@@ -4,6 +4,8 @@
 
 #include <unistd.h>	// access
 
+constexpr bool CHECK_FILE_EXISTS = false;
+
 static void printUsage(const char *name){
 	printf("Usage:\n");
 	printf("%s [file.db] [btree_file]\n", name);
@@ -25,12 +27,10 @@ int main(int argc, char **argv){
 	const char *input_file	= argv[1];
 	const char *output_file	= argv[2];
 
-#if 0
-	if (fileExists(output)){
-		printf("File %s exists. Please remove it and try again.\n", output);
+	if (CHECK_FILE_EXISTS && fileExists(output_file)){
+		printf("File %s exists. Please remove it and try again.\n", output_file);
 		return 2;
 	}
-#endif
 
 	using DiskTable = hm3::DiskTable;
 

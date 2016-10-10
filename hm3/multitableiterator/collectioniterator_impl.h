@@ -20,7 +20,7 @@ auto CollectionIterator<CONTAINER>::operator++() -> CollectionIterator &{
 
 	if ( ! pair ){
 		// notice, there is no increment here !!!
-		_ended = true;
+		ended_ = true;
 		return *this;
 	}
 
@@ -38,8 +38,8 @@ bool CollectionIterator<CONTAINER>::operator==(const CollectionIterator &other) 
 	if (it_.size() != other.it_.size())
 		return false;
 
-	// ???
-	if (_ended || other._ended)
+	// this seems to skip the loop faster
+	if (ended_ || other.ended_)
 		return true;
 
 	for(size_type i = 0; i < it_.size(); ++i){

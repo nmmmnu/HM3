@@ -42,7 +42,7 @@ private:
 private:
 	vector_type		it_;
 
-	bool			_ended		= false;
+	bool			ended_		= false;
 
 	/* !!! */ mutable
 	const Pair		*tmp_pair	= nullptr;

@@ -14,12 +14,18 @@ public:
 	WorkerStatus operator()(CONNECTION &buffer);
 
 private:
-	static const StringRef cmd_hello;
-	static const StringRef cmd_help;
-	static const StringRef cmd_exit;
-	static const StringRef cmd_shutdown;
+	static constexpr StringRef cmd_hello	= "hello\r\n";
+	static constexpr StringRef cmd_help	= "help\r\n";
+	static constexpr StringRef cmd_exit	= "exit\r\n";
+	static constexpr StringRef cmd_shutdown	= "shutdown\r\n";
 
-	static const StringRef msg_help;
+	static constexpr StringRef msg_help	=
+				"Usage:\r\n"
+				"   hello    - greeting\r\n"
+				"   help     - this message\r\n"
+				"   exit     - disconnect\r\n"
+				"   shutdown - shutdown the server\r\n"
+				"\r\n";
 
 private:
 	template<class CONNECTION>

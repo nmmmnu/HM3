@@ -4,5 +4,5 @@ SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 include Makefile.sub
 
-all: $(O)echoworker.o
+all: $(O)echoworker.o $(O)keyvalueworker.o
 

@@ -16,15 +16,6 @@ const uint32_t PairBlob::MAX_VAL_SIZE = PairBlob::sizeofValue__();
 
 // ==============================
 
-void *PairBlob::operator new(size_t , size_t const size, bool const nothrow){
-	if (nothrow)
-		return ::operator new(size, std::nothrow);
-
-	return ::operator new(size);
-}
-
-// ==============================
-
 std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen,
 				const char *val, size_t const vallen,
 				uint32_t const expires, uint32_t const created){
@@ -45,7 +36,7 @@ std::unique_ptr<PairBlob> PairBlob::create(	const char *key, size_t const keylen
 
 	size_t const size = sizeofBase__() + keylen + 1 + vallen + 1;
 
-	std::unique_ptr<PairBlob>  pair{ new(size, false) PairBlob };
+	std::unique_ptr<PairBlob>  pair{ new(size, std::nothrow) PairBlob };
 
 	pair->created	= htobe64(getCreateTime_(created));
 	pair->expires	= htobe32(expires);
@@ -71,7 +62,7 @@ std::unique_ptr<PairBlob> PairBlob::create(const PairBlob *src){
 
 	size_t const size = src->getBytes();
 
-	std::unique_ptr<PairBlob> pair{ new(size, false) PairBlob };
+	std::unique_ptr<PairBlob> pair{ new(size) PairBlob };
 
 	memcpy(pair.get(), src, size);
 

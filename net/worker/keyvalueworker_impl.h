@@ -40,43 +40,44 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::process_request_(CONNECTION &
 	protocol_.print();
 
 	const auto &p = protocol_.getParams();
+	const auto &cmd = p[0];
 
-	if (p[0] == SHUTDOWN || p[0] == SHUTDOWN2){
+	if (cmd == SHUTDOWN || cmd == SHUTDOWN2){
 		return WorkerStatus::SHUTDOWN;
 	}
 
-	if (p[0] == EXIT || p[0] == EXIT2){
+	if (cmd == EXIT || cmd == EXIT2){
 		return WorkerStatus::DISCONNECT;
 	}
 
-	if (p[0] == RELOAD || p[0] == RELOAD2){
+	if (cmd == RELOAD || cmd == RELOAD2){
 		return sendResponseString_(buffer, "OK");
 	}
 
-	if (p[0] == INFO || p[0] == INFO2){
+	if (cmd == INFO || cmd == INFO2){
 		if (p.size() != 1)
 			return sendResponseError_(buffer, "Bad request");
 
-		return sendResponseString_(buffer, db_info_(db_) );
+		return sendResponseString_(buffer, db_.info() );
 	}
 
-	if (p[0] == GET || p[0] == GET2){
+	if (cmd == GET || cmd == GET2){
 		if (p.size() != 2)
 			return sendResponseError_(buffer, "Bad request");
 
 		const auto &key = p[1];
 
-		return sendResponseString_(buffer, db_get_(db_, key));
+		return sendResponseString_(buffer, db_.get(key));
 	}
 
-	if (p[0] == GETALL || p[0] == GETALL2){
+	if (cmd == GETALL || cmd == GETALL2){
 		if (p.size() != 2)
 			return sendResponseError_(buffer, "Bad request");
 
 		const auto &key = p[1];
 		(void) key;
 
-		return sendResponseMulti_(buffer, db_getall_(db_, key) );
+		return sendResponseMulti_(buffer, db_.getall(key) );
 	}
 
 	return sendResponseError_(buffer, "Not Implemented");
@@ -106,28 +107,6 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::sendResponseMulti_(CONNECTION
 	buffer.clear();
 	protocol_.response_strings(buffer, msg);
 	return WorkerStatus::WRITE;
-}
-
-// ====================================
-
-template<class PROTOCOL, class DB_ADAPTER>
-std::string KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_info_(const std::nullptr_t *){
-	return "Mock Adapter Info";
-}
-
-template<class PROTOCOL, class DB_ADAPTER>
-std::string KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_get_(const std::nullptr_t *, const StringRef &){
-	return "value";
-}
-
-template<class PROTOCOL, class DB_ADAPTER>
-std::vector<StringRef> KeyValueWorker<PROTOCOL, DB_ADAPTER>::db_getall_(const std::nullptr_t *, const StringRef &){
-	return {
-		"key1", "value1",
-		"key2", "value2",
-		"key3", "value3",
-		"key4", "value4"
-	};
 }
 
 } // namespace worker
