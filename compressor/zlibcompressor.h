@@ -25,7 +25,7 @@ public:
 	const static int DEFAULT_COMPRESSION	;
 
 public:
-	ZLibCompressor(int compressionLevel = DEFAULT_COMPRESSION);
+	ZLibCompressor(int compressionLevel = BEST_COMPRESSION);
 	~ZLibCompressor();
 
 	bool operator()(const char *data_in, size_t const size_in, char *data_out, size_t &size_out);
