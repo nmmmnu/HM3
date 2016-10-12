@@ -12,7 +12,7 @@ namespace hm3{
 namespace btreeindex{
 
 
-template <class LIST, class COMPRESSOR = std::nullptr_t>
+template <class LIST>
 class BTreeIndexBuilder{
 public:
 	constexpr static bool MEMSET_UNUSED_VALUES	= true;
@@ -37,13 +37,6 @@ private:
 
 	void injectValue_(const LIST &list, size_type index);
 
-	template <class CT>
-	void injectValueKey_(const CT &, const StringRef &key);
-
-	void injectValueKey_(std::nullptr_t, const StringRef &key){
-		file_data_.write( key.data(), (std::streamsize) key.size() );
-	}
-
 	void reorder(const LIST &list,
 				size_type begin, size_type end,
 				level_type level, level_type this_level = 0);
@@ -64,8 +57,6 @@ private:
 	std::ofstream	file_data_;
 	size_t		current_	= 0;
 	branch_type	levels_;
-
-	COMPRESSOR	compressor_;
 };
 
 
