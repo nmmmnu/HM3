@@ -11,12 +11,12 @@ constexpr const char *DOT_INDX	= ".tree";
 constexpr const char *DOT_DATA	= ".keys";
 
 
-inline std::string filenameIndx(std::string filename){
-	return filename.append(DOT_INDX);
+inline std::string filenameIndx(const StringRef &filename){
+	return StringRef::concatenate( { filename, DOT_INDX } );
 }
 
-inline std::string filenameData(std::string filename){
-	return filename.append(DOT_DATA);
+inline std::string filenameData(const StringRef &filename){
+	return StringRef::concatenate( { filename, DOT_INDX } );
 }
 
 

@@ -5,6 +5,8 @@
 #include <string>
 #include <ostream>
 
+#include <initializer_list>
+
 class StringRef{
 private:
 	constexpr static bool COMPARE_MICRO_OPTIMIZATIONS = true;
@@ -138,6 +140,8 @@ public:
 		return s == nullptr ? true : size == 0;
 	}
 
+	static std::string concatenate(std::initializer_list<StringRef> args);
+
 private:
 	size_t		size_	= 0;
 	const char	*data_	= "";
@@ -165,6 +169,16 @@ inline std::ostream& operator << (std::ostream& os, const StringRef &sr){
 	return os.write(sr.data(), static_cast<std::streamsize>( sr.size() ));
 }
 
+// need for standard algoritms
+
+inline bool operator ==(const std::string &s, const StringRef &sr){
+	return sr == s;
+}
+
+inline bool operator <(const std::string &s, const StringRef &sr){
+	return sr.compare(s) > 0;
+}
+
 // ==================================
 // ==================================
 // ==================================
@@ -189,6 +203,24 @@ inline int StringRef::compare(const char *s1, size_t const size1, const char *s2
 	}
 
 	return compare__(s1, size1, s2, size2);
+}
+
+inline std::string StringRef::concatenate(std::initializer_list<StringRef> args){
+	// super cheap concatenation
+
+	std::string s;
+
+	size_t reserve_size = 0;
+
+	for(const auto &sr : args)
+		reserve_size += sr.size();
+
+	s.reserve(reserve_size);
+
+	for(const auto &sr : args)
+		s.append(sr.data(), sr.size());
+
+	return s;
 }
 
 // ==================================

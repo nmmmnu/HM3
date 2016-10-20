@@ -3,23 +3,18 @@
 
 #include "stringref.h"
 
-#include <vector>
-
-#include <cstring>
 #include <cstdio>
 
 namespace net{
 
-
-// ==================================
-
 class IOBuffer{
-public:
-	using size_type = std::vector<char>::size_type;
+private:
+	using container_type	= std::string;
+	using size_type		= container_type::size_type;
 
 private:
 	size_type		head_	= 0;
-	std::vector<char>	buffer_;
+	container_type		buffer_;
 
 public:
 	void clear(){
@@ -46,25 +41,27 @@ public:
 	}
 
 	bool push(const char *p){
-		return p ? push(strlen(p), p) : false;
+		size_t size;
+
+		// C++17 if :)
+		if (p && ( size = strlen(p) ) )
+			return push_(size, p);
+
+		return false;
 	}
 
 	bool push(const StringRef &sr){
-		return push(sr.size(), sr.data());
+		if (sr.size())
+			return push_(sr.size(), sr.data());
+
+		return false;
 	}
 
 	bool push(size_t const len, const char *ptr){
-		if (ptr == nullptr || len == 0)
-			return false;
+		if (ptr && len)
+			return push_(len, ptr);
 
-		for(size_t i = 0; i < len; ++i)
-			buffer_.push_back( ptr[i] );
-
-		return true;
-	}
-
-	bool push(ssize_t const len, const char *ptr){
-		return push((size_t) len, ptr);
+		return false;
 	}
 
 	bool pop(size_t const len){
@@ -86,6 +83,12 @@ public:
 		return true;
 	}
 
+	// ==================================
+
+	bool push(ssize_t const len, const char *ptr){
+		return push((size_t) len, ptr);
+	}
+
 	bool pop(ssize_t const len){
 		return pop((size_t) len);
 	}
@@ -97,6 +100,16 @@ public:
 				head_,
 				size(),
 				(int) size(), buffer_.data() );
+	}
+
+private:
+	bool push_(size_t const len, const char *ptr){
+		if (ptr == nullptr || len == 0)
+			return false;
+
+		buffer_.append(ptr, len);
+
+		return true;
 	}
 };
 

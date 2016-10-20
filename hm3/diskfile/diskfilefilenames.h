@@ -11,16 +11,16 @@ constexpr const char *DOT_INDX = ".indx";
 constexpr const char *DOT_DATA = ".data";
 
 
-inline std::string filenameMeta(std::string filename){
+inline std::string filenameMeta(const StringRef &filename){
 	return filename;
 }
 
-inline std::string filenameIndx(std::string filename){
-	return filename.append(DOT_INDX);
+inline std::string filenameIndx(const StringRef &filename){
+	return StringRef::concatenate( { filename, DOT_INDX } );
 }
 
-inline std::string filenameData(std::string filename){
-	return filename.append(DOT_DATA);
+inline std::string filenameData(const StringRef &filename){
+	return StringRef::concatenate( { filename, DOT_DATA } );
 }
 
 

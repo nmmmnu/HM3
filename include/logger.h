@@ -6,12 +6,12 @@
 
 namespace{
 	inline void log__(){
-		std::cout << '\n';
+		std::clog << '\n';
 	}
 
 	template<typename T, typename... ARGS>
 	void log__(T first, ARGS... args){
-		std::cout << first << " ";
+		std::clog << first << " ";
 		log__(args...);
 	}
 }
