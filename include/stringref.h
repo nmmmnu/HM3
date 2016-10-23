@@ -176,7 +176,7 @@ inline bool operator ==(const std::string &s, const StringRef &sr){
 }
 
 inline bool operator <(const std::string &s, const StringRef &sr){
-	return sr.compare(s) > 0;
+	return sr.compare(s) >= 0;
 }
 
 // ==================================
