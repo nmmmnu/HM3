@@ -1,6 +1,7 @@
 #include "zlibcompressor.h"
 
-#include <stdexcept>
+#include <stdexcept>	// std::bad_alloc
+#include <new>		// std::bad_alloc for MacOS / clang
 
 #include <cstring>
 

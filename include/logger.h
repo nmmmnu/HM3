@@ -4,6 +4,9 @@
 #undef log__
 #endif
 
+#ifndef MY_LOGGER_H_
+#define MY_LOGGER_H_
+
 namespace{
 	inline void log__(){
 		std::clog << '\n';
@@ -15,4 +18,6 @@ namespace{
 		log__(args...);
 	}
 }
+
+#endif
 

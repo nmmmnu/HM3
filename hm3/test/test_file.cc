@@ -2,8 +2,9 @@
 #include <ctype.h>	// isspace
 
 #include <memory>
-#include <fstream>
 #include <vector>
+
+#include "filereader.h"
 
 #include "diskfile/diskfilebuilder.h"
 
@@ -38,18 +39,12 @@ static void printUsage(const char *cmd){
 
 
 
-template <class LIST>
-static void listLoad(LIST &list, const StringRef &filename, bool const tombstones = true){
-	static const char *trim_ch = " \t\n";
-
-	std::ifstream f;
-	f.open(filename);
-
+template <class LIST, class READER>
+static void listLoad(LIST &list, READER &reader, bool const tombstones = true){
 	unsigned int i = 0;
 
-	for(std::string line; getline(f, line);){
-		// trim
-		line.erase(line.find_last_not_of(trim_ch) + 1);
+	while( reader ){
+		std::string line = reader.getLine();
 
 		const StringRef key = line;
 		const StringRef val = tombstones ? nullptr : key;
@@ -81,12 +76,12 @@ static void listSearch(const LIST &list, const StringRef &key){
 
 
 
-template <class LIST>
-static int op_write(LIST &&list, const StringRef &filename, const std::string &filename2){
+template <class LIST, class READER>
+static int op_write(LIST &&list, READER &reader, const StringRef &filename2){
 	using DiskFileBuilder = hm3::diskfile::DiskFileBuilder;
 
 	printf("Load start...\n");
-	listLoad(list, filename);
+	listLoad(list, reader);
 	printf("Load done...\n");
 	getchar();
 
@@ -100,23 +95,25 @@ static int op_write(LIST &&list, const StringRef &filename, const std::string &f
 }
 
 static int op_write_v(char const what, const StringRef &filename, const StringRef &filename2){
+	FileReader reader{ filename };
+
 	switch(what){
 	case 'v':
-	case 'V':	return op_write(hm3::VectorList{},	filename, filename2);
+	case 'V':	return op_write(hm3::VectorList{},	reader, filename2);
 
-	case 'l':	return op_write(hm3::LinkList{},	filename, filename2);
+	case 'l':	return op_write(hm3::LinkList{},	reader, filename2);
 
 	default:
-	case 's':	return op_write(hm3::SkipList{},	filename, filename2);
+	case 's':	return op_write(hm3::SkipList{},	reader, filename2);
 	}
 }
 
 
 
-template <class LIST>
-static int op_search(LIST &&list, const StringRef &filename, const StringRef &key){
+template <class LIST, class READER>
+static int op_search(LIST &&list, READER &reader, const StringRef &key){
 	printf("Load start...\n");
-	listLoad(list, filename);
+	listLoad(list, reader);
 	printf("Load done...\n");
 	getchar();
 
@@ -131,20 +128,22 @@ static int op_search(LIST &&list, const StringRef &filename, const StringRef &ke
 static int op_search_v(char const what, const StringRef &filename, const StringRef &key){
 	constexpr auto buckets = 8192;
 
+	FileReader reader{ filename };
+
 	switch(what){
 
 	case 'T':
-	case 't':	return op_search(hm3::STLVectorList{},					filename, key);
+	case 't':	return op_search(hm3::STLVectorList{},					reader, key);
 
 	case 'v':
-	case 'V':	return op_search(hm3::VectorList{},					filename, key);
-	case 'w':	return op_search(hm3::HashList<std::vector<hm3::VectorList> >{buckets},	filename, key);
+	case 'V':	return op_search(hm3::VectorList{},					reader, key);
+	case 'w':	return op_search(hm3::HashList<std::vector<hm3::VectorList> >{buckets},	reader, key);
 
-	case 'l':	return op_search(hm3::LinkList{},					filename, key);
+	case 'l':	return op_search(hm3::LinkList{},					reader, key);
 
 	default:
-	case 's':	return op_search(hm3::SkipList{},					filename, key);
-	case 'z':	return op_search(hm3::HashList<std::vector<hm3::SkipList> >{buckets},	filename, key);
+	case 's':	return op_search(hm3::SkipList{},					reader, key);
+	case 'z':	return op_search(hm3::HashList<std::vector<hm3::SkipList> >{buckets},	reader, key);
 
 	}
 }

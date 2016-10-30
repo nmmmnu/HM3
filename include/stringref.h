@@ -82,7 +82,8 @@ public:
 		return equals(data, strlen__(data) );
 	}
 
-	constexpr bool operator ==(const std::string &data) const noexcept{
+	// constexpr - CentOS gcc / clang complains
+	bool operator ==(const std::string &data) const noexcept{
 		return equals(data.data(), data.size() );
 	}
 
@@ -100,7 +101,8 @@ public:
 		return ! (*this == data);
 	}
 
-	constexpr bool operator !=(const std::string &data) const noexcept{
+	// constexpr - CentOS gcc / clang complains
+	bool operator !=(const std::string &data) const noexcept{
 		return ! (*this == data);
 	}
 

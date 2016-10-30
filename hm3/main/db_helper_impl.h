@@ -37,15 +37,3 @@ static int op_filesearch(const LIST &list, size_t const keyCount, char **keys){
 	return 0;
 }
 
-// =====================================
-
-static std::string &trim(std::string &line) __attribute__((unused));
-
-static std::string &trim(std::string &line){
-	constexpr const char *trim_ch = " \t\r\n";
-
-	line.erase(line.find_last_not_of(trim_ch) + 1);
-
-	return line;
-}
-

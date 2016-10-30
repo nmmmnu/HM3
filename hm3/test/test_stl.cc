@@ -8,6 +8,9 @@
 
 #include "pair.h"
 
+#include "filereader.h"
+
+
 constexpr unsigned int PROCESS_STEP = 1000 * 10;
 
 using Pair = hm3::Pair;
@@ -22,11 +25,15 @@ struct pcomp{
 
 using MySet = std::set<Pair,pcomp>;
 
-static void listLoad(MySet &list, const StringRef &filename, bool tombstones = true);
+template<class LIST, class READER>
+void listLoad(LIST &list, READER &reader, bool tombstones = true);
 
-static int op_search(MySet &list, const char *filename, const char *key){
+template<class LIST>
+int op_search(LIST &list, const char *filename, const char *key){
+	FileReader reader{ filename };
+
 	printf("Load start...\n");
-	listLoad(list, filename);
+	listLoad(list, reader);
 	printf("Load done...\n");
 	getchar();
 
@@ -62,19 +69,14 @@ static void printUsage(const char *cmd){
 	printf("\n");
 }
 
-static void listLoad(MySet &list, const StringRef &filename, bool const tombstones){
-	static const char *trim_ch = " \t\n";
-
+template<class LIST, class READER>
+void listLoad(LIST &list, READER &reader, bool const tombstones){
 	const std::string empty;
-
-	std::ifstream f;
-	f.open(filename);
 
 	unsigned int i = 0;
 
-	for(std::string line; getline(f, line);){
-		// trim
-		line.erase(line.find_last_not_of(trim_ch) + 1);
+	while(reader){
+		std::string line = reader.getLine();
 
 		const std::string &key = line;
 		const std::string &val = tombstones ? empty : key;

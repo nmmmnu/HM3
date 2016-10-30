@@ -9,6 +9,7 @@
 #include "flusher/diskfileflusher.h"
 
 #include "stringtokenizer.h"
+#include "filereader.h"
 
 
 
@@ -26,19 +27,13 @@ constexpr size_type	PROCESS_STEP	= 1000 * 10;
 
 static void printUsage(const char *cmd);
 
-static std::string &trim(std::string &line);
 
-
-
-template <class LIST>
-static int listLoad(LIST &list, const StringRef &filename){
-	std::ifstream f;
-	f.open(filename);
-
+template <class LIST, class READER>
+int listLoad(LIST &list, READER &reader){
 	size_type i = 0;
 
-	for(std::string line; getline(f, line);){
-		trim(line);
+	while(reader){
+		std::string line = reader.getLine();
 
 		StringTokenizer st{ line, ':' };
 
@@ -120,17 +115,9 @@ int main(int argc, char **argv){
 		MEMLIST_SIZE
 	};
 
-	return listLoad(mylist, filename);
-}
+	FileReader reader{ filename };
 
-
-
-static std::string &trim(std::string &line){
-	constexpr const char *trim_ch = " \t\r\n";
-
-	line.erase(line.find_last_not_of(trim_ch) + 1);
-
-	return line;
+	return listLoad(mylist, reader);
 }
 
 
