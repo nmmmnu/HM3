@@ -32,13 +32,13 @@ int main(int argc, char **argv){
 	using MyTableLoader	= hm3::tableloader::DirectoryTableLoader;
 	using MyLSMTable	= hm3::LSMTable<MyTableLoader::container_type>;
 
-	MyTableLoader dl{ path };
-	MyLSMTable list(*dl);
+	MyTableLoader loader{ path };
+	MyLSMTable list(*loader);
 
 	// ----------------------------------
 
-	using MyAdapter = DBAdapter<MyLSMTable>;
-	MyAdapter adapter(list);
+	using MyAdapter = DBAdapter<MyLSMTable, MyTableLoader>;
+	MyAdapter adapter(list, loader);
 
 	// ----------------------------------
 

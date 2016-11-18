@@ -42,26 +42,28 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::process_request_(CONNECTION &
 	const auto &p = protocol_.getParams();
 	const auto &cmd = p[0];
 
-	if (cmd == SHUTDOWN || cmd == SHUTDOWN2){
+	if (cmp__(cmd, SHUTDOWN)){
 		return WorkerStatus::SHUTDOWN;
 	}
 
-	if (cmd == EXIT || cmd == EXIT2){
+	if (cmp__(cmd, EXIT)){
 		return WorkerStatus::DISCONNECT;
 	}
 
-	if (cmd == RELOAD || cmd == RELOAD2){
+	if (cmp__(cmd, REFRESH)){
+		db_.refresh();
+
 		return sendResponseString_(buffer, "OK");
 	}
 
-	if (cmd == INFO || cmd == INFO2){
+	if (cmp__(cmd, INFO)){
 		if (p.size() != 1)
 			return sendResponseError_(buffer, "Bad request");
 
 		return sendResponseString_(buffer, db_.info() );
 	}
 
-	if (cmd == GET || cmd == GET2){
+	if (cmp__(cmd, GET)){
 		if (p.size() != 2)
 			return sendResponseError_(buffer, "Bad request");
 
@@ -70,7 +72,7 @@ WorkerStatus KeyValueWorker<PROTOCOL, DB_ADAPTER>::process_request_(CONNECTION &
 		return sendResponseString_(buffer, db_.get(key));
 	}
 
-	if (cmd == GETALL || cmd == GETALL2){
+	if (cmp__(cmd, GETALL)){
 		if (p.size() != 2)
 			return sendResponseError_(buffer, "Bad request");
 

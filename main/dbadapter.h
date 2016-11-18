@@ -4,13 +4,15 @@
 #include <sstream>
 #include <iostream>
 
-template<class LIST>
+template<class LIST, class LOADER>
 class DBAdapter{
 private:
 	constexpr static size_t MAX_RESULTS = 50;
 
 public:
-	DBAdapter(LIST &list) : list_(list){}
+	DBAdapter(LIST &list, LOADER &loader) :
+				list_(list),
+				loader_(loader){}
 
 	std::string get(const StringRef &key) const{
 		const auto &p = list_.get(key);
@@ -30,7 +32,7 @@ public:
 		size_t c = 0;
 		for(auto it = bit; it != eit; ++it){
 			result.push_back(it->getKey());
-			result.push_back(es_(it->getVal()));
+			result.push_back(es__(it->getVal()));
 
 			if (++c >= MAX_RESULTS)
 				break;
@@ -52,13 +54,19 @@ public:
 		return ss.str();
 	}
 
+	bool refresh() const{
+		return loader_.refresh();
+	}
+
+
 private:
-	static std::string es_(const StringRef &data){
+	static std::string es__(const StringRef &data){
 		return data.empty() ? "0" : data;
 	}
 
 private:
-	LIST &list_;
+	LIST	&list_;
+	LOADER	&loader_;
 };
 
 

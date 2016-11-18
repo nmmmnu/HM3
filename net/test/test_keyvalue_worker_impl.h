@@ -19,6 +19,10 @@ struct KeyValueMockAdapter{
 			"key4", "value4"
 		};
 	}
+
+	bool refresh(){
+		return true;
+	}
 };
 
 using MyProtocol	= net::protocol::RedisProtocol;

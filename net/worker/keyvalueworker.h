@@ -11,28 +11,28 @@
 
 #include <vector>
 
+#include <array>
 
 namespace net{
 namespace worker{
 
 struct KeyValueWorkerStrings{
-	static constexpr StringRef EXIT		= "EXIT";
-	static constexpr StringRef EXIT2	= "exit";
+	static constexpr std::array<StringRef, 2> EXIT		{{	"EXIT",		"exit"		}};
+	static constexpr std::array<StringRef, 2> SHUTDOWN	{{	"SHUTDOWN",	"shutdown"	}};
+	static constexpr std::array<StringRef, 2> INFO		{{	"INFO",		"info"		}};
+	static constexpr std::array<StringRef, 4> REFRESH	{{	"SAVE",		"BGSAVE",
+									"save",		"bgsave"	}};
+	static constexpr std::array<StringRef, 2> GET		{{	"GET",		"get"		}};
+	static constexpr std::array<StringRef, 2> GETALL	{{	"HGETALL",	"hgetall"	}};
 
-	static constexpr StringRef SHUTDOWN	= "SHUTDOWN";
-	static constexpr StringRef SHUTDOWN2	= "shutdown";
+public:
+	static constexpr bool cmp__(const StringRef &cmd, const std::array<StringRef, 4> &m){
+		return cmd == m[0] || cmd == m[1] || cmd == m[2] || cmd == m[3];
+	}
 
-	static constexpr StringRef INFO		= "INFO";
-	static constexpr StringRef INFO2	= "info";
-
-	static constexpr StringRef RELOAD	= "RELOAD";
-	static constexpr StringRef RELOAD2	= "reload";
-
-	static constexpr StringRef GET		= "GET";
-	static constexpr StringRef GET2		= "get";
-
-	static constexpr StringRef GETALL	= "HGETALL";
-	static constexpr StringRef GETALL2	= "hgetall";
+	static constexpr bool cmp__(const StringRef &cmd, const std::array<StringRef, 2> &m){
+		return cmd == m[0] || cmd == m[1];
+	}
 
 };
 
