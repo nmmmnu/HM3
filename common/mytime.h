@@ -11,8 +11,15 @@ public:
 	constexpr static const char *DATA_FORMAT_STANDARD	= "%Y-%m-%d %H:%M:%S";
 	constexpr static const char *DATA_FORMAT_NUMBER		= "%Y%m%d.%H%M%S";
 
+	constexpr static const char *DATA_FORMAT_STANDARD2	= "%Y-%m-%d";
+	constexpr static const char *DATA_FORMAT_NUMBER2	= "%Y%m%d";
+
 public:
 	static const char *toString(uint64_t date, const char *format = DATA_FORMAT_STANDARD) noexcept;
+
+	static const char *toString(const char *format = DATA_FORMAT_STANDARD) noexcept{
+		return toString(now(), format);
+	}
 
 	static uint64_t now() noexcept{
 		return now64();

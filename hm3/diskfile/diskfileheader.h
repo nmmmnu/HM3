@@ -2,7 +2,6 @@
 #define _DISK_FILE_HEADER_H
 
 #include <cstdint>
-#include <iostream>
 
 #include "stringref.h"
 
@@ -46,13 +45,13 @@ public:
 	DiskFileHeader(uint64_t count, bool sorted = false, uint64_t tombstones = 0, uint64_t createdMin = 0, uint64_t createdMax = 0);
 
 	bool open(const StringRef &filename);
-	bool open(std::ifstream &file);
+	bool open(std::istream &file);
 
 	operator bool() const{
 		return version_;
 	}
 
-	bool writeToFile(std::ofstream &file) const;
+	bool writeToFile(std::ostream &file) const;
 
 	void print() const;
 

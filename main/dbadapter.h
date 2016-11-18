@@ -2,6 +2,7 @@
 #define DBADAPTER_H_
 
 #include <sstream>
+#include <iostream>
 
 template<class LIST>
 class DBAdapter{

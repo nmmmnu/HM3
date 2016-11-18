@@ -28,7 +28,7 @@ bool DiskFileHeader::open(const StringRef &filename){
 	return open(file);
 }
 
-bool DiskFileHeader::open(std::ifstream &file_meta){
+bool DiskFileHeader::open(std::istream &file_meta){
 	POD pod;
 	memset(&pod, 0, sizeof(POD));
 
@@ -85,7 +85,7 @@ auto DiskFileHeader::createPOD_() const -> POD{
 	return pod;
 }
 
-bool DiskFileHeader::writeToFile(std::ofstream &file) const{
+bool DiskFileHeader::writeToFile(std::ostream &file) const{
 	const POD pod = createPOD_();
 
 	file.write( (const char *) & pod, sizeof(POD));

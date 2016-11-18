@@ -2,7 +2,7 @@
 
 #include <sys/mman.h>	// mmap
 #include <fcntl.h>	// open
-#include <unistd.h>	// close
+#include <unistd.h>	// close, lseek
 
 MMAPFile::MMAPFile(MMAPFile &&other) :
 		mem_(	std::move(other.mem_)),
