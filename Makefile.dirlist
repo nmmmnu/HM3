@@ -1,6 +1,5 @@
 
 SUBDIRS = test common checksumcalculator	\
-		compressor			\
 						\
 		net net/selector net/protocol net/worker net/test		\
 						\
@@ -11,3 +10,5 @@ SUBDIRS = test common checksumcalculator	\
 						\
 		main
 
+# Compression not work as expected
+#		compressor			\
