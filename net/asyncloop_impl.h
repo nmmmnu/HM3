@@ -127,10 +127,10 @@ void AsyncLoop<SELECTOR, WORKER>::handleRead_(int const fd){
 	if (size <= 0)
 		return handleSocketOps_(fd, size);
 
-	buffer.push(size, inputBuffer_);
-
-	if (buffer.size() > conf_maxPacketSize_)
+	if (buffer.size() + (size_t) size > conf_maxPacketSize_)
 		return handleDisconnect_(fd, DisconnectStatus::ERROR);
+
+	buffer.push(size, inputBuffer_);
 
 	buffer.restartTimer();
 

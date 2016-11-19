@@ -7,12 +7,13 @@
 template<class LIST, class LOADER>
 class DBAdapter{
 private:
-	constexpr static size_t MAX_RESULTS = 50;
+	constexpr static size_t DEFAULT_MAX_RESULTS = 50;
 
 public:
-	DBAdapter(LIST &list, LOADER &loader) :
+	DBAdapter(LIST &list, LOADER &loader, size_t const maxResults = DEFAULT_MAX_RESULTS) :
 				list_(list),
-				loader_(loader){}
+				loader_(loader),
+				maxResults_(maxResults){}
 
 	std::string get(const StringRef &key) const{
 		const auto &p = list_.get(key);
@@ -24,7 +25,8 @@ public:
 	std::vector<std::string> getall(const StringRef &key) const{
 		std::vector<std::string> result;
 
-		result.reserve(MAX_RESULTS * 2);
+		// reserve x2 because of hgetall
+		result.reserve(maxResults_ * 2);
 
 		const auto bit = list_.lowerBound(key);
 		const auto eit = list_.end();
@@ -34,7 +36,7 @@ public:
 			result.push_back(it->getKey());
 			result.push_back(es__(it->getVal()));
 
-			if (++c >= MAX_RESULTS)
+			if (++c >= maxResults_)
 				break;
 		}
 
@@ -67,6 +69,7 @@ private:
 private:
 	LIST	&list_;
 	LOADER	&loader_;
+	size_t	maxResults_;
 };
 
 

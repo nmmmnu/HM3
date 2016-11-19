@@ -20,6 +20,10 @@ class Pair{
 public:
 	static constexpr int CMP_ZERO = +1;
 
+	static const     uint32_t MAX_SIZE	;
+	static const     uint16_t MAX_KEY_SIZE	;
+	static const     uint32_t MAX_VAL_SIZE	;
+
 private:
 	using Blob = PairBlob;
 
@@ -103,7 +107,7 @@ private:
 	std::unique_ptr<Blob>	pimpl;
 
 private:
-	static const Pair		zero_;
+	static const Pair	zero_;
 };
 
 // ==============================

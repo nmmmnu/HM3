@@ -9,6 +9,10 @@ namespace hm3{
 
 const Pair Pair::zero_ = {};
 
+const uint32_t Pair::MAX_SIZE		= PairBlob::MAX_SIZE		;
+const uint16_t Pair::MAX_KEY_SIZE	= PairBlob::MAX_KEY_SIZE	;
+const uint32_t Pair::MAX_VAL_SIZE	= PairBlob::MAX_VAL_SIZE	;
+
 // ==============================
 
 Pair::~Pair() = default;
