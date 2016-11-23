@@ -16,10 +16,9 @@
 
 namespace hm3{
 
+#define log__(...) /* nada */
+
 #include "logger.h"
-
-//#define log__(...) /* nada */
-
 
 const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_llholder;
 
@@ -92,10 +91,9 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 	if (!nodes){
 		// go try with binary search
-		log__("Problem, switch to binary search");
+		log__("Problem, switch to binary search (1)");
 		return binarySearch_(key, result);
 	}
-
 
 	size_type bs_left  = 0;
 	size_type bs_right = getCount();
@@ -145,7 +143,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				if (!nd){
 					// go try with binary search
-					log__("Problem, switch to binary search");
+					log__("Problem, switch to binary search (2)");
 					return binarySearch_(key, result);
 				}
 
@@ -157,7 +155,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 
 				if (!keyptr){
 					// go try with binary search
-					log__("Problem, switch to binary search");
+					log__("Problem, switch to binary search (3)");
 					return binarySearch_(key, result);
 				}
 

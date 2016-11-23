@@ -16,7 +16,7 @@ int main(int argc, char **argv){
 
 	constexpr size_t	MAX_CLIENTS		= 1024;
 	constexpr uint32_t	CONNECTION_TIMEOUT	= 30;
-	constexpr size_t	MAX_PACKET_SIZE		= 1024 * 64;
+	const     size_t	MAX_PACKET_SIZE		= hm3::Pair::MAX_SIZE * 2;
 
 	// ----------------------------------
 
