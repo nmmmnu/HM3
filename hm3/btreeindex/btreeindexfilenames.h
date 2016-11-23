@@ -16,7 +16,7 @@ inline std::string filenameIndx(const StringRef &filename){
 }
 
 inline std::string filenameData(const StringRef &filename){
-	return StringRef::concatenate( { filename, DOT_INDX } );
+	return StringRef::concatenate( { filename, DOT_DATA } );
 }
 
 
