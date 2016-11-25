@@ -16,7 +16,12 @@ public:
 		close();
 	}
 
-	bool open(const StringRef &filename);
+	bool open(const StringRef &filename){
+		return openRO(filename);
+	}
+
+	bool openRO(const StringRef &filename);
+	bool openRW(const StringRef &filename);
 
 	void close();
 
@@ -28,17 +33,28 @@ public:
 		return mem_;
 	}
 
+	void *mem() {
+		return mem_;
+	}
+
 	size_t size() const{
 		return size_;
 	}
 
+public:
+	static bool createFile(const StringRef &filename, size_t size = 0);
+
 private:
-	const void	*mem_		= nullptr;
-	size_t		size_		= 0;
+	bool open_(const StringRef &filename, int mode, int prot);
 
-	int		fd_;
+private:
+	void	*mem_		= nullptr;
+	size_t	size_		= 0;
 
-	int		madvise_;
+	int	fd_;
+
+	int	madvise_;
+
 };
 
 #endif
