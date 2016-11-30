@@ -17,6 +17,8 @@ public:
 	using size_type		= typename List::size_type;
 	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
+	using MyHash		= DJB2Hash<uint64_t>;
+
 public:
 	constexpr
 	static size_t DEFAULT_SIZE = 64;
@@ -58,8 +60,8 @@ public:
 	}
 
 private:
-	static unsigned long calcHash_(const char *str){
-		return DJB2Hash<unsigned long>(str);
+	uint64_t calcHash_(const char *str) const{
+		return hash_(str);
 	}
 
 	typename CONTAINER::size_type getBucketForKey_(const StringRef &key) const{
@@ -75,6 +77,8 @@ private:
 
 private:
 	CONTAINER	container_;
+
+	MyHash		hash_;
 };
 
 

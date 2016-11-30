@@ -49,7 +49,7 @@ size_t HashIndexBuilder::createFromList_(uint64_t *hashtable, size_t const hasht
 	uint64_t const BE_BUCKET_EMPTY		= htobe64(BUCKET_EMPTY		);
 	uint64_t const BE_BUCKET_COLLISION	= htobe64(BUCKET_COLLISION	);
 
-	auto CalcHash = DJB2Hash<uint64_t>;
+	DJB2Hash<uint64_t> calcHash;
 
 	size_t collisions = 0;
 
@@ -58,7 +58,7 @@ size_t HashIndexBuilder::createFromList_(uint64_t *hashtable, size_t const hasht
 	for(const auto &p : list){
 		const char *s = p.getKey().data();
 
-		auto const hash = CalcHash(s);
+		auto const hash = calcHash(s);
 
 		auto const bucket = hash % hashtableSize;
 

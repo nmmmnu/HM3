@@ -3,22 +3,33 @@
 
 // DJB Hash function from CDB
 template <typename uint>
-uint DJB2Hash(const char *s);
+struct DJB2Hash{
+	uint operator()(const char *s) const;
+};
 
 template <typename uint>
-uint DJB2AHash(const char *s);
+struct DJB2AHash{
+	uint operator()(const char *s) const;
+};
+
 
 // SDBM is reimplementation of NDBM
 template <typename uint>
-uint SDBMHash(const char *s);
+struct SDBMHash{
+	uint operator()(const char *s) const;
+};
+
 
 // FNV1 http://www.isthe.com/chongo/tech/comp/fnv/index.html
 template <typename uint>
-uint FNV1Hash(const char *s);
+struct FNV1Hash{
+	uint operator()(const char *s) const;
+};
 
 template <typename uint>
-uint FNV1AHash(const char *s);
-
+struct FNV1AHash{
+	uint operator()(const char *s) const;
+};
 
 #endif
 
