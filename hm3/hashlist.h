@@ -59,7 +59,7 @@ public:
 
 private:
 	static unsigned long calcHash_(const char *str){
-		return DJB2Hash(str);
+		return DJB2Hash<unsigned long>(str);
 	}
 
 	typename CONTAINER::size_type getBucketForKey_(const StringRef &key) const{

@@ -2,13 +2,23 @@
 #define _DJB_HASH_H
 
 // DJB Hash function from CDB
-unsigned long DJB2Hash(const char *str);
+template <typename uint>
+uint DJB2Hash(const char *s);
 
-// modified DJB Hash function from CDB
-unsigned long DJB2AHash(const char *str);
+template <typename uint>
+uint DJB2AHash(const char *s);
 
 // SDBM is reimplementation of NDBM
-unsigned long SDBMHash(const char *str);
+template <typename uint>
+uint SDBMHash(const char *s);
+
+// FNV1 http://www.isthe.com/chongo/tech/comp/fnv/index.html
+template <typename uint>
+uint FNV1Hash(const char *s);
+
+template <typename uint>
+uint FNV1AHash(const char *s);
+
 
 #endif
 
