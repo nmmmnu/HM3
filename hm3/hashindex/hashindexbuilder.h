@@ -1,6 +1,8 @@
 #ifndef _HASH_INDEX_BUILDER_H
 #define _HASH_INDEX_BUILDER_H
 
+#include "myhash.h"
+
 #include "stringref.h"
 
 #include "endian.h"
@@ -15,21 +17,26 @@ private:
 
 	constexpr static size_t DEFAULT_GROW_FACTOR	= 8;
 
+	using MyHash = DJB2AHash<uint64_t>;
+
 public:
 	HashIndexBuilder(size_t const growFactor = DEFAULT_GROW_FACTOR) :
 					growFactor_(growFactor){}
 
 	template <class LIST>
-	bool createFromList(const StringRef &filename, const LIST &list, bool stats = true);
+	bool createFromList(const StringRef &filename, const LIST &list, bool stats = true) const;
 
 private:
 	static void printStats_(size_t const size, size_t const collisions);
 
 	template <class LIST>
-	size_t createFromList_(uint64_t *hashtable, size_t hashtableSize, const LIST &list);
+	size_t createFromList_(uint64_t *hashtable, size_t hashtableSize, const LIST &list) const;
+
+	uint64_t bucketForKey_(const StringRef &key, size_t const hashtableSize) const;
 
 private:
-	size_t growFactor_;
+	size_t	growFactor_;
+	MyHash	hash_;
 };
 
 

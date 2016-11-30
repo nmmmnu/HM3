@@ -11,7 +11,7 @@ include Makefile.sub
 all: $(MY_TARGETS)
 
 
-PAIR_OBJ = $(O)pair.o $(O)pairblob.o $(O)nmea0183checksumcalculator.o $(O)mytime.o
+PAIR_OBJ = $(O)pair.o $(O)pairblob.o $(O)myhash.o $(O)mytime.o
 DISKTABLE_OBJ = $(O)disktable.o $(O)mmapfile.o $(O)diskfileheader.o
 
 

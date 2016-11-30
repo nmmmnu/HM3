@@ -1,5 +1,4 @@
 #include "mmapfile.h"
-#include "myhash.h"
 
 #include "hashindexfilenames.h"
 
@@ -9,7 +8,7 @@ namespace hm3{
 namespace hashindex{
 
 template <class LIST>
-bool HashIndexBuilder::createFromList(const StringRef &filename2, const LIST &list, bool const stats){
+bool HashIndexBuilder::createFromList(const StringRef &filename2, const LIST &list, bool const stats) const{
 	size_t const hashtableSize = list.getCount() * growFactor_;
 	size_t const sizeBin       = hashtableSize * sizeof(uint64_t);
 
@@ -45,25 +44,18 @@ bool HashIndexBuilder::createFromList(const StringRef &filename2, const LIST &li
 }
 
 template <class LIST>
-size_t HashIndexBuilder::createFromList_(uint64_t *hashtable, size_t const hashtableSize, const LIST &list){
+size_t HashIndexBuilder::createFromList_(uint64_t *hashtable, size_t const hashtableSize, const LIST &list) const{
 	uint64_t const BE_BUCKET_EMPTY		= htobe64(BUCKET_EMPTY		);
 	uint64_t const BE_BUCKET_COLLISION	= htobe64(BUCKET_COLLISION	);
-
-	DJB2Hash<uint64_t> calcHash;
 
 	size_t collisions = 0;
 
 	log__("Creating hashtable.");
 	DiskTable::size_type index = 0;
 	for(const auto &p : list){
-		const char *s = p.getKey().data();
-
-		auto const hash = calcHash(s);
-
-		auto const bucket = hash % hashtableSize;
+		auto const bucket = bucketForKey_(p.getKey(), hashtableSize);
 
 		auto const htb = hashtable[bucket];
-
 
 		if (htb == BE_BUCKET_EMPTY){
 			hashtable[bucket] = htobe64(index);
@@ -82,6 +74,14 @@ size_t HashIndexBuilder::createFromList_(uint64_t *hashtable, size_t const hasht
 	}
 
 	return collisions;
+}
+
+uint64_t HashIndexBuilder::bucketForKey_(const StringRef &key, size_t const hashtableSize) const{
+	const char *s = key.data();
+
+	auto const hash = hash_(s);
+
+	return hash % hashtableSize;
 }
 
 void HashIndexBuilder::printStats_(size_t const size, size_t const collisions){

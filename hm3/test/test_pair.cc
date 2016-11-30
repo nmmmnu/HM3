@@ -1,7 +1,7 @@
 #include "pair.h"
 #include "pairblob.h"
-#include "checksum.h"
-#include "nmea0183checksumcalculator.h"
+
+#include "myhash.h"
 
 using Pair	= hm3::Pair;
 using PairBlob	= hm3::PairBlob;
@@ -14,7 +14,7 @@ using PairBlob	= hm3::PairBlob;
 
 
 
-using ChecksumCalculator = checksumcalculator::NMEA0183ChecksumCalculator;
+using ChecksumCalculator = NMEA0183Hash;
 
 
 
@@ -77,9 +77,9 @@ static void pair_test_raw(const char *module){
 	const char *key = "name";
 	const char *val = "Peter";
 
-	Checksum<ChecksumCalculator> chk;
+	ChecksumCalculator chk;
 
-	char checksum = (char) chk.calc("name\0Peter\0", 11);
+	char checksum = (char) chk("name\0Peter\0", 11);
 
 	static char raw_memory[] = {
 		0x50, 0x00, 0x00, 0x00,		// created, 2012-07-13 11:01:20
