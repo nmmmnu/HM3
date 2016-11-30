@@ -1,55 +1,35 @@
-#ifndef _DJB_HASH_H
-#define _DJB_HASH_H
+#ifndef MY_HASH_H_
+#define MY_HASH_H_
 
 #include <cstdint>
 #include <cstdlib>	// size_t
 
+#include "myhash_impl.h"
+
+
 // DJB Hash function from CDB
 template <typename uint>
-struct DJB2Hash{
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
+using DJB2Hash = myhash::impl::MyHashBase<myhash::impl::DJB2<uint> >;
 
 template <typename uint>
-struct DJB2AHash{
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
-
+using DJB2AHash = myhash::impl::MyHashBase<myhash::impl::DJB2A<uint> >;
 
 
 // SDBM is reimplementation of NDBM
 template <typename uint>
-struct SDBMHash{
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
-
+using SDBMHash = myhash::impl::MyHashBase<myhash::impl::SDBM<uint> >;
 
 
 // FNV1 http://www.isthe.com/chongo/tech/comp/fnv/index.html
 template <typename uint>
-struct FNV1Hash{
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
+using FNV1Hash = myhash::impl::MyHashBase<myhash::impl::FNV1<uint> >;
 
 template <typename uint>
-struct FNV1AHash{
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
-
+using FNV1AHash = myhash::impl::MyHashBase<myhash::impl::FNV1A<uint> >;
 
 
 // NMEA0183
-struct NMEA0183Hash{
-	using uint = uint8_t;
-
-	uint operator()(const char *s) const;
-	uint operator()(const char *s, size_t const size) const;
-};
+using NMEA0183Hash = myhash::impl::MyHashBase<myhash::impl::NMEA0183>;
 
 #endif
 
