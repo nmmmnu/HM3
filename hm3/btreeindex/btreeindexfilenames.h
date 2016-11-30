@@ -1,7 +1,7 @@
 #ifndef BTREE_INDEX_FILENAMES_H_
 #define BTREE_INDEX_FILENAMES_H_
 
-#include <string>
+#include "stringref.h"
 
 namespace hm3{
 namespace btreeindex{

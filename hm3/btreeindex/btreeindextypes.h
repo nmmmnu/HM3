@@ -1,5 +1,8 @@
 #include <cstdint>
 
+#ifndef BTREE_INDEX_TYPES_H
+#define BTREE_INDEX_TYPES_H
+
 namespace hm3{
 namespace btreeindex{
 
@@ -11,4 +14,6 @@ using offset_type	= uint64_t;
 
 } // namespace diskbtree
 } // namespace
+
+#endif
 

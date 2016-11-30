@@ -1,5 +1,5 @@
-#ifndef _DISK_BTREE_H
-#define _DISK_BTREE_H
+#ifndef _BTREE_INDEX_BUILDER_H
+#define _BTREE_INDEX_BUILDER_H
 
 #include "stringref.h"
 #include "btreeindexnode.h"
@@ -40,14 +40,6 @@ private:
 	void reorder(const LIST &list,
 				size_type begin, size_type end,
 				level_type level, level_type this_level = 0);
-
-private:
-	template<class COMPR>
-	static void compress_(COMPR &compressor){
-	}
-
-	static void compress_(std::nullptr_t &){
-	}
 
 private:
 	static constexpr LevelOrderLookup<NODE_LEVELS> llHolder_{};

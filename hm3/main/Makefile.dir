@@ -39,5 +39,5 @@ $(A)zone_loader: $(O)zone_loader.o $(O)stringtokenizer.o $(O)skiplist.o $(O)idge
 									$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)
 
-$(A)db_mkhash: $(O)db_mkhash.o $(O)djbhash.o				$(PAIR_OBJ) $(DISKTABLE_OBJ)
+$(A)db_mkhash: $(O)db_mkhash.o $(O)myhash.o				$(PAIR_OBJ) $(DISKTABLE_OBJ)
 	$(LINK)

@@ -41,6 +41,8 @@ int main(int argc, char **argv){
 
 	BTreeIndexBuilder builder;
 
-	builder.createFromList(output_file, list);
+	bool const result = builder.createFromList(output_file, list);
+
+	return result ? 0 : 100;
 }
 

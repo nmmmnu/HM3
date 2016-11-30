@@ -1,7 +1,7 @@
 #ifndef _HASH_LIST_H
 #define _HASH_LIST_H
 
-#include "djbhash.h"
+#include "myhash.h"
 
 #include "ilist.h"
 #include "multitableiterator/collectioniterator.h"
@@ -59,7 +59,7 @@ public:
 
 private:
 	static unsigned long calcHash_(const char *str){
-		return DJBHash(str);
+		return DJB2Hash(str);
 	}
 
 	typename CONTAINER::size_type getBucketForKey_(const StringRef &key) const{
