@@ -1,7 +1,9 @@
 
 namespace myhash{
 namespace impl{
-namespace {
+	
+// anonymous namespace give problems in C++14.
+// those are templates anyway, so nothing wrong will happen.
 
 	template <class HASH>
 	class MyHashBase{
@@ -147,7 +149,6 @@ namespace {
 		}
 	};
 
-} // namespace anonymous
 } // namespace impl
 } // namespace
 
