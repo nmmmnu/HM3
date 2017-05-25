@@ -9,23 +9,8 @@ namespace hm3{
 namespace flusher{
 
 
-template<class IDGENERATOR, class TABLELOADER = std::nullptr_t>
+template<class IDGENERATOR>
 class DiskFileFlusher{
-private:
-	template<class UIDGENERATOR>
-	DiskFileFlusher(
-			UIDGENERATOR &&idGenerator,
-			const StringRef &path,
-			const StringRef &ext,
-			bool const keepTombstones,
-			TABLELOADER *loader
-		):
-				_idGenerator(std::forward<UIDGENERATOR>(idGenerator)),
-				path_(path),
-				_ext(ext),
-				_keepTombstones(keepTombstones),
-				loader_(loader){}
-
 public:
 	template<class UIDGENERATOR>
 	DiskFileFlusher(
@@ -34,49 +19,14 @@ public:
 			const StringRef &ext,
 			bool const keepTombstones = true
 		):
-				DiskFileFlusher(
-						std::forward<UIDGENERATOR>(idGenerator),
-						path,
-						ext,
-						keepTombstones,
-						nullptr
-				){}
-
-	template<class UIDGENERATOR>
-	DiskFileFlusher(
-			UIDGENERATOR &&idGenerator,
-			const StringRef &path,
-			const StringRef &ext,
-			TABLELOADER &loader,
-			bool const keepTombstones
-		):
-				DiskFileFlusher(
-						std::forward<UIDGENERATOR>(idGenerator),
-						path,
-						ext,
-						keepTombstones,
-						&loader
-				){}
-
-	template<class UIDGENERATOR>
-	DiskFileFlusher(
-			UIDGENERATOR &&idGenerator,
-			const StringRef &path,
-			const StringRef &ext,
-			bool const keepTombstones,
-			TABLELOADER &loader
-		):
-				DiskFileFlusher(
-						std::forward<UIDGENERATOR>(idGenerator),
-						path,
-						ext,
-						keepTombstones,
-						&loader
-				){}
+				_idGenerator(std::forward<UIDGENERATOR>(idGenerator)),
+				path_(path),
+				_ext(ext),
+				_keepTombstones(keepTombstones){}
 
 public:
 	template<class LIST>
-	bool operator << (LIST &list) const{
+	bool operator << (const LIST &list) const{
 		if (list.isEmpty())
 			return false;
 
@@ -89,24 +39,7 @@ public:
 		DiskFileBuilder df;
 		df.createFromList(filename, list, _keepTombstones);
 
-		list.removeAll();
-
-		notifyLoader_(loader_);
-
 		return true;
-	}
-
-private:
-	template<class T>
-	static bool notifyLoader_(T *loader){
-		if (loader)
-			return loader->refresh();
-
-		return false;
-	}
-
-	static bool notifyLoader_(std::nullptr_t *){
-		return false;
 	}
 
 private:
@@ -114,7 +47,6 @@ private:
 	std::string	path_;
 	std::string	_ext;
 	bool		_keepTombstones;
-	TABLELOADER	*loader_;
 };
 
 } // namespace flusher

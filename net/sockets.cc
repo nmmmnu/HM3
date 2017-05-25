@@ -4,17 +4,27 @@
 #include <arpa/inet.h>		// AF_INET
 #include <sys/un.h>		// AF_UNIX
 #include <netinet/tcp.h>	// TCP_NODELAY
-#include <netinet/in.h>		// IPPROTO_TCP for FreeBSD 
+#include <netinet/in.h>		// IPPROTO_TCP for FreeBSD
 #include <fcntl.h>		// fcntl
 #include <string.h>		// strlen
-#include <unistd.h>		// close
+#include <unistd.h>		// close, read, write
 
 #include <errno.h>		// errno
 
+#include <poll.h>
+
 namespace net{
-	
+
+using pollfd_event_type = decltype(pollfd::events);
+
+// ===========================
+
+inline bool socket_poll_(int const fd, pollfd_event_type event, int const timeout);
+
 inline bool socket_setOption_(int const fd, int const proto, int const opt, int const val = 1);
+
 inline int socket_error_(int const fd, int const error);
+
 template <class SOCKADDR>
 int socket_server_(int const fd, SOCKADDR &address, uint16_t const backlog);
 
@@ -27,7 +37,6 @@ bool socket_check_eagain() noexcept{
 bool socket_makeNonBlocking(int const fd) noexcept{
 	return fcntl(fd, F_SETFL, O_NONBLOCK) >= 0;
 }
-
 
 bool socket_makeReuseAddr_(int const fd) noexcept{
 	return socket_setOption_(fd, SOL_SOCKET, SO_REUSEADDR);
@@ -45,8 +54,42 @@ void socket_close(int const fd) noexcept{
 	::close(fd);
 }
 
+ssize_t socket_read(int const fd, void *buf, size_t const count) noexcept{
+	return ::read(fd, buf, count);
+}
+
+ssize_t socket_write(int const fd, const void *buf, size_t const count) noexcept{
+	return ::write(fd, buf, count);
+}
+
 int socket_accept(int const fd) noexcept{
 	return ::accept(fd, nullptr, nullptr);
+}
+
+// ===========================
+
+ssize_t socket_read(int const fd, void *buf, size_t const count, int const timeout) noexcept{
+	bool const ready = socket_poll_(fd, POLLIN, timeout);
+
+	if (!ready){
+		// simulate EAGAIN
+		errno = EAGAIN;
+		return -1;
+	}
+
+	return socket_read(fd, buf, count);
+}
+
+ssize_t socket_write(int const fd, const void *buf, size_t const count, int const timeout) noexcept{
+	bool const ready = socket_poll_(fd, POLLOUT, timeout);
+
+	if (!ready){
+		// simulate EAGAIN
+		errno = EAGAIN;
+		return -1;
+	}
+
+	return socket_write(fd, buf, count);
 }
 
 // ===========================
@@ -103,6 +146,20 @@ int socket_create(const SOCKET_UNIX, const char *path, uint16_t const backlog, o
 	unlink(address.sun_path);
 
 	return socket_server_(fd, address, backlog);
+}
+
+// ===========================
+
+inline bool socket_poll_(int const fd, pollfd_event_type event, int const timeout){
+	pollfd p;
+	p.fd		= fd;
+	p.events	= event;
+
+	// size cast is for FreeBSD and OSX warning
+	int const result = poll(&p, (nfds_t) 1, timeout);
+
+	// we are still checking the result, because it could be -1
+	return result == 1 && p.revents & event;
 }
 
 // ===========================

@@ -14,7 +14,7 @@ using PairBlob	= hm3::PairBlob;
 
 
 
-using ChecksumCalculator = NMEA0183Hash;
+using ChecksumCalculator = myhash::NMEA0183;
 
 
 

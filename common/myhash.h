@@ -6,30 +6,33 @@
 
 #include "myhash_impl.h"
 
+namespace myhash{
 
 // DJB Hash function from CDB
 template <typename uint>
-using DJB2Hash = myhash::impl::MyHashBase<myhash::impl::DJB2<uint> >;
+using DJB2 = impl::MyHashBase<impl::DJB2<uint> >;
 
 template <typename uint>
-using DJB2AHash = myhash::impl::MyHashBase<myhash::impl::DJB2A<uint> >;
+using DJB2A = impl::MyHashBase<impl::DJB2A<uint> >;
 
 
 // SDBM is reimplementation of NDBM
 template <typename uint>
-using SDBMHash = myhash::impl::MyHashBase<myhash::impl::SDBM<uint> >;
+using SDBM = impl::MyHashBase<impl::SDBM<uint> >;
 
 
 // FNV1 http://www.isthe.com/chongo/tech/comp/fnv/index.html
 template <typename uint>
-using FNV1Hash = myhash::impl::MyHashBase<myhash::impl::FNV1<uint> >;
+using FNV1 = impl::MyHashBase<impl::FNV1<uint> >;
 
 template <typename uint>
-using FNV1AHash = myhash::impl::MyHashBase<myhash::impl::FNV1A<uint> >;
+using FNV1A = impl::MyHashBase<impl::FNV1A<uint> >;
 
 
 // NMEA0183
-using NMEA0183Hash = myhash::impl::MyHashBase<myhash::impl::NMEA0183>;
+using NMEA0183 = impl::MyHashBase<impl::NMEA0183>;
+
+} // namespace
 
 #endif
 

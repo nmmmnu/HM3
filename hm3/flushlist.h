@@ -7,21 +7,30 @@
 namespace hm3{
 
 
-template <class LIST, class FLUSH>
+template <class LIST, class FLUSH, class TABLELOADER = std::nullptr_t>
 class FlushList : public IMutableList<FlushList<LIST, FLUSH> >{
 public:
 	constexpr static size_t MAX_SIZE = 1 * 1024 * 1024;
 
-	using Iterator		= typename LIST::Iterator;
+	using Iterator	= typename LIST::Iterator;
 	using size_type	= typename LIST::size_type;
+
+private:
+	template <class UFLUSH>
+	FlushList(LIST &list, UFLUSH &&flusher, TABLELOADER *loader, size_t const maxSize = MAX_SIZE) :
+					list_(list),
+					flusher_(std::forward<UFLUSH>(flusher)),
+					loader_(loader),
+					maxSize_(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){}
 
 public:
 	template <class UFLUSH>
+	FlushList(LIST &list, UFLUSH &&flusher, TABLELOADER &loader, size_t const maxSize = MAX_SIZE) :
+					FlushList(list, std::forward<UFLUSH>(flusher), &loader, maxSize){}
+
+	template <class UFLUSH>
 	FlushList(LIST &list, UFLUSH &&flusher, size_t const maxSize = MAX_SIZE) :
-					list_(list),
-					flusher_(std::forward<UFLUSH>(flusher)),
-					maxSize_(maxSize > MAX_SIZE ? maxSize : MAX_SIZE){
-	}
+					FlushList(list, std::forward<UFLUSH>(flusher), nullptr, maxSize){}
 
 	FlushList(FlushList &&other) = default;
 
@@ -58,11 +67,16 @@ private:
 	friend class IMutableList<FlushList<LIST, FLUSH> >;
 
 	template <class UPAIR>
-	bool putT_(UPAIR &&data);
+	bool putT_(UPAIR &&data){
+		bool const result = list_.put( std::forward<UPAIR>(data) );
 
-public:
-	bool flush(){
-		return flusher_ << list_;
+		if (list_.getBytes() > maxSize_){
+			flush();
+			list_.removeAll();
+			notifyLoader_(loader_);
+		}
+
+		return result;
 	}
 
 public:
@@ -74,28 +88,30 @@ public:
 		return list_.end();
 	}
 
+public:
+	bool flush(){
+		return flusher_ << list_;
+	}
+
+private:
+	template<class T>
+	static bool notifyLoader_(T *loader){
+		if (loader)
+			return loader->refresh();
+
+		return false;
+	}
+
+	static bool notifyLoader_(std::nullptr_t *){
+		return false;
+	}
+
 private:
 	LIST		&list_;
 	FLUSH		flusher_;
+	TABLELOADER	*loader_;
 	size_t		maxSize_;
 };
-
-
-
-// ===================================
-
-
-
-template <class LIST, class FLUSH>
-template <class UPAIR>
-bool FlushList<LIST, FLUSH>::putT_(UPAIR &&data){
-	bool const result = list_.put( std::forward<UPAIR>(data) );
-
-	if (list_.getBytes() > maxSize_)
-		flush();
-
-	return result;
-}
 
 
 } // namespace

@@ -9,7 +9,7 @@
 
 namespace hm3{
 
-using ChecksumCalculator = NMEA0183Hash;
+using ChecksumCalculator = myhash::NMEA0183;
 
 const uint32_t PairBlob::MAX_VAL_SIZE = PairBlob::sizeofValue__();
 

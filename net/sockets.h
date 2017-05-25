@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <unistd.h> // ssize_t
+
 namespace net{
 
 using options_type = uint8_t;
@@ -46,6 +48,13 @@ bool socket_makeKeepAlive(int fd) noexcept;
 int socket_accept(int fd) noexcept;
 
 void socket_close(int fd) noexcept;
+
+// simple wrapper functions for performance
+ssize_t socket_read( int fd,       void *buf, size_t count) noexcept;
+ssize_t socket_write(int fd, const void *buf, size_t count) noexcept;
+
+ssize_t socket_read( int fd,       void *buf, size_t count, int timeout) noexcept;
+ssize_t socket_write(int fd, const void *buf, size_t count, int timeout) noexcept;
 
 bool socket_check_eagain() noexcept;
 

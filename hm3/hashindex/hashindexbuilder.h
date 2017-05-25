@@ -17,7 +17,7 @@ private:
 
 	constexpr static size_t DEFAULT_GROW_FACTOR	= 8;
 
-	using MyHash = DJB2AHash<uint64_t>;
+	using MyHash = myhash::DJB2A<uint64_t>;
 
 public:
 	HashIndexBuilder(size_t const growFactor = DEFAULT_GROW_FACTOR) :

@@ -17,7 +17,7 @@ public:
 	using size_type		= typename List::size_type;
 	using Iterator		= multitableiterator::CollectionIterator<CONTAINER>;
 
-	using MyHash		= DJB2Hash<uint64_t>;
+	using MyHash		= myhash::DJB2<uint64_t>;
 
 public:
 	constexpr
