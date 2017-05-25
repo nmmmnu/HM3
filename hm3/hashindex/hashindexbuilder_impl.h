@@ -88,7 +88,7 @@ void HashIndexBuilder::printStats_(size_t const size, size_t const collisions){
 	constexpr const char *MASKZ = "%-16s : %12zu\n";
 	constexpr const char *MASKF = "%-16s : %15.2f %%\n";
 
-	double const percent = 100.0 * collisions / size;
+	double const percent = 100.0 * (double) collisions / (double) size;
 
 	printf(MASKZ, "Total",			size			);
 	printf(MASKZ, "Total Present",		size - collisions	);

@@ -46,7 +46,7 @@ private:
 
 public:
 	// fixing C++14 error
-	static void operator delete(void* memory){
+	static void operator delete(void* memory) noexcept{
 		::operator delete(memory);
 	}
 
