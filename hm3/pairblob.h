@@ -34,14 +34,20 @@ private:
 	static constexpr int      CMP_NULLKEY  = -1;
 
 private:
-	PairBlob() = default;
+	PairBlob() noexcept = default;
 
 	static void *operator new(size_t, size_t const size){
 		return ::operator new(size);
 	}
 
-	static void *operator new(size_t, size_t const size, const std::nothrow_t){
+	static void *operator new(size_t, size_t const size, const std::nothrow_t) noexcept{
 		return ::operator new(size, std::nothrow);
+	}
+
+public:
+	// fixing C++14 error
+	static void operator delete(void* memory){
+		::operator delete(memory);
 	}
 
 public:

@@ -72,7 +72,9 @@ private:
 		and overal result will be low quality code.
 		*/
 
-		return calcHash_(key.data()) % container_.size();
+		auto const result = calcHash_(key.data()) % container_.size();
+		
+		return (typename CONTAINER::size_type) result;
 	}
 
 private:
