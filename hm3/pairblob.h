@@ -109,14 +109,14 @@ public:
 
 	bool equals(const char *key, size_t const size) const noexcept{
 		return StringRef::fastEmptyChar(key, size) ?
-			CMP_NULLKEY :
+			bool(CMP_NULLKEY) :
 			StringRef::equals(getKey(), getKeyLen(), key, size);
 	}
 
 	bool equals(const char *key) const noexcept{
 		// because of strlen nullptr, we do it in this way
 		return StringRef::fastEmptyChar(key) ?
-			CMP_NULLKEY :
+			bool(CMP_NULLKEY) :
 			StringRef::equals(getKey(), getKeyLen(), key, strlen(key) );
 	}
 
