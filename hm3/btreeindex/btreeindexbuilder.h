@@ -42,7 +42,7 @@ private:
 				level_type level, level_type this_level = 0);
 
 private:
-	static constexpr LevelOrderLookup<NODE_LEVELS> llHolder_{};
+	static constexpr LevelOrderLookup<branch_type, NODE_LEVELS> llHolder_{};
 
 private:
 	std::ofstream	file_indx_;

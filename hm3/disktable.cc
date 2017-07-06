@@ -20,7 +20,7 @@ namespace hm3{
 
 #include "logger.h"
 
-const btreeindex::LevelOrderLookup<btreeindex::NODE_LEVELS> g_llholder;
+const LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
 
 inline BlobRef DiskTable::mmap2blob__(const MMAPFile &m){
 	return { m.mem(), m.size() };
