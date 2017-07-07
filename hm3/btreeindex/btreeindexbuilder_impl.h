@@ -11,7 +11,7 @@ namespace btreeindex{
 
 
 template <class LIST>
-constexpr LevelOrderLookup<NODE_LEVELS> BTreeIndexBuilder<LIST>::llHolder_;
+constexpr LevelOrderLookup<branch_type, NODE_LEVELS> BTreeIndexBuilder<LIST>::llHolder_;
 
 
 template <class LIST>

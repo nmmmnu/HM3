@@ -13,8 +13,8 @@ bool binarySearch(const ARRAY &list,
 	 */
 
 	while (start + minimum_distance < end){
-	//	SIZE mid = start + ((end - start) /  2);
-		SIZE mid = SIZE(start + ((end - start) >> 1)); // 4% faster
+	//	SIZE const mid = start + ((end - start) /  2);
+		SIZE const mid = SIZE(start + ((end - start) >> 1)); // 4% faster
 
 		int const cmp = comp(list, mid, key); //list.cmpAt(mid, key);
 

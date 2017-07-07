@@ -16,7 +16,7 @@ all: 		$(A)test_checkedvalue $(A)test_stringref		\
 		$(A)test_blobref					\
 		$(A)test_glob						\
 		$(A)test_stringtokenizer $(A)test_stringimploder	\
-		$(A)test_binarysearch
+		$(A)test_binarysearch $(A)test_levelorderlookup
 
 #		$(A)test_compressor
 
@@ -39,6 +39,9 @@ $(A)test_stringimploder: $(O)test_stringimploder.o
 	$(LINK)
 
 $(A)test_binarysearch: $(O)test_binarysearch.o
+	$(LINK)
+
+$(A)test_levelorderlookup: $(O)test_levelorderlookup.o
 	$(LINK)
 
 $(A)test_compressor: $(O)test_compressor.o $(O)zlibcompressor.o
