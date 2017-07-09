@@ -96,10 +96,14 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	while(pos < nodesCount){
 		const Node &node = nodes[pos];
 
+		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
+		// OUTPUT PARAMETERS
+
 		branch_type node_index;
 		bool needRight = true;
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
+		// CODE
 		{
 			const auto &ll = g_llholder.value;
 
