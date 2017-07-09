@@ -20,7 +20,7 @@ namespace hm3{
 
 #include "logger.h"
 
-const LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
+constexpr LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
 
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
@@ -99,15 +99,13 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		branch_type node_index;
 		bool needRight = true;
 
-		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
+		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 		{
 			const auto &ll = g_llholder.value;
 
 			branch_type node_pos = 0;
 
-			node_index = ll[node_pos];
-
-			while (node_pos < VALUES){
+			do{
 
 				// ACCESS ELEMENT
 				// ---
@@ -192,9 +190,9 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					result = dataid;
 					return true;
 				}
-			}
+			}while (node_pos < VALUES);
 		}
-		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH
+		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 
 		if (needRight){ //node_index == size){
 			// Go Right
