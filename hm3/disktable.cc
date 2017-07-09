@@ -100,7 +100,6 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		// OUTPUT PARAMETERS
 
 		branch_type node_index;
-		bool needRight = true;
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 		// CODE
@@ -142,8 +141,8 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					return binarySearch_(key, result);
 				}
 
-				size_t    const keysize = static_cast<size_type>(be16toh(nd->keysize));
-				size_type const dataid  = static_cast<size_type>(be64toh(nd->dataid));
+				size_t    const keysize = be16toh(nd->keysize);
+				size_type const dataid  = be64toh(nd->dataid);
 
 				// key is just after the NodeData
 				const char *keyptr = blobKeys_.as<const char>((size_t) offset + sizeof(NodeData), keysize);
@@ -166,11 +165,11 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					// this + 1 is because,
 					// we want if possible to go LEFT instead of RIGHT
 					// node_index will go out of bounds,
-					// but this is OK.
+					// this is indicator for RIGHT
 					node_index = branch_type( ll[node_pos] + 1 );
 
 					// go right
-					node_pos = branch_type( 2 * node_pos + 2 );
+					node_pos = branch_type( 2 * node_pos + 1 + 1 );
 
 					bs.first = dataid + 1;
 
@@ -182,8 +181,6 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 					node_pos = branch_type( 2 * node_pos + 1 );
 
 					bs.second = dataid;
-
-					needRight = false;
 
 					log__("\t L:", node_pos, "BS:", bs.first, "-", bs.second, "KEYX", keyx);
 				}else{
@@ -198,7 +195,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		}
 		// EO MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 
-		if (needRight){ //node_index == size){
+		if ( node_index == VALUES ){
 			// Go Right
 			pos = pos * BRANCHES + VALUES + 1;
 
@@ -250,20 +247,6 @@ const PairBlob *DiskTable::validateFromDisk_(const PairBlob *blob) const{
 
 	return blob->validChecksum() ? blob : nullptr;
 }
-
-#if 0
-size_t DiskTable::getAtOffset(size_type const index) const{
-	const uint64_t *ptr_be = (const uint64_t *) mmapIndx_.safeAccess( index * sizeof(uint64_t) );
-
-	if (ptr_be){
-		size_t const offset = be64toh( *ptr_be );
-
-		return offset;
-	}
-
-	return static_cast<size_t>(-1);
-}
-#endif
 
 const PairBlob *DiskTable::getAtFromDisk_(size_type const index) const{
 	const uint64_t *ptrs_be = blobIndx_.as<const uint64_t>(0, getCount());
