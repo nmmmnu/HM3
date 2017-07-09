@@ -89,8 +89,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		return binarySearch_(key, result);
 	}
 
-	size_type bs_left  = 0;
-	size_type bs_right = getCount();
+	std::pair<size_type, size_type> bs{ 0, getCount() };
 
 	size_type pos = 0;
 
@@ -162,28 +161,29 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				int const cmp = keyx.compare(key);
 
 				if (cmp < 0){
-					// this + 1 is because the element is checked already
-					// see standard binary search implementation.
-					// took me two days to figure it out :)
+					// this + 1 is because,
+					// we want if possible to go LEFT instead of RIGHT
+					// node_index will go out of bounds,
+					// but this is OK.
 					node_index = branch_type( ll[node_pos] + 1 );
 
 					// go right
 					node_pos = branch_type( 2 * node_pos + 2 );
 
-					bs_left = dataid;
+					bs.first = dataid + 1;
 
-					log__("\t R:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+					log__("\t R:", node_pos, "BS:", bs.first, "-", bs.second, "KEYX", keyx);
 				}else if (cmp > 0){
 					node_index = ll[node_pos];
 
 					// go left
 					node_pos = branch_type( 2 * node_pos + 1 );
 
-					bs_right = dataid;
+					bs.second = dataid;
 
 					needRight = false;
 
-					log__("\t L:", node_pos, "BS:", bs_left, "-", bs_right, "KEYX", keyx);
+					log__("\t L:", node_pos, "BS:", bs.first, "-", bs.second, "KEYX", keyx);
 				}else{
 					// found
 
@@ -214,9 +214,9 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 	// fallback to binary search :)
 
 	log__("BTREE LEAF:", pos);
-	log__("Fallback to binary search", bs_left, bs_right, "diff", bs_right - bs_left);
+	log__("Fallback to binary search", bs.first, bs.second, "diff", bs.second - bs.first);
 
-	return binarySearch(*this, bs_left, bs_right, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
+	return binarySearch(*this, bs.first, bs.second, key, BinarySearchCompList{}, result, BIN_SEARCH_MINIMUM_DISTANCE);
 }
 
 Pair DiskTable::get(const StringRef &key) const{
