@@ -160,9 +160,6 @@ private:
 
 
 	template<typename T>
-	static T std_min__(const T a, const T b) noexcept;
-
-	template<typename T>
 	static int sgn__(const  T a) noexcept;
 };
 
@@ -231,7 +228,7 @@ inline int StringRef::compare__(const char *s1, size_t const size1, const char *
 	// First idea was lazy based on LLVM::StringRef
 	// http://llvm.org/docs/doxygen/html/StringRef_8h_source.html
 
-	if ( int const res = memcmp__(s1, s2, std_min__(size1, size2) ) )
+	if ( int const res = memcmp__(s1, s2, std::min(size1, size2) ) )
 		return res; // most likely exit
 
 	// sgn helps convert size_t to int, without a branch
@@ -274,13 +271,6 @@ constexpr inline const char *StringRef::strptr__(const char *s) noexcept{
 template<typename T>
 int StringRef::sgn__(const T a) noexcept{
 	return (T(0) < a) - (a < T(0));
-}
-
-// this apears to be faster than std::min(),
-// because is by value
-template<typename T>
-inline T StringRef::std_min__(const T a, const T b) noexcept{
-	return a > b ? a : b;
 }
 
 #endif

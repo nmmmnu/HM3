@@ -85,8 +85,8 @@ private:
 
 	bool search_(const StringRef &key, size_type &result) const;
 
-private:
-	static BlobRef mmap2blob__(const MMAPFile &m);
+	static void  openFile__(MMAPFile &file, BlobRef &blob, const StringRef &filename);
+	static void closeFile__(MMAPFile &file, BlobRef &blob);
 
 private:
 	diskfile::DiskFileHeader	header_;

@@ -5,10 +5,10 @@ template<typename size_type, unsigned char LEVELS>
 class LevelOrderLookup{
 public:
 	using level_type = unsigned char;
-	
-	constexpr static size_type size = (1 << LEVELS) - 1;
 
-	size_type value[size];
+	constexpr static size_type SIZE = (1 << LEVELS) - 1;
+
+	size_type value[SIZE];
 
 public:
 	constexpr LevelOrderLookup() : value(){
@@ -20,7 +20,7 @@ public:
 
 private:
 	constexpr void reorderLevel_(size_type &push_pos, level_type const level){
-		reorder_(push_pos, 0, size, level, 0);
+		reorder_(push_pos, 0, SIZE, level, 0);
 	}
 
 	constexpr void push_back(size_type &push_pos, size_type const data){

@@ -22,43 +22,37 @@ namespace hm3{
 
 const LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
 
-inline BlobRef DiskTable::mmap2blob__(const MMAPFile &m){
-	return { m.mem(), m.size() };
-}
-
 bool DiskTable::open(const std::string &filename){
 	header_.open(diskfile::filenameMeta(filename));
 
 	if (header_ == false)
 		return false;
 
-	mmapIndx_.open(diskfile::filenameIndx(filename));
-	mmapData_.open(diskfile::filenameData(filename));
+	openFile__(mmapIndx_, blobIndx_, diskfile::filenameIndx(filename)	);
+	openFile__(mmapData_, blobData_, diskfile::filenameData(filename)	);
 
-	mmapTree_.open(btreeindex::filenameIndx(filename));
-	mmapKeys_.open(btreeindex::filenameData(filename));
-
-	blobIndx_ =  mmap2blob__(mmapIndx_);
-	blobData_ =  mmap2blob__(mmapData_);
-
-	blobTree_ =  mmap2blob__(mmapTree_);
-	blobKeys_ =  mmap2blob__(mmapKeys_);
+	openFile__(mmapTree_, blobTree_, btreeindex::filenameIndx(filename)	);
+	openFile__(mmapKeys_, blobKeys_, btreeindex::filenameData(filename)	);
 
 	return true;
 }
 
 void DiskTable::close(){
-	blobIndx_.reset();
-	blobData_.reset();
+	closeFile__(mmapIndx_, blobIndx_);
+	closeFile__(mmapData_, blobData_);
 
-	blobTree_.reset();
-	blobKeys_.reset();
+	closeFile__(mmapTree_, blobTree_);
+	closeFile__(mmapKeys_, blobKeys_);
+}
 
-	mmapIndx_.close();
-	mmapData_.close();
+inline void DiskTable::openFile__(MMAPFile &file, BlobRef &blob, const StringRef &filename){
+	file.open(filename);
+	blob = { file.mem(), file.size() };
+}
 
-	mmapTree_.close();
-	mmapKeys_.close();
+inline void DiskTable::closeFile__(MMAPFile &file, BlobRef &blob){
+	blob.reset();
+	file.close();
 }
 
 inline bool DiskTable::binarySearch_(const StringRef &key, size_type &result) const{
