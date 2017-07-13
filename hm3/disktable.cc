@@ -22,7 +22,7 @@ namespace hm3{
 
 constexpr LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
 
-bool DiskTable::open(const std::string &filename){
+bool DiskTable::open(const StringRef &filename){
 	header_.open(diskfile::filenameMeta(filename));
 
 	if (header_ == false)
@@ -34,7 +34,7 @@ bool DiskTable::open(const std::string &filename){
 	openFile__(mmapTree_, blobTree_, btreeindex::filenameIndx(filename)	);
 	openFile__(mmapKeys_, blobKeys_, btreeindex::filenameData(filename)	);
 
-	return true;
+	return mmapIndx_ && mmapData_;
 }
 
 void DiskTable::close(){
@@ -142,6 +142,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				}
 
 				size_t    const keysize = be16toh(nd->keysize);
+				// if file is open, there will be guaranteed this to work on 32 bit system:
 				size_type const dataid  = (size_type) be64toh(nd->dataid);
 
 				// key is just after the NodeData
