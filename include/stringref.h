@@ -7,6 +7,8 @@
 
 #include <initializer_list>
 
+#include <type_traits>	// is_signed
+
 class StringRef{
 private:
 	constexpr static bool COMPARE_MICRO_OPTIMIZATIONS = true;
@@ -160,7 +162,7 @@ private:
 
 
 	template<typename T>
-	static int sgn__(const  T a) noexcept;
+	static int sgn__(const T &a) noexcept;
 };
 
 inline std::ostream& operator << (std::ostream& os, const StringRef &sr){
@@ -232,7 +234,7 @@ inline int StringRef::compare__(const char *s1, size_t const size1, const char *
 		return res; // most likely exit
 
 	// sgn helps convert size_t to int, without a branch
-	return sgn__(size1 - size2);
+	return sgn__( ssize_t(size1) - ssize_t(size2) );
 }
 
 constexpr inline bool StringRef::equals__(const char *s1, size_t const size1, const char *s2, size_t const size2) noexcept{
@@ -269,7 +271,8 @@ constexpr inline const char *StringRef::strptr__(const char *s) noexcept{
 // ==================================
 
 template<typename T>
-int StringRef::sgn__(const T a) noexcept{
+int StringRef::sgn__(const T &a) noexcept{
+	static_assert(std::is_signed<T>::value, "T must be signed type");
 	return (T(0) < a) - (a < T(0));
 }
 
