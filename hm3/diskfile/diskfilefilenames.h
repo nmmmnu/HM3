@@ -11,7 +11,7 @@ constexpr const char *DOT_INDX = ".indx";
 constexpr const char *DOT_DATA = ".data";
 
 
-inline std::string filenameMeta(const StringRef &filename){
+inline const StringRef &filenameMeta(const StringRef &filename){
 	return filename;
 }
 

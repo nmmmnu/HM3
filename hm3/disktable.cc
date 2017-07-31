@@ -22,7 +22,7 @@ namespace hm3{
 
 constexpr LevelOrderLookup<btreeindex::branch_type, btreeindex::NODE_LEVELS> g_llholder;
 
-bool DiskTable::open(const std::string &filename){
+bool DiskTable::open(const StringRef &filename){
 	header_.open(diskfile::filenameMeta(filename));
 
 	if (header_ == false)
@@ -34,7 +34,7 @@ bool DiskTable::open(const std::string &filename){
 	openFile__(mmapTree_, blobTree_, btreeindex::filenameIndx(filename)	);
 	openFile__(mmapKeys_, blobKeys_, btreeindex::filenameData(filename)	);
 
-	return true;
+	return mmapIndx_ && mmapData_;
 }
 
 void DiskTable::close(){
@@ -99,7 +99,7 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 		// OUTPUT PARAMETERS
 
-		branch_type node_index;
+		branch_type node_index = 0; // no need to have start value, but gcc gives a warning
 
 		// MODIFIED LEVEL ORDERED MINI-BINARY SEARCH INSIDE BTREE NODE
 		// CODE
@@ -142,7 +142,8 @@ bool DiskTable::btreeSearch_(const StringRef &key, size_type &result) const{
 				}
 
 				size_t    const keysize = be16toh(nd->keysize);
-				size_type const dataid  = be64toh(nd->dataid);
+				// if file is open, there will be guaranteed this to work on 32 bit system:
+				size_type const dataid  = (size_type) be64toh(nd->dataid);
 
 				// key is just after the NodeData
 				const char *keyptr = blobKeys_.as<const char>((size_t) offset + sizeof(NodeData), keysize);

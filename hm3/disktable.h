@@ -33,7 +33,7 @@ public:
 	// MMAPFile-s will be closed automatically
 	~DiskTable() = default;
 
-	bool open(const std::string &filename);
+	bool open(const StringRef &filename);
 	void close();
 
 	operator bool(){
